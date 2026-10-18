@@ -114,7 +114,7 @@ window.ATLAS_CHAMPS = [
 "dd": "Annie",
 "name": "Annie",
 "title": "The Dark Child",
-"region": "noxus",
+"region": "wanderers",
 "role": "Mage · Support",
 "tags": [
 "Mage",
@@ -486,7 +486,7 @@ window.ATLAS_CHAMPS = [
 "dd": "Fizz",
 "name": "Fizz",
 "title": "The Tidal Trickster",
-"region": "bilgewater",
+"region": "wanderers",
 "role": "Assassin · Fighter",
 "tags": [
 "Assassin",
@@ -1034,7 +1034,7 @@ window.ATLAS_CHAMPS = [
 "dd": "Lucian",
 "name": "Lucian",
 "title": "The Purifier",
-"region": "demacia",
+"region": "wanderers",
 "role": "Marksman · Assassin",
 "tags": [
 "Marksman",
@@ -1215,7 +1215,7 @@ window.ATLAS_CHAMPS = [
 "dd": "Nami",
 "name": "Nami",
 "title": "The Tidecaller",
-"region": "bilgewater",
+"region": "wanderers",
 "role": "Support · Mage",
 "tags": [
 "Support",
@@ -1601,7 +1601,7 @@ window.ATLAS_CHAMPS = [
 "dd": "Senna",
 "name": "Senna",
 "title": "The Redeemer",
-"region": "shadowisles",
+"region": "wanderers",
 "role": "Support · Marksman",
 "tags": [
 "Support",
@@ -1738,7 +1738,7 @@ window.ATLAS_CHAMPS = [
 "dd": "Smolder",
 "name": "Smolder",
 "title": "The Fiery Fledgling",
-"region": "noxus",
+"region": "wanderers",
 "role": "Marksman · Mage",
 "tags": [
 "Marksman",
