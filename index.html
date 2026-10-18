@@ -255,7 +255,7 @@ section.region{--scene-h:clamp(380px,46vw,600px);padding-top:calc(var(--scene-h)
 .node text{font-family:var(--f-body);font-size:13px;fill:var(--text);text-anchor:middle;paint-order:stroke;stroke:var(--panel);stroke-width:4px;stroke-linejoin:round}
 .node .ini{font-family:var(--f-display);font-size:15px;stroke:none;fill:var(--ink)}
 .node.ext .ini{fill:var(--text);font-size:12px}
-.node.dim{opacity:.25}
+.node.dim{opacity:.5}
 .edge{transition:opacity .2s, stroke-width .2s}
 .edge.dim{opacity:.08}
 .legend{display:flex;flex-wrap:wrap;gap:12px 16px;padding:0 16px 14px;font-family:var(--f-mono);font-size:11px;letter-spacing:.06em;color:var(--muted)}
@@ -1412,10 +1412,10 @@ function selectChamp(id){
 function renderWeb(){
   const svg = document.getElementById("web");
   const all = regionChamps(current);
-  let champs = all.filter(c=>bondsOf(c.id).length||c.id===selected);
-  if(!champs.length) champs = all.slice(0,8);
-  const cx=260, cy=265, R=150, R2=232;
-  const NR = Math.max(16, Math.min(26, Math.PI*R/champs.length - 7));
+  const champs = all;
+  const big = champs.length>12;
+  const cx=260, cy=265, R=big?178:150, R2=big?250:232;
+  const NR = Math.max(15, Math.min(26, Math.PI*R/champs.length - 7));
   const pos = {};
   champs.forEach((c,i)=>{ const a = -Math.PI/2 + i*2*Math.PI/champs.length; pos[c.id]={x:cx+R*Math.cos(a),y:cy+R*Math.sin(a),a,ext:false}; });
   const inIds = new Set(champs.map(c=>c.id));
@@ -1439,7 +1439,7 @@ function renderWeb(){
            <circle cx="${cx}" cy="${cy}" r="${R2}" fill="none" stroke="#5b6580" stroke-opacity=".18" stroke-dasharray="1 8"/>
            <text x="${cx}" y="${cy-4}" text-anchor="middle" font-family="Marcellus SC, serif" font-size="22" fill="var(--r)" opacity=".55">${esc(regById[current].name)}</text>
            <text x="${cx}" y="${cy+18}" text-anchor="middle" font-family="Spline Sans Mono, monospace" font-size="10" letter-spacing="2" fill="#939bb0">${edges.length} BONDS</text>
-           ${all.length>champs.length?`<text x="${cx}" y="${cy+34}" text-anchor="middle" font-family="Spline Sans Mono, monospace" font-size="9" letter-spacing="1.5" fill="#6d7690">+${all.length-champs.length} MORE IN ROSTER</text>`:""}`;
+           <text x="${cx}" y="${cy+34}" text-anchor="middle" font-family="Spline Sans Mono, monospace" font-size="9" letter-spacing="1.5" fill="#6d7690">${all.length} CHAMPIONS</text>`;
   for(const b of edges){
     const p=pos[b[0]], q=pos[b[1]]; if(!p||!q||p.pending||q.pending) continue;
     const on = b[0]===sel||b[1]===sel;
@@ -1454,14 +1454,16 @@ function renderWeb(){
     const c = byId[id], col = regById[c.region].color;
     const r = p.ext?Math.min(18,NR):Math.round(NR), isSel = id===sel;
     const dim = linked.has(id)?"":"dim";
-    const ly = p.y > cy+20 ? r+18 : -(r+9);
+    const ca=Math.cos(p.a), sa=Math.sin(p.a), lr=r+7;
+    const anchor = big||p.ext ? (ca>.35?"start":ca<-.35?"end":"middle") : "middle";
+    const lx = anchor==="middle"?0:ca*lr, ly = anchor==="middle"?(sa>0?r+16:-(r+8)):sa*lr+4;
     h += `<g class="node ${p.ext?'ext':''} ${dim}" data-id="${id}" tabindex="0" role="button" aria-label="${esc(c.name)}" transform="translate(${p.x.toFixed(1)} ${p.y.toFixed(1)})">
       ${isSel?`<circle r="${r+8}" fill="none" stroke="${col}" stroke-width="1.5" opacity=".7"/>`:''}
       <circle r="${r}" fill="${p.ext?'#0f1a2e':col}"/>
       <text class="ini" y="5">${initials(c.name)}</text>
       <image href="${esc(c.img)}" x="${-r}" y="${-r}" width="${2*r}" height="${2*r}" clip-path="url(#clipc)" preserveAspectRatio="xMidYMid slice" ${p.ext?'opacity=".75"':''}/>
       <circle r="${r}" fill="none" stroke="${col}" stroke-width="${p.ext?1.5:2.5}" ${p.ext?'stroke-dasharray="3 3"':''}/>
-      <text y="${ly}">${esc(c.name)}</text>
+      <text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" style="text-anchor:${anchor};font-size:${big?11.5:13}px">${esc(c.name)}</text>
     </g>`;
   }
   svg.innerHTML = h;
