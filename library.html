@@ -9,7 +9,7 @@
 <meta property="og:description" content="Every Legends of Runeterra card and the line of lore it carries.">
 <link rel="icon" href="img/emblem/wanderers.webp">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus+SC&family=Alegreya:ital,wght@0,400;0,500;0,700;1,400&family=Spline+Sans+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus+SC&family=Alegreya:ital,wght@0,400;0,500;0,700;1,400&family=Spline+Sans+Mono:wght@400;500&family=Teko:wght@500;600&display=swap">
 <style>
 /* Layout: an archive reading room. Quote of the moment up top, a filter bar that sticks, then a dense wall of cards; one card opens into a lore plate. Shares the Atlas tokens. */
 :root{
@@ -21,6 +21,7 @@
   --f-display:"Marcellus SC","Cinzel",Georgia,serif;
   --f-body:"Alegreya",Georgia,"Times New Roman",serif;
   --f-mono:"Spline Sans Mono",ui-monospace,Menlo,monospace;
+  --f-num:"Teko","Oxanium",var(--f-display),sans-serif;
   padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
 }
 *{box-sizing:border-box}
@@ -116,6 +117,10 @@ footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width
 
 @media (max-width:860px){.hero{grid-template-columns:1fr;gap:24px;padding-block:36px 24px}.plate{grid-template-columns:1fr;padding:20px}.plate .big{max-width:260px;margin-inline:auto;display:block}}
 @media (max-width:480px){.filters{position:static}.seg button{padding:8px 9px;font-size:11px}.chip{font-size:11px}.grid{grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:10px 8px}.card .nm{font-size:12.5px}.oracle{grid-template-columns:96px minmax(0,1fr);padding:16px;gap:14px}.oracle img{width:96px}.oracle blockquote{font-size:17px}}
+/* numerals */
+.num,.counts div b,.status b{font-family:var(--f-num)!important;font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:.02em}
+.counts div b{font-size:40px;line-height:.9}
+.status b{font-size:15px;font-weight:500}
 </style>
 </head>
 <body>

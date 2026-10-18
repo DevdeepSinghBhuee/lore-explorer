@@ -10,7 +10,7 @@
 <link rel="icon" href="img/emblem/wanderers.webp">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://esports-api.lolesports.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus+SC&family=Alegreya:ital,wght@0,400;0,500;0,700;1,400&family=Spline+Sans+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus+SC&family=Alegreya:ital,wght@0,400;0,500;0,700;1,400&family=Spline+Sans+Mono:wght@400;500&family=Teko:wght@500;600&display=swap">
 <style>
 /* Layout: a broadcast desk. Scoreboard hero with the next or live match, stage tabs over a day-by-day schedule, a wall of team crests that open into rosters, and a trophy timeline. Atlas tokens; one hot accent for LIVE. */
 :root{
@@ -21,6 +21,7 @@
   --f-display:"Marcellus SC","Cinzel",Georgia,serif;
   --f-body:"Alegreya",Georgia,"Times New Roman",serif;
   --f-mono:"Spline Sans Mono",ui-monospace,Menlo,monospace;
+  --f-num:"Teko","Oxanium",var(--f-display),sans-serif;
   padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
 }
 *{box-sizing:border-box}
@@ -125,6 +126,14 @@ footer{border-top:1px solid var(--rule);margin-top:56px;padding-block:24px 40px;
 footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width:80ch}
 @media (max-width:860px){.hero{grid-template-columns:1fr;padding-block:30px 40px}.roster{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media (max-width:560px){.match{grid-template-columns:56px minmax(0,1fr) auto minmax(0,1fr);gap:8px}.match .meta{display:none}.match .t img{width:26px;height:26px}.match .t span{font-size:15px}.roster{grid-template-columns:repeat(2,minmax(0,1fr))}.anthem img{width:110px}}
+/* numerals */
+.num,.score,.cd,.match .sc,.match .time,.yr .y{font-family:var(--f-num)!important;font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:.02em}
+.score{font-size:clamp(52px,8vw,84px);letter-spacing:.04em}
+.cd{font-size:clamp(34px,4.6vw,46px);letter-spacing:.06em}
+.match .sc{font-size:28px;line-height:1}
+.match .time{font-size:17px;font-weight:500;color:var(--text)}
+.yr .y{font-size:17px;font-weight:500;letter-spacing:.08em}
+.score small,.cd small{font-family:var(--f-mono)!important;font-weight:400;letter-spacing:.14em}
 </style>
 </head>
 <body>
