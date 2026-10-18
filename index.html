@@ -57,6 +57,7 @@ button{font:inherit;color:inherit}
 .brand{font-family:var(--f-display);font-size:20px;letter-spacing:.08em;color:var(--gold);display:flex;align-items:center;gap:10px}
 .brand svg{width:26px;height:26px}
 .nav{display:flex;gap:4px}
+header .nav{flex-wrap:wrap}
 .nav a{font-family:var(--f-mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-decoration:none;padding:7px 12px}
 .nav a:hover{color:var(--text)}
 .nav a[aria-current="page"]{color:var(--ink);background:var(--gold)}
@@ -249,6 +250,10 @@ section.region{--scene-h:clamp(380px,46vw,600px);padding-top:calc(var(--scene-h)
 .lor a{display:block;width:74px;transition:transform .2s}
 .lor a:hover{transform:translateY(-3px)}
 .lor img{width:100%;aspect-ratio:400/602;object-fit:cover;border-radius:4px}
+.vids{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.vids a{display:flex;flex-direction:column;gap:4px;text-decoration:none;color:var(--text);font-size:13.5px;line-height:1.25}
+.vids img{width:100%;aspect-ratio:16/9;object-fit:cover;border:1px solid color-mix(in srgb,var(--c,var(--r)) 35%,transparent)}
+.vids a:hover span{color:var(--c,var(--r))}
 .libcta{display:inline-block;margin-top:14px;font-family:var(--f-mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--r);text-decoration:none;border-bottom:1px solid var(--r)}
 
 /* region dossier */
@@ -345,7 +350,7 @@ footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width
       <svg viewBox="0 0 32 32" aria-hidden="true"><polygon points="16,2 29,9.5 29,22.5 16,30 3,22.5 3,9.5" fill="none" stroke="#c8aa6e" stroke-width="1.5"/><circle cx="16" cy="16" r="5" fill="none" stroke="#c8aa6e" stroke-width="1.5"/><path d="M16 2v9M16 21v9M3 9.5l8 4.5M21 18l8 4.5M29 9.5l-8 4.5M11 18l-8 4.5" stroke="#c8aa6e" stroke-width="1"/></svg>
       Runeterra Atlas
     </div>
-    <nav class="nav" aria-label="Site"><a href="./" aria-current="page">Atlas</a><a href="library.html">Library</a></nav>
+    <nav class="nav" aria-label="Site"><a href="./" aria-current="page">Atlas</a><a href="library.html">Library</a><a href="riftbound.html">Riftbound</a><a href="theater.html">Theater</a></nav>
   </header>
 
   <section class="hero">
@@ -449,6 +454,8 @@ footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width
 <script src="data/champions.js"></script>
 <script src="data/stories.js"></script>
 <script src="data/champcards.js"></script>
+<script src="data/champrb.js"></script>
+<script src="data/videos.js"></script>
 <script>
 const REGIONS = [
   {id:"demacia",name:"Demacia",color:"#e8d395",x:210,y:228,side:"below",
@@ -1844,7 +1851,9 @@ function renderDetail(){
     </div>
     <div class="ties"><h5>Ties</h5>${ties || `<p class="none">A loner, as far as the records go.</p>`}</div>
     ${(()=>{const st=(window.ATLAS_STORIES||{})[c.id]||[];return st.length?`<div class="extra"><h5>Official stories</h5><ul class="stories">${st.map(([t,u])=>`<li><a href="https://universe.leagueoflegends.com/en_US/story/${esc(u)}/" target="_blank" rel="noopener">${esc(t)}<span aria-hidden="true"> ↗</span></a></li>`).join("")}</ul></div>`:"";})()}
-    ${(()=>{const L=(window.ATLAS_LOR||{})[c.id]||[];return L.length?`<div class="extra"><h5>In Legends of Runeterra</h5><div class="lor">${L.map(([code,n])=>`<a href="library.html#card-${code}" title="${esc(n)}"><img src="img/cards/${code}.webp" alt="${esc(n)}" loading="lazy"></a>`).join("")}</div></div>`:"";})()}`;
+    ${(()=>{const L=(window.ATLAS_LOR||{})[c.id]||[];return L.length?`<div class="extra"><h5>In Legends of Runeterra</h5><div class="lor">${L.map(([code,n])=>`<a href="library.html#card-${code}" title="${esc(n)}"><img src="img/cards/${code}.webp" alt="${esc(n)}" loading="lazy"></a>`).join("")}</div></div>`:"";})()}
+    ${(()=>{const R=(window.ATLAS_RB||{})[c.id]||[];return R.length?`<div class="extra"><h5>In Riftbound</h5><div class="lor">${R.map(([id,n,img])=>`<a href="riftbound.html#card-${id}" title="${esc(n)}"><img src="https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/${img}?w=200&fm=webp" alt="${esc(n)}" loading="lazy"></a>`).join("")}</div></div>`:"";})()}
+    ${(()=>{const V=[];(window.ATLAS_VIDEOS||[]).forEach(sh=>sh.v.forEach(v=>{if(v.ch.includes(c.id)&&sh.id!=="login"&&sh.id!=="making")V.push(v);}));const L2=(window.ATLAS_VIDEOS||[]).find(sh=>sh.id==="login");const lg=L2?L2.v.find(v=>v.ch.includes(c.id)):null;if(lg)V.push(lg);return V.length?`<div class="extra"><h5>Watch</h5><div class="vids">${V.slice(0,6).map(v=>`<a href="theater.html#v-${v.y}"><img src="https://i.ytimg.com/vi/${v.y}/mqdefault.jpg" alt="" loading="lazy"><span>${esc(v.t)}</span></a>`).join("")}</div></div>`:"";})()}`;
   document.querySelectorAll("#detail .tie").forEach(t=>t.addEventListener("click",()=>{
     const id=t.dataset.id; const crossing = byId[id].region!==current;
     selectChamp(id);

@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Riftbound Gallery</title>
+<meta name="description" content="Every Riftbound trading card, from Origins to Vendetta, with filters by domain, type, set and champion.">
+<meta property="og:title" content="Riftbound Gallery">
+<meta property="og:description" content="Scroll through every card of League's trading card game.">
+<link rel="icon" href="img/emblem/wanderers.webp">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://cmsassets.rgpub.io">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus+SC&family=Alegreya:ital,wght@0,400;0,500;0,700;1,400&family=Spline+Sans+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a collector's binder. Six domain colors drive the accents; a sticky filter rail; a dense, endless wall of cards; battlefields lie sideways across two columns. Shares the Atlas tokens. */
+:root{
+  color-scheme:dark;
+  --ink:#080d18; --panel:#0f1a2e; --panel-2:#142238;
+  --gold:#c8aa6e; --text:#ebe4d3; --muted:#939bb0; --faint:#5b6580;
+  --rule:rgba(200,170,110,.22);
+  --fury:#e5484d; --calm:#3fb27f; --mind:#4b8cff; --body:#f28c28; --chaos:#9b5de5; --order:#e9c46a;
+  --rc:#c8aa6e;
+  --f-display:"Marcellus SC","Cinzel",Georgia,serif;
+  --f-body:"Alegreya",Georgia,"Times New Roman",serif;
+  --f-mono:"Spline Sans Mono",ui-monospace,Menlo,monospace;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ink);color:var(--text);font-family:var(--f-body);font-size:18px;line-height:1.55;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+img{max-width:100%}
+[hidden]{display:none!important}
+a{color:var(--gold)}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.wrap{max-width:1240px;margin-inline:auto}
+
+.bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:18px;border-bottom:1px solid var(--rule);flex-wrap:wrap}
+.brand{font-family:var(--f-display);font-size:20px;letter-spacing:.08em;color:var(--gold);display:flex;align-items:center;gap:10px;text-decoration:none}
+.brand svg{width:26px;height:26px}
+.nav{display:flex;gap:4px;flex-wrap:wrap}
+.nav a{font-family:var(--f-mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-decoration:none;padding:7px 12px}
+.nav a:hover{color:var(--text)}
+.nav a[aria-current="page"]{color:var(--ink);background:var(--gold)}
+
+.hero{position:relative;padding-block:56px 34px;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:36px;align-items:center}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+h1{font-family:var(--f-display);font-weight:400;font-size:clamp(42px,6.4vw,84px);line-height:.95;margin:12px 0 18px;text-wrap:balance}
+h1 .dm{background:linear-gradient(90deg,var(--fury),var(--body),var(--order),var(--calm),var(--mind),var(--chaos));-webkit-background-clip:text;background-clip:text;color:transparent}
+.lede{font-size:20px;max-width:42ch;margin:0 0 22px}
+.counts{display:flex;gap:22px;flex-wrap:wrap}
+.counts b{display:block;font-family:var(--f-display);font-weight:400;font-size:32px;color:var(--gold);line-height:1;font-variant-numeric:tabular-nums}
+.counts span{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.fan{position:relative;height:340px}
+.fan img{position:absolute;left:50%;top:50%;width:190px;aspect-ratio:744/1039;object-fit:cover;border-radius:10px;box-shadow:0 20px 40px -12px rgba(0,0,0,.8);transform-origin:50% 120%;transition:transform .5s cubic-bezier(.2,.8,.2,1);cursor:pointer;background:var(--panel)}
+.fan:hover img:nth-child(1){transform:translate(-50%,-50%) rotate(-24deg) translateX(-30px)}
+.fan:hover img:nth-child(5){transform:translate(-50%,-50%) rotate(24deg) translateX(30px)}
+
+.filters{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:color-mix(in srgb,var(--ink) 92%,transparent);backdrop-filter:blur(8px);border-block:1px solid var(--rule);padding-block:12px;display:grid;grid-template-columns:minmax(0,1fr);gap:10px}
+.filters>*{min-width:0}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.search{flex:1 1 260px;min-width:0}
+.search input{width:100%;background:var(--panel);border:1px solid var(--rule);padding:9px 12px;font-size:16px}
+select{flex:1 1 150px;min-width:0;max-width:100%;background:var(--panel);border:1px solid var(--rule);padding:9px 10px;font-size:14px;font-family:var(--f-mono);letter-spacing:.04em}
+.seg{display:flex;border:1px solid var(--rule);max-width:100%;overflow-x:auto;scrollbar-width:none}
+.seg::-webkit-scrollbar{display:none}
+.seg button{flex:none;background:transparent;border:0;border-right:1px solid var(--rule);padding:8px 11px;font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);cursor:pointer}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--gold);color:var(--ink)}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{display:inline-flex;align-items:center;gap:7px;background:transparent;border:1px solid var(--rule);padding:5px 11px;font-family:var(--f-mono);font-size:12px;color:var(--muted);cursor:pointer}
+.chip i{width:10px;height:10px;border-radius:50%;background:var(--chip)}
+.chip:hover{color:var(--text)}
+.chip[aria-pressed="true"]{color:var(--text);border-color:var(--chip);background:color-mix(in srgb,var(--chip) 20%,transparent)}
+.status{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;color:var(--muted);margin:16px 0 12px}
+.status b{color:var(--text);font-weight:500}
+.clear{background:none;border:0;color:var(--gold);text-decoration:underline;cursor:pointer;font-family:var(--f-mono);font-size:12px}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:16px 12px;grid-auto-flow:dense}
+.card{background:none;border:0;padding:0;cursor:pointer;text-align:left;display:flex;flex-direction:column;gap:6px;min-width:0}
+.card.land{grid-column:span 2}
+.card .img{position:relative;aspect-ratio:744/1039;width:100%;border-radius:9px;overflow:hidden;background:radial-gradient(ellipse at 50% 40%,var(--panel-2),var(--panel));transition:transform .25s cubic-bezier(.2,.8,.2,1),box-shadow .25s}
+.card.land .img{aspect-ratio:1039/744}
+.card img{width:100%;height:100%;object-fit:cover;display:block}
+.card:hover .img,.card:focus-visible .img{transform:translateY(-5px) rotate(-.6deg);box-shadow:0 16px 30px -10px color-mix(in srgb,var(--rc) 55%,#000)}
+.card .img::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.18) 50%,transparent 65%);transform:translateX(-120%);transition:transform .7s}
+.card:hover .img::after{transform:translateX(120%)}
+.card .nm{font-size:14px;line-height:1.25;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.card .mt{font-family:var(--f-mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);display:flex;gap:6px;align-items:center;min-width:0}
+.dots{display:inline-flex;gap:3px}
+.dots i{width:7px;height:7px;border-radius:50%}
+.more{display:block;margin:28px auto 8px;background:transparent;border:1px solid var(--gold);color:var(--gold);padding:11px 20px;font-family:var(--f-mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;cursor:pointer}
+.empty{padding:60px 0;text-align:center;color:var(--muted);font-style:italic}
+
+dialog{border:0;padding:0;background:transparent;color:var(--text);max-width:min(1040px,calc(100vw - 24px));width:100%;max-height:calc(100vh - 24px)}
+dialog::backdrop{background:rgba(4,6,12,.84);backdrop-filter:blur(4px)}
+.plate{position:relative;display:grid;grid-template-columns:minmax(0,380px) minmax(0,1fr);gap:28px;padding:28px;background:linear-gradient(140deg,color-mix(in srgb,var(--rc) 18%,#0d1424),#0b1120 55%);border:1px solid color-mix(in srgb,var(--rc) 45%,transparent);max-height:calc(100vh - 24px);overflow:auto}
+.plate.land{grid-template-columns:1fr}
+.plate .big{width:100%;border-radius:14px;filter:drop-shadow(0 18px 30px rgba(0,0,0,.6));background:var(--panel)}
+.plate h2{font-family:var(--f-display);font-weight:400;font-size:clamp(30px,4vw,44px);line-height:1;margin:4px 0 6px}
+.plate .subt{font-style:italic;color:var(--rc);margin:0 0 12px;font-size:19px}
+.meta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+.tagm{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;padding:3px 7px;border:1px solid var(--rule);color:var(--muted);display:inline-flex;align-items:center;gap:5px}
+.tagm i{width:8px;height:8px;border-radius:50%}
+.plate h3{font-family:var(--f-mono);font-weight:400;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin:16px 0 6px}
+.plate p{margin:0;font-size:16.5px;color:#d3d7e0;white-space:pre-line}
+.plate .credit{margin-top:18px;font-family:var(--f-mono);font-size:11px;letter-spacing:.06em;color:var(--muted)}
+.plate .goto{display:inline-block;margin-top:18px;font-family:var(--f-mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink);background:var(--rc);padding:9px 14px;text-decoration:none}
+.x{position:absolute;top:10px;right:10px;width:36px;height:36px;background:rgba(0,0,0,.4);border:1px solid var(--rule);color:var(--text);font-size:20px;line-height:1;cursor:pointer;z-index:2}
+.step{display:flex;gap:8px;margin-top:20px}
+.step button{background:transparent;border:1px solid var(--rule);color:var(--muted);padding:8px 12px;font-family:var(--f-mono);font-size:12px;cursor:pointer}
+.step button:hover{color:var(--text);border-color:var(--gold)}
+
+footer{border-top:1px solid var(--rule);margin-top:48px;padding-block:24px 40px;color:var(--muted);font-size:14px;display:grid;gap:8px}
+footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width:80ch}
+
+@media (max-width:860px){.hero{grid-template-columns:1fr;padding-block:36px 20px}.fan{height:260px}.fan img{width:140px}.plate{grid-template-columns:1fr;padding:20px}.plate .big{max-width:300px;margin-inline:auto;display:block}.plate.land .big{max-width:100%}}
+@media (max-width:480px){.filters{position:static}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 10px}.card .nm{font-size:13px}.seg button{padding:8px 9px;font-size:11px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="bar">
+    <a class="brand" href="./">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><polygon points="16,2 29,9.5 29,22.5 16,30 3,22.5 3,9.5" fill="none" stroke="#c8aa6e" stroke-width="1.5"/><circle cx="16" cy="16" r="5" fill="none" stroke="#c8aa6e" stroke-width="1.5"/><path d="M16 2v9M16 21v9M3 9.5l8 4.5M21 18l8 4.5M29 9.5l-8 4.5M11 18l-8 4.5" stroke="#c8aa6e" stroke-width="1"/></svg>
+      Runeterra Atlas
+    </a>
+    <nav class="nav" aria-label="Site"><a href="./">Atlas</a><a href="library.html">Library</a><a href="riftbound.html" aria-current="page">Riftbound</a><a href="theater.html">Theater</a></nav>
+  </header>
+
+  <section class="hero">
+    <div>
+      <div class="eyebrow">Riftbound · League's trading card game</div>
+      <h1>Six domains. <span class="dm">Every card.</span></h1>
+      <p class="lede">The complete Riftbound collection from Riot's official gallery, from Origins to Vendetta. Filter by domain, find your champion, and open any card to see it up close.</p>
+      <div class="counts" id="counts"></div>
+    </div>
+    <div class="fan" id="fan" aria-hidden="true"></div>
+  </section>
+
+  <section class="filters" aria-label="Filter cards">
+    <div class="row">
+      <label class="search"><span hidden>Search cards</span><input id="q" type="search" placeholder="Search cards, champions, artists, rules text…" autocomplete="off"></label>
+      <div class="seg" id="types" role="group" aria-label="Card type"></div>
+      <select id="set" aria-label="Set"></select>
+      <select id="rar" aria-label="Rarity"></select>
+      <select id="sort" aria-label="Sort"><option value="set">Set order</option><option value="name">Name A–Z</option><option value="cost">Energy cost</option></select>
+    </div>
+    <div class="chips" id="domains" role="group" aria-label="Domain"></div>
+  </section>
+
+  <div class="status" id="status" aria-live="polite"></div>
+  <div class="grid" id="grid"></div>
+  <p class="empty" id="empty" hidden>No cards match. Try fewer filters.</p>
+  <button class="more" id="more" type="button" hidden>Show more cards</button>
+
+  <footer>
+    <div>Card data and images from Riot's official Riftbound card gallery; images load directly from Riot's servers. Artists are credited on each card.</div>
+    <div class="legal">Runeterra Atlas was created under Riot Games' "Legal Jibber Jabber" policy using assets owned by Riot Games. Riot Games does not endorse or sponsor this project.</div>
+  </footer>
+</div>
+
+<dialog id="dlg" aria-label="Card details"><div class="plate" id="plate"></div></dialog>
+
+<script src="data/champions.js"></script>
+<script src="data/riftbound.js"></script>
+<script>
+const CDN="https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/";
+const SETS=window.RB_SETS||{};
+const CARDS=(window.RB_CARDS||[]).map(r=>({i:r[0],n:r[1],sub:r[2],sc:r[3],s:SETS[r[3]]||r[3],no:r[4],t:r[5],ra:r[6],d:r[7]?r[7].split("/"):[],img:r[8],land:r[9]==="landscape",ar:r[10],tx:r[11],fx:r[12],e:r[13],m:r[14],p:r[15],tg:r[16],ch:r[17]}));
+const CH=Object.fromEntries((window.ATLAS_CHAMPS||[]).map(c=>[c.id,c]));
+const DOM={Fury:"var(--fury)",Calm:"var(--calm)",Mind:"var(--mind)",Body:"var(--body)",Chaos:"var(--chaos)",Order:"var(--order)"};
+const DOMHEX={Fury:"#e5484d",Calm:"#3fb27f",Mind:"#4b8cff",Body:"#f28c28",Chaos:"#9b5de5",Order:"#e9c46a"};
+const TYPES=[["all","All"],["Legend","Legends"],["Unit","Units"],["Spell","Spells"],["Gear","Gear"],["Battlefield","Battlefields"],["Rune","Runes"]];
+const RAR=["Common","Uncommon","Rare","Epic","Showcase"];
+const PAGE=48;
+const esc=s=>String(s??"").replace(/[&<>"]/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch]));
+const thumb=c=>`${CDN}${c.img}?w=${c.land?560:400}&fm=webp`;
+const large=c=>`${CDN}${c.img}?w=${c.land?1039:744}&fm=webp`;
+const S={q:"",type:"all",dom:new Set(),set:"",rar:"",sort:"set",shown:PAGE};
+let list=[];
+const SETORDER=Object.keys(SETS);
+
+const cnt=t=>CARDS.filter(c=>c.t===t).length;
+document.getElementById("counts").innerHTML=[[CARDS.length,"Cards"],[cnt("Legend"),"Legends"],[Object.keys(SETS).length,"Sets"],[new Set(CARDS.map(c=>c.ar).filter(Boolean)).size,"Artists"]].map(([v,l])=>`<div><b>${v.toLocaleString()}</b><span>${l}</span></div>`).join("");
+document.getElementById("types").innerHTML=TYPES.map(([v,l])=>`<button type="button" data-v="${v}" aria-pressed="${v==="all"}">${l}</button>`).join("");
+document.getElementById("set").innerHTML=`<option value="">All sets</option>`+SETORDER.map(k=>`<option value="${k}">${esc(SETS[k])}</option>`).join("");
+document.getElementById("rar").innerHTML=`<option value="">All rarities</option>`+RAR.map(r=>`<option>${r}</option>`).join("");
+document.getElementById("domains").innerHTML=Object.keys(DOM).map(d=>`<button class="chip" type="button" data-v="${d}" aria-pressed="false" style="--chip:${DOM[d]}"><i></i>${d}</button>`).join("");
+
+// hero fan: five legends
+(function(){const L=CARDS.filter(c=>c.t==="Legend"&&!c.land); const pick=[];while(pick.length<5&&L.length){pick.push(L.splice(Math.floor(Math.random()*L.length),1)[0]);}
+ document.getElementById("fan").innerHTML=pick.map((c,i)=>`<img src="${thumb(c)}" alt="" style="transform:translate(-50%,-50%) rotate(${(i-2)*11}deg)" data-id="${c.i}">`).join("");
+ document.getElementById("fan").addEventListener("click",e=>{const im=e.target.closest("img");if(!im)return;reset();const k=list.findIndex(c=>c.i===im.dataset.id);if(k>=0)open(k);});})();
+
+const grid=document.getElementById("grid");
+function apply(){
+  const q=S.q.trim().toLowerCase();
+  list=CARDS.filter(c=>{
+    if(S.type!=="all"&&c.t!==S.type)return false;
+    if(S.set&&c.sc!==S.set)return false;
+    if(S.rar&&c.ra!==S.rar)return false;
+    if(S.dom.size&&!c.d.some(d=>S.dom.has(d)))return false;
+    if(q&&!(c.n.toLowerCase().includes(q)||c.sub.toLowerCase().includes(q)||c.tg.join(" ").toLowerCase().includes(q)||c.ar.toLowerCase().includes(q)||c.tx.toLowerCase().includes(q)))return false;
+    return true;});
+  if(S.sort==="name")list.sort((a,b)=>a.n.localeCompare(b.n));
+  else if(S.sort==="cost")list.sort((a,b)=>(a.e??99)-(b.e??99)||a.n.localeCompare(b.n));
+  else list.sort((a,b)=>SETORDER.indexOf(a.sc)-SETORDER.indexOf(b.sc)||a.no.localeCompare(b.no,undefined,{numeric:true}));
+  render();
+}
+function render(){
+  grid.innerHTML=list.slice(0,S.shown).map((c,k)=>`<button class="card${c.land?" land":""}" type="button" data-k="${k}" style="--rc:${DOMHEX[c.d[0]]||"#c8aa6e"}">
+    <div class="img"><img src="${thumb(c)}" alt="${esc(c.n)}" loading="lazy" decoding="async"></div>
+    <span class="nm">${esc(c.n)}</span><span class="mt"><span class="dots">${c.d.map(d=>`<i style="background:${DOM[d]||"#888"}"></i>`).join("")}</span>${esc(c.t)} · ${esc(c.ra)}</span></button>`).join("");
+  document.getElementById("empty").hidden=list.length>0;
+  document.getElementById("more").hidden=S.shown>=list.length;
+  const f=S.q||S.type!=="all"||S.dom.size||S.set||S.rar;
+  document.getElementById("status").innerHTML=`Showing <b>${Math.min(S.shown,list.length).toLocaleString()}</b> of <b>${list.length.toLocaleString()}</b> cards${f?` · <button class="clear" type="button" id="clear">Clear filters</button>`:""}`;
+  const cl=document.getElementById("clear"); if(cl)cl.onclick=reset;
+}
+function reset(){S.q="";S.type="all";S.dom.clear();S.set="";S.rar="";S.shown=PAGE;
+  ["q","set","rar"].forEach(id=>document.getElementById(id).value="");
+  document.querySelectorAll("#types button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.v==="all")));
+  document.querySelectorAll("#domains .chip").forEach(b=>b.setAttribute("aria-pressed","false"));apply();}
+let tm; document.getElementById("q").addEventListener("input",e=>{clearTimeout(tm);tm=setTimeout(()=>{S.q=e.target.value;S.shown=PAGE;apply();},160);});
+document.getElementById("types").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;S.type=b.dataset.v;S.shown=PAGE;document.querySelectorAll("#types button").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));apply();});
+document.getElementById("domains").addEventListener("click",e=>{const b=e.target.closest(".chip");if(!b)return;const v=b.dataset.v;S.dom.has(v)?S.dom.delete(v):S.dom.add(v);b.setAttribute("aria-pressed",String(S.dom.has(v)));S.shown=PAGE;apply();});
+document.getElementById("set").addEventListener("change",e=>{S.set=e.target.value;S.shown=PAGE;apply();});
+document.getElementById("rar").addEventListener("change",e=>{S.rar=e.target.value;S.shown=PAGE;apply();});
+document.getElementById("sort").addEventListener("change",e=>{S.sort=e.target.value;apply();});
+document.getElementById("more").addEventListener("click",()=>{S.shown+=PAGE*2;render();});
+if("IntersectionObserver" in window){new IntersectionObserver(es=>{if(es[0].isIntersecting&&S.shown<list.length){S.shown+=PAGE;render();}},{rootMargin:"700px"}).observe(document.getElementById("more"));}
+grid.addEventListener("click",e=>{const b=e.target.closest(".card");if(b)open(+b.dataset.k);});
+
+const dlg=document.getElementById("dlg"),plate=document.getElementById("plate"); let cur=-1;
+function open(k){
+  cur=k; const c=list[k]; if(!c)return;
+  plate.style.setProperty("--rc",DOMHEX[c.d[0]]||"#c8aa6e"); plate.classList.toggle("land",c.land);
+  const champ=c.ch&&CH[c.ch];
+  const stat=[c.e!=null?`Energy ${c.e}`:"",c.p!=null?`Power ${c.p}`:"",c.m!=null?`Might ${c.m}`:""].filter(Boolean);
+  plate.innerHTML=`<button class="x" type="button" aria-label="Close" id="x">×</button>
+    <img class="big" src="${large(c)}" alt="${esc(c.n)} card">
+    <div style="min-width:0">
+      <div class="eyebrow" style="color:var(--rc)">${esc(c.s)} · ${esc(c.no)}</div>
+      <h2>${esc(c.n)}</h2>${c.sub?`<p class="subt">${esc(c.sub)}</p>`:""}
+      <div class="meta">${c.d.map(d=>`<span class="tagm"><i style="background:${DOM[d]}"></i>${d}</span>`).join("")}<span class="tagm">${esc(c.t)}</span><span class="tagm">${esc(c.ra)}</span>${stat.map(s=>`<span class="tagm">${s}</span>`).join("")}${c.tg.map(t=>`<span class="tagm">${esc(t)}</span>`).join("")}</div>
+      ${c.tx?`<h3>Ability</h3><p>${esc(c.tx)}</p>`:""}
+      ${c.fx?`<h3>Effect</h3><p>${esc(c.fx)}</p>`:""}
+      ${champ?`<a class="goto" href="./#c-${champ.id}">Meet ${esc(champ.name)} in the Atlas →</a>`:""}
+      <div class="credit">${c.ar?`Art by ${esc(c.ar)} · `:""}Riftbound ${esc(c.s)}</div>
+      <div class="step"><button type="button" id="pv">← Previous</button><button type="button" id="nx">Next →</button></div>
+    </div>`;
+  document.getElementById("x").onclick=()=>dlg.close();
+  document.getElementById("pv").onclick=()=>open((cur-1+list.length)%list.length);
+  document.getElementById("nx").onclick=()=>open((cur+1)%list.length);
+  if(!dlg.open)dlg.showModal();
+  try{history.replaceState(null,"",location.pathname+location.search+"#card-"+c.i);}catch(e){}
+}
+dlg.addEventListener("close",()=>{try{history.replaceState(null,"",location.pathname+location.search);}catch(e){}});
+dlg.addEventListener("click",e=>{if(e.target===dlg)dlg.close();});
+dlg.addEventListener("keydown",e=>{if(e.key==="ArrowRight")open((cur+1)%list.length);if(e.key==="ArrowLeft")open((cur-1+list.length)%list.length);});
+
+const P=new URLSearchParams(location.search);
+if(P.get("q")){S.q=P.get("q");document.getElementById("q").value=S.q;}
+apply();
+const h=(location.hash||"").match(/^#card-([\w-]+)$/);
+if(h){let k=list.findIndex(c=>c.i===h[1]); if(k<0){reset();k=list.findIndex(c=>c.i===h[1]);} if(k>=0)open(k);}
+</script>
+</body>
+</html>

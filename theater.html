@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Runeterra Theater</title>
+<meta name="description" content="Every League of Legends cinematic, Worlds anthem, Arcane trailer and region story in one place.">
+<meta property="og:title" content="Runeterra Theater">
+<meta property="og:description" content="Cinematics, Worlds anthems, Arcane and the music of League of Legends.">
+<link rel="icon" href="img/emblem/wanderers.webp">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://i.ytimg.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus+SC&family=Alegreya:ital,wght@0,400;0,500;0,700;1,400&family=Spline+Sans+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a screening room. A wide stage holds the current film; below it, shelves of films scroll sideways like reels. Dark, gold-trimmed, the Atlas tokens. */
+:root{
+  color-scheme:dark;
+  --ink:#06090f; --panel:#0f1a2e; --panel-2:#142238;
+  --gold:#c8aa6e; --text:#ebe4d3; --muted:#939bb0; --faint:#5b6580;
+  --rule:rgba(200,170,110,.22);
+  --f-display:"Marcellus SC","Cinzel",Georgia,serif;
+  --f-body:"Alegreya",Georgia,"Times New Roman",serif;
+  --f-mono:"Spline Sans Mono",ui-monospace,Menlo,monospace;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ink);color:var(--text);font-family:var(--f-body);font-size:18px;line-height:1.55;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+img{max-width:100%}
+[hidden]{display:none!important}
+a{color:var(--gold)}
+button,input{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+.wrap{max-width:1240px;margin-inline:auto}
+
+.bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:18px;border-bottom:1px solid var(--rule);flex-wrap:wrap}
+.brand{font-family:var(--f-display);font-size:20px;letter-spacing:.08em;color:var(--gold);display:flex;align-items:center;gap:10px;text-decoration:none}
+.brand svg{width:26px;height:26px}
+.nav{display:flex;gap:4px;flex-wrap:wrap}
+.nav a{font-family:var(--f-mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-decoration:none;padding:7px 12px}
+.nav a:hover{color:var(--text)}
+.nav a[aria-current="page"]{color:var(--ink);background:var(--gold)}
+
+.stage{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:28px;padding-block:32px 28px;align-items:start}
+.screen{position:relative;aspect-ratio:16/9;width:100%;background:#000;border:1px solid var(--rule);box-shadow:0 30px 80px -30px rgba(200,170,110,.25),0 0 0 6px #000}
+.screen iframe,.screen .poster{position:absolute;inset:0;width:100%;height:100%;border:0}
+.poster{background:#000 center/cover no-repeat;cursor:pointer;display:grid;place-items:center}
+.poster::before{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.65),transparent 50%)}
+.play{position:relative;width:84px;height:84px;border-radius:50%;border:2px solid var(--gold);background:rgba(6,9,15,.6);display:grid;place-items:center;transition:transform .2s,background .2s}
+.play::after{content:"";border-left:24px solid var(--gold);border-top:15px solid transparent;border-bottom:15px solid transparent;margin-left:6px}
+.poster:hover .play{transform:scale(1.08);background:rgba(200,170,110,.2)}
+.now .eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+.now h1{font-family:var(--f-display);font-weight:400;font-size:clamp(30px,3.6vw,46px);line-height:1.02;margin:10px 0 12px;text-wrap:balance}
+.now p{margin:0 0 14px;color:#cfd3dd;font-size:17px}
+.now .who{font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.champs{display:flex;gap:6px;flex-wrap:wrap;margin-top:14px}
+.champs a{display:inline-flex;align-items:center;gap:6px;text-decoration:none;color:var(--text);font-size:14px;border:1px solid var(--rule);padding:3px 8px 3px 3px}
+.champs a:hover{border-color:var(--gold)}
+.champs img{width:24px;height:24px;border-radius:50%;object-fit:cover}
+.yt{display:inline-block;margin-top:16px;font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+
+.tools{display:flex;gap:10px;flex-wrap:wrap;align-items:center;border-block:1px solid var(--rule);padding-block:12px;margin-bottom:8px}
+.tools input{flex:1 1 260px;min-width:0;background:var(--panel);border:1px solid var(--rule);padding:9px 12px;font-size:16px}
+.chips{display:flex;gap:6px;flex-wrap:wrap;min-width:0}
+.chip{display:inline-flex;align-items:center;gap:6px;background:transparent;border:1px solid var(--rule);padding:4px 10px 4px 5px;font-family:var(--f-mono);font-size:12px;color:var(--muted);cursor:pointer}
+.chip img{width:20px;height:20px}
+.chip[aria-pressed="true"]{color:var(--text);border-color:var(--chip);background:color-mix(in srgb,var(--chip) 18%,transparent)}
+
+.shelf{margin-top:30px}
+.shelf header{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.shelf h2{font-family:var(--f-display);font-weight:400;font-size:clamp(24px,2.8vw,32px);margin:0}
+.shelf h2 small{font-family:var(--f-mono);font-size:12px;letter-spacing:.1em;color:var(--muted);margin-left:10px}
+.shelf .sd{margin:0;color:var(--muted);font-size:15px}
+.reel{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(240px,280px);gap:14px;overflow-x:auto;padding-bottom:12px;scroll-snap-type:x proximity;scrollbar-width:thin;scrollbar-color:var(--gold-dim,#7d6a45) transparent}
+.tile{scroll-snap-align:start;background:none;border:0;padding:0;text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:8px;min-width:0}
+.tile .th{position:relative;aspect-ratio:16/9;width:100%;border:1px solid var(--rule);overflow:hidden;background:var(--panel)}
+.tile img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .35s cubic-bezier(.2,.8,.2,1),filter .3s;filter:saturate(.9)}
+.tile:hover img,.tile:focus-visible img{transform:scale(1.06);filter:saturate(1.1)}
+.tile .yr{position:absolute;left:8px;top:8px;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.1em;background:rgba(6,9,15,.8);color:var(--gold);padding:2px 6px}
+.tile[aria-current="true"] .th{border-color:var(--gold);box-shadow:0 0 0 2px var(--gold)}
+.tile .tt{font-size:16px;line-height:1.25;color:var(--text)}
+.tile .tm{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.06em;color:var(--faint);text-transform:uppercase}
+.empty{color:var(--muted);font-style:italic}
+
+footer{border-top:1px solid var(--rule);margin-top:48px;padding-block:24px 40px;color:var(--muted);font-size:14px;display:grid;gap:8px}
+footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width:80ch}
+@media (max-width:860px){.stage{grid-template-columns:1fr;gap:18px;padding-block:20px}.reel{grid-auto-columns:minmax(200px,72vw)}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="bar">
+    <a class="brand" href="./">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><polygon points="16,2 29,9.5 29,22.5 16,30 3,22.5 3,9.5" fill="none" stroke="#c8aa6e" stroke-width="1.5"/><circle cx="16" cy="16" r="5" fill="none" stroke="#c8aa6e" stroke-width="1.5"/><path d="M16 2v9M16 21v9M3 9.5l8 4.5M21 18l8 4.5M29 9.5l-8 4.5M11 18l-8 4.5" stroke="#c8aa6e" stroke-width="1"/></svg>
+      Runeterra Atlas
+    </a>
+    <nav class="nav" aria-label="Site"><a href="./">Atlas</a><a href="library.html">Library</a><a href="riftbound.html">Riftbound</a><a href="theater.html" aria-current="page">Theater</a></nav>
+  </header>
+
+  <section class="stage" aria-label="Now playing">
+    <div class="screen" id="screen"></div>
+    <div class="now" id="now"></div>
+  </section>
+
+  <div class="tools">
+    <input id="q" type="search" placeholder="Search cinematics, songs, champions…" aria-label="Search videos" autocomplete="off">
+    <div class="chips" id="regions" role="group" aria-label="Region"></div>
+  </div>
+
+  <div id="shelves"></div>
+
+  <footer>
+    <div>Videos play from YouTube and belong to their channels: League of Legends, LoL Esports, Riot Games Music, Netflix and Imagine Dragons. Most were collected from Riot's Universe site.</div>
+    <div class="legal">Runeterra Atlas was created under Riot Games' "Legal Jibber Jabber" policy using assets owned by Riot Games. Riot Games does not endorse or sponsor this project.</div>
+  </footer>
+</div>
+
+<script src="data/champions.js"></script>
+<script src="data/videos.js"></script>
+<script>
+const SHELVES=window.ATLAS_VIDEOS||[];
+const CH=Object.fromEntries((window.ATLAS_CHAMPS||[]).map(c=>[c.id,c]));
+const ALL=[]; SHELVES.forEach(s=>s.v.forEach(v=>{v.shelf=s.id;v.shelfT=s.t;ALL.push(v);}));
+const REG={demacia:["Demacia","#e8d395"],noxus:["Noxus","#e0503f"],piltover:["Piltover","#e8ab4f"],zaun:["Zaun","#7ee06f"],freljord:["Freljord","#93d8f4"],ionia:["Ionia","#ef84b0"],shurima:["Shurima","#f2c443"],targon:["Targon","#a596ff"],bilgewater:["Bilgewater","#46a8e8"],shadowisles:["Shadow Isles","#7af0d2"],bandle:["Bandle City","#d9ea5e"],ixtal:["Ixtal","#36cfa6"],void:["The Void","#b764ea"],wanderers:["Wanderers","#e9c46a"]};
+const EMB={ixtal:null,void:null};
+const esc=s=>String(s??"").replace(/[&<>"]/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch]));
+const thumb=y=>`https://i.ytimg.com/vi/${y}/hqdefault.jpg`;
+const big=y=>`https://i.ytimg.com/vi/${y}/maxresdefault.jpg`;
+const F={q:"",reg:new Set()};
+let current=null;
+
+document.getElementById("regions").innerHTML=Object.entries(REG).map(([k,[n,c]])=>`<button class="chip" type="button" data-v="${k}" aria-pressed="false" style="--chip:${c}">${k in EMB?"":`<img src="img/emblem/${k}.webp" alt="">`}${n}</button>`).join("");
+
+function show(v,autoplay){
+  current=v;
+  const scr=document.getElementById("screen");
+  if(autoplay){
+    scr.innerHTML=`<iframe src="https://www.youtube-nocookie.com/embed/${v.y}?autoplay=1&rel=0&modestbranding=1" title="${esc(v.t)}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
+  } else {
+    scr.innerHTML=`<button class="poster" type="button" aria-label="Play ${esc(v.t)}" style="background-image:url('${big(v.y)}'),url('${thumb(v.y)}')"><span class="play"></span></button>`;
+    scr.querySelector(".poster").onclick=()=>show(v,true);
+  }
+  const champs=v.ch.filter(c=>CH[c]).slice(0,10);
+  document.getElementById("now").innerHTML=`<div class="eyebrow">${esc(v.shelfT)} · ${esc(v.yr)}</div>
+    <h1>${esc(v.t)}</h1>${v.d?`<p>${esc(v.d)}</p>`:""}<div class="who">${esc(v.by)}</div>
+    ${champs.length?`<div class="champs">${champs.map(c=>`<a href="./#c-${c}"><img src="img/${c}-tile.webp" alt="">${esc(CH[c].name)}</a>`).join("")}</div>`:""}
+    <a class="yt" href="https://www.youtube.com/watch?v=${v.y}" target="_blank" rel="noopener">Watch on YouTube ↗</a>`;
+  document.querySelectorAll(".tile").forEach(t=>t.setAttribute("aria-current",String(t.dataset.y===v.y)));
+  try{history.replaceState(null,"","#v-"+v.y);}catch(e){}
+}
+function match(v){
+  if(F.reg.size&&!v.rg.some(r=>F.reg.has(r)))return false;
+  const q=F.q.trim().toLowerCase(); if(!q)return true;
+  return (v.t+" "+v.d+" "+v.by+" "+v.yr+" "+v.ch.map(c=>CH[c]?CH[c].name:c).join(" ")).toLowerCase().includes(q);
+}
+function render(){
+  const html=SHELVES.map(s=>{
+    const vs=s.v.filter(match); if(!vs.length)return "";
+    const order=s.id==="season"||s.id==="worlds"?vs.slice().reverse():vs.slice().reverse();
+    return `<section class="shelf"><header><div><h2>${esc(s.t)}<small>${vs.length}</small></h2><p class="sd">${esc(s.d)}</p></div></header>
+      <div class="reel">${order.map(v=>`<button class="tile" type="button" data-y="${v.y}" aria-current="${current&&current.y===v.y}">
+        <div class="th"><img src="${thumb(v.y)}" alt="" loading="lazy" decoding="async"><span class="yr">${esc(v.yr)}</span></div>
+        <span class="tt">${esc(v.t)}</span><span class="tm">${esc(v.by)}${v.ch.length?" · "+esc(v.ch.slice(0,3).map(c=>CH[c]?CH[c].name:c).join(", ")):""}</span></button>`).join("")}</div></section>`;
+  }).join("");
+  document.getElementById("shelves").innerHTML=html||`<p class="empty">Nothing matches. Try another search.</p>`;
+}
+document.getElementById("shelves").addEventListener("click",e=>{const t=e.target.closest(".tile");if(!t)return;const v=ALL.find(x=>x.y===t.dataset.y);if(v){show(v,true);window.scrollTo({top:0,behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"});}});
+let tm; document.getElementById("q").addEventListener("input",e=>{clearTimeout(tm);tm=setTimeout(()=>{F.q=e.target.value;render();},150);});
+document.getElementById("regions").addEventListener("click",e=>{const b=e.target.closest(".chip");if(!b)return;const k=b.dataset.v;F.reg.has(k)?F.reg.delete(k):F.reg.add(k);b.setAttribute("aria-pressed",String(F.reg.has(k)));render();});
+
+const P=new URLSearchParams(location.search);
+if(P.get("champion")){F.q=CH[P.get("champion")]?CH[P.get("champion")].name:P.get("champion");document.getElementById("q").value=F.q;}
+if(P.get("region")&&REG[P.get("region")]){F.reg.add(P.get("region"));document.querySelector(`.chip[data-v="${P.get("region")}"]`).setAttribute("aria-pressed","true");}
+render();
+const h=(location.hash||"").match(/^#v-([\w-]{11})$/);
+const start=(h&&ALL.find(v=>v.y===h[1]))||SHELVES.find(s=>s.id==="worlds").v.slice(-1)[0];
+show(start,false);
+</script>
+</body>
+</html>
