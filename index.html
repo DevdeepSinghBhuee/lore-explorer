@@ -73,6 +73,10 @@ header .nav{flex-wrap:wrap}
 .stat b{display:block;font-family:var(--f-display);font-size:38px;font-weight:400;color:var(--gold);line-height:1;font-variant-numeric:tabular-nums}
 .stat span{font-family:var(--f-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
 .cta{display:inline-flex;align-items:center;gap:10px;padding:12px 20px;border:1px solid var(--gold);color:var(--gold);text-decoration:none;font-family:var(--f-mono);font-size:13px;letter-spacing:.14em;text-transform:uppercase;transition:background .2s,color .2s}
+.worldsnow{display:flex;align-items:center;gap:8px;margin-top:16px;font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;color:var(--text);text-decoration:none}
+.worldsnow:hover{color:var(--gold)}
+.worldsnow .dot{width:8px;height:8px;border-radius:50%;background:#ff4655;animation:wn 1.4s infinite}
+@keyframes wn{50%{opacity:.3}}
 .cta:hover{background:var(--gold);color:var(--ink)}
 
 /* map */
@@ -350,7 +354,7 @@ footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width
       <svg viewBox="0 0 32 32" aria-hidden="true"><polygon points="16,2 29,9.5 29,22.5 16,30 3,22.5 3,9.5" fill="none" stroke="#c8aa6e" stroke-width="1.5"/><circle cx="16" cy="16" r="5" fill="none" stroke="#c8aa6e" stroke-width="1.5"/><path d="M16 2v9M16 21v9M3 9.5l8 4.5M21 18l8 4.5M29 9.5l-8 4.5M11 18l-8 4.5" stroke="#c8aa6e" stroke-width="1"/></svg>
       Runeterra Atlas
     </div>
-    <nav class="nav" aria-label="Site"><a href="./" aria-current="page">Atlas</a><a href="library.html">Library</a><a href="riftbound.html">Riftbound</a><a href="theater.html">Theater</a></nav>
+    <nav class="nav" aria-label="Site"><a href="./" aria-current="page">Atlas</a><a href="worlds.html">Worlds</a><a href="library.html">Library</a><a href="riftbound.html">Riftbound</a><a href="theater.html">Theater</a></nav>
   </header>
 
   <section class="hero">
@@ -362,6 +366,7 @@ footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width
       <p class="lede">No card games to unlock the next chapter. Open the map, step into a region, and see who lives there and how they are tied to each other.</p>
       <div class="stats" id="stats"></div>
       <a class="cta" href="#mapsec">Open the map <span aria-hidden="true">↓</span></a>
+      <a class="worldsnow" href="worlds.html"><span class="dot"></span>Worlds 2026 is on · live scores &amp; rosters →</a>
     </div>
   </section>
 

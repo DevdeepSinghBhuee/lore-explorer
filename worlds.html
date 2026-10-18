@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Worlds 2026</title>
+<meta name="description" content="Live schedule, results, teams and rosters for the 2026 League of Legends World Championship, in your local time.">
+<meta property="og:title" content="Worlds 2026 · Runeterra Atlas">
+<meta property="og:description" content="Live schedule, results and every roster at Worlds 2026.">
+<link rel="icon" href="img/emblem/wanderers.webp">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://esports-api.lolesports.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus+SC&family=Alegreya:ital,wght@0,400;0,500;0,700;1,400&family=Spline+Sans+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a broadcast desk. Scoreboard hero with the next or live match, stage tabs over a day-by-day schedule, a wall of team crests that open into rosters, and a trophy timeline. Atlas tokens; one hot accent for LIVE. */
+:root{
+  color-scheme:dark;
+  --ink:#070a12; --panel:#0f1a2e; --panel-2:#142238;
+  --gold:#c8aa6e; --gold-hi:#f0d9a0; --text:#ebe4d3; --muted:#939bb0; --faint:#5b6580;
+  --rule:rgba(200,170,110,.22); --win:#4fd1a5; --live:#ff4655;
+  --f-display:"Marcellus SC","Cinzel",Georgia,serif;
+  --f-body:"Alegreya",Georgia,"Times New Roman",serif;
+  --f-mono:"Spline Sans Mono",ui-monospace,Menlo,monospace;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ink);color:var(--text);font-family:var(--f-body);font-size:18px;line-height:1.55;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+img{max-width:100%}
+[hidden]{display:none!important}
+a{color:var(--gold)}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.wrap{max-width:1180px;margin-inline:auto}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:18px;border-bottom:1px solid var(--rule);flex-wrap:wrap}
+.brand{font-family:var(--f-display);font-size:20px;letter-spacing:.08em;color:var(--gold);display:flex;align-items:center;gap:10px;text-decoration:none}
+.brand svg{width:26px;height:26px}
+.nav{display:flex;gap:4px;flex-wrap:wrap}
+.nav a{font-family:var(--f-mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-decoration:none;padding:7px 12px}
+.nav a:hover{color:var(--text)}
+.nav a[aria-current="page"]{color:var(--ink);background:var(--gold)}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+
+.hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:36px;align-items:center;padding-block:48px 36px}
+h1{font-family:var(--f-display);font-weight:400;font-size:clamp(46px,7vw,96px);line-height:.9;margin:10px 0 14px}
+h1 span{display:block;font-size:.42em;letter-spacing:.24em;color:var(--gold);margin-top:10px}
+.lede{margin:0 0 18px;font-size:19px;max-width:40ch}
+.venues{display:grid;gap:6px;font-family:var(--f-mono);font-size:12px;letter-spacing:.06em;color:var(--muted)}
+.venues b{color:var(--text);font-weight:500}
+.board{position:relative;border:1px solid var(--rule);background:radial-gradient(ellipse at 50% 0%,rgba(200,170,110,.16),transparent 60%),var(--panel);padding:22px 22px 18px;box-shadow:0 30px 70px -40px rgba(200,170,110,.35)}
+.board .tag{display:flex;justify-content:space-between;align-items:center;gap:10px;font-family:var(--f-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:16px;flex-wrap:wrap}
+.pill{display:inline-flex;align-items:center;gap:7px;padding:4px 9px;border:1px solid var(--rule);color:var(--text)}
+.pill.live{border-color:var(--live);color:#fff;background:color-mix(in srgb,var(--live) 25%,transparent)}
+.pill.live::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--live);animation:blink 1.2s infinite}
+@keyframes blink{50%{opacity:.25}}
+.vs{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:14px}
+.side{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;min-width:0}
+.side img{width:min(110px,22vw);aspect-ratio:1;object-fit:contain;filter:drop-shadow(0 8px 18px rgba(0,0,0,.6))}
+.side .tn{font-family:var(--f-display);font-size:clamp(18px,2.2vw,24px);line-height:1.1}
+.side .rec{font-family:var(--f-mono);font-size:11px;color:var(--muted)}
+.score{font-family:var(--f-display);font-size:clamp(40px,6vw,64px);line-height:1;font-variant-numeric:tabular-nums;color:var(--gold-hi);white-space:nowrap}
+.score small{display:block;font-family:var(--f-mono);font-size:11px;letter-spacing:.14em;color:var(--muted);text-align:center;margin-top:6px}
+.cd{font-family:var(--f-mono);font-size:clamp(22px,3vw,30px);color:var(--gold-hi);text-align:center;font-variant-numeric:tabular-nums;white-space:nowrap}
+.cd small{display:block;font-size:11px;letter-spacing:.14em;color:var(--muted);margin-top:6px}
+.watch{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:18px}
+.watch a{font-family:var(--f-mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;padding:9px 14px;border:1px solid var(--gold);color:var(--gold)}
+.watch a.primary{background:var(--gold);color:var(--ink)}
+.feed{position:absolute;bottom:-26px;right:0;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.06em;color:var(--faint)}
+
+h2{font-family:var(--f-display);font-weight:400;font-size:clamp(28px,3.4vw,40px);margin:0}
+.sec{margin-top:56px}
+.sechead{display:flex;justify-content:space-between;align-items:end;gap:16px;flex-wrap:wrap;margin-bottom:16px}
+.sechead p{margin:0;color:var(--muted);font-size:16px}
+.tabs{display:flex;border:1px solid var(--rule);max-width:100%;overflow-x:auto}
+.tabs button{flex:none;background:transparent;border:0;border-right:1px solid var(--rule);padding:9px 14px;font-family:var(--f-mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);cursor:pointer}
+.tabs button:last-child{border-right:0}
+.tabs button[aria-selected="true"]{background:var(--gold);color:var(--ink)}
+.day{margin-top:20px}
+.day h3{font-family:var(--f-mono);font-weight:400;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin:0 0 8px;padding-bottom:6px;border-bottom:1px solid var(--rule)}
+.match{display:grid;grid-template-columns:76px minmax(0,1fr) auto minmax(0,1fr) 64px;align-items:center;gap:12px;padding:10px 4px;border-bottom:1px solid rgba(200,170,110,.08)}
+.match .time{font-family:var(--f-mono);font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.match .t{display:flex;align-items:center;gap:10px;min-width:0}
+.match .t.r{justify-content:flex-end;text-align:right}
+.match .t img{width:34px;height:34px;object-fit:contain;flex:none}
+.match .t span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.match .t.win span{color:var(--text);font-weight:700}
+.match .t.lose{opacity:.55}
+.match .sc{font-family:var(--f-display);font-size:22px;font-variant-numeric:tabular-nums;min-width:58px;text-align:center;color:var(--gold-hi)}
+.match .sc.pre{font-family:var(--f-mono);font-size:11px;color:var(--faint);letter-spacing:.1em}
+.match .meta{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.08em;color:var(--faint);text-align:right}
+.match.live{background:linear-gradient(90deg,color-mix(in srgb,var(--live) 14%,transparent),transparent 70%)}
+.match.live .meta{color:var(--live)}
+.tbd{color:var(--faint);font-style:italic}
+
+.lg{margin-top:20px}
+.lg h3{font-family:var(--f-mono);font-weight:400;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+.teams{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.team{display:flex;flex-direction:column;align-items:center;gap:8px;padding:16px 10px 12px;border:1px solid var(--rule);background:var(--panel);cursor:pointer;text-align:center;transition:border-color .2s,transform .2s}
+.team:hover{border-color:var(--gold);transform:translateY(-2px)}
+.team[aria-expanded="true"]{border-color:var(--gold);background:color-mix(in srgb,var(--gold) 10%,var(--panel))}
+.team img{width:64px;height:64px;object-fit:contain}
+.team .nm{font-size:16px;line-height:1.15}
+.team .sd{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.08em;color:var(--muted)}
+.team .sd.pi{color:var(--gold)}
+.roster{grid-column:1/-1;border:1px solid var(--gold);background:linear-gradient(135deg,color-mix(in srgb,var(--gold) 10%,var(--panel)),var(--panel));padding:18px;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
+.pl{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;min-width:0}
+.pl .ph{width:100%;max-width:150px;aspect-ratio:1;background:radial-gradient(circle at 50% 30%,var(--panel-2),transparent 70%);border-bottom:1px solid var(--rule);overflow:hidden}
+.pl img{width:100%;height:100%;object-fit:cover;object-position:top}
+.pl b{font-family:var(--f-display);font-weight:400;font-size:20px;line-height:1}
+.pl span{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+
+.trophy{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px}
+.yr{padding:14px;border:1px solid var(--rule);background:var(--panel)}
+.yr .y{font-family:var(--f-mono);font-size:12px;letter-spacing:.14em;color:var(--gold)}
+.yr .c{font-family:var(--f-display);font-size:20px;line-height:1.1;margin:4px 0}
+.yr .o{font-size:14px;color:var(--muted);line-height:1.35}
+.yr.t1{border-color:color-mix(in srgb,#e2012d 60%,transparent)}
+.anthem{display:flex;gap:16px;align-items:center;margin-top:16px;padding:14px;border:1px solid var(--rule);background:var(--panel);text-decoration:none;color:var(--text)}
+.anthem img{width:160px;aspect-ratio:16/9;object-fit:cover}
+.anthem b{font-family:var(--f-display);font-weight:400;font-size:22px;display:block}
+.anthem span{font-size:15px;color:var(--muted)}
+
+footer{border-top:1px solid var(--rule);margin-top:56px;padding-block:24px 40px;color:var(--muted);font-size:14px;display:grid;gap:8px}
+footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width:80ch}
+@media (max-width:860px){.hero{grid-template-columns:1fr;padding-block:30px 40px}.roster{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:560px){.match{grid-template-columns:56px minmax(0,1fr) auto minmax(0,1fr);gap:8px}.match .meta{display:none}.match .t img{width:26px;height:26px}.match .t span{font-size:15px}.roster{grid-template-columns:repeat(2,minmax(0,1fr))}.anthem img{width:110px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="bar">
+    <a class="brand" href="./">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><polygon points="16,2 29,9.5 29,22.5 16,30 3,22.5 3,9.5" fill="none" stroke="#c8aa6e" stroke-width="1.5"/><circle cx="16" cy="16" r="5" fill="none" stroke="#c8aa6e" stroke-width="1.5"/><path d="M16 2v9M16 21v9M3 9.5l8 4.5M21 18l8 4.5M29 9.5l-8 4.5M11 18l-8 4.5" stroke="#c8aa6e" stroke-width="1"/></svg>
+      Runeterra Atlas
+    </a>
+    <nav class="nav" aria-label="Site"><a href="./">Atlas</a><a href="worlds.html" aria-current="page">Worlds</a><a href="library.html">Library</a><a href="riftbound.html">Riftbound</a><a href="theater.html">Theater</a></nav>
+  </header>
+
+  <section class="hero">
+    <div>
+      <div class="eyebrow">League of Legends World Championship</div>
+      <h1>Worlds 2026<span>This Is Our Moment</span></h1>
+      <p class="lede">Nineteen teams, one Summoner's Cup. Live scores, every match in your local time, and the players behind each team.</p>
+      <div class="venues">
+        <div><b>Play-Ins</b> · Oct 15–18 · Riot Games Arena, Los Angeles</div>
+        <div><b>Swiss</b> · Oct 23–31 · Credit Union of Texas Event Center, Allen</div>
+        <div><b>Knockouts</b> · Nov 3–8 · Allen, Texas</div>
+        <div><b>Final</b> · Nov 14 · Barclays Center, Brooklyn</div>
+      </div>
+    </div>
+    <div class="board" id="board" aria-live="polite"></div>
+  </section>
+
+  <section class="sec" aria-labelledby="schH">
+    <div class="sechead">
+      <div><h2 id="schH">Schedule &amp; results</h2><p id="tzNote"></p></div>
+      <div class="tabs" role="tablist" id="tabs"></div>
+    </div>
+    <div id="schedule"></div>
+  </section>
+
+  <section class="sec" aria-labelledby="tmH">
+    <div class="sechead"><div><h2 id="tmH">The 19 teams</h2><p>Tap a team to see its Worlds lineup.</p></div></div>
+    <div id="teams"></div>
+  </section>
+
+  <section class="sec" aria-labelledby="anH">
+    <div class="sechead"><div><h2 id="anH">The anthem</h2></div></div>
+    <a class="anthem" href="theater.html#v-mlFxxNsExJc"><img src="https://i.ytimg.com/vi/mlFxxNsExJc/mqdefault.jpg" alt=""><div><b>Know My Name</b><span>True Damage return for the Worlds 2026 anthem. Watch it in the Theater, with every anthem since 2014.</span></div></a>
+  </section>
+
+  <section class="sec" aria-labelledby="hiH">
+    <div class="sechead"><div><h2 id="hiH">Every champion of the world</h2><p>Fifteen finals, from Jönköping to Chengdu.</p></div></div>
+    <div class="trophy" id="trophy"></div>
+  </section>
+
+  <footer>
+    <div>Schedule, results, logos and player photos come live from LoL Esports. Lineups follow published Worlds 2026 rosters. If the live feed can't be reached, the page shows a saved copy.</div>
+    <div class="legal">Runeterra Atlas was created under Riot Games' "Legal Jibber Jabber" policy using assets owned by Riot Games. Riot Games does not endorse or sponsor this project.</div>
+  </footer>
+</div>
+
+<script src="data/worlds.js"></script>
+<script>
+const API="https://esports-api.lolesports.com/persisted/gw/", KEY="0TvQnueqKa5mxJntVWt0w4LpLfEkrV1Ta8rQBb9Z", LEAGUE="98767975604431411";
+const TEAMS=window.WORLDS_TEAMS||[]; const byCode=Object.fromEntries(TEAMS.map(t=>[t.code,t]));
+const esc=s=>String(s??"").replace(/[&<>"]/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch]));
+const https=u=>(u||"").replace(/^http:\/\//,"https://");
+const TZ=Intl.DateTimeFormat().resolvedOptions().timeZone;
+const tzShort=(()=>{try{return new Intl.DateTimeFormat(undefined,{timeZoneName:"short"}).formatToParts(new Date()).find(p=>p.type==="timeZoneName").value;}catch(e){return "";}})();
+const fmtDay=d=>d.toLocaleDateString(undefined,{weekday:"long",month:"long",day:"numeric"});
+const fmtTime=d=>d.toLocaleTimeString(undefined,{hour:"numeric",minute:"2-digit"});
+document.getElementById("tzNote").textContent=`Times shown in your time zone (${tzShort||TZ}).`;
+let EVENTS=[], source="live", stage=null, openTeam=null;
+
+function norm(raw){return raw.map(e=>Array.isArray(e.tm)?e:{t:e.startTime,s:e.state,b:e.blockName,id:e.match&&e.match.id,bo:e.match&&e.match.strategy.count,
+  tm:(e.match?e.match.teams:[]).map(x=>[x.code,x.name,https(x.image),x.result?x.result.gameWins:null,x.result?x.result.outcome:null,x.record?x.record.wins+"-"+x.record.losses:null])});}
+async function load(){
+  try{
+    const r=await fetch(API+"getSchedule?hl=en-US&leagueId="+LEAGUE,{headers:{"x-api-key":KEY}});
+    if(!r.ok)throw new Error(r.status);
+    const j=await r.json(); EVENTS=norm(j.data.schedule.events.filter(e=>e.startTime>="2026-10-01")); source="live";
+  }catch(e){ if(!EVENTS.length){EVENTS=norm(window.WORLDS_SNAPSHOT||[]); source="saved";} }
+  EVENTS.sort((a,b)=>a.t.localeCompare(b.t));
+  render();
+}
+const STAGES=["Play-Ins","Swiss","Quarterfinals","Semifinals","Finals"];
+const teamCell=(x,right)=>{ if(!x||x[0]==="TBD")return `<div class="t${right?" r":""}"><span class="tbd">To be decided</span></div>`;
+  const cls=x[4]==="win"?"win":x[4]==="loss"?"lose":""; const img=`<img src="${esc(https(x[2]))}" alt="" loading="lazy">`;
+  const nm=`<span title="${esc(x[1])}">${esc(x[1])}</span>`;
+  return `<div class="t ${cls}${right?" r":""}">${right?nm+img:img+nm}</div>`;};
+function render(){
+  const now=Date.now();
+  const live=EVENTS.find(e=>e.s==="inProgress");
+  const next=EVENTS.find(e=>e.s==="unstarted"&&new Date(e.t).getTime()>now-3600e3);
+  const focus=live||next||EVENTS[EVENTS.length-1];
+  // board
+  const b=document.getElementById("board");
+  if(focus){
+    const [A,B]=focus.tm; const d=new Date(focus.t);
+    const centre=focus.s==="unstarted"?`<div class="cd" id="cd">–<small>${esc(fmtDay(d))} · ${esc(fmtTime(d))}</small></div>`:`<div class="score">${A&&A[3]!=null?A[3]:0} – ${B&&B[3]!=null?B[3]:0}<small>Best of ${focus.bo||1}</small></div>`;
+    const side=x=>x&&x[0]!=="TBD"?`<div class="side"><img src="${esc(https(x[2]))}" alt=""><div class="tn">${esc(x[1])}</div><div class="rec">${x[5]?esc(x[5])+" record":"&nbsp;"}</div></div>`:`<div class="side"><img src="https://static.lolesports.com/teams/team-tbd.png" alt=""><div class="tn tbd">To be decided</div><div class="rec">&nbsp;</div></div>`;
+    b.innerHTML=`<div class="tag"><span>${esc(focus.b)}${focus.s==="completed"?" · Final result":""}</span>${live?`<span class="pill live">Live now</span>`:focus.s==="unstarted"?`<span class="pill">Next match</span>`:`<span class="pill">Completed</span>`}</div>
+      <div class="vs">${side(A)}${centre}${side(B)}</div>
+      <div class="watch"><a class="${live?"primary":""}" href="https://lolesports.com/live/worlds" target="_blank" rel="noopener">${live?"Watch live":"LoL Esports"} ↗</a><a href="https://www.youtube.com/@lolesports/live" target="_blank" rel="noopener">YouTube ↗</a></div>
+      <div class="feed">${source==="live"?"Live data · refreshes automatically":"Saved copy · live feed unavailable"}</div>`;
+  }
+  // tabs
+  const present=STAGES.filter(s=>EVENTS.some(e=>e.b===s));
+  if(!stage){ stage=(live||next||{}).b||present[0]; }
+  document.getElementById("tabs").innerHTML=present.map(s=>`<button role="tab" type="button" aria-selected="${s===stage}" data-s="${s}">${s}</button>`).join("");
+  // schedule
+  const list=EVENTS.filter(e=>e.b===stage); const days={};
+  list.forEach(e=>{const k=new Date(e.t).toDateString();(days[k]||(days[k]=[])).push(e);});
+  document.getElementById("schedule").innerHTML=Object.values(days).map(evs=>`<div class="day"><h3>${esc(fmtDay(new Date(evs[0].t)))}</h3>${evs.map(e=>{
+    const [A,B]=e.tm; const done=e.s!=="unstarted";
+    return `<div class="match${e.s==="inProgress"?" live":""}"><div class="time">${esc(fmtTime(new Date(e.t)))}</div>${teamCell(A,false)}
+      <div class="sc${done?"":" pre"}">${done?`${A&&A[3]!=null?A[3]:0}–${B&&B[3]!=null?B[3]:0}`:"VS"}</div>${teamCell(B,true)}
+      <div class="meta">${e.s==="inProgress"?"LIVE":"BO"+(e.bo||1)}</div></div>`;}).join("")}</div>`).join("")||`<p class="tbd">Matches for this stage haven't been announced yet.</p>`;
+  tick();
+}
+document.getElementById("tabs").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;stage=b.dataset.s;render();});
+function tick(){
+  const el=document.getElementById("cd"); if(!el)return;
+  const next=EVENTS.find(e=>e.s==="unstarted"&&new Date(e.t).getTime()>Date.now()-3600e3); if(!next)return;
+  let s=Math.max(0,Math.floor((new Date(next.t).getTime()-Date.now())/1000));
+  const dd=Math.floor(s/86400); s%=86400; const hh=Math.floor(s/3600); s%=3600; const mm=Math.floor(s/60); const ss=s%60;
+  el.firstChild.nodeValue=(dd?dd+"d ":"")+String(hh).padStart(2,"0")+":"+String(mm).padStart(2,"0")+":"+String(ss).padStart(2,"0");
+}
+setInterval(tick,1000);
+setInterval(()=>{ if(document.visibilityState==="visible") load(); }, 60000);
+
+// teams
+const LEAGUES=["LCK","LPL","LEC","LCS","LCP","CBLOL"];
+function renderTeams(){
+  document.getElementById("teams").innerHTML=LEAGUES.map(L=>{const ts=TEAMS.filter(t=>t.league===L);return `<div class="lg"><h3>${L}</h3><div class="teams">${ts.map(t=>`<button class="team" type="button" data-s="${t.slug}" aria-expanded="${openTeam===t.slug}"><img src="${esc(t.img)}" alt="" loading="lazy"><span class="nm">${esc(t.name)}</span><span class="sd${t.start==="Play-Ins"?" pi":""}">${esc(t.seed)} · ${t.start==="Play-Ins"?"Play-Ins":"Swiss"}</span></button>`).join("")}${ts.some(t=>t.slug===openTeam)?roster(TEAMS.find(t=>t.slug===openTeam)):""}</div></div>`;}).join("");
+}
+const ROLE={top:"Top",jungle:"Jungle",mid:"Mid",bottom:"Bot",support:"Support"};
+function roster(t){return `<div class="roster">${t.roster.map(([n,r,img])=>`<div class="pl"><div class="ph">${img?`<img src="${esc(img)}" alt="${esc(n)}" loading="lazy">`:""}</div><b>${esc(n)}</b><span>${ROLE[r]||r}</span></div>`).join("")}</div>`;}
+document.getElementById("teams").addEventListener("click",e=>{const b=e.target.closest(".team");if(!b)return;openTeam=openTeam===b.dataset.s?null:b.dataset.s;renderTeams();});
+renderTeams();
+
+// history
+const HIST=[[2025,"T1","3–2","KT Rolster","Chengdu"],[2024,"T1","3–2","Bilibili Gaming","London"],[2023,"T1","3–0","Weibo Gaming","Seoul"],[2022,"DRX","3–2","T1","San Francisco"],[2021,"EDward Gaming","3–2","DWG KIA","Reykjavík"],[2020,"DAMWON Gaming","3–1","Suning","Shanghai"],[2019,"FunPlus Phoenix","3–0","G2 Esports","Paris"],[2018,"Invictus Gaming","3–0","Fnatic","Incheon"],[2017,"Samsung Galaxy","3–0","SK Telecom T1","Beijing"],[2016,"SK Telecom T1","3–2","Samsung Galaxy","Los Angeles"],[2015,"SK Telecom T1","3–1","KOO Tigers","Berlin"],[2014,"Samsung White","3–1","Royal Club","Seoul"],[2013,"SK Telecom T1","3–0","Royal Club","Los Angeles"],[2012,"Taipei Assassins","3–1","Azubu Frost","Los Angeles"],[2011,"Fnatic","2–1","against All authority","Jönköping"]];
+document.getElementById("trophy").innerHTML=HIST.map(([y,c,s,o,v])=>`<div class="yr${/T1/.test(c)?" t1":""}"><div class="y">${y} · ${esc(v)}</div><div class="c">${esc(c)}</div><div class="o">beat ${esc(o)} ${s}</div></div>`).join("");
+
+EVENTS=norm(window.WORLDS_SNAPSHOT||[]); source="saved"; render(); load();
+</script>
+</body>
+</html>
