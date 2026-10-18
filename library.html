@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Runeterra Library</title>
+<meta name="description" content="All 1,647 Legends of Runeterra cards with their art and lore, filterable by region, type and set.">
+<meta property="og:title" content="Runeterra Library">
+<meta property="og:description" content="Every Legends of Runeterra card and the line of lore it carries.">
+<link rel="icon" href="img/emblem/wanderers.webp">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus+SC&family=Alegreya:ital,wght@0,400;0,500;0,700;1,400&family=Spline+Sans+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: an archive reading room. Quote of the moment up top, a filter bar that sticks, then a dense wall of cards; one card opens into a lore plate. Shares the Atlas tokens. */
+:root{
+  color-scheme:dark;
+  --ink:#080d18; --panel:#0f1a2e; --panel-2:#142238;
+  --gold:#c8aa6e; --gold-dim:#7d6a45; --text:#ebe4d3; --muted:#939bb0; --faint:#5b6580;
+  --rule:rgba(200,170,110,.22);
+  --rc:#c8aa6e;
+  --f-display:"Marcellus SC","Cinzel",Georgia,serif;
+  --f-body:"Alegreya",Georgia,"Times New Roman",serif;
+  --f-mono:"Spline Sans Mono",ui-monospace,Menlo,monospace;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ink);color:var(--text);font-family:var(--f-body);font-size:18px;line-height:1.55;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+img{max-width:100%}
+[hidden]{display:none!important}
+a{color:var(--gold)}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.wrap{max-width:1240px;margin-inline:auto}
+
+.bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:18px;border-bottom:1px solid var(--rule);flex-wrap:wrap}
+.brand{font-family:var(--f-display);font-size:20px;letter-spacing:.08em;color:var(--gold);display:flex;align-items:center;gap:10px;text-decoration:none}
+.brand svg{width:26px;height:26px}
+.nav{display:flex;gap:4px}
+.nav a{font-family:var(--f-mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-decoration:none;padding:7px 12px;border:1px solid transparent}
+.nav a:hover{color:var(--text)}
+.nav a[aria-current="page"]{color:var(--ink);background:var(--gold)}
+
+.hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:40px;align-items:center;padding-block:56px 36px}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+h1{font-family:var(--f-display);font-weight:400;font-size:clamp(42px,6.4vw,84px);line-height:.95;margin:12px 0 18px;text-wrap:balance}
+h1 em{font-style:normal;color:var(--gold)}
+.lede{font-size:20px;max-width:40ch;margin:0 0 22px}
+.counts{display:flex;gap:22px;flex-wrap:wrap}
+.counts div b{display:block;font-family:var(--f-display);font-weight:400;font-size:32px;color:var(--gold);line-height:1;font-variant-numeric:tabular-nums}
+.counts div span{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+
+.oracle{position:relative;display:grid;grid-template-columns:150px minmax(0,1fr);gap:22px;align-items:center;padding:22px;border:1px solid var(--rule);background:linear-gradient(135deg,color-mix(in srgb,var(--rc) 14%,var(--panel)),var(--panel) 60%)}
+.oracle img{width:150px;aspect-ratio:400/602;object-fit:cover;filter:drop-shadow(0 14px 24px rgba(0,0,0,.6));cursor:pointer}
+.oracle blockquote{margin:0;font-size:21px;line-height:1.45;font-style:italic;text-wrap:pretty}
+.oracle .src{margin-top:12px;font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.oracle .src b{color:var(--rc);font-weight:500}
+.oracle .again{position:absolute;top:10px;right:10px;background:transparent;border:1px solid var(--rule);color:var(--muted);font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:5px 9px;cursor:pointer}
+.oracle .again:hover{color:var(--text);border-color:var(--gold)}
+
+.filters{min-width:0;position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:color-mix(in srgb,var(--ink) 92%,transparent);backdrop-filter:blur(8px);border-block:1px solid var(--rule);padding-block:12px;display:grid;gap:10px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.filters{grid-template-columns:minmax(0,1fr)}
+.filters>*{min-width:0}
+.search{flex:1 1 260px;min-width:0}
+.search input{width:100%;background:var(--panel);border:1px solid var(--rule);padding:9px 12px;font-size:16px}
+select{flex:1 1 150px;min-width:0;max-width:100%;background:var(--panel);border:1px solid var(--rule);padding:9px 10px;font-size:14px;font-family:var(--f-mono);letter-spacing:.04em}
+.seg{display:flex;border:1px solid var(--rule);max-width:100%;overflow-x:auto;scrollbar-width:none}
+.seg::-webkit-scrollbar{display:none}
+.seg button{flex:none}
+.seg button{background:transparent;border:0;border-right:1px solid var(--rule);padding:8px 11px;font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);cursor:pointer}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--gold);color:var(--ink)}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{display:inline-flex;align-items:center;gap:6px;background:transparent;border:1px solid var(--rule);padding:4px 10px 4px 5px;font-family:var(--f-mono);font-size:12px;color:var(--muted);cursor:pointer}
+.chip img{width:20px;height:20px}
+.chip:hover{color:var(--text)}
+.chip[aria-pressed="true"]{color:var(--text);border-color:var(--chip);background:color-mix(in srgb,var(--chip) 18%,transparent)}
+.status{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;color:var(--muted);margin:16px 0 12px}
+.status b{color:var(--text);font-weight:500}
+.clear{background:none;border:0;color:var(--gold);text-decoration:underline;cursor:pointer;font-family:var(--f-mono);font-size:12px}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px 12px}
+.card{background:none;border:0;padding:0;cursor:pointer;text-align:left;display:flex;flex-direction:column;gap:6px;min-width:0}
+.card .img{aspect-ratio:400/602;width:100%;background:radial-gradient(ellipse at 50% 40%,var(--panel-2),var(--panel));border-radius:6px;overflow:hidden;transition:transform .2s cubic-bezier(.2,.8,.2,1),filter .2s}
+.card img{width:100%;height:100%;object-fit:cover;display:block}
+.card:hover .img,.card:focus-visible .img{transform:translateY(-4px) scale(1.02);filter:drop-shadow(0 10px 18px rgba(0,0,0,.6)) brightness(1.06)}
+.card .nm{font-size:14px;line-height:1.25;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.card .mt{font-family:var(--f-mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint)}
+.more{display:block;margin:28px auto 8px;background:transparent;border:1px solid var(--gold);color:var(--gold);padding:11px 20px;font-family:var(--f-mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;cursor:pointer}
+.more:hover{background:var(--gold);color:var(--ink)}
+.empty{padding:60px 0;text-align:center;color:var(--muted);font-style:italic}
+
+dialog{border:0;padding:0;background:transparent;color:var(--text);max-width:min(1000px,calc(100vw - 24px));width:100%;max-height:calc(100vh - 24px)}
+dialog::backdrop{background:rgba(4,6,12,.82);backdrop-filter:blur(4px)}
+.plate{position:relative;display:grid;grid-template-columns:minmax(0,360px) minmax(0,1fr);gap:28px;padding:28px;background:linear-gradient(140deg,color-mix(in srgb,var(--rc) 16%,#0d1424),#0b1120 55%);border:1px solid color-mix(in srgb,var(--rc) 45%,transparent);max-height:calc(100vh - 24px);overflow:auto}
+.plate .big{width:100%;aspect-ratio:400/602;object-fit:cover;filter:drop-shadow(0 18px 30px rgba(0,0,0,.6))}
+.plate h2{font-family:var(--f-display);font-weight:400;font-size:clamp(30px,4vw,44px);line-height:1;margin:4px 0 10px}
+.meta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+.tagm{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;padding:3px 7px;border:1px solid var(--rule);color:var(--muted)}
+.tagm.reg{color:var(--text);border-color:color-mix(in srgb,var(--rc) 60%,transparent);display:inline-flex;align-items:center;gap:5px}
+.tagm.reg img{width:14px;height:14px}
+.plate blockquote{margin:0 0 18px;padding-left:16px;border-left:2px solid var(--rc);font-size:20px;line-height:1.5;font-style:italic}
+.plate h3{font-family:var(--f-mono);font-weight:400;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin:16px 0 6px}
+.plate p{margin:0;font-size:16.5px;color:#cfd3dd}
+.plate .credit{margin-top:18px;font-family:var(--f-mono);font-size:11px;letter-spacing:.06em;color:var(--muted)}
+.plate .goto{display:inline-block;margin-top:18px;font-family:var(--f-mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink);background:var(--rc);padding:9px 14px;text-decoration:none}
+.x{position:absolute;top:10px;right:10px;width:36px;height:36px;background:rgba(0,0,0,.4);border:1px solid var(--rule);color:var(--text);font-size:20px;line-height:1;cursor:pointer}
+.step{display:flex;gap:8px;margin-top:20px}
+.step button{background:transparent;border:1px solid var(--rule);color:var(--muted);padding:8px 12px;font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;cursor:pointer}
+.step button:hover{color:var(--text);border-color:var(--gold)}
+
+footer{border-top:1px solid var(--rule);margin-top:48px;padding-block:24px 40px;color:var(--muted);font-size:14px;display:grid;gap:8px}
+footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width:80ch}
+
+@media (max-width:860px){.hero{grid-template-columns:1fr;gap:24px;padding-block:36px 24px}.plate{grid-template-columns:1fr;padding:20px}.plate .big{max-width:260px;margin-inline:auto;display:block}}
+@media (max-width:480px){.filters{position:static}.seg button{padding:8px 9px;font-size:11px}.chip{font-size:11px}.grid{grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:10px 8px}.card .nm{font-size:12.5px}.oracle{grid-template-columns:96px minmax(0,1fr);padding:16px;gap:14px}.oracle img{width:96px}.oracle blockquote{font-size:17px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="bar">
+    <a class="brand" href="./">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><polygon points="16,2 29,9.5 29,22.5 16,30 3,22.5 3,9.5" fill="none" stroke="#c8aa6e" stroke-width="1.5"/><circle cx="16" cy="16" r="5" fill="none" stroke="#c8aa6e" stroke-width="1.5"/><path d="M16 2v9M16 21v9M3 9.5l8 4.5M21 18l8 4.5M29 9.5l-8 4.5M11 18l-8 4.5" stroke="#c8aa6e" stroke-width="1"/></svg>
+      Runeterra Atlas
+    </a>
+    <nav class="nav" aria-label="Site"><a href="./">Atlas</a><a href="library.html" aria-current="page">Library</a></nav>
+  </header>
+
+  <section class="hero">
+    <div>
+      <div class="eyebrow">Legends of Runeterra · card archive</div>
+      <h1>Every card holds <em>a line of lore.</em></h1>
+      <p class="lede">The full Legends of Runeterra collection, with the story each card tells. Filter by region, search a name or a phrase, and open any card to read it.</p>
+      <div class="counts" id="counts"></div>
+    </div>
+    <figure class="oracle" id="oracle" style="margin:0">
+      <img id="oImg" alt="">
+      <div>
+        <blockquote id="oQuote"></blockquote>
+        <div class="src" id="oSrc"></div>
+      </div>
+      <button class="again" type="button" id="oAgain">Another</button>
+    </figure>
+  </section>
+
+  <section class="filters" aria-label="Filter cards">
+    <div class="row">
+      <label class="search"><span hidden>Search cards</span><input id="q" type="search" placeholder="Search names, lore lines, artists…" autocomplete="off"></label>
+      <div class="seg" id="types" role="group" aria-label="Card type"></div>
+      <select id="set" aria-label="Expansion"></select>
+      <select id="sort" aria-label="Sort">
+        <option value="set">Release order</option>
+        <option value="name">Name A–Z</option>
+        <option value="cost">Cost</option>
+      </select>
+    </div>
+    <div class="chips" id="regions" role="group" aria-label="Region"></div>
+  </section>
+
+  <div class="status" id="status" aria-live="polite"></div>
+  <div class="grid" id="grid"></div>
+  <p class="empty" id="empty" hidden>No cards match. Try fewer filters.</p>
+  <button class="more" id="more" type="button" hidden>Show more cards</button>
+
+  <footer>
+    <div>Card art and text from Legends of Runeterra, via Riot's Data Dragon. Artists are credited on each card.</div>
+    <div class="legal">Runeterra Atlas was created under Riot Games' "Legal Jibber Jabber" policy using assets owned by Riot Games. Riot Games does not endorse or sponsor this project.</div>
+  </footer>
+</div>
+
+<dialog id="dlg" aria-label="Card details">
+  <div class="plate" id="plate"></div>
+</dialog>
+
+<script src="data/champions.js"></script>
+<script src="data/cards.js"></script>
+<script>
+const CARDS = window.LOR_CARDS || [];
+const CH = Object.fromEntries((window.ATLAS_CHAMPS||[]).map(c=>[c.id,c]));
+const REG = {
+  Demacia:{name:"Demacia",color:"#e8d395",emb:"demacia"}, Noxus:{name:"Noxus",color:"#e0503f",emb:"noxus"},
+  PiltoverZaun:{name:"Piltover & Zaun",color:"#e8ab4f",emb:"piltover"}, Freljord:{name:"Freljord",color:"#93d8f4",emb:"freljord"},
+  Ionia:{name:"Ionia",color:"#ef84b0",emb:"ionia"}, Shurima:{name:"Shurima",color:"#f2c443",emb:"shurima"},
+  Targon:{name:"Targon",color:"#a596ff",emb:"targon"}, Bilgewater:{name:"Bilgewater",color:"#46a8e8",emb:"bilgewater"},
+  ShadowIsles:{name:"Shadow Isles",color:"#7af0d2",emb:"shadowisles"}, BandleCity:{name:"Bandle City",color:"#d9ea5e",emb:"bandle"},
+  Runeterra:{name:"Runeterra",color:"#e9c46a",emb:"wanderers"}
+};
+const TYPES=[["all","All"],["Champion","Champions"],["Unit","Units"],["Spell","Spells"],["Landmark","Landmarks"],["Equipment","Equipment"]];
+const SETS=[...new Set(CARDS.map(c=>c.s))];
+const PAGE=60;
+const esc=s=>String(s??"").replace(/[&<>"]/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch]));
+const img=c=>`img/cards/${c.c}.webp`;
+const kind=c=>c.ra==="Champion"?"Champion":c.t;
+const S={q:"",type:"all",regions:new Set(),set:"",sort:"set",shown:PAGE};
+let list=[];
+
+// counts
+const n=t=>CARDS.filter(c=>kind(c)===t).length;
+document.getElementById("counts").innerHTML=[[CARDS.length,"Cards"],[n("Champion"),"Champions"],[SETS.length,"Expansions"],[new Set(CARDS.map(c=>c.ar).filter(Boolean)).size,"Artists"]]
+  .map(([v,l])=>`<div><b>${v.toLocaleString()}</b><span>${l}</span></div>`).join("");
+
+// controls
+document.getElementById("types").innerHTML=TYPES.map(([v,l])=>`<button type="button" data-v="${v}" aria-pressed="${v==="all"}">${l}</button>`).join("");
+document.getElementById("set").innerHTML=`<option value="">All expansions</option>`+SETS.map(s=>`<option>${esc(s)}</option>`).join("");
+document.getElementById("regions").innerHTML=Object.entries(REG).map(([k,r])=>`<button class="chip" type="button" data-v="${k}" aria-pressed="false" style="--chip:${r.color}"><img src="img/emblem/${r.emb}.webp" alt="">${r.name}</button>`).join("");
+
+const grid=document.getElementById("grid");
+function apply(){
+  const q=S.q.trim().toLowerCase();
+  list=CARDS.filter(c=>{
+    if(S.type!=="all"&&kind(c)!==S.type)return false;
+    if(S.set&&c.s!==S.set)return false;
+    if(S.regions.size&&!c.r.some(r=>S.regions.has(r)))return false;
+    if(q&&!(c.n.toLowerCase().includes(q)||c.f.toLowerCase().includes(q)||c.ar.toLowerCase().includes(q)||c.st.join(" ").toLowerCase().includes(q)))return false;
+    return true;
+  });
+  if(S.sort==="name")list.sort((a,b)=>a.n.localeCompare(b.n));
+  else if(S.sort==="cost")list.sort((a,b)=>(a.k??0)-(b.k??0)||a.n.localeCompare(b.n));
+  render();
+}
+function render(){
+  const slice=list.slice(0,S.shown);
+  grid.innerHTML=slice.map((c,i)=>`<button class="card" type="button" data-i="${i}">
+    <div class="img"><img src="${img(c)}" alt="${esc(c.n)}" loading="lazy" decoding="async"></div>
+    <span class="nm">${esc(c.n)}</span><span class="mt">${esc(kind(c))}${c.r.length?" · "+esc(c.r.map(r=>REG[r]?REG[r].name:r).join(" / ")):""}</span></button>`).join("");
+  document.getElementById("empty").hidden=list.length>0;
+  document.getElementById("more").hidden=S.shown>=list.length;
+  const filtered=S.q||S.type!=="all"||S.regions.size||S.set;
+  document.getElementById("status").innerHTML=`Showing <b>${Math.min(S.shown,list.length).toLocaleString()}</b> of <b>${list.length.toLocaleString()}</b> cards${filtered?` · <button class="clear" type="button" id="clear">Clear filters</button>`:""}`;
+  const cl=document.getElementById("clear"); if(cl)cl.onclick=reset;
+}
+function reset(){S.q="";S.type="all";S.regions.clear();S.set="";S.shown=PAGE;
+  document.getElementById("q").value="";document.getElementById("set").value="";
+  document.querySelectorAll("#types button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.v==="all")));
+  document.querySelectorAll("#regions .chip").forEach(b=>b.setAttribute("aria-pressed","false"));apply();}
+let t; document.getElementById("q").addEventListener("input",e=>{clearTimeout(t);t=setTimeout(()=>{S.q=e.target.value;S.shown=PAGE;apply();},160);});
+document.getElementById("types").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;S.type=b.dataset.v;S.shown=PAGE;document.querySelectorAll("#types button").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));apply();});
+document.getElementById("regions").addEventListener("click",e=>{const b=e.target.closest(".chip");if(!b)return;const v=b.dataset.v;S.regions.has(v)?S.regions.delete(v):S.regions.add(v);b.setAttribute("aria-pressed",String(S.regions.has(v)));S.shown=PAGE;apply();});
+document.getElementById("set").addEventListener("change",e=>{S.set=e.target.value;S.shown=PAGE;apply();});
+document.getElementById("sort").addEventListener("change",e=>{S.sort=e.target.value;apply();});
+document.getElementById("more").addEventListener("click",()=>{S.shown+=PAGE*2;render();});
+if("IntersectionObserver" in window){new IntersectionObserver(es=>{if(es[0].isIntersecting&&S.shown<list.length){S.shown+=PAGE;render();}},{rootMargin:"600px"}).observe(document.getElementById("more"));}
+grid.addEventListener("click",e=>{const b=e.target.closest(".card");if(b)open(+b.dataset.i);});
+
+// card plate
+const dlg=document.getElementById("dlg"), plate=document.getElementById("plate");
+let cur=-1;
+function open(i){
+  cur=i; const c=list[i]; if(!c)return;
+  const r0=REG[c.r[0]]||REG.Runeterra; plate.style.setProperty("--rc",r0.color);
+  const champ=c.ch&&CH[c.ch];
+  const stats=c.t==="Unit"?`<span class="tagm">${c.a} / ${c.h}</span>`:"";
+  plate.innerHTML=`<button class="x" type="button" aria-label="Close" id="x">×</button>
+    <img class="big" src="${img(c)}" alt="${esc(c.n)} card">
+    <div style="min-width:0">
+      <div class="eyebrow" style="color:var(--rc)">${esc(c.s)} · ${esc(c.ra||kind(c))}</div>
+      <h2>${esc(c.n)}</h2>
+      <div class="meta">${c.r.map(r=>REG[r]?`<span class="tagm reg"><img src="img/emblem/${REG[r].emb}.webp" alt="">${REG[r].name}</span>`:"").join("")}
+        <span class="tagm">${esc(c.t)}</span><span class="tagm">Cost ${c.k??"–"}</span>${stats}${c.st.map(s=>`<span class="tagm">${esc(s)}</span>`).join("")}</div>
+      ${c.f?`<blockquote>${esc(c.f)}</blockquote>`:""}
+      ${c.d?`<h3>On the card</h3><p>${esc(c.d)}</p>`:""}
+      ${c.l?`<h3>Level up</h3><p>${esc(c.l)}</p>`:""}
+      ${champ?`<a class="goto" href="./#c-${champ.id}">Meet ${esc(champ.name)} in the Atlas →</a>`:""}
+      <div class="credit">${c.ar?`Art by ${esc(c.ar)} · `:""}Card ${esc(c.c)}</div>
+      <div class="step"><button type="button" id="pv">← Previous</button><button type="button" id="nx">Next →</button></div>
+    </div>`;
+  document.getElementById("x").onclick=()=>dlg.close();
+  document.getElementById("pv").onclick=()=>open((cur-1+list.length)%list.length);
+  document.getElementById("nx").onclick=()=>open((cur+1)%list.length);
+  if(!dlg.open)dlg.showModal();
+  try{history.replaceState(null,"","#card-"+c.c);}catch(e){}
+}
+dlg.addEventListener("close",()=>{try{history.replaceState(null,"",location.pathname);}catch(e){}});
+dlg.addEventListener("click",e=>{if(e.target===dlg)dlg.close();});
+dlg.addEventListener("keydown",e=>{if(e.key==="ArrowRight")open((cur+1)%list.length);if(e.key==="ArrowLeft")open((cur-1+list.length)%list.length);});
+
+// lore of the moment
+const LORE=CARDS.filter(c=>c.f&&c.f.length>40&&c.f.length<260);
+function oracle(){
+  const c=LORE[Math.floor(Math.random()*LORE.length)]; const r0=REG[c.r[0]]||REG.Runeterra;
+  const o=document.getElementById("oracle"); o.style.setProperty("--rc",r0.color);
+  document.getElementById("oImg").src=img(c); document.getElementById("oImg").alt=c.n;
+  document.getElementById("oQuote").textContent=c.f;
+  document.getElementById("oSrc").innerHTML=`<b>${esc(c.n)}</b> · ${esc(r0.name)} · ${esc(c.s)}`;
+  document.getElementById("oImg").onclick=()=>{reset();const i=list.indexOf(c);open(i);};
+}
+document.getElementById("oAgain").onclick=oracle;
+
+// filter from URL: library.html?region=Noxus or ?champion=garen ; open card from #card-CODE
+const P=new URLSearchParams(location.search);
+if(P.get("region")&&REG[P.get("region")]){S.regions.add(P.get("region"));document.querySelector(`#regions .chip[data-v="${P.get("region")}"]`).setAttribute("aria-pressed","true");}
+if(P.get("q")){S.q=P.get("q");document.getElementById("q").value=S.q;}
+oracle(); apply();
+const h=(location.hash||"").match(/^#card-(\w+)$/);
+if(h){const i=list.findIndex(c=>c.c===h[1]); if(i>=0)open(i); else {reset(); const j=list.findIndex(c=>c.c===h[1]); if(j>=0)open(j);}}
+</script>
+</body>
+</html>

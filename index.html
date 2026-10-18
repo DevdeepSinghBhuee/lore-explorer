@@ -56,6 +56,10 @@ button{font:inherit;color:inherit}
 .bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:18px;border-bottom:1px solid var(--rule)}
 .brand{font-family:var(--f-display);font-size:20px;letter-spacing:.08em;color:var(--gold);display:flex;align-items:center;gap:10px}
 .brand svg{width:26px;height:26px}
+.nav{display:flex;gap:4px}
+.nav a{font-family:var(--f-mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-decoration:none;padding:7px 12px}
+.nav a:hover{color:var(--text)}
+.nav a[aria-current="page"]{color:var(--ink);background:var(--gold)}
 .bar .tag{font-family:var(--f-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
 
 /* hero */
@@ -236,6 +240,17 @@ section.region{--scene-h:clamp(380px,46vw,600px);padding-top:calc(var(--scene-h)
 .story{font-family:var(--f-mono);font-size:11px;letter-spacing:.06em;color:var(--text);margin-left:auto;text-decoration:none;border-bottom:1px solid var(--c)}
 .story:hover{color:var(--c)}
 
+.extra{margin-top:18px}
+.extra h5{font-family:var(--f-mono);font-weight:400;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+.stories{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px}
+.stories a{display:inline-block;font-size:15px;color:var(--text);text-decoration:none;border:1px solid color-mix(in srgb,var(--c,var(--r)) 40%,transparent);padding:4px 10px}
+.stories a:hover{border-color:var(--c,var(--r));color:var(--c,var(--r))}
+.lor{display:flex;gap:8px;flex-wrap:wrap}
+.lor a{display:block;width:74px;transition:transform .2s}
+.lor a:hover{transform:translateY(-3px)}
+.lor img{width:100%;aspect-ratio:400/602;object-fit:cover;border-radius:4px}
+.libcta{display:inline-block;margin-top:14px;font-family:var(--f-mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--r);text-decoration:none;border-bottom:1px solid var(--r)}
+
 /* region dossier */
 .region{padding-block:56px 40px;border-top:1px solid var(--rule);margin-top:40px;position:relative}
 .rhead{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:24px;align-items:end;margin-bottom:28px}
@@ -330,7 +345,7 @@ footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width
       <svg viewBox="0 0 32 32" aria-hidden="true"><polygon points="16,2 29,9.5 29,22.5 16,30 3,22.5 3,9.5" fill="none" stroke="#c8aa6e" stroke-width="1.5"/><circle cx="16" cy="16" r="5" fill="none" stroke="#c8aa6e" stroke-width="1.5"/><path d="M16 2v9M16 21v9M3 9.5l8 4.5M21 18l8 4.5M29 9.5l-8 4.5M11 18l-8 4.5" stroke="#c8aa6e" stroke-width="1"/></svg>
       Runeterra Atlas
     </div>
-    <div class="tag">Fan project · Worlds 2026 edition</div>
+    <nav class="nav" aria-label="Site"><a href="./" aria-current="page">Atlas</a><a href="library.html">Library</a></nav>
   </header>
 
   <section class="hero">
@@ -389,6 +404,7 @@ footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width
         <p class="tagline" id="rTag"></p>
         <p class="desc" id="rDesc"></p>
         <div class="dna" id="rDna" aria-label="Region design notes"></div>
+        <a class="libcta" id="rLib" href="library.html">Browse this region's cards in the Library →</a>
       </div>
       <div class="nav">
         <button id="prev" type="button">← <span id="prevName"></span></button>
@@ -431,6 +447,8 @@ footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width
 </div>
 
 <script src="data/champions.js"></script>
+<script src="data/stories.js"></script>
+<script src="data/champcards.js"></script>
 <script>
 const REGIONS = [
   {id:"demacia",name:"Demacia",color:"#e8d395",x:210,y:228,side:"below",
@@ -1339,6 +1357,8 @@ function onRegionChange(rid){
   document.getElementById("tFaces").innerHTML=rc.slice(0,6).map(c=>`<img src="${esc(c.img)}" alt="${esc(c.name)}" title="${esc(c.name)}">`).join("");
   document.getElementById("tGoName").textContent=r.name;
   document.getElementById("rEmb").src=emblem(rid);
+  {const LR={demacia:"Demacia",noxus:"Noxus",piltover:"PiltoverZaun",zaun:"PiltoverZaun",freljord:"Freljord",ionia:"Ionia",shurima:"Shurima",targon:"Targon",bilgewater:"Bilgewater",shadowisles:"ShadowIsles",bandle:"BandleCity",wanderers:"Runeterra"}[rid];
+   const a=document.getElementById("rLib"); a.hidden=!LR; if(LR){a.href="library.html?region="+LR; a.textContent="Browse "+(rid==="piltover"||rid==="zaun"?"Piltover & Zaun":regById[rid].name)+" cards in the Library →";}}
   applyTheme(rid);
   drawHighlight();
 }
@@ -1822,7 +1842,9 @@ function renderDetail(){
         <div class="chips">${(c.tags||[]).map(t=>`<span class="chip-t">${esc(t)}</span>`).join("")}<a class="story" href="https://universe.leagueoflegends.com/en_US/champion/${esc(({renata:"renataglasc"})[c.id]||(c.dd||c.id).toLowerCase())}/" target="_blank" rel="noopener">Full story on Universe ↗</a></div>
       </div>
     </div>
-    <div class="ties"><h5>Ties</h5>${ties || `<p class="none">A loner, as far as the records go.</p>`}</div>`;
+    <div class="ties"><h5>Ties</h5>${ties || `<p class="none">A loner, as far as the records go.</p>`}</div>
+    ${(()=>{const st=(window.ATLAS_STORIES||{})[c.id]||[];return st.length?`<div class="extra"><h5>Official stories</h5><ul class="stories">${st.map(([t,u])=>`<li><a href="https://universe.leagueoflegends.com/en_US/story/${esc(u)}/" target="_blank" rel="noopener">${esc(t)}<span aria-hidden="true"> ↗</span></a></li>`).join("")}</ul></div>`:"";})()}
+    ${(()=>{const L=(window.ATLAS_LOR||{})[c.id]||[];return L.length?`<div class="extra"><h5>In Legends of Runeterra</h5><div class="lor">${L.map(([code,n])=>`<a href="library.html#card-${code}" title="${esc(n)}"><img src="img/cards/${code}.webp" alt="${esc(n)}" loading="lazy"></a>`).join("")}</div></div>`:"";})()}`;
   document.querySelectorAll("#detail .tie").forEach(t=>t.addEventListener("click",()=>{
     const id=t.dataset.id; const crossing = byId[id].region!==current;
     selectChamp(id);
@@ -1842,8 +1864,11 @@ renderMap();
 document.getElementById("allChamps").innerHTML = CHAMPS.slice().sort((a,b)=>a.name.localeCompare(b.name)).map(c=>`<option value="${esc(c.name)}">${esc(regById[c.region].name)}</option>`).join("");
 (function(){const f=document.getElementById("find");const go=()=>{const v=f.value.trim().toLowerCase();if(!v)return;const c=CHAMPS.find(x=>x.name.toLowerCase()===v)||CHAMPS.find(x=>x.name.toLowerCase().startsWith(v));if(c){selectChamp(c.id);f.value="";f.blur();document.getElementById("region").scrollIntoView({behavior:"smooth"});}};
 f.addEventListener("change",go);f.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();go();}});})();
-const start = (location.hash||"").slice(1);
-openRegion(regById[start] ? start : "zaun", null, false);
+const start0 = (location.hash||"").slice(1);
+const startChamp = start0.startsWith("c-") && byId[start0.slice(2)] ? start0.slice(2) : null;
+const start = startChamp ? byId[startChamp].region : start0;
+openRegion(regById[start] ? start : "zaun", startChamp, false);
+if(startChamp) setTimeout(()=>document.getElementById("region").scrollIntoView(),300);
 buildTerrain();
 </script>
 </body>
