@@ -199,12 +199,12 @@ function render(){
     const over=h>H-ground-top-8?`<span class="over" style="left:50%">↑ ${fmtH(p.cm)}</span>`:"";
     return `<button type="button" class="fig${p.human?" human":""}" data-id="${p.id}" aria-pressed="${p.id===sel}" aria-label="${esc(name)}, ${fmtH(p.cm)}" style="width:${w}px">
       <div class="body" style="height:${h}px;width:${w}px">${inner}<div class="head"></div></div>${over}
-      <span class="cap"><b>${esc(name)}</b><i>${fmtH(p.cm)} · ${ftin(p.cm)}</i></span></button>`;
+      ${scale==="giant"&&!p.human&&p.cm<300&&p.id!==sel?"":`<span class="cap"><b>${esc(name)}</b><i>${fmtH(p.cm)} · ${ftin(p.cm)}</i></span>`}</button>`;
   }).join("");
   stage.innerHTML=g+`<div class="row" style="--ground:${ground}px;--gap:${scale==="human"?26:14}px">${figs}</div>`;
   // the row can be wider than the plate (Galio at human scale); stretch the stage to match so the grid spans it
   const row=stage.querySelector(".row");stage.style.width=Math.max(row.scrollWidth,stage.parentElement.clientWidth)+"px";
-  document.querySelectorAll(".fig").forEach(f=>f.addEventListener("click",()=>{sel=f.dataset.id;document.querySelectorAll(".fig").forEach(x=>x.setAttribute("aria-pressed",x===f));card();history.replaceState(null,"","#h-"+sel);}));
+  document.querySelectorAll(".fig").forEach(f=>f.addEventListener("click",()=>{sel=f.dataset.id;document.querySelectorAll(".fig").forEach(x=>x.setAttribute("aria-pressed",x===f));card();history.replaceState(null,"","#h-"+sel);if(scale==="giant")render();}));
 }
 function card(){
   const p=people.find(x=>x.id===sel)||people[people.length-1];const el=document.getElementById("card");
