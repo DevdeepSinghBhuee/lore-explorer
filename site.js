@@ -8,8 +8,8 @@
   "use strict";
   var GROUPS=[
     {t:"Champions",items:[["journey.html","Journeys","A guided tour of any champion"],["skins.html","Skins","Every skin and its splash art"],["timeline.html","Timeline","Every champion in release order"]]},
-    {t:"Lore",items:[["./","Atlas","The map of Runeterra and its web of bonds"],["reading.html","Reading Room","Every official story and comic"]]},
-    {t:"Play",items:[["daily.html","Runeterra Daily","Guess today's champions: clues, splash, lore"]]},
+    {t:"Lore",items:[["atlas.html","Atlas","The map of Runeterra and its web of bonds"],["reading.html","Reading Room","Every official story and comic"]]},
+    {t:"Play",items:[["./","Runeterra Daily","Guess today's champions: clues, splash, lore"]]},
     {t:"Esports",items:[["worlds.html","Worlds 2026","Live scores, schedule and teams"],["players.html","Players","The pros at Worlds 2026"]]},
     {t:"Watch & Listen",items:[["theater.html","Theater","Official cinematics and trailers"],["music.html","Music","Anthems, bands and champion themes"]]},
     {t:"Card games",items:[["library.html","Runeterra cards","Every Legends of Runeterra card"],["riftbound.html","Riftbound","The Riftbound trading card game"]]}

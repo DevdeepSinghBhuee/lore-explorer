@@ -101,7 +101,7 @@ footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width
       <svg viewBox="0 0 32 32" aria-hidden="true"><polygon points="16,2 29,9.5 29,22.5 16,30 3,22.5 3,9.5" fill="none" stroke="#c8aa6e" stroke-width="1.5"/><circle cx="16" cy="16" r="5" fill="none" stroke="#c8aa6e" stroke-width="1.5"/><path d="M16 2v9M16 21v9M3 9.5l8 4.5M21 18l8 4.5M29 9.5l-8 4.5M11 18l-8 4.5" stroke="#c8aa6e" stroke-width="1"/></svg>
       Runeterra Atlas
     </a>
-    <nav class="nav" aria-label="Site"><a href="./">Atlas</a><a href="journey.html">Journeys</a><a href="worlds.html">Worlds</a><a href="players.html">Players</a><a href="music.html">Music</a><a href="skins.html">Skins</a><a href="reading.html">Reading</a><a href="timeline.html">Timeline</a><a href="library.html">Library</a><a href="riftbound.html">Riftbound</a><a href="theater.html" aria-current="page">Theater</a></nav>
+    <nav class="nav" aria-label="Site"><a href="atlas.html">Atlas</a><a href="journey.html">Journeys</a><a href="worlds.html">Worlds</a><a href="players.html">Players</a><a href="music.html">Music</a><a href="skins.html">Skins</a><a href="reading.html">Reading</a><a href="timeline.html">Timeline</a><a href="library.html">Library</a><a href="riftbound.html">Riftbound</a><a href="theater.html" aria-current="page">Theater</a></nav>
   </header>
 
   <section class="stage" aria-label="Now playing">
@@ -150,7 +150,7 @@ function show(v,autoplay){
   const champs=v.ch.filter(c=>CH[c]).slice(0,10);
   document.getElementById("now").innerHTML=`<div class="eyebrow">${esc(v.shelfT)} · ${esc(v.yr)}</div>
     <h1>${esc(v.t)}</h1>${v.d?`<p>${esc(v.d)}</p>`:""}<div class="who">${esc(v.by)}</div>
-    ${champs.length?`<div class="champs">${champs.map(c=>`<a href="./#c-${c}"><img src="img/${c}-tile.webp" alt="">${esc(CH[c].name)}</a>`).join("")}</div>`:""}
+    ${champs.length?`<div class="champs">${champs.map(c=>`<a href="atlas.html#c-${c}"><img src="img/${c}-tile.webp" alt="">${esc(CH[c].name)}</a>`).join("")}</div>`:""}
     <a class="yt" href="https://www.youtube.com/watch?v=${v.y}" target="_blank" rel="noopener">Watch on YouTube ↗</a>`;
   document.querySelectorAll(".tile").forEach(t=>t.setAttribute("aria-current",String(t.dataset.y===v.y)));
   try{history.replaceState(null,"","#v-"+v.y);}catch(e){}

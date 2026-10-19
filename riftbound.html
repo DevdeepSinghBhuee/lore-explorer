@@ -132,7 +132,7 @@ footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width
       <svg viewBox="0 0 32 32" aria-hidden="true"><polygon points="16,2 29,9.5 29,22.5 16,30 3,22.5 3,9.5" fill="none" stroke="#c8aa6e" stroke-width="1.5"/><circle cx="16" cy="16" r="5" fill="none" stroke="#c8aa6e" stroke-width="1.5"/><path d="M16 2v9M16 21v9M3 9.5l8 4.5M21 18l8 4.5M29 9.5l-8 4.5M11 18l-8 4.5" stroke="#c8aa6e" stroke-width="1"/></svg>
       Runeterra Atlas
     </a>
-    <nav class="nav" aria-label="Site"><a href="./">Atlas</a><a href="journey.html">Journeys</a><a href="worlds.html">Worlds</a><a href="players.html">Players</a><a href="music.html">Music</a><a href="skins.html">Skins</a><a href="reading.html">Reading</a><a href="timeline.html">Timeline</a><a href="library.html">Library</a><a href="riftbound.html" aria-current="page">Riftbound</a><a href="theater.html">Theater</a></nav>
+    <nav class="nav" aria-label="Site"><a href="atlas.html">Atlas</a><a href="journey.html">Journeys</a><a href="worlds.html">Worlds</a><a href="players.html">Players</a><a href="music.html">Music</a><a href="skins.html">Skins</a><a href="reading.html">Reading</a><a href="timeline.html">Timeline</a><a href="library.html">Library</a><a href="riftbound.html" aria-current="page">Riftbound</a><a href="theater.html">Theater</a></nav>
   </header>
 
   <section class="hero">
@@ -253,7 +253,7 @@ function open(k){
       <div class="meta">${c.d.map(d=>`<span class="tagm"><i style="background:${DOM[d]}"></i>${d}</span>`).join("")}<span class="tagm">${esc(c.t)}</span><span class="tagm">${esc(c.ra)}</span>${stat.map(s=>`<span class="tagm">${s}</span>`).join("")}${c.tg.map(t=>`<span class="tagm">${esc(t)}</span>`).join("")}</div>
       ${c.tx?`<h3>Ability</h3><p>${esc(c.tx)}</p>`:""}
       ${c.fx?`<h3>Effect</h3><p>${esc(c.fx)}</p>`:""}
-      ${champ?`<a class="goto" href="./#c-${champ.id}">Meet ${esc(champ.name)} in the Atlas →</a>`:""}
+      ${champ?`<a class="goto" href="atlas.html#c-${champ.id}">Meet ${esc(champ.name)} in the Atlas →</a>`:""}
       <div class="credit">${c.ar?`Art by ${esc(c.ar)} · `:""}Riftbound ${esc(c.s)}</div>
       <div class="step"><button type="button" id="pv">← Previous</button><button type="button" id="nx">Next →</button></div>
     </div>`;

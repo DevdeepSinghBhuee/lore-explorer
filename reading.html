@@ -169,7 +169,7 @@ footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width
       <svg viewBox="0 0 32 32" aria-hidden="true"><polygon points="16,2 29,9.5 29,22.5 16,30 3,22.5 3,9.5" fill="none" stroke="#c8aa6e" stroke-width="1.5"/><circle cx="16" cy="16" r="5" fill="none" stroke="#c8aa6e" stroke-width="1.5"/><path d="M16 2v9M16 21v9M3 9.5l8 4.5M21 18l8 4.5M29 9.5l-8 4.5M11 18l-8 4.5" stroke="#c8aa6e" stroke-width="1"/></svg>
       Runeterra Atlas
     </a>
-    <nav class="nav" aria-label="Site"><a href="./">Atlas</a><a href="journey.html">Journeys</a><a href="worlds.html">Worlds</a><a href="players.html">Players</a><a href="music.html">Music</a><a href="skins.html">Skins</a><a href="reading.html" aria-current="page">Reading</a><a href="timeline.html">Timeline</a><a href="library.html">Library</a><a href="riftbound.html">Riftbound</a><a href="theater.html">Theater</a></nav>
+    <nav class="nav" aria-label="Site"><a href="atlas.html">Atlas</a><a href="journey.html">Journeys</a><a href="worlds.html">Worlds</a><a href="players.html">Players</a><a href="music.html">Music</a><a href="skins.html">Skins</a><a href="reading.html" aria-current="page">Reading</a><a href="timeline.html">Timeline</a><a href="library.html">Library</a><a href="riftbound.html">Riftbound</a><a href="theater.html">Theater</a></nav>
   </header>
 
   <section class="intro">
@@ -291,7 +291,7 @@ function render(){
   document.getElementById("more").hidden=S.shown>=list.length;
   const filtered=S.q||S.len!=="all"||S.regions.size||S.champ;
   const lm=list.reduce((a,s)=>a+s.min,0);
-  document.getElementById("status").innerHTML=`<b>${list.length}</b> ${list.length===1?"story":"stories"}${S.champ?` featuring <a href="./#c-${S.champ}">${esc(CH[S.champ].name)}</a>`:""} · about <b>${lm<90?lm:Math.round(lm/60)}</b> ${lm<90?"minutes":"hours"} of reading${filtered?` · <button class="clear" type="button" id="clear">Clear filters</button>`:""}`;
+  document.getElementById("status").innerHTML=`<b>${list.length}</b> ${list.length===1?"story":"stories"}${S.champ?` featuring <a href="atlas.html#c-${S.champ}">${esc(CH[S.champ].name)}</a>`:""} · about <b>${lm<90?lm:Math.round(lm/60)}</b> ${lm<90?"minutes":"hours"} of reading${filtered?` · <button class="clear" type="button" id="clear">Clear filters</button>`:""}`;
   const cl=document.getElementById("clear"); if(cl)cl.onclick=()=>{reset();apply();renderComics();};
 }
 function reset(){S.q="";S.len="all";S.regions.clear();S.champ="";S.shown=PAGE;
@@ -323,7 +323,7 @@ function renderComics(){
         <div class="cov"><img src="${img(c.img,c.ar>1?720:420)}" alt="${esc(c.t)} cover" loading="lazy" decoding="async"></div>
         <span class="nm">${esc(c.t)}</span><span class="dt">${fdate(c.date)}</span></button>`).join("")}</div></section>`;}).join("");
   window._groups=groups;
-  document.getElementById("cstatus").innerHTML=`<b>${pool.length}</b> comic ${pool.length===1?"issue":"issues"}${S.champ?` featuring <a href="./#c-${S.champ}">${esc(CH[S.champ].name)}</a>`:""}${pool.length?"":" — none yet for this champion."}`;
+  document.getElementById("cstatus").innerHTML=`<b>${pool.length}</b> comic ${pool.length===1?"issue":"issues"}${S.champ?` featuring <a href="atlas.html#c-${S.champ}">${esc(CH[S.champ].name)}</a>`:""}${pool.length?"":" — none yet for this champion."}`;
 }
 document.getElementById("racks").addEventListener("click",e=>{const b=e.target.closest(".issue");if(b){const L=window._groups[b.dataset.k];open(L[+b.dataset.i],L);}});
 
@@ -340,7 +340,7 @@ document.getElementById("tComics").onclick=()=>{tab("comics");try{history.replac
 // plate
 const dlg=document.getElementById("dlg"), plate=document.getElementById("plate");
 let cur=null, curList=[];
-const who=ch=>ch.length?`<h4>Featuring</h4><div class="who">${ch.map(c=>`<a href="./#c-${c}"><img src="img/${c}-tile.webp" alt="">${esc(CH[c].name)}</a>`).join("")}</div>`:"";
+const who=ch=>ch.length?`<h4>Featuring</h4><div class="who">${ch.map(c=>`<a href="atlas.html#c-${c}"><img src="img/${c}-tile.webp" alt="">${esc(CH[c].name)}</a>`).join("")}</div>`:"";
 function open(x,L){
   if(!x)return; cur=x; curList=L||[x];
   plate.style.setProperty("--rc",rc(x.ch));

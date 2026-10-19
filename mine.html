@@ -111,7 +111,7 @@ footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width
       <svg viewBox="0 0 32 32" aria-hidden="true"><polygon points="16,2 29,9.5 29,22.5 16,30 3,22.5 3,9.5" fill="none" stroke="#c8aa6e" stroke-width="1.5"/><circle cx="16" cy="16" r="5" fill="none" stroke="#c8aa6e" stroke-width="1.5"/><path d="M16 2v9M16 21v9M3 9.5l8 4.5M21 18l8 4.5M29 9.5l-8 4.5M11 18l-8 4.5" stroke="#c8aa6e" stroke-width="1"/></svg>
       Runeterra Atlas
     </a>
-    <nav class="nav" aria-label="Site"><a href="./">Atlas</a><a href="journey.html">Journeys</a><a href="reading.html">Reading</a><a href="mine.html" aria-current="page">My champions</a></nav>
+    <nav class="nav" aria-label="Site"><a href="atlas.html">Atlas</a><a href="journey.html">Journeys</a><a href="reading.html">Reading</a><a href="mine.html" aria-current="page">My champions</a></nav>
   </header>
 
   <section class="intro">
@@ -180,7 +180,7 @@ function render(){
       <button class="unstar" type="button" data-fav="${id}" title="Remove from my champions" aria-label="Remove ${esc(c.name)} from my champions">★</button>
       <div class="body"><h3>${esc(c.name)}<small>${esc(rg.name||"")} · ${esc(c.title)}</small></h3>
         ${mine.length?`<div class="mini"><i style="width:${done/mine.length*100}%"></i></div><div class="stat"><b>${done}</b> of <b>${mine.length}</b> ${mine.length===1?"story":"stories"} read</div>`:`<div class="stat">No Riot stories about ${esc(c.name)} yet.</div>`}
-        <div class="links"><a href="journey.html?c=${id}">Journey</a><a href="reading.html?champion=${id}">Stories</a><a href="skins.html?champion=${id}">Skins</a><a href="./#c-${id}">Atlas</a></div></div></article>`;}).join("")}</div>`
+        <div class="links"><a href="journey.html?c=${id}">Journey</a><a href="reading.html?champion=${id}">Stories</a><a href="skins.html?champion=${id}">Skins</a><a href="atlas.html#c-${id}">Atlas</a></div></div></article>`;}).join("")}</div>`
     :`<div class="empty"><p>No favourites yet. Open any champion's journey and press <b>☆ Add to my champions</b>.</p><a class="btn" href="journey.html">Find a champion</a></div>`;
 
   const q=STORIES.filter(s=>!read[s.s]&&s.ch.some(id=>favs.includes(id))).sort((a,b)=>a.min-b.min).slice(0,8);
