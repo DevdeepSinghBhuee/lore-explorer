@@ -17,15 +17,16 @@ Custom domain is possible later via Pages settings + CNAME file (not set up).
 | riftbound.html | 1,407 Riftbound TCG cards, domain chips; images hotlinked from Riot CDN. |
 | theater.html | 147 official videos in 8 shelves, youtube-nocookie embeds, `#v-<id>`. |
 | players.html | 97 Worlds 2026 players: search/role/team filters (`?team=CODE`), dossier dialog with 6 signature champions (link to Atlas `#c-<id>`) and a Worlds timeline. Deep link `#p-<slug>`. Worlds rosters link here. |
+| skins.html | Skins wardrobe: 1,994 skins (no base skins/chromas) as loading-screen portraits, rarity gems, featured splash, filters (search, rarity, skin line, region, Legacy), splash plate with Riot description. `?champion=<id>`, `?line=<id>`, deep link `#s-<champ>-<num>` (num "C" = the 2026 "Classic" skins, art from CommunityDragon). Atlas champion panel shows a lazy-loaded skins strip linking here. |
 | music.html | Music hub: 13 shelves (anthems, virtual bands, Arcane S1/S2/score, Pentakill, Star Guardian, login themes from videos.js, champion songs, Warsongs, DJ Sona, LoR, long listens). One docked YouTube IFrame-API player (youtube-nocookie; kept ≥200px tall per YouTube's rules) plays a shelf in order, shuffle, Media Session controls. Deep links `#s-<shelf>`, `#t-<shelf>-<n>`. |
 
-Nav on every page: Atlas(./) · Worlds · Players · Music · Library · Riftbound · Theater. Every footer carries Riot's
+Nav on every page: Atlas(./) · Worlds · Players · Music · Skins · Library · Riftbound · Theater. Every footer carries Riot's
 "Legal Jibber Jabber" fan-content notice — keep it on any new page.
 
 ## Data (data/*.js, plain globals)
 champions.js (173 champs: id, dd, name, title, region, role, tags, bio, hand) · cards.js · stories.js ·
 champcards.js · riftbound.js (RB_SETS, RB_CARDS) · champrb.js · videos.js (ATLAS_VIDEOS shelves) ·
-worlds.js (WORLDS_TEAMS, WORLDS_SNAPSHOT) · players.js (ATLAS_PLAYERS, saved 2026-10-19) · music.js (ATLAS_MUSIC shelves, saved 2026-10-19). Bonds live in index.html as [a,b,type,note,source,necritVideo]; source r = Riot Universe text, w = League Wiki Relations,
+worlds.js (WORLDS_TEAMS, WORLDS_SNAPSHOT) · players.js (ATLAS_PLAYERS, saved 2026-10-19) · music.js (ATLAS_MUSIC shelves, saved 2026-10-19) · skins.js (ATLAS_SKINS by champion + ATLAS_SKIN_LINES, saved 2026-10-19, patch 16.20). Bonds live in index.html as [a,b,type,note,source,necritVideo]; source r = Riot Universe text, w = League Wiki Relations,
 u = only listed as related by Riot (note says no official story explains it). Reviewed 2026-10-19: 77 re-typed, 34 verified as Linked, 129 'u'.
 
 ## Sources (all free)
@@ -40,6 +41,10 @@ u = only listed as related by Riot (note says no official story explains it). Re
   Credit Leaguepedia (CC BY-SA 3.0) in the footer. Refresh after Worlds ends to fill 2026 placings.
 - Music: Riot Games Music's YouTube playlists (youtube.com/@RiotGamesMusic/playlists), read in the browser pane: parse ytInitialData
   lockupViewModel items on /playlist?list=…; check embeddability with /oembed (non-200 = can't embed). Each shelf keeps its source playlist id.
+- Skins: CommunityDragon raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/skins.json + skinlines.json (game client data; read in the
+  browser pane — the workspace can't reach it), joined with Data Dragon championFull.json from the mirror. Images hotlinked from
+  ddragon.leagueoflegends.com/cdn/img/champion/{loading,splash}/<dd>_<num>.jpg. Big browser exports: a javascript_tool result that is too large
+  is saved to a file under ~/.claude/projects/.../tool-results/ — read it with python instead of retyping.
 - Lore cross-checks: League Wiki API leagueoflegends.fandom.com/api.php (action=parse, Relations section); Necrit's uploads
   (channel UCiUHGAbtjCrLO3ZPrTfle3Q) matched by champion names in titles.
 - Esports: esports-api.lolesports.com/persisted/gw/ (getSchedule, getTeams, getStandings), header
@@ -62,4 +67,5 @@ Must work at phone width with no horizontal scroll (watch grid children: `min-wi
 2. ~~Music hub~~ (done 2026-10-19).
 3. ~~Enrich Linked bonds~~ (done 2026-10-19; 129 still have no official explanation — revisit when Riot publishes more).
 5. Champion size chart: built and REMOVED 2026-10-19 at Devdeep's request (didn't like it; too few official heights — only 12). Don't rebuild.
-4. Custom domain.
+4. Custom domain (costs money yearly — conflicts with the zero-cost rule; only if Devdeep insists).
+6. ~~Skins gallery~~ (done 2026-10-19). Next agreed: 7. Comics & short stories shelf, then 8. Champion release timeline (League Wiki dates).

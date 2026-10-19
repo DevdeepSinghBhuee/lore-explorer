@@ -255,6 +255,11 @@ section.region{--scene-h:clamp(380px,46vw,600px);padding-top:calc(var(--scene-h)
 .stories a{display:inline-block;font-size:15px;color:var(--text);text-decoration:none;border:1px solid color-mix(in srgb,var(--c,var(--r)) 40%,transparent);padding:4px 10px}
 .stories a:hover{border-color:var(--c,var(--r));color:var(--c,var(--r))}
 .lor{display:flex;gap:8px;flex-wrap:wrap}
+.extra.skins h5 a{margin-left:8px;color:var(--gold);text-decoration:none;letter-spacing:.1em}
+.skrow{display:flex;gap:8px;overflow-x:auto;min-width:0;padding-bottom:8px;scrollbar-width:thin;scrollbar-color:var(--gold-dim,#7d6a45) transparent}
+.skrow a{flex:none;width:68px;transition:transform .2s}
+.skrow a:hover{transform:translateY(-3px)}
+.skrow img{display:block;width:100%;aspect-ratio:308/560;object-fit:cover;border-radius:4px;background:rgba(255,255,255,.04)}
 .lor a{display:block;width:74px;transition:transform .2s}
 .lor a:hover{transform:translateY(-3px)}
 .lor img{width:100%;aspect-ratio:400/602;object-fit:cover;border-radius:4px}
@@ -361,7 +366,7 @@ footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width
       <svg viewBox="0 0 32 32" aria-hidden="true"><polygon points="16,2 29,9.5 29,22.5 16,30 3,22.5 3,9.5" fill="none" stroke="#c8aa6e" stroke-width="1.5"/><circle cx="16" cy="16" r="5" fill="none" stroke="#c8aa6e" stroke-width="1.5"/><path d="M16 2v9M16 21v9M3 9.5l8 4.5M21 18l8 4.5M29 9.5l-8 4.5M11 18l-8 4.5" stroke="#c8aa6e" stroke-width="1"/></svg>
       Runeterra Atlas
     </div>
-    <nav class="nav" aria-label="Site"><a href="./" aria-current="page">Atlas</a><a href="worlds.html">Worlds</a><a href="players.html">Players</a><a href="music.html">Music</a><a href="library.html">Library</a><a href="riftbound.html">Riftbound</a><a href="theater.html">Theater</a></nav>
+    <nav class="nav" aria-label="Site"><a href="./" aria-current="page">Atlas</a><a href="worlds.html">Worlds</a><a href="players.html">Players</a><a href="music.html">Music</a><a href="skins.html">Skins</a><a href="library.html">Library</a><a href="riftbound.html">Riftbound</a><a href="theater.html">Theater</a></nav>
   </header>
 
   <section class="hero">
@@ -1840,6 +1845,19 @@ function renderWeb(){
   });
 }
 
+// Skins strip: data/skins.js is large, so it loads only when a champion panel first opens
+let skinsLoading=null;
+function fillSkins(c){
+  const box=document.getElementById("skinsBox"); if(!box)return;
+  if(!window.ATLAS_SKINS){
+    if(!skinsLoading)skinsLoading=new Promise(res=>{const s=document.createElement("script");s.src="data/skins.js";s.onload=res;s.onerror=res;document.head.appendChild(s);});
+    skinsLoading.then(()=>{const b=document.getElementById("skinsBox");if(b&&b.dataset.c===c.id&&window.ATLAS_SKINS)fillSkins(c);});
+    return;
+  }
+  const K=window.ATLAS_SKINS[c.id]||[]; if(!K.length){box.remove();return;}
+  const src=k=>k[7]?"https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/"+k[7]:`https://ddragon.leagueoflegends.com/cdn/img/champion/loading/${c.dd}_${k[0]}.jpg`;
+  box.innerHTML=`<h5>Skins · ${K.length} <a href="skins.html?champion=${c.id}">Browse all →</a></h5><div class="skrow">${K.map(k=>`<a href="skins.html#s-${c.id}-${k[0]}" title="${esc(k[1])}"><img src="${src(k)}" alt="${esc(k[1])}" loading="lazy" decoding="async" referrerpolicy="no-referrer"></a>`).join("")}</div>`;
+}
 function renderDetail(){
   const c = byId[selected], col = regById[c.region].color;
   const ties = bondsOf(c.id).map(b=>{
@@ -1866,7 +1884,9 @@ function renderDetail(){
     ${(()=>{const st=(window.ATLAS_STORIES||{})[c.id]||[];return st.length?`<div class="extra"><h5>Official stories</h5><ul class="stories">${st.map(([t,u])=>`<li><a href="https://universe.leagueoflegends.com/en_US/story/${esc(u)}/" target="_blank" rel="noopener">${esc(t)}<span aria-hidden="true"> ↗</span></a></li>`).join("")}</ul></div>`:"";})()}
     ${(()=>{const L=(window.ATLAS_LOR||{})[c.id]||[];return L.length?`<div class="extra"><h5>In Legends of Runeterra</h5><div class="lor">${L.map(([code,n])=>`<a href="library.html#card-${code}" title="${esc(n)}"><img src="img/cards/${code}.webp" alt="${esc(n)}" loading="lazy"></a>`).join("")}</div></div>`:"";})()}
     ${(()=>{const R=(window.ATLAS_RB||{})[c.id]||[];return R.length?`<div class="extra"><h5>In Riftbound</h5><div class="lor">${R.map(([id,n,img])=>`<a href="riftbound.html#card-${id}" title="${esc(n)}"><img src="https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/${img}?w=200&fm=webp" alt="${esc(n)}" loading="lazy"></a>`).join("")}</div></div>`:"";})()}
+    <div class="extra skins" id="skinsBox" data-c="${c.id}"></div>
     ${(()=>{const V=[];(window.ATLAS_VIDEOS||[]).forEach(sh=>sh.v.forEach(v=>{if(v.ch.includes(c.id)&&sh.id!=="login"&&sh.id!=="making")V.push(v);}));const L2=(window.ATLAS_VIDEOS||[]).find(sh=>sh.id==="login");const lg=L2?L2.v.find(v=>v.ch.includes(c.id)):null;if(lg)V.push(lg);return V.length?`<div class="extra"><h5>Watch</h5><div class="vids">${V.slice(0,6).map(v=>`<a href="theater.html#v-${v.y}"><img src="https://i.ytimg.com/vi/${v.y}/mqdefault.jpg" alt="" loading="lazy"><span>${esc(v.t)}</span></a>`).join("")}</div></div>`:"";})()}`;
+  fillSkins(c);
   document.querySelectorAll("#detail .tie").forEach(t=>t.addEventListener("click",()=>{
     const id=t.dataset.id; const crossing = byId[id].region!==current;
     selectChamp(id);

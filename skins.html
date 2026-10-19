@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Runeterra Wardrobe</title>
+<meta name="description" content="Every League of Legends skin with its splash art, rarity, skin line and Riot's own description, searchable by champion, region and theme.">
+<meta property="og:title" content="Runeterra Wardrobe">
+<meta property="og:description" content="Every League of Legends skin, its splash art and the story Riot wrote for it.">
+<link rel="icon" href="img/emblem/wanderers.webp">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://ddragon.leagueoflegends.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus+SC&family=Alegreya:ital,wght@0,400;0,500;0,700;1,400&family=Spline+Sans+Mono:wght@400;500&family=Teko:wght@500;600&display=swap">
+<style>
+/* Layout: a wardrobe. A featured splash fills the top, a sticky filter bar, then a wall of loading-screen portraits; one portrait opens into a full splash plate. Shares the Atlas tokens. */
+:root{
+  color-scheme:dark;
+  --ink:#080d18; --panel:#0f1a2e; --panel-2:#142238;
+  --gold:#c8aa6e; --gold-dim:#7d6a45; --text:#ebe4d3; --muted:#939bb0; --faint:#5b6580;
+  --rule:rgba(200,170,110,.22);
+  --rc:#c8aa6e;
+  --f-display:"Marcellus SC","Cinzel",Georgia,serif;
+  --f-body:"Alegreya",Georgia,"Times New Roman",serif;
+  --f-mono:"Spline Sans Mono",ui-monospace,Menlo,monospace;
+  --f-num:"Teko","Oxanium",var(--f-display),sans-serif;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ink);color:var(--text);font-family:var(--f-body);font-size:18px;line-height:1.55;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+img{max-width:100%}
+[hidden]{display:none!important}
+a{color:var(--gold)}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.wrap{max-width:1240px;margin-inline:auto}
+
+.bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:18px;border-bottom:1px solid var(--rule);flex-wrap:wrap}
+.brand{font-family:var(--f-display);font-size:20px;letter-spacing:.08em;color:var(--gold);display:flex;align-items:center;gap:10px;text-decoration:none}
+.brand svg{width:26px;height:26px}
+.nav{display:flex;gap:4px;flex-wrap:wrap}
+.nav a{font-family:var(--f-mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-decoration:none;padding:7px 12px;border:1px solid transparent}
+.nav a:hover{color:var(--text)}
+.nav a[aria-current="page"]{color:var(--ink);background:var(--gold)}
+
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+.intro{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;padding-block:40px 22px}
+h1{font-family:var(--f-display);font-weight:400;font-size:clamp(40px,6vw,78px);line-height:.95;margin:12px 0 14px;text-wrap:balance}
+h1 em{font-style:normal;color:var(--gold)}
+.lede{font-size:19px;max-width:46ch;margin:0}
+.counts{display:flex;gap:22px;flex-wrap:wrap}
+.counts div b{display:block;font-family:var(--f-num);font-weight:600;font-size:40px;line-height:.9;color:var(--gold);font-variant-numeric:tabular-nums}
+.counts div span{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+
+/* featured splash */
+.feature{position:relative;margin:0 0 28px;aspect-ratio:1215/560;min-height:300px;overflow:hidden;border:1px solid color-mix(in srgb,var(--rc) 45%,transparent);background:var(--panel)}
+.feature img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 25%;transition:opacity .5s}
+.feature::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(6,9,18,.92) 0%,rgba(6,9,18,.7) 34%,rgba(6,9,18,0) 64%),linear-gradient(0deg,rgba(6,9,18,.75),rgba(6,9,18,0) 45%)}
+.feature .cap{position:absolute;z-index:1;left:0;bottom:0;padding:28px;max-width:min(560px,100%)}
+.feature h2{font-family:var(--f-display);font-weight:400;font-size:clamp(28px,3.6vw,46px);line-height:1;margin:6px 0 10px}
+.feature p{margin:0 0 14px;font-size:17px;line-height:1.5;font-style:italic;color:#d9dbe2;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+.feature .acts{display:flex;gap:8px;flex-wrap:wrap}
+.btn{display:inline-block;font-family:var(--f-mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;padding:9px 14px;text-decoration:none;cursor:pointer;border:1px solid var(--rc);background:var(--rc);color:var(--ink)}
+.btn.ghost{background:rgba(0,0,0,.35);color:var(--text);border-color:var(--rule)}
+.btn.ghost:hover{border-color:var(--gold)}
+
+.filters{min-width:0;position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:color-mix(in srgb,var(--ink) 92%,transparent);backdrop-filter:blur(8px);border-block:1px solid var(--rule);padding-block:12px;display:grid;grid-template-columns:minmax(0,1fr);gap:10px}
+.filters>*{min-width:0}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.search{flex:1 1 260px;min-width:0}
+.search input{width:100%;background:var(--panel);border:1px solid var(--rule);padding:9px 12px;font-size:16px}
+select{flex:1 1 170px;min-width:0;max-width:100%;background:var(--panel);border:1px solid var(--rule);padding:9px 10px;font-size:14px;font-family:var(--f-mono);letter-spacing:.04em}
+.seg{display:flex;border:1px solid var(--rule);max-width:100%;overflow-x:auto;scrollbar-width:none}
+.seg::-webkit-scrollbar{display:none}
+.seg button{flex:none;background:transparent;border:0;border-right:1px solid var(--rule);padding:8px 11px;font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);cursor:pointer}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--gold);color:var(--ink)}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{display:inline-flex;align-items:center;gap:6px;background:transparent;border:1px solid var(--rule);padding:4px 10px 4px 5px;font-family:var(--f-mono);font-size:12px;color:var(--muted);cursor:pointer}
+.chip img,.chip i{width:20px;height:20px;flex:none}
+.chip i{display:inline-block;border-radius:50%;background:var(--chip);transform:scale(.55)}
+.chip:hover{color:var(--text)}
+.chip[aria-pressed="true"]{color:var(--text);border-color:var(--chip);background:color-mix(in srgb,var(--chip) 18%,transparent)}
+.chip.leg{padding-left:10px}
+.status{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;color:var(--muted);margin:16px 0 12px}
+.status b{color:var(--text);font-weight:500;font-family:var(--f-num);font-size:15px;font-variant-numeric:tabular-nums}
+.clear{background:none;border:0;color:var(--gold);text-decoration:underline;cursor:pointer;font-family:var(--f-mono);font-size:12px}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:16px 12px}
+.card{background:none;border:0;padding:0;cursor:pointer;text-align:left;display:flex;flex-direction:column;gap:5px;min-width:0}
+.card .img{position:relative;aspect-ratio:308/560;width:100%;background:radial-gradient(ellipse at 50% 40%,var(--panel-2),var(--panel));overflow:hidden;border:1px solid color-mix(in srgb,var(--rar) 55%,transparent);transition:transform .2s cubic-bezier(.2,.8,.2,1),filter .2s}
+.card img{width:100%;height:100%;object-fit:cover;display:block}
+.card .gem{position:absolute;top:6px;left:6px;width:10px;height:10px;transform:rotate(45deg);background:var(--rar);box-shadow:0 0 0 2px rgba(0,0,0,.5)}
+.card:hover .img,.card:focus-visible .img{transform:translateY(-4px);filter:drop-shadow(0 10px 18px rgba(0,0,0,.6)) brightness(1.08)}
+.card .nm{font-size:14.5px;line-height:1.25;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.card .mt{font-family:var(--f-mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.more{display:block;margin:28px auto 8px;background:transparent;border:1px solid var(--gold);color:var(--gold);padding:11px 20px;font-family:var(--f-mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;cursor:pointer}
+.more:hover{background:var(--gold);color:var(--ink)}
+.empty{padding:60px 0;text-align:center;color:var(--muted);font-style:italic}
+
+dialog{border:0;padding:0;background:transparent;color:var(--text);max-width:min(1060px,calc(100vw - 24px));width:100%;max-height:calc(100vh - 24px)}
+dialog::backdrop{background:rgba(4,6,12,.86);backdrop-filter:blur(4px)}
+.plate{position:relative;background:linear-gradient(160deg,color-mix(in srgb,var(--rc) 14%,#0d1424),#0b1120 60%);border:1px solid color-mix(in srgb,var(--rc) 45%,transparent);max-height:calc(100vh - 24px);overflow:auto}
+.plate .splash{display:block;width:100%;aspect-ratio:1215/717;object-fit:cover;background:var(--panel)}
+.plate .splash.tall{aspect-ratio:auto;max-height:70vh;width:auto;margin:0 auto;padding-top:20px}
+.plate .body{padding:24px 28px 26px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,260px);gap:28px}
+.plate h2{font-family:var(--f-display);font-weight:400;font-size:clamp(28px,3.6vw,42px);line-height:1;margin:4px 0 12px}
+.meta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+.tagm{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;padding:3px 7px;border:1px solid var(--rule);color:var(--muted);display:inline-flex;align-items:center;gap:6px;background:none;cursor:default}
+button.tagm{cursor:pointer}
+button.tagm:hover{color:var(--text);border-color:var(--gold)}
+.tagm.rar{color:var(--text);border-color:color-mix(in srgb,var(--rar) 70%,transparent)}
+.tagm.rar::before{content:"";width:7px;height:7px;transform:rotate(45deg);background:var(--rar)}
+.plate .desc{margin:0;font-size:18px;line-height:1.55;font-style:italic;color:#d9dbe2;padding-left:16px;border-left:2px solid var(--rc)}
+.plate .nodesc{margin:0;color:var(--muted);font-style:italic;font-size:16px}
+.side{display:grid;gap:12px;align-content:start}
+.side h3{font-family:var(--f-mono);font-weight:400;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin:0}
+.who{display:flex;gap:12px;align-items:center;text-decoration:none;color:var(--text)}
+.who img{width:52px;height:52px;object-fit:cover;border:1px solid var(--rule)}
+.who b{display:block;font-family:var(--f-display);font-weight:400;font-size:20px;line-height:1.1}
+.who span{font-size:14px;color:var(--muted)}
+.side .links{display:grid;gap:8px}
+.side .links a{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;text-decoration:none}
+.x{position:absolute;top:10px;right:10px;z-index:2;width:36px;height:36px;background:rgba(0,0,0,.55);border:1px solid var(--rule);color:var(--text);font-size:20px;line-height:1;cursor:pointer}
+.step{display:flex;gap:8px;margin-top:6px}
+.step button{background:transparent;border:1px solid var(--rule);color:var(--muted);padding:8px 12px;font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;cursor:pointer}
+.step button:hover{color:var(--text);border-color:var(--gold)}
+.credit{font-family:var(--f-mono);font-size:11px;letter-spacing:.06em;color:var(--faint)}
+
+footer{border-top:1px solid var(--rule);margin-top:48px;padding-block:24px 40px;color:var(--muted);font-size:14px;display:grid;gap:8px}
+footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width:80ch}
+
+@media (max-width:860px){.plate .body{grid-template-columns:1fr;padding:20px}}
+@media (max-width:640px){
+  .feature{aspect-ratio:auto;min-height:440px}
+  .feature img{object-position:60% 20%}
+  .feature::after{background:linear-gradient(0deg,rgba(6,9,18,.96) 0%,rgba(6,9,18,.8) 48%,rgba(6,9,18,0) 78%)}
+  .feature .cap{padding:18px}
+  .feature p{font-size:15.5px;-webkit-line-clamp:3}
+}
+@media (max-width:480px){.filters{position:static}.seg button{padding:8px 9px;font-size:11px}.chip{font-size:11px}.grid{grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:12px 8px}.card .nm{font-size:12.5px}.counts{gap:16px}.counts div b{font-size:32px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="bar">
+    <a class="brand" href="./">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><polygon points="16,2 29,9.5 29,22.5 16,30 3,22.5 3,9.5" fill="none" stroke="#c8aa6e" stroke-width="1.5"/><circle cx="16" cy="16" r="5" fill="none" stroke="#c8aa6e" stroke-width="1.5"/><path d="M16 2v9M16 21v9M3 9.5l8 4.5M21 18l8 4.5M29 9.5l-8 4.5M11 18l-8 4.5" stroke="#c8aa6e" stroke-width="1"/></svg>
+      Runeterra Atlas
+    </a>
+    <nav class="nav" aria-label="Site"><a href="./">Atlas</a><a href="worlds.html">Worlds</a><a href="players.html">Players</a><a href="music.html">Music</a><a href="skins.html" aria-current="page">Skins</a><a href="library.html">Library</a><a href="riftbound.html">Riftbound</a><a href="theater.html">Theater</a></nav>
+  </header>
+
+  <section class="intro">
+    <div>
+      <div class="eyebrow">League of Legends · the wardrobe</div>
+      <h1>Every champion, <em>every other life.</em></h1>
+      <p class="lede">All League of Legends skins with their splash art and the short story Riot wrote for each. Search a theme, follow a skin line, or open any skin for the full splash.</p>
+    </div>
+    <div class="counts" id="counts"></div>
+  </section>
+
+  <figure class="feature" id="feature" style="margin-top:0">
+    <img id="fImg" alt="" referrerpolicy="no-referrer">
+    <figcaption class="cap">
+      <div class="eyebrow" id="fEye" style="color:var(--rc)"></div>
+      <h2 id="fName"></h2>
+      <p id="fDesc"></p>
+      <div class="acts"><button class="btn" type="button" id="fOpen">View this skin</button><button class="btn ghost" type="button" id="fAgain">Show another</button></div>
+    </figcaption>
+  </figure>
+
+  <section class="filters" aria-label="Filter skins">
+    <div class="row">
+      <label class="search"><span hidden>Search skins</span><input id="q" type="search" placeholder="Search skins, champions, skin lines…" autocomplete="off"></label>
+      <select id="line" aria-label="Skin line"></select>
+      <select id="sort" aria-label="Sort">
+        <option value="champ">Champion A–Z</option>
+        <option value="name">Skin name A–Z</option>
+        <option value="rar">Rarest first</option>
+        <option value="chroma">Most chromas</option>
+      </select>
+    </div>
+    <div class="row">
+      <div class="seg" id="rars" role="group" aria-label="Rarity"></div>
+      <button class="chip leg" type="button" id="legacy" aria-pressed="false" style="--chip:#c8aa6e">Legacy only</button>
+    </div>
+    <div class="chips" id="regions" role="group" aria-label="Region"></div>
+  </section>
+
+  <div class="status" id="status" aria-live="polite"></div>
+  <div class="grid" id="grid"></div>
+  <p class="empty" id="empty" hidden>No skins match. Try fewer filters.</p>
+  <button class="more" id="more" type="button" hidden>Show more skins</button>
+
+  <footer>
+    <div>Skin names, rarities, skin lines, chroma counts and descriptions come from the game's own data as published by <a href="https://www.communitydragon.org/" rel="noopener">CommunityDragon</a>; splash and loading-screen art from Riot's Data Dragon. Base skins and chromas are not listed. Saved 19 Oct 2026 (patch 16.20).</div>
+    <div class="legal">Runeterra Atlas was created under Riot Games' "Legal Jibber Jabber" policy using assets owned by Riot Games. Riot Games does not endorse or sponsor this project.</div>
+  </footer>
+</div>
+
+<dialog id="dlg" aria-label="Skin details">
+  <div class="plate" id="plate"></div>
+</dialog>
+
+<script src="data/champions.js"></script>
+<script src="data/skins.js"></script>
+<script>
+const CHAMPS=window.ATLAS_CHAMPS||[];
+const CH=Object.fromEntries(CHAMPS.map(c=>[c.id,c]));
+const LINES=window.ATLAS_SKIN_LINES||{};
+const REG={
+  demacia:["Demacia","#e8d395",1],noxus:["Noxus","#e0503f",1],piltover:["Piltover","#e8ab4f",1],zaun:["Zaun","#7ee06f",1],
+  freljord:["Freljord","#93d8f4",1],ionia:["Ionia","#ef84b0",1],shurima:["Shurima","#f2c443",1],targon:["Targon","#a596ff",1],
+  bilgewater:["Bilgewater","#46a8e8",1],shadowisles:["Shadow Isles","#7af0d2",1],bandle:["Bandle City","#d9ea5e",1],
+  ixtal:["Ixtal","#36cfa6",0],void:["The Void","#b764ea",0],wanderers:["The Wanderers","#e9c46a",1]
+};
+// rarity gems, colored like the in-game client
+const RAR=[["Standard","#7d8597"],["Rare","#5aa9e6"],["Epic","#3ccfe0"],["Legendary","#e8513f"],["Mythic","#b25fe8"],["Ultimate","#f0a03c"],["Exalted","#f7d774"],["Transcendent","#f4f0ff"]];
+const DD="https://ddragon.leagueoflegends.com/cdn/img/champion/";
+const CD="https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/";
+const esc=s=>String(s??"").replace(/[&<>"]/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch]));
+// Riot's descriptions carry a few <br> and <i> tags: keep only those
+const rich=s=>esc(s).replace(/&lt;br\s*\/?&gt;/gi,"<br>").replace(/&lt;(\/?)i&gt;/gi,"<$1i>");
+const plain=s=>String(s||"").replace(/<br\s*\/?>/gi," ").replace(/<\/?i>/gi,"");
+
+const SKINS=[];
+for(const c of CHAMPS){
+  (window.ATLAS_SKINS[c.id]||[]).forEach(([num,name,rar,leg,lines,chromas,desc,path])=>{
+    SKINS.push({key:c.id+"-"+num,num,name,rar,leg:!!leg,lines,chromas,desc,path,champ:c,
+      hay:(name+" "+c.name+" "+lines.map(l=>LINES[l]||"").join(" ")).toLowerCase()});
+  });
+}
+const BY=Object.fromEntries(SKINS.map(s=>[s.key,s]));
+const load=s=>s.path?CD+s.path:`${DD}loading/${s.champ.dd}_${s.num}.jpg`;
+const splash=s=>s.path?CD+s.path:`${DD}splash/${s.champ.dd}_${s.num}.jpg`;
+
+const PAGE=60;
+const S={q:"",champ:"",rar:"all",line:"",regions:new Set(),legacy:false,sort:"champ",shown:PAGE};
+let list=[];
+
+// counts
+const usedLines=[...new Set(SKINS.flatMap(s=>s.lines))].filter(l=>LINES[l]);
+document.getElementById("counts").innerHTML=[[SKINS.length,"Skins"],[usedLines.length,"Skin lines"],[SKINS.reduce((a,s)=>a+s.chromas,0),"Chromas"],[new Set(SKINS.map(s=>s.champ.id)).size,"Champions"]]
+  .map(([v,l])=>`<div><b>${v.toLocaleString()}</b><span>${l}</span></div>`).join("");
+
+// controls
+const rarCount=i=>SKINS.filter(s=>s.rar===i).length;
+document.getElementById("rars").innerHTML=`<button type="button" data-v="all" aria-pressed="true">All</button>`+
+  RAR.map(([n],i)=>rarCount(i)?`<button type="button" data-v="${i}" aria-pressed="false">${n}</button>`:"").join("");
+const lineCount={};SKINS.forEach(s=>s.lines.forEach(l=>lineCount[l]=(lineCount[l]||0)+1));
+document.getElementById("line").innerHTML=`<option value="">All skin lines</option>`+
+  usedLines.sort((a,b)=>LINES[a].localeCompare(LINES[b])).map(l=>`<option value="${l}">${esc(LINES[l])} (${lineCount[l]})</option>`).join("");
+document.getElementById("regions").innerHTML=Object.entries(REG).map(([k,[n,col,emb]])=>`<button class="chip" type="button" data-v="${k}" aria-pressed="false" style="--chip:${col}">${emb?`<img src="img/emblem/${k}.webp" alt="">`:`<i></i>`}${n}</button>`).join("");
+
+const grid=document.getElementById("grid");
+function apply(){
+  const q=S.q.trim().toLowerCase();
+  list=SKINS.filter(s=>{
+    if(S.champ&&s.champ.id!==S.champ)return false;
+    if(S.rar!=="all"&&s.rar!==+S.rar)return false;
+    if(S.line&&!s.lines.includes(+S.line))return false;
+    if(S.regions.size&&!S.regions.has(s.champ.region))return false;
+    if(S.legacy&&!s.leg)return false;
+    if(q&&!s.hay.includes(q))return false;
+    return true;
+  });
+  if(S.sort==="name")list.sort((a,b)=>a.name.localeCompare(b.name));
+  else if(S.sort==="rar")list.sort((a,b)=>b.rar-a.rar||a.name.localeCompare(b.name));
+  else if(S.sort==="chroma")list.sort((a,b)=>b.chromas-a.chromas||a.name.localeCompare(b.name));
+  render();
+}
+function render(){
+  grid.innerHTML=list.slice(0,S.shown).map((s,i)=>`<button class="card" type="button" data-i="${i}" style="--rar:${RAR[s.rar][1]}">
+    <div class="img"><img src="${load(s)}" alt="${esc(s.name)}" loading="lazy" decoding="async" referrerpolicy="no-referrer">${s.rar?`<span class="gem" title="${RAR[s.rar][0]}"></span>`:""}</div>
+    <span class="nm">${esc(s.name)}</span><span class="mt">${esc(s.champ.name)}${s.rar?" · "+RAR[s.rar][0]:""}${s.leg?" · Legacy":""}</span></button>`).join("");
+  document.getElementById("empty").hidden=list.length>0;
+  document.getElementById("more").hidden=S.shown>=list.length;
+  const filtered=S.q||S.champ||S.rar!=="all"||S.line||S.regions.size||S.legacy;
+  document.getElementById("status").innerHTML=`Showing <b>${Math.min(S.shown,list.length).toLocaleString()}</b> of <b>${list.length.toLocaleString()}</b> skins${S.champ?` for <a href="./#c-${S.champ}">${esc(CH[S.champ].name)}</a>`:""}${filtered?` · <button class="clear" type="button" id="clear">Clear filters</button>`:""}`;
+  const cl=document.getElementById("clear"); if(cl)cl.onclick=()=>{reset();apply();};
+}
+function reset(){S.q="";S.champ="";S.rar="all";S.line="";S.regions.clear();S.legacy=false;S.shown=PAGE;
+  document.getElementById("q").value="";document.getElementById("line").value="";
+  document.getElementById("legacy").setAttribute("aria-pressed","false");
+  document.querySelectorAll("#rars button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.v==="all")));
+  document.querySelectorAll("#regions .chip").forEach(b=>b.setAttribute("aria-pressed","false"));}
+let t; document.getElementById("q").addEventListener("input",e=>{clearTimeout(t);t=setTimeout(()=>{S.q=e.target.value;S.shown=PAGE;apply();},160);});
+document.getElementById("rars").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;S.rar=b.dataset.v;S.shown=PAGE;document.querySelectorAll("#rars button").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));apply();});
+document.getElementById("regions").addEventListener("click",e=>{const b=e.target.closest(".chip");if(!b)return;const v=b.dataset.v;S.regions.has(v)?S.regions.delete(v):S.regions.add(v);b.setAttribute("aria-pressed",String(S.regions.has(v)));S.shown=PAGE;apply();});
+document.getElementById("legacy").addEventListener("click",e=>{S.legacy=!S.legacy;e.currentTarget.setAttribute("aria-pressed",String(S.legacy));S.shown=PAGE;apply();});
+document.getElementById("line").addEventListener("change",e=>{S.line=e.target.value;S.shown=PAGE;apply();});
+document.getElementById("sort").addEventListener("change",e=>{S.sort=e.target.value;apply();});
+document.getElementById("more").addEventListener("click",()=>{S.shown+=PAGE*2;render();});
+if("IntersectionObserver" in window){new IntersectionObserver(es=>{if(es[0].isIntersecting&&S.shown<list.length){S.shown+=PAGE;render();}},{rootMargin:"700px"}).observe(document.getElementById("more"));}
+grid.addEventListener("click",e=>{const b=e.target.closest(".card");if(b)open(list[+b.dataset.i]);});
+
+// skin plate
+const dlg=document.getElementById("dlg"), plate=document.getElementById("plate");
+let cur=null;
+function step(d){if(!list.length)return;let i=list.indexOf(cur);if(i<0)i=0;open(list[(i+d+list.length)%list.length]);}
+function filterBy(kind,v){reset();
+  if(kind==="champ")S.champ=v;
+  if(kind==="line"){S.line=String(v);document.getElementById("line").value=S.line;}
+  apply();dlg.close();document.getElementById("status").scrollIntoView({behavior:"smooth",block:"start"});}
+function open(s){
+  if(!s)return; cur=s; const c=s.champ, rc=(REG[c.region]||REG.wanderers)[1];
+  plate.style.setProperty("--rc",rc);
+  const total=(window.ATLAS_SKINS[c.id]||[]).length;
+  plate.innerHTML=`<button class="x" type="button" aria-label="Close" id="x">×</button>
+    <img class="splash${s.path?" tall":""}" src="${splash(s)}" alt="${esc(s.name)} splash art" referrerpolicy="no-referrer">
+    <div class="body">
+      <div style="min-width:0">
+        <div class="eyebrow" style="color:var(--rc)">${esc(c.name)} · ${esc((REG[c.region]||REG.wanderers)[0])}</div>
+        <h2>${esc(s.name)}</h2>
+        <div class="meta">
+          <span class="tagm rar" style="--rar:${RAR[s.rar][1]}">${RAR[s.rar][0]}</span>
+          ${s.lines.filter(l=>LINES[l]).map(l=>`<button class="tagm" type="button" data-line="${l}" title="Show every ${esc(LINES[l])} skin">${esc(LINES[l])} · ${lineCount[l]}</button>`).join("")}
+          ${s.chromas?`<span class="tagm">${s.chromas} chroma${s.chromas>1?"s":""}</span>`:""}
+          ${s.leg?`<span class="tagm" title="Sold only in occasional Legacy Vault sales">Legacy</span>`:""}
+        </div>
+        ${s.desc?`<p class="desc">${rich(s.desc)}</p>`:`<p class="nodesc">Riot hasn't written a description for this skin.</p>`}
+      </div>
+      <div class="side">
+        <h3>Champion</h3>
+        <a class="who" href="./#c-${c.id}"><img src="img/${c.id}-tile.webp" alt=""><div><b>${esc(c.name)}</b><span>${esc(c.title)}</span></div></a>
+        <div class="links">
+          <a href="./#c-${c.id}">Meet ${esc(c.name)} in the Atlas →</a>
+          <a href="#" id="allc">All ${total} ${esc(c.name)} skins →</a>
+        </div>
+        <div class="step"><button type="button" id="pv">← Previous</button><button type="button" id="nx">Next →</button></div>
+        <div class="credit">Skin ${esc(s.key)}</div>
+      </div>
+    </div>`;
+  document.getElementById("x").onclick=()=>dlg.close();
+  document.getElementById("pv").onclick=()=>step(-1);
+  document.getElementById("nx").onclick=()=>step(1);
+  document.getElementById("allc").onclick=e=>{e.preventDefault();filterBy("champ",c.id);};
+  plate.querySelectorAll("[data-line]").forEach(b=>b.onclick=()=>filterBy("line",b.dataset.line));
+  plate.scrollTop=0;
+  if(!dlg.open)dlg.showModal();
+  try{history.replaceState(null,"","#s-"+s.key);}catch(e){}
+}
+dlg.addEventListener("close",()=>{try{history.replaceState(null,"",location.pathname+location.search);}catch(e){}});
+dlg.addEventListener("click",e=>{if(e.target===dlg)dlg.close();});
+dlg.addEventListener("keydown",e=>{if(e.key==="ArrowRight")step(1);if(e.key==="ArrowLeft")step(-1);});
+
+// featured skin: a random Legendary-or-rarer skin that has a description
+const FEAT=SKINS.filter(s=>s.rar>=3&&s.desc&&!s.path);
+let fCur=null;
+function feature(){
+  fCur=FEAT[Math.floor(Math.random()*FEAT.length)]; const c=fCur.champ;
+  const f=document.getElementById("feature"); f.style.setProperty("--rc",RAR[fCur.rar][1]);
+  const im=document.getElementById("fImg"); im.style.opacity="0"; im.onload=()=>im.style.opacity="1"; im.src=splash(fCur); im.alt=fCur.name+" splash art";
+  document.getElementById("fEye").textContent=`${RAR[fCur.rar][0]} skin · ${c.name}`;
+  document.getElementById("fName").textContent=fCur.name;
+  document.getElementById("fDesc").textContent=plain(fCur.desc);
+}
+document.getElementById("fAgain").onclick=feature;
+document.getElementById("fOpen").onclick=()=>{if(!list.includes(fCur)){reset();apply();}open(fCur);};
+
+// URL: skins.html?champion=ahri · ?line=91 · #s-ahri-15
+const P=new URLSearchParams(location.search);
+if(P.get("champion")&&CH[P.get("champion")])S.champ=P.get("champion");
+if(P.get("line")&&LINES[P.get("line")]){S.line=P.get("line");document.getElementById("line").value=S.line;}
+if(P.get("q")){S.q=P.get("q");document.getElementById("q").value=S.q;}
+feature(); apply();
+const h=(location.hash||"").match(/^#s-([a-z]+-(?:\d+|C))$/);
+if(h&&BY[h[1]]){if(!list.includes(BY[h[1]])){reset();apply();}open(BY[h[1]]);}
+</script>
+</body>
+</html>
