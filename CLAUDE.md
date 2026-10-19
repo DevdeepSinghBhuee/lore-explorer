@@ -19,15 +19,16 @@ Custom domain is possible later via Pages settings + CNAME file (not set up).
 | players.html | 97 Worlds 2026 players: search/role/team filters (`?team=CODE`), dossier dialog with 6 signature champions (link to Atlas `#c-<id>`) and a Worlds timeline. Deep link `#p-<slug>`. Worlds rosters link here. |
 | skins.html | Skins wardrobe: 1,994 skins (no base skins/chromas) as loading-screen portraits, rarity gems, featured splash, filters (search, rarity, skin line, region, Legacy), splash plate with Riot description. `?champion=<id>`, `?line=<id>`, deep link `#s-<champ>-<num>` (num "C" = the 2026 "Classic" skins, art from CommunityDragon). Atlas champion panel shows a lazy-loaded skins strip linking here. |
 | reading.html | Reading Room: 244 official short stories (illustrated cards, reading time, author, champions; filters: search, length, region, sort) and 38 comics as cover racks per series + one-shots. Plates link out to universe.leagueoflegends.com (never copy story text). `?champion=<id>`, `#comics`, `#story-<slug>`, `#comic-<series>--<issue>`. Atlas champion panel lazy-loads reading.js to show reading times + comic covers. |
+| timeline.html | Release timeline: 173 champions in release order. Pulse bar chart (releases per year, drawn at real width, hover tooltip, click jumps), 6 computed milestones, year bands with release-day rows (date + patch, #order), filters (search, class = tags[0], region, oldest/newest). Plate: released/revealed dates, same-day & before/after champs, links to Atlas/Skins/Reading. `?region=`, `#y<year>`, `#t-<id>`. Atlas panel shows "Released <date> · patch" linking here. |
 | music.html | Music hub: 13 shelves (anthems, virtual bands, Arcane S1/S2/score, Pentakill, Star Guardian, login themes from videos.js, champion songs, Warsongs, DJ Sona, LoR, long listens). One docked YouTube IFrame-API player (youtube-nocookie; kept ≥200px tall per YouTube's rules) plays a shelf in order, shuffle, Media Session controls. Deep links `#s-<shelf>`, `#t-<shelf>-<n>`. |
 
-Nav on every page: Atlas(./) · Worlds · Players · Music · Skins · Reading · Library · Riftbound · Theater. Every footer carries Riot's
+Nav on every page: Atlas(./) · Worlds · Players · Music · Skins · Reading · Timeline · Library · Riftbound · Theater. Every footer carries Riot's
 "Legal Jibber Jabber" fan-content notice — keep it on any new page.
 
 ## Data (data/*.js, plain globals)
 champions.js (173 champs: id, dd, name, title, region, role, tags, bio, hand) · cards.js · stories.js ·
 champcards.js · riftbound.js (RB_SETS, RB_CARDS) · champrb.js · videos.js (ATLAS_VIDEOS shelves) ·
-worlds.js (WORLDS_TEAMS, WORLDS_SNAPSHOT) · players.js (ATLAS_PLAYERS, saved 2026-10-19) · music.js (ATLAS_MUSIC shelves, saved 2026-10-19) · skins.js (ATLAS_SKINS by champion + ATLAS_SKIN_LINES, saved 2026-10-19, patch 16.20) · reading.js (ATLAS_READ_STORIES, ATLAS_READ_COMICS, ATLAS_READ_SERIES, saved 2026-10-19). Bonds live in index.html as [a,b,type,note,source,necritVideo]; source r = Riot Universe text, w = League Wiki Relations,
+worlds.js (WORLDS_TEAMS, WORLDS_SNAPSHOT) · players.js (ATLAS_PLAYERS, saved 2026-10-19) · music.js (ATLAS_MUSIC shelves, saved 2026-10-19) · skins.js (ATLAS_SKINS by champion + ATLAS_SKIN_LINES, saved 2026-10-19, patch 16.20) · reading.js (ATLAS_READ_STORIES, ATLAS_READ_COMICS, ATLAS_READ_SERIES, saved 2026-10-19) · releases.js (ATLAS_RELEASES id → [released, patch, revealed]). Bonds live in index.html as [a,b,type,note,source,necritVideo]; source r = Riot Universe text, w = League Wiki Relations,
 u = only listed as related by Riot (note says no official story explains it). Reviewed 2026-10-19: 77 re-typed, 34 verified as Linked, 129 'u'.
 
 ## Sources (all free)
@@ -48,6 +49,9 @@ u = only listed as related by Riot (note says no official story explains it). Re
   is saved to a file under ~/.claude/projects/.../tool-results/ — read it with python instead of retyping.
 - Reading Room: universe-meeps …/v1/en_us/explore2/index.json (story-preview + comic link-out modules; complete — newest story 2025-03-05),
   comics/index.json (series, one-shots, issue covers), story/<slug>/index.json (word-count, minutes-to-read). Images cmsassets.rgpub.io/sanity/images/dsfx7636/universe/<file>?w=N&fm=webp.
+- Release dates: League Wiki Module:ChampionData/data (date, patch; via api.php revisions) + Leaguepedia Cargo Champions.ReleaseDate (fills
+  Yunara/Zaahen/Locke; agrees ±1 day elsewhere). Wiki rows for Ambessa & Mel are copies of Ahri — patch not trusted. Universe search/index.json
+  release-date = REVEAL date (~2 weeks early; Udyr = rework) — used only as "revealed" when 4–120 days before release.
 - Lore cross-checks: League Wiki API leagueoflegends.fandom.com/api.php (action=parse, Relations section); Necrit's uploads
   (channel UCiUHGAbtjCrLO3ZPrTfle3Q) matched by champion names in titles.
 - Esports: esports-api.lolesports.com/persisted/gw/ (getSchedule, getTeams, getStandings), header
@@ -73,4 +77,4 @@ Must work at phone width with no horizontal scroll (watch grid children: `min-wi
 4. Custom domain (costs money yearly — conflicts with the zero-cost rule; only if Devdeep insists).
 6. ~~Skins gallery~~ (done 2026-10-19). 
 7. ~~Comics & short stories (Reading Room)~~ (done 2026-10-19).
-8. Champion release timeline (League Wiki dates) — next agreed.
+8. ~~Champion release timeline~~ (done 2026-10-19). Ask Devdeep what next.

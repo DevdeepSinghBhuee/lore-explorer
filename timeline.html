@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Runeterra Timeline</title>
+<meta name="description" content="Every League of Legends champion in the order they were released, from the 17 on day one in 2009 to today, with release patches and reveal dates.">
+<meta property="og:title" content="Runeterra Timeline">
+<meta property="og:description" content="Every League of Legends champion, in the order they arrived.">
+<link rel="icon" href="img/emblem/wanderers.webp">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus+SC&family=Alegreya:ital,wght@0,400;0,500;0,700;1,400&family=Spline+Sans+Mono:wght@400;500&family=Teko:wght@400;500;600&display=swap">
+<style>
+/* Layout: a chronicle. A pulse chart of releases per year, a strip of milestones, then one band per year with its champions in release order; a champion opens into a small plate. Shares the Atlas tokens. */
+:root{
+  color-scheme:dark;
+  --ink:#080d18; --panel:#0f1a2e; --panel-2:#142238;
+  --gold:#c8aa6e; --gold-dim:#7d6a45; --text:#ebe4d3; --muted:#939bb0; --faint:#5b6580;
+  --rule:rgba(200,170,110,.22);
+  --rc:#c8aa6e;
+  --f-display:"Marcellus SC","Cinzel",Georgia,serif;
+  --f-body:"Alegreya",Georgia,"Times New Roman",serif;
+  --f-mono:"Spline Sans Mono",ui-monospace,Menlo,monospace;
+  --f-num:"Teko","Oxanium",var(--f-display),sans-serif;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box}
+html{scroll-padding-top:16px}
+body{margin:0;background:var(--ink);color:var(--text);font-family:var(--f-body);font-size:18px;line-height:1.55;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+img{max-width:100%}
+[hidden]{display:none!important}
+a{color:var(--gold)}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+.wrap{max-width:1240px;margin-inline:auto}
+.num{font-family:var(--f-num);font-variant-numeric:tabular-nums}
+
+.bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:18px;border-bottom:1px solid var(--rule);flex-wrap:wrap}
+.brand{font-family:var(--f-display);font-size:20px;letter-spacing:.08em;color:var(--gold);display:flex;align-items:center;gap:10px;text-decoration:none}
+.brand svg{width:26px;height:26px}
+.nav{display:flex;gap:4px;flex-wrap:wrap}
+.nav a{font-family:var(--f-mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-decoration:none;padding:7px 12px;border:1px solid transparent}
+.nav a:hover{color:var(--text)}
+.nav a[aria-current="page"]{color:var(--ink);background:var(--gold)}
+
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+.intro{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;padding-block:40px 18px}
+h1{font-family:var(--f-display);font-weight:400;font-size:clamp(40px,6vw,78px);line-height:.95;margin:12px 0 14px;text-wrap:balance}
+h1 em{font-style:normal;color:var(--gold)}
+.lede{font-size:19px;max-width:48ch;margin:0}
+.counts{display:flex;gap:22px;flex-wrap:wrap}
+.counts div b{display:block;font-family:var(--f-num);font-weight:600;font-size:40px;line-height:.9;color:var(--gold);font-variant-numeric:tabular-nums}
+.counts div span{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+
+/* pulse chart: releases per year (single series, so no legend; the heading names it) */
+.pulse{border:1px solid var(--rule);background:linear-gradient(180deg,var(--panel),var(--ink));padding:18px 18px 8px;margin:10px 0 18px;position:relative}
+.pulse h2{font-family:var(--f-mono);font-weight:400;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin:0 0 6px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.pulse h2 span{color:var(--faint)}
+.pulse svg{display:block;width:100%;height:auto;overflow:visible}
+.pulse .grid line{stroke:rgba(200,170,110,.12);stroke-width:1}
+.pulse .grid text,.pulse .xl text{font-family:var(--f-num);font-size:15px;fill:var(--muted)}
+.pulse .b rect.m{fill:var(--gold);transition:fill .15s,opacity .2s}
+.pulse .b rect.hit{fill:transparent;cursor:pointer}
+.pulse .b:hover rect.m,.pulse .b:focus-visible rect.m{fill:#f0d9a2}
+.pulse .b text.v{font-family:var(--f-num);font-size:16px;fill:var(--text);text-anchor:middle;font-variant-numeric:tabular-nums}
+.pulse .b.zero text.v{fill:var(--faint)}
+.tip{position:absolute;pointer-events:none;background:#0b1120;border:1px solid var(--gold-dim);padding:8px 10px;font-size:14px;line-height:1.35;box-shadow:0 8px 20px rgba(0,0,0,.5);max-width:240px;z-index:3}
+.tip b{font-family:var(--f-num);font-size:20px;font-weight:500;color:var(--gold);margin-right:4px}
+.tip .t{font-family:var(--f-num);font-size:18px;color:var(--text)}
+.tip small{display:block;color:var(--muted);font-size:13px}
+
+/* milestones */
+.miles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:0 0 26px}
+@media (max-width:900px){.miles{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){.miles{grid-template-columns:minmax(0,1fr)}}
+.mile{border:1px solid var(--rule);padding:14px 16px;background:var(--panel);min-width:0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;align-items:center}
+.mile .k{grid-column:1/-1;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.mile .v{font-family:var(--f-num);font-size:38px;line-height:.9;color:var(--gold);font-variant-numeric:tabular-nums;white-space:nowrap}
+.mile .d{font-size:15px;line-height:1.35;color:#c4c8d3;min-width:0}
+.mile .d a{color:var(--text)}
+
+.filters{min-width:0;position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:color-mix(in srgb,var(--ink) 92%,transparent);backdrop-filter:blur(8px);border-block:1px solid var(--rule);padding-block:12px;display:grid;grid-template-columns:minmax(0,1fr);gap:10px}
+.filters>*{min-width:0}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.search{flex:1 1 240px;min-width:0}
+.search input{width:100%;background:var(--panel);border:1px solid var(--rule);padding:9px 12px;font-size:16px}
+.seg{display:flex;border:1px solid var(--rule);max-width:100%;overflow-x:auto;scrollbar-width:none}
+.seg::-webkit-scrollbar{display:none}
+.seg button{flex:none;background:transparent;border:0;border-right:1px solid var(--rule);padding:8px 11px;font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);cursor:pointer}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--gold);color:var(--ink)}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{display:inline-flex;align-items:center;gap:6px;background:transparent;border:1px solid var(--rule);padding:4px 10px 4px 5px;font-family:var(--f-mono);font-size:12px;color:var(--muted);cursor:pointer}
+.chip img,.chip i{width:20px;height:20px;flex:none}
+.chip i{display:inline-block;border-radius:50%;background:var(--chip);transform:scale(.55)}
+.chip:hover{color:var(--text)}
+.chip[aria-pressed="true"]{color:var(--text);border-color:var(--chip);background:color-mix(in srgb,var(--chip) 18%,transparent)}
+.status{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;color:var(--muted);margin:16px 0 4px}
+.status b{color:var(--text);font-weight:500;font-family:var(--f-num);font-size:15px}
+.clear{background:none;border:0;color:var(--gold);text-decoration:underline;cursor:pointer;font-family:var(--f-mono);font-size:12px}
+
+/* year bands */
+.year{display:grid;grid-template-columns:150px minmax(0,1fr);gap:24px;padding-block:26px;border-bottom:1px solid var(--rule);position:relative}
+.year .yl{position:sticky;top:120px;align-self:start}
+.year .yl b{display:block;font-family:var(--f-num);font-weight:500;font-size:76px;line-height:.8;color:var(--gold);font-variant-numeric:tabular-nums;letter-spacing:.01em}
+.year .yl span{font-family:var(--f-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.year .yl em{display:block;margin-top:8px;font-style:italic;font-size:14.5px;line-height:1.35;color:var(--faint);max-width:16ch}
+.days{display:grid;gap:14px;min-width:0}
+.day{display:grid;grid-template-columns:72px minmax(0,1fr);gap:14px;align-items:start;min-width:0}
+.day .dt{font-family:var(--f-num);font-size:22px;line-height:1;color:var(--text);padding-top:16px;white-space:nowrap}
+.day .dt small{display:block;font-family:var(--f-mono);font-size:10px;letter-spacing:.08em;color:var(--faint);margin-top:4px;white-space:normal;line-height:1.3}
+.champs{display:flex;flex-wrap:wrap;gap:10px;min-width:0}
+.ch{background:none;border:0;padding:0;cursor:pointer;color:inherit;display:flex;flex-direction:column;align-items:center;gap:5px;width:78px;text-align:center;min-width:0}
+.ch .face{position:relative;width:64px;height:64px;border:1px solid color-mix(in srgb,var(--rc) 55%,transparent);background:var(--panel-2);overflow:hidden;transition:transform .2s cubic-bezier(.2,.8,.2,1),box-shadow .2s}
+.ch .face img{width:100%;height:100%;object-fit:cover;display:block}
+.ch .face i{position:absolute;right:2px;bottom:2px;font-style:normal;font-family:var(--f-num);font-size:13px;line-height:1;padding:1px 3px;background:rgba(6,9,18,.85);color:var(--muted)}
+.ch:hover .face,.ch:focus-visible .face{transform:translateY(-3px);box-shadow:0 8px 16px rgba(0,0,0,.5),0 0 0 1px var(--rc)}
+.ch .nm{font-size:13.5px;line-height:1.15;color:var(--text);max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.empty{padding:60px 0;text-align:center;color:var(--muted);font-style:italic}
+
+/* plate */
+dialog{border:0;padding:0;background:transparent;color:var(--text);max-width:min(760px,calc(100vw - 24px));width:100%;max-height:calc(100vh - 24px)}
+dialog::backdrop{background:rgba(4,6,12,.84);backdrop-filter:blur(4px)}
+.plate{position:relative;display:grid;grid-template-columns:minmax(0,220px) minmax(0,1fr);gap:24px;padding:24px;background:linear-gradient(150deg,color-mix(in srgb,var(--rc) 16%,#0d1424),#0b1120 60%);border:1px solid color-mix(in srgb,var(--rc) 45%,transparent);max-height:calc(100vh - 24px);overflow:auto}
+.plate .art{width:100%;aspect-ratio:308/560;object-fit:cover;background:var(--panel);box-shadow:0 14px 26px rgba(0,0,0,.55)}
+.plate h2{font-family:var(--f-display);font-weight:400;font-size:clamp(30px,4vw,42px);line-height:1;margin:6px 0 4px}
+.plate .ttl{font-style:italic;color:var(--muted);margin-bottom:14px}
+.facts{display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px 16px;margin:0 0 16px;align-items:baseline}
+.facts dt{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.facts dd{margin:0;font-size:16.5px}
+.facts dd b{font-family:var(--f-num);font-weight:500;font-size:21px;letter-spacing:.02em;color:var(--text)}
+.facts dd small{color:var(--muted);font-size:14px}
+.plate .near{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+.plate .near button{display:inline-flex;align-items:center;gap:6px;background:transparent;border:1px solid var(--rule);padding:3px 8px 3px 3px;cursor:pointer;font-size:14px}
+.plate .near button:hover{border-color:var(--gold)}
+.plate .near img{width:26px;height:26px;object-fit:cover}
+.plate .links{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
+.btn{display:inline-block;font-family:var(--f-mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;padding:9px 13px;text-decoration:none;border:1px solid var(--rc);background:var(--rc);color:var(--ink)}
+.btn.ghost{background:transparent;color:var(--text);border-color:var(--rule)}
+.btn.ghost:hover{border-color:var(--gold)}
+.plate h4{font-family:var(--f-mono);font-weight:400;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:16px 0 6px}
+.x{position:absolute;top:10px;right:10px;z-index:2;width:36px;height:36px;background:rgba(0,0,0,.55);border:1px solid var(--rule);color:var(--text);font-size:20px;line-height:1;cursor:pointer}
+
+footer{border-top:1px solid var(--rule);margin-top:48px;padding-block:24px 40px;color:var(--muted);font-size:14px;display:grid;gap:8px}
+footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width:80ch}
+
+@media (max-width:760px){
+  .year{grid-template-columns:1fr;gap:10px}
+  .year .yl{position:static;display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+  .year .yl b{font-size:58px}
+  .year .yl em{max-width:none;margin:0;flex-basis:100%}
+  .plate{grid-template-columns:1fr}.plate .art{max-width:170px;margin-inline:auto;display:block}
+}
+@media (max-width:480px){.filters{position:static}.seg button{padding:8px 9px;font-size:11px}.chip{font-size:11px}.day{grid-template-columns:56px minmax(0,1fr);gap:10px}.day .dt{font-size:19px}.ch{width:64px}.ch .face{width:56px;height:56px}.counts{gap:16px}.counts div b{font-size:32px}.pulse{padding:14px 10px 6px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="bar">
+    <a class="brand" href="./">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><polygon points="16,2 29,9.5 29,22.5 16,30 3,22.5 3,9.5" fill="none" stroke="#c8aa6e" stroke-width="1.5"/><circle cx="16" cy="16" r="5" fill="none" stroke="#c8aa6e" stroke-width="1.5"/><path d="M16 2v9M16 21v9M3 9.5l8 4.5M21 18l8 4.5M29 9.5l-8 4.5M11 18l-8 4.5" stroke="#c8aa6e" stroke-width="1"/></svg>
+      Runeterra Atlas
+    </a>
+    <nav class="nav" aria-label="Site"><a href="./">Atlas</a><a href="worlds.html">Worlds</a><a href="players.html">Players</a><a href="music.html">Music</a><a href="skins.html">Skins</a><a href="reading.html">Reading</a><a href="timeline.html" aria-current="page">Timeline</a><a href="library.html">Library</a><a href="riftbound.html">Riftbound</a><a href="theater.html">Theater</a></nav>
+  </header>
+
+  <section class="intro">
+    <div>
+      <div class="eyebrow">League of Legends · the chronicle</div>
+      <h1>Every champion, <em>in the order they arrived.</em></h1>
+      <p class="lede" id="lede"></p>
+    </div>
+    <div class="counts" id="counts"></div>
+  </section>
+
+  <section class="pulse" aria-labelledby="pulseTitle">
+    <h2 id="pulseTitle">Champions released each year <span id="pulseNote">Tap a year to jump to it</span></h2>
+    <svg id="chart" role="img" aria-label="Bar chart of champions released per year"></svg>
+    <div class="tip" id="tip" hidden></div>
+  </section>
+
+  <section class="miles" id="miles" aria-label="Milestones"></section>
+
+  <section class="filters" aria-label="Filter champions">
+    <div class="row">
+      <label class="search"><span hidden>Find a champion</span><input id="q" type="search" placeholder="Find a champion…" autocomplete="off"></label>
+      <div class="seg" id="roles" role="group" aria-label="Class"></div>
+      <div class="seg" id="order" role="group" aria-label="Order"><button type="button" data-v="old" aria-pressed="true">Oldest first</button><button type="button" data-v="new" aria-pressed="false">Newest first</button></div>
+    </div>
+    <div class="chips" id="regions" role="group" aria-label="Region"></div>
+  </section>
+
+  <div class="status" id="status" aria-live="polite"></div>
+  <div id="years"></div>
+  <p class="empty" id="empty" hidden>No champions match. Try fewer filters.</p>
+
+  <footer>
+    <div>Release dates and patches from the <a href="https://leagueoflegends.fandom.com/wiki/List_of_champions" rel="noopener">League of Legends Wiki</a> (CC BY-SA), checked against <a href="https://lol.fandom.com/" rel="noopener">Leaguepedia</a> (CC BY-SA 3.0), which also supplies the dates for Yunara, Zaahen and Locke. Reveal dates are when Riot published each champion on its <a href="https://universe.leagueoflegends.com/" rel="noopener">Universe</a> site. Saved 19 Oct 2026.</div>
+    <div class="legal">Runeterra Atlas was created under Riot Games' "Legal Jibber Jabber" policy using assets owned by Riot Games. Riot Games does not endorse or sponsor this project.</div>
+  </footer>
+</div>
+
+<dialog id="dlg" aria-label="Champion release">
+  <div class="plate" id="plate"></div>
+</dialog>
+
+<script src="data/champions.js"></script>
+<script src="data/releases.js"></script>
+<script>
+const REL=window.ATLAS_RELEASES||{};
+const REG={
+  demacia:["Demacia","#e8d395",1],noxus:["Noxus","#e0503f",1],piltover:["Piltover","#e8ab4f",1],zaun:["Zaun","#7ee06f",1],
+  freljord:["Freljord","#93d8f4",1],ionia:["Ionia","#ef84b0",1],shurima:["Shurima","#f2c443",1],targon:["Targon","#a596ff",1],
+  bilgewater:["Bilgewater","#46a8e8",1],shadowisles:["Shadow Isles","#7af0d2",1],bandle:["Bandle City","#d9ea5e",1],
+  ixtal:["Ixtal","#36cfa6",0],void:["The Void","#b764ea",0],wanderers:["The Wanderers","#e9c46a",1]
+};
+const esc=s=>String(s??"").replace(/[&<>"]/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch]));
+const MON=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const MONL=["January","February","March","April","May","June","July","August","September","October","November","December"];
+const dm=d=>{const [y,m,dd]=d.split("-");return `${+dd} ${MON[+m-1]}`;};
+const full=d=>{const [y,m,dd]=d.split("-");return `${+dd} ${MONL[+m-1]} ${y}`;};
+const days=(a,b)=>Math.round((Date.parse(b)-Date.parse(a))/864e5);
+const TODAY=new Date().toISOString().slice(0,10);
+const pl=(n,w)=>`${n.toLocaleString()} ${w}${n===1?"":"s"}`;
+
+// release order: by date, then name
+const CHAMPS=(window.ATLAS_CHAMPS||[]).filter(c=>REL[c.id]).map(c=>({...c,rel:REL[c.id][0],patch:REL[c.id][1],rev:REL[c.id][2]}))
+  .sort((a,b)=>a.rel.localeCompare(b.rel)||a.name.localeCompare(b.name));
+CHAMPS.forEach((c,i)=>{c.n=i+1;c.yr=+c.rel.slice(0,4);});
+const BY=Object.fromEntries(CHAMPS.map(c=>[c.id,c]));
+const FIRST=+CHAMPS[0].yr, LAST=Math.max(...CHAMPS.map(c=>c.yr));
+const YEARS=[];for(let y=FIRST;y<=LAST;y++)YEARS.push(y);
+const byDay={};CHAMPS.forEach(c=>(byDay[c.rel]=byDay[c.rel]||[]).push(c));
+
+// ---- headline facts (all computed from the data) ----
+const launch=byDay[CHAMPS[0].rel];
+const newest=CHAMPS[CHAMPS.length-1];
+document.getElementById("lede").textContent=`${launch.length} champions were playable on ${full(launch[0].rel)}. ${CHAMPS.length-launch.length} more have followed since, the latest being ${newest.name} on ${full(newest.rel)}. Every one of them is here, in order.`;
+document.getElementById("counts").innerHTML=[[CHAMPS.length,"Champions"],[LAST-FIRST+1,"Years"],[launch.length,"On day one"],[days(newest.rel,TODAY),"Days since the last"]]
+  .map(([v,l])=>`<div><b>${v.toLocaleString()}</b><span>${l}</span></div>`).join("");
+
+// milestones
+const perYear=y=>CHAMPS.filter(c=>c.yr===y).length;
+const busiest=YEARS.reduce((a,y)=>perYear(y)>perYear(a)?y:a,FIRST);
+const dates=Object.keys(byDay).sort();
+let gap={n:0};for(let i=1;i<dates.length;i++){const g=days(dates[i-1],dates[i]);if(g>gap.n)gap={n:g,a:byDay[dates[i-1]],b:byDay[dates[i]],from:dates[i-1],to:dates[i]};}
+const pairs=dates.filter(d=>d>"2010-01-01"&&byDay[d].length>1);
+const revs=CHAMPS.filter(c=>c.rev).map(c=>({c,g:days(c.rev,c.rel)}));
+const avgRev=Math.round(revs.reduce((a,x)=>a+x.g,0)/revs.length);
+const recent=CHAMPS.filter(c=>c.yr>=2020);const regCount={};recent.forEach(c=>regCount[c.region]=(regCount[c.region]||0)+1);
+const topReg=Object.entries(regCount).sort((a,b)=>b[1]-a[1])[0];
+const since2014=dates.filter(d=>d>="2014-01-01");const avgGap=Math.round(days(since2014[0],since2014[since2014.length-1])/(since2014.length-1));
+const link=c=>`<a href="#" data-open="${c.id}">${esc(c.name)}</a>`;
+const M=[
+  ["Busiest year",perYear(busiest),`champions in ${busiest}, the year the game opened`],
+  ["Longest wait",gap.n,`days between ${gap.a.map(link).join(" & ")} (${dm(gap.from)} ${gap.from.slice(0,4)}) and ${gap.b.map(link).join(" & ")} (${dm(gap.to)} ${gap.to.slice(0,4)})`],
+  ["Released together",pairs.length,`${pairs.length===1?"day":"days"} since 2010 when two champions arrived at once: ${pairs.map(d=>byDay[d].map(link).join(" & ")+" ("+d.slice(0,4)+")").join(", ")}`],
+  ["Since 2014",avgGap,`days between new champions, on average`],
+  ["Reveal to release",avgRev,`days, on average, from Riot revealing a champion on Universe to it being playable (${revs.length} champions with a reveal date)`],
+  ["Since 2020",topReg[1],`of the ${recent.length} champions released since 2020 come from ${esc(REG[topReg[0]][0])}, more than any other region`],
+];
+document.getElementById("miles").innerHTML=M.map(([k,v,d])=>`<div class="mile"><span class="k">${k}</span><span class="v">${v}</span><span class="d">${d}</span></div>`).join("");
+document.getElementById("miles").addEventListener("click",e=>{const a=e.target.closest("[data-open]");if(a){e.preventDefault();open(BY[a.dataset.open]);}});
+
+// ---- filters ----
+const cls=c=>(c.tags&&c.tags[0])||"";
+const ROLES=[...new Set(CHAMPS.map(cls))].filter(Boolean).sort();
+const S={q:"",role:"all",regions:new Set(),order:"old"};
+document.getElementById("roles").innerHTML=`<button type="button" data-v="all" aria-pressed="true">All classes</button>`+ROLES.map(r=>`<button type="button" data-v="${esc(r)}" aria-pressed="false">${esc(r)}</button>`).join("");
+document.getElementById("regions").innerHTML=Object.entries(REG).map(([k,[n,col,emb]])=>`<button class="chip" type="button" data-v="${k}" aria-pressed="false" style="--chip:${col}">${emb?`<img src="img/emblem/${k}.webp" alt="">`:`<i></i>`}${n}</button>`).join("");
+const match=c=>(S.role==="all"||cls(c)===S.role)&&(!S.regions.size||S.regions.has(c.region))&&(!S.q||c.name.toLowerCase().includes(S.q));
+
+// ---- pulse chart ----
+const tip=document.getElementById("tip"), svg=document.getElementById("chart");
+function chart(){
+  // drawn at the real on-screen width so text keeps its size on phones
+  const W=Math.max(300,Math.round(svg.parentElement.clientWidth-36)),H=W<560?190:220,pl=30,pr=4,pt=22,pb=28,n=YEARS.length,bw=(W-pl-pr)/n;
+  const vals=YEARS.map(y=>CHAMPS.filter(c=>c.yr===y&&match(c)).length);
+  const max=Math.max(5,...vals), step=max>30?10:max>12?5:2, top=Math.ceil(max/step)*step;
+  const yv=v=>pt+(H-pt-pb)*(1-v/top);
+  let g=`<g class="grid">`;for(let v=0;v<=top;v+=step)g+=`<line x1="${pl}" x2="${W-pr}" y1="${yv(v)}" y2="${yv(v)}"/><text x="${pl-8}" y="${yv(v)+5}" text-anchor="end">${v}</text>`;g+=`</g>`;
+  const bars=YEARS.map((y,i)=>{const v=vals[i],w=Math.max(6,bw*0.58),x=pl+i*bw+(bw-w)/2,y0=yv(0),h=y0-yv(v),r=Math.min(4,w/2,h);
+    // bar with 4px rounded data-end, square at the baseline
+    const path=v?`<path class="m" d="M${x},${y0}V${y0-h+r}Q${x},${y0-h} ${x+r},${y0-h}H${x+w-r}Q${x+w},${y0-h} ${x+w},${y0-h+r}V${y0}Z" style="fill:var(--gold)"/>`:"";
+    return `<g class="b${v?"":" zero"}" tabindex="0" role="button" aria-label="${y}: ${v} champions" data-y="${y}" data-v="${v}">${path}<rect class="hit" x="${pl+i*bw}" y="${pt-18}" width="${bw}" height="${H-pt-pb+18}"/>${v&&(bw>=22||v===max||i===n-1)?`<text class="v" x="${x+w/2}" y="${yv(v)-6}">${v}</text>`:""}</g>`;}).join("");
+  const every=bw>=44?1:bw>=20?2:4, short=bw<44;
+  const xl=`<g class="xl">${YEARS.map((y,i)=>(i%every===0)?`<text x="${pl+i*bw+bw/2}" y="${H-8}" text-anchor="middle">${short?"’"+String(y).slice(2):y}</text>`:"").join("")}</g>`;
+  svg.setAttribute("viewBox",`0 0 ${W} ${H}`);
+  svg.innerHTML=`${g}<line x1="${pl}" x2="${W-pr}" y1="${yv(0)}" y2="${yv(0)}" stroke="rgba(200,170,110,.45)"/>${bars}${xl}`;
+}
+function showTip(gEl,evt){
+  const y=+gEl.dataset.y,v=+gEl.dataset.v;const list=CHAMPS.filter(c=>c.yr===y&&match(c));
+  tip.innerHTML=`<span class="t">${y}</span><br><b>${v}</b>${v===1?"champion":"champions"}${list.length?`<small>${esc(list.slice(0,6).map(c=>c.name).join(", "))}${list.length>6?` and ${list.length-6} more`:""}</small>`:""}`;
+  tip.hidden=false;
+  const box=svg.closest(".pulse").getBoundingClientRect(), r=gEl.getBoundingClientRect();
+  let left=r.left-box.left+r.width/2-tip.offsetWidth/2; left=Math.max(6,Math.min(left,box.width-tip.offsetWidth-6));
+  tip.style.left=left+"px"; tip.style.top=Math.max(4,r.top-box.top-tip.offsetHeight+30)+"px";
+}
+svg.addEventListener("mouseover",e=>{const g=e.target.closest(".b");if(g)showTip(g,e);});
+svg.addEventListener("mouseleave",()=>tip.hidden=true);
+svg.addEventListener("focusin",e=>{const g=e.target.closest(".b");if(g)showTip(g,e);});
+svg.addEventListener("focusout",()=>tip.hidden=true);
+const jump=y=>{const el=document.getElementById("y"+y);if(el)el.scrollIntoView({behavior:"smooth",block:"start"});};
+svg.addEventListener("click",e=>{const g=e.target.closest(".b");if(g&&+g.dataset.v)jump(g.dataset.y);});
+svg.addEventListener("keydown",e=>{const g=e.target.closest(".b");if(g&&(e.key==="Enter"||e.key===" ")){e.preventDefault();if(+g.dataset.v)jump(g.dataset.y);}});
+
+// ---- year bands ----
+const NOTES={};NOTES[FIRST]=`The game's alpha began with ${launch.length} champions on ${full(launch[0].rel)}.`;
+function render(){
+  const list=CHAMPS.filter(match);
+  const ys=[...new Set(list.map(c=>c.yr))].sort((a,b)=>S.order==="old"?a-b:b-a);
+  document.getElementById("years").innerHTML=ys.map(y=>{
+    const L=list.filter(c=>c.yr===y), ds=[...new Set(L.map(c=>c.rel))].sort();if(S.order==="new")ds.reverse();
+    return `<section class="year" id="y${y}"><div class="yl"><b>${y}</b><span>${pl(L.length,"champion")}</span>${NOTES[y]&&!S.q&&!S.regions.size&&S.role==="all"?`<em>${esc(NOTES[y])}</em>`:""}</div>
+      <div class="days">${ds.map(d=>{const D=L.filter(c=>c.rel===d);const p=D[0].patch;
+        return `<div class="day"><div class="dt">${dm(d)}${p?`<small>${esc(p.replace(/^V/,"Patch "))}</small>`:""}</div><div class="champs">${D.map(c=>
+          `<button class="ch" type="button" data-id="${c.id}" style="--rc:${REG[c.region][1]}" title="${esc(c.name)} · #${c.n}"><span class="face"><img src="img/${c.id}-tile.webp" alt="" loading="lazy" decoding="async"><i>#${c.n}</i></span><span class="nm">${esc(c.name)}</span></button>`).join("")}</div></div>`;}).join("")}</div></section>`;}).join("");
+  document.getElementById("empty").hidden=list.length>0;
+  const filtered=S.q||S.role!=="all"||S.regions.size;
+  document.getElementById("status").innerHTML=`<b>${list.length}</b> of <b>${CHAMPS.length}</b> champions${list.length?` · ${list[0].yr===list[list.length-1].yr?list[0].yr:`${Math.min(...list.map(c=>c.yr))}–${Math.max(...list.map(c=>c.yr))}`}`:""}${filtered?` · <button class="clear" type="button" id="clear">Clear filters</button>`:""}`;
+  const cl=document.getElementById("clear");if(cl)cl.onclick=reset;
+  chart();
+}
+function reset(){S.q="";S.role="all";S.regions.clear();document.getElementById("q").value="";
+  document.querySelectorAll("#roles button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.v==="all")));
+  document.querySelectorAll("#regions .chip").forEach(b=>b.setAttribute("aria-pressed","false"));render();}
+let t;document.getElementById("q").addEventListener("input",e=>{clearTimeout(t);t=setTimeout(()=>{S.q=e.target.value.trim().toLowerCase();render();},140);});
+document.getElementById("roles").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;S.role=b.dataset.v;document.querySelectorAll("#roles button").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));render();});
+document.getElementById("order").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;S.order=b.dataset.v;document.querySelectorAll("#order button").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));render();});
+document.getElementById("regions").addEventListener("click",e=>{const b=e.target.closest(".chip");if(!b)return;const v=b.dataset.v;S.regions.has(v)?S.regions.delete(v):S.regions.add(v);b.setAttribute("aria-pressed",String(S.regions.has(v)));render();});
+document.getElementById("years").addEventListener("click",e=>{const b=e.target.closest(".ch");if(b)open(BY[b.dataset.id]);});
+
+// ---- champion plate ----
+const dlg=document.getElementById("dlg"),plate=document.getElementById("plate");
+function open(c){
+  if(!c)return;const rg=REG[c.region];plate.style.setProperty("--rc",rg[1]);
+  const same=byDay[c.rel].filter(x=>x!==c);
+  const prev=CHAMPS.filter(x=>x.rel<c.rel).slice(-1)[0], next=CHAMPS.find(x=>x.rel>c.rel);
+  const prevDay=prev?byDay[prev.rel]:[], nextDay=next?byDay[next.rel]:[];
+  const btn=x=>`<button type="button" data-open="${x.id}"><img src="img/${x.id}-tile.webp" alt="">${esc(x.name)}</button>`;
+  const yearN=CHAMPS.filter(x=>x.yr===c.yr), idxY=yearN.indexOf(c)+1;
+  plate.innerHTML=`<button class="x" type="button" aria-label="Close" id="x">×</button>
+    <img class="art" src="img/${c.id}-full.webp" alt="${esc(c.name)}">
+    <div style="min-width:0">
+      <div class="eyebrow" style="color:var(--rc)">Champion #${c.n} of ${CHAMPS.length} · ${esc(rg[0])}</div>
+      <h2>${esc(c.name)}</h2><div class="ttl">${esc(c.title)}</div>
+      <dl class="facts">
+        <dt>Released</dt><dd><b>${full(c.rel)}</b>${c.patch?` <small>· ${esc(c.patch.replace(/^V/,"patch "))}</small>`:""}</dd>
+        ${c.rev?`<dt>Revealed</dt><dd><b>${full(c.rev)}</b> <small>· ${days(c.rev,c.rel)} days before release</small></dd>`:""}
+        <dt>In ${c.yr}</dt><dd><b>${idxY}</b> <small>of ${yearN.length} that year</small></dd>
+        <dt>Played for</dt><dd><b>${(days(c.rel,TODAY)/365.25).toFixed(1)}</b> <small>years</small></dd>
+      </dl>
+      ${same.length?`<h4>Released the same day</h4><div class="near">${same.slice(0,8).map(btn).join("")}${same.length>8?`<small style="align-self:center;color:var(--muted)">+${same.length-8} more</small>`:""}</div>`:""}
+      ${prev||next?`<h4>Before and after</h4><div class="near">${prevDay.length&&prev.rel!==c.rel?btn(prevDay[prevDay.length-1]):""}${nextDay.length?btn(nextDay[0]):""}</div>`:""}
+      <div class="links"><a class="btn" href="./#c-${c.id}">Meet ${esc(c.name)} in the Atlas</a><a class="btn ghost" href="skins.html?champion=${c.id}">Skins</a><a class="btn ghost" href="reading.html?champion=${c.id}">Stories</a></div>
+    </div>`;
+  document.getElementById("x").onclick=()=>dlg.close();
+  plate.querySelectorAll("[data-open]").forEach(b=>b.onclick=()=>open(BY[b.dataset.open]));
+  plate.scrollTop=0;
+  if(!dlg.open)dlg.showModal();
+  try{history.replaceState(null,"",location.pathname+location.search+"#t-"+c.id);}catch(e){}
+}
+dlg.addEventListener("close",()=>{try{history.replaceState(null,"",location.pathname+location.search);}catch(e){}});
+dlg.addEventListener("click",e=>{if(e.target===dlg)dlg.close();});
+
+// URL: timeline.html?region=ionia · #y2013 · #t-<champion>
+const P=new URLSearchParams(location.search);
+if(P.get("region")&&REG[P.get("region")]){S.regions.add(P.get("region"));document.querySelector(`#regions .chip[data-v="${P.get("region")}"]`).setAttribute("aria-pressed","true");}
+render();
+addEventListener("resize",()=>{clearTimeout(window._rz);window._rz=setTimeout(chart,150);});
+const h=location.hash;let m;
+if((m=h.match(/^#t-([a-z]+)$/))&&BY[m[1]]){jump(BY[m[1]].yr);open(BY[m[1]]);}
+else if((m=h.match(/^#y(\d{4})$/)))jump(m[1]);
+</script>
+</body>
+</html>
