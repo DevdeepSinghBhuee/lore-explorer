@@ -282,7 +282,7 @@ function apply(){
 }
 function render(){
   document.getElementById("grid").innerHTML=list.slice(0,S.shown).map((s,i)=>`<button class="story" type="button" data-i="${i}">
-    <div class="pic"><img src="${img(s.img,560)}" alt="" loading="lazy" decoding="async"><span class="mins"><b>${s.min}</b>min read</span></div>
+    <div class="pic"><img src="${img(s.img,560)}" alt="" loading="lazy" decoding="async" onerror="this.style.visibility='hidden'"><span class="mins"><b>${s.min}</b>min read</span></div>
     <h3>${esc(s.t)}</h3>
     <div class="meta"><span class="yr">${s.date.slice(0,4)}</span>${s.by?`<span>by ${esc(s.by)}</span>`:""}</div>
     <p class="tease">${esc(s.d)}</p>${faces(s.ch)}</button>`).join("");
