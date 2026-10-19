@@ -207,6 +207,7 @@ footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width
   .faces{grid-template-columns:repeat(auto-fill,minmax(76px,1fr))}.face img{width:64px;height:64px}
 }
 </style>
+<script src="site.js" defer></script>
 </head>
 <body>
 <div class="wrap">
@@ -243,7 +244,7 @@ footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width
         <h1 id="hName"></h1>
         <div class="ttl" id="hTitle"></div>
         <div class="meta" id="hMeta"></div>
-        <div class="change"><a class="btn ghost" href="journey.html">Pick another champion</a><button class="btn ghost" type="button" id="hRandom">Surprise me</button></div>
+        <div class="change"><button type="button" class="fav-btn" id="hFav" data-fav-label>Add to my champions</button><a class="btn ghost" href="journey.html">Pick another champion</a><button class="btn ghost" type="button" id="hRandom">Surprise me</button></div>
       </div>
     </section>
     <div class="tour">
@@ -322,6 +323,7 @@ async function journey(c){
   document.getElementById("hTitle").textContent=c.title.charAt(0).toUpperCase()+c.title.slice(1);
   document.getElementById("hMeta").innerHTML=`<span>${emb(c.region)}${esc(rg.name)}</span><span>${esc((c.tags||[]).join(" · "))}</span>${R?`<span>Arrived <b>${full(R[0])}</b></span>`:""}`;
   document.getElementById("hRandom").onclick=()=>surprise(c.id);
+  document.getElementById("hFav").setAttribute("data-fav",c.id);
 
   // the heavier data files load now, in parallel
   await Promise.all([loadScript("data/reading.js"),loadScript("data/skins.js")]);
@@ -348,9 +350,9 @@ async function journey(c){
       ${first?`<a class="firstread" href="${UNI}story/${esc(first.s)}/" target="_blank" rel="noopener">
         <div class="pic" style="background-image:url('${UIMG}${first.img}?w=700&fm=webp')"></div>
         <div class="body"><div class="tag">${own?`${esc(c.name)}'s own story`:"Shortest way in"} · <b>${first.min}</b> min read · ${first.date.slice(0,4)}</div>
-        <h3>${esc(first.t)}</h3>${first.by?`<div class="tag" style="margin-bottom:10px">by ${esc(first.by)}</div>`:""}<p>${esc(first.d)}</p>
+        <h3>${esc(first.t)}<span class="read-badge" data-read="${esc(first.s)}">✓ Read</span></h3>${first.by?`<div class="tag" style="margin-bottom:10px">by ${esc(first.by)}</div>`:""}<p>${esc(first.d)}</p>
         <span class="more-link">Read on Universe ↗</span></div></a>`:""}
-      ${rest.length?`<h3 class="tag" style="margin:18px 0 8px">Then, in the order Riot published them</h3><ul class="list">${rest.map(s=>`<li><a href="${UNI}story/${esc(s.s)}/" target="_blank" rel="noopener"><span>${esc(s.t)} <span class="tag">· ${s.date.slice(0,4)}</span></span><small>${s.min} min</small></a></li>`).join("")}</ul>`:""}
+      ${rest.length?`<h3 class="tag" style="margin:18px 0 8px">Then, in the order Riot published them</h3><ul class="list">${rest.map(s=>`<li><a href="${UNI}story/${esc(s.s)}/" target="_blank" rel="noopener"><span>${esc(s.t)} <span class="tag">· ${s.date.slice(0,4)}</span><span class="read-badge" data-read="${esc(s.s)}">✓ Read</span></span><small>${s.min} min</small></a></li>`).join("")}</ul>`:""}
       ${CM.length?`<h3 class="tag" style="margin:22px 0 0">Comics</h3><div class="comics">${CM.map(x=>`<a href="reading.html#comic-${x.u.replace("/","--")}" title="${esc(x.t)}" style="--ar:${x.ar}"><img src="${UIMG}${x.img}?w=${x.ar>1?480:260}&fm=webp" alt="${esc(x.t)}" loading="lazy"></a>`).join("")}</div>`:""}
       <p style="margin-top:14px"><a class="more-link" href="reading.html?champion=${c.id}">Everything about ${esc(c.name)} in the Reading Room →</a></p>`);
   }

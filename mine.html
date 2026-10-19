@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>My Champions</title>
+<meta name="description" content="Your favourite League of Legends champions and the Runeterra stories you have read, kept in your own browser.">
+<link rel="icon" href="img/emblem/wanderers.webp">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus+SC&family=Alegreya:ital,wght@0,400;0,500;0,700;1,400&family=Spline+Sans+Mono:wght@400;500&family=Teko:wght@400;500;600&display=swap">
+<style>
+/* Layout: a personal shelf. Reading progress up top, the starred champions as a row of portrait cards with their own progress, what to read next, and a log of what's been read. */
+:root{
+  color-scheme:dark;
+  --ink:#080d18; --panel:#0f1a2e; --panel-2:#142238;
+  --gold:#c8aa6e; --gold-dim:#7d6a45; --text:#ebe4d3; --muted:#939bb0; --faint:#5b6580;
+  --rule:rgba(200,170,110,.22); --done:#7fd1a0;
+  --f-display:"Marcellus SC","Cinzel",Georgia,serif;
+  --f-body:"Alegreya",Georgia,"Times New Roman",serif;
+  --f-mono:"Spline Sans Mono",ui-monospace,Menlo,monospace;
+  --f-num:"Teko","Oxanium",var(--f-display),sans-serif;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ink);color:var(--text);font-family:var(--f-body);font-size:18px;line-height:1.55;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+img{max-width:100%}
+[hidden]{display:none!important}
+a{color:var(--gold)}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.wrap{max-width:1240px;margin-inline:auto}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:18px;border-bottom:1px solid var(--rule);flex-wrap:wrap}
+.brand{font-family:var(--f-display);font-size:20px;letter-spacing:.08em;color:var(--gold);display:flex;align-items:center;gap:10px;text-decoration:none}
+.brand svg{width:26px;height:26px}
+.nav{display:flex;gap:4px;flex-wrap:wrap}
+.nav a{font-family:var(--f-mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-decoration:none;padding:7px 12px}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+
+.intro{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:32px;align-items:end;padding-block:40px 26px}
+h1{font-family:var(--f-display);font-weight:400;font-size:clamp(40px,6vw,74px);line-height:.95;margin:12px 0 14px}
+h1 em{font-style:normal;color:var(--gold)}
+.intro p{margin:0;font-size:18px;max-width:48ch;color:#c4c8d3}
+.progress{border:1px solid var(--rule);background:var(--panel);padding:18px 20px}
+.progress .row{display:flex;justify-content:space-between;gap:12px;align-items:baseline;flex-wrap:wrap}
+.progress b{font-family:var(--f-num);font-weight:500;font-size:44px;line-height:.9;color:var(--gold);font-variant-numeric:tabular-nums}
+.progress span{font-family:var(--f-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.meter{height:8px;background:rgba(200,170,110,.12);margin:14px 0 8px;overflow:hidden}
+.meter i{display:block;height:100%;background:var(--done);width:0;transition:width .6s cubic-bezier(.2,.8,.2,1)}
+.progress small{color:var(--muted);font-size:14px}
+
+section.block{padding-block:26px;border-top:1px solid var(--rule)}
+section.block>h2{font-family:var(--f-display);font-weight:400;font-size:clamp(26px,3vw,34px);margin:0 0 4px;display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+section.block>h2 small{font-family:var(--f-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+section.block>p.sub{margin:0 0 16px;color:var(--muted);font-size:15.5px}
+
+.favs{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
+.fav{position:relative;border:1px solid color-mix(in srgb,var(--rc) 45%,transparent);background:var(--panel);min-width:0;display:flex;flex-direction:column}
+.fav .pic{display:block;aspect-ratio:16/9;overflow:hidden;background:var(--panel-2)}
+.fav .pic img{width:100%;height:100%;object-fit:cover;object-position:70% 20%;display:block;transition:transform .5s}
+.fav:hover .pic img{transform:scale(1.04)}
+.fav .body{padding:12px 14px 14px;display:grid;gap:8px}
+.fav h3{font-family:var(--f-display);font-weight:400;font-size:24px;line-height:1;margin:0}
+.fav h3 small{display:block;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-top:6px}
+.fav .mini{height:5px;background:rgba(200,170,110,.12)}
+.fav .mini i{display:block;height:100%;background:var(--done)}
+.fav .stat{font-size:14px;color:var(--muted)}
+.fav .stat b{font-family:var(--f-num);font-weight:500;font-size:17px;color:var(--text)}
+.fav .links{display:flex;gap:6px;flex-wrap:wrap}
+.fav .links a{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;border:1px solid var(--rule);padding:5px 8px;color:var(--text)}
+.fav .links a:hover{border-color:var(--gold)}
+.fav .unstar{position:absolute;top:8px;right:8px;width:34px;height:34px;background:rgba(8,13,24,.8);border:1px solid var(--gold-dim);color:var(--gold);font-size:17px;cursor:pointer;line-height:1}
+.fav .unstar:hover{background:var(--gold);color:var(--ink)}
+
+.empty{border:1px dashed var(--rule);padding:30px;text-align:center;color:#c4c8d3}
+.empty p{margin:0 0 14px}
+.btn{display:inline-flex;align-items:center;gap:8px;font-family:var(--f-mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;padding:10px 14px;text-decoration:none;cursor:pointer;border:1px solid var(--gold);background:var(--gold);color:var(--ink)}
+.btn.ghost{background:transparent;color:var(--text);border-color:var(--rule)}
+.btn.ghost:hover{border-color:var(--gold)}
+
+.queue{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.q{display:grid;grid-template-columns:110px minmax(0,1fr);gap:12px;border:1px solid var(--rule);text-decoration:none;color:var(--text);background:var(--panel);min-width:0}
+.q:hover{border-color:var(--gold)}
+.q img{width:110px;height:100%;min-height:80px;object-fit:cover;display:block}
+.q div{padding:10px 12px 10px 0;min-width:0}
+.q b{display:block;font-family:var(--f-display);font-weight:400;font-size:18px;line-height:1.15}
+.q small{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+
+.log{list-style:none;margin:0;padding:0;display:grid;gap:6px;max-width:820px}
+.log li{display:flex;justify-content:space-between;gap:12px;align-items:center;border:1px solid var(--rule);padding:8px 12px}
+.log a{color:var(--text);text-decoration:none;min-width:0}
+.log a:hover{color:var(--gold)}
+.log small{font-family:var(--f-num);font-size:16px;color:var(--muted);white-space:nowrap}
+.log button{background:none;border:0;color:var(--faint);cursor:pointer;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap}
+.log button:hover{color:var(--text)}
+.note{color:var(--faint);font-size:14px;margin-top:22px}
+.danger{background:none;border:1px solid rgba(255,93,93,.4);color:#ff9d9d;font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:8px 12px;cursor:pointer}
+
+footer{border-top:1px solid var(--rule);margin-top:48px;padding-block:24px 40px;color:var(--muted);font-size:14px;display:grid;gap:8px}
+footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width:80ch}
+@media (max-width:760px){.intro{grid-template-columns:1fr;gap:18px}}
+@media (max-width:480px){.favs{grid-template-columns:minmax(0,1fr)}.queue{grid-template-columns:minmax(0,1fr)}.q{grid-template-columns:90px minmax(0,1fr)}.q img{width:90px}}
+</style>
+<script src="site.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header class="bar">
+    <a class="brand" href="./">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><polygon points="16,2 29,9.5 29,22.5 16,30 3,22.5 3,9.5" fill="none" stroke="#c8aa6e" stroke-width="1.5"/><circle cx="16" cy="16" r="5" fill="none" stroke="#c8aa6e" stroke-width="1.5"/><path d="M16 2v9M16 21v9M3 9.5l8 4.5M21 18l8 4.5M29 9.5l-8 4.5M11 18l-8 4.5" stroke="#c8aa6e" stroke-width="1"/></svg>
+      Runeterra Atlas
+    </a>
+    <nav class="nav" aria-label="Site"><a href="./">Atlas</a><a href="journey.html">Journeys</a><a href="reading.html">Reading</a><a href="mine.html" aria-current="page">My champions</a></nav>
+  </header>
+
+  <section class="intro">
+    <div>
+      <div class="eyebrow">Yours</div>
+      <h1>My champions <em>&amp; my reading.</em></h1>
+      <p>Star a champion on their journey, on the Atlas, the Timeline or in Skins and they'll gather here. Every story you open from this site is ticked off as read. It is all kept in this browser only: no account, nothing sent anywhere.</p>
+    </div>
+    <div class="progress" id="progress"></div>
+  </section>
+
+  <section class="block">
+    <h2>Favourites <small id="favCount"></small></h2>
+    <p class="sub">Your starred champions, with how much of their story you've read.</p>
+    <div id="favs"></div>
+  </section>
+
+  <section class="block" id="nextBlock">
+    <h2>Read next <small>about your champions</small></h2>
+    <p class="sub">Stories featuring your favourites that you haven't opened yet, shortest first.</p>
+    <div class="queue" id="queue"></div>
+  </section>
+
+  <section class="block">
+    <h2>Stories you've read <small id="logCount"></small></h2>
+    <p class="sub">Newest first. Tick a story off by hand in the Reading Room if you read it somewhere else.</p>
+    <ul class="log" id="log"></ul>
+    <p class="note">Saved in this browser. Clearing your browser data, or using another device or a private window, starts fresh. <button class="danger" type="button" id="clear">Clear everything</button></p>
+  </section>
+
+  <footer>
+    <div>Stories and comics belong to Riot Games and open on Riot's Universe site.</div>
+    <div class="legal">Runeterra Atlas was created under Riot Games' "Legal Jibber Jabber" policy using assets owned by Riot Games. Riot Games does not endorse or sponsor this project.</div>
+  </footer>
+</div>
+
+<script src="data/champions.js"></script>
+<script src="data/regions.js"></script>
+<script src="data/reading.js"></script>
+<script>
+const CH=Object.fromEntries((window.ATLAS_CHAMPS||[]).map(c=>[c.id,c]));
+const RG=Object.fromEntries((window.ATLAS_REGIONS||[]).map(r=>[r.id,r]));
+const STORIES=window.ATLAS_READ_STORIES||[], BYS=Object.fromEntries(STORIES.map(s=>[s.s,s]));
+const DD="https://ddragon.leagueoflegends.com/cdn/img/champion/";
+const UIMG="https://cmsassets.rgpub.io/sanity/images/dsfx7636/universe/";
+const UNI="https://universe.leagueoflegends.com/en_US/story/";
+const esc=s=>String(s??"").replace(/[&<>"]/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch]));
+const MON=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const dm=d=>{const [y,m,dd]=d.split("-");return `${+dd} ${MON[+m-1]} ${y}`;};
+const hm=m=>m<60?`${m} min`:`${Math.floor(m/60)} h ${m%60?`${m%60} min`:""}`.trim();
+
+function render(){
+  const M=window.AtlasMine; if(!M)return;
+  const favs=M.favs().filter(id=>CH[id]), read=M.read();
+  const readS=STORIES.filter(s=>read[s.s]);
+  const mins=readS.reduce((a,s)=>a+s.min,0), total=STORIES.reduce((a,s)=>a+s.min,0);
+  document.getElementById("progress").innerHTML=`<div class="row"><div><b>${readS.length}</b> <span>of ${STORIES.length} stories read</span></div><div><b>${favs.length}</b> <span>${favs.length===1?"favourite":"favourites"}</span></div></div>
+    <div class="meter"><i style="width:${(readS.length/STORIES.length*100).toFixed(1)}%"></i></div>
+    <small>${readS.length?`About ${hm(mins)} of Runeterra read, out of roughly ${Math.round(total/60)} hours.`:"Open any story from the Reading Room or a journey and it will count here."}</small>`;
+
+  document.getElementById("favCount").textContent=favs.length?`${favs.length} starred`:"";
+  document.getElementById("favs").innerHTML=favs.length?`<div class="favs">${favs.map(id=>{const c=CH[id],rg=RG[c.region]||{};
+    const mine=STORIES.filter(s=>s.ch.includes(id)), done=mine.filter(s=>read[s.s]).length;
+    return `<article class="fav" style="--rc:${rg.color||"#c8aa6e"}">
+      <a class="pic" href="journey.html?c=${id}"><img src="${DD}splash/${c.dd}_0.jpg" alt="" loading="lazy"></a>
+      <button class="unstar" type="button" data-fav="${id}" title="Remove from my champions" aria-label="Remove ${esc(c.name)} from my champions">★</button>
+      <div class="body"><h3>${esc(c.name)}<small>${esc(rg.name||"")} · ${esc(c.title)}</small></h3>
+        ${mine.length?`<div class="mini"><i style="width:${done/mine.length*100}%"></i></div><div class="stat"><b>${done}</b> of <b>${mine.length}</b> ${mine.length===1?"story":"stories"} read</div>`:`<div class="stat">No Riot stories about ${esc(c.name)} yet.</div>`}
+        <div class="links"><a href="journey.html?c=${id}">Journey</a><a href="reading.html?champion=${id}">Stories</a><a href="skins.html?champion=${id}">Skins</a><a href="./#c-${id}">Atlas</a></div></div></article>`;}).join("")}</div>`
+    :`<div class="empty"><p>No favourites yet. Open any champion's journey and press <b>☆ Add to my champions</b>.</p><a class="btn" href="journey.html">Find a champion</a></div>`;
+
+  const q=STORIES.filter(s=>!read[s.s]&&s.ch.some(id=>favs.includes(id))).sort((a,b)=>a.min-b.min).slice(0,8);
+  document.getElementById("nextBlock").hidden=!favs.length;
+  document.getElementById("queue").innerHTML=q.length?q.map(s=>`<a class="q" href="${UNI}${esc(s.s)}/" target="_blank" rel="noopener"><img src="${UIMG}${s.img}?w=240&fm=webp" alt="" loading="lazy"><div><small>${s.min} min · ${esc(s.ch.filter(id=>favs.includes(id)).map(id=>CH[id].name).join(", "))}</small><b>${esc(s.t)}</b></div></a>`).join("")
+    :`<p style="color:var(--muted);margin:0;grid-column:1/-1">${favs.length?"You've read every story about your favourites. Star another champion to keep going.":""}</p>`;
+
+  const log=Object.entries(read).filter(([s])=>BYS[s]).sort((a,b)=>b[1].localeCompare(a[1]));
+  document.getElementById("logCount").textContent=log.length?`${log.length}`:"";
+  document.getElementById("log").innerHTML=log.length?log.map(([s,d])=>{const x=BYS[s];return `<li><a href="${UNI}${esc(s)}/" target="_blank" rel="noopener">${esc(x.t)}</a><span style="display:flex;gap:12px;align-items:center"><small>${dm(d)}</small><button type="button" data-unread="${esc(s)}">Unmark</button></span></li>`;}).join("")
+    :`<li style="justify-content:center;color:var(--muted);border-style:dashed">Nothing yet. <a href="reading.html" style="color:var(--gold);margin-left:6px">Visit the Reading Room</a></li>`;
+}
+document.getElementById("log").addEventListener("click",e=>{const b=e.target.closest("[data-unread]");if(b)AtlasMine.unmarkRead(b.dataset.unread);});
+let armed=false;document.getElementById("clear").addEventListener("click",e=>{
+  if(!armed){armed=true;e.target.textContent="Click again to clear";setTimeout(()=>{armed=false;e.target.textContent="Clear everything";},4000);return;}
+  AtlasMine.clear();armed=false;e.target.textContent="Clear everything";});
+// site.js is deferred, so wait for it
+function boot(){if(!window.AtlasMine){return setTimeout(boot,30);}render();AtlasMine.onChange(render);}
+boot();
+</script>
+</body>
+</html>

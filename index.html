@@ -15,6 +15,7 @@
 <title>Runeterra Atlas</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus+SC&family=Alegreya:ital,wght@0,400;0,500;0,700;1,400&family=Spline+Sans+Mono:wght@400;500&family=Teko:wght@500;600&display=swap">
+<script src="site.js" defer></script>
 </head>
 <body>
 <style>
@@ -1429,7 +1430,7 @@ function fillReading(c){
   const U="https://universe.leagueoflegends.com/en_US/";
   box.hidden=false;
   box.innerHTML=`<h5>Read about ${esc(c.name)} <a class="rr" href="reading.html?champion=${c.id}">Reading Room →</a></h5>`+
-    (st.length?`<ul class="stories">${st.map(s=>`<li><a href="${U}story/${esc(s.s)}/" target="_blank" rel="noopener">${esc(s.t)}<span class="rm">${s.min} min</span><span aria-hidden="true"> ↗</span></a></li>`).join("")}</ul>`:"")+
+    (st.length?`<ul class="stories">${st.map(s=>`<li><a href="${U}story/${esc(s.s)}/" target="_blank" rel="noopener">${esc(s.t)}<span class="rm">${s.min} min</span><span class="read-badge" data-read="${esc(s.s)}">✓ Read</span><span aria-hidden="true"> ↗</span></a></li>`).join("")}</ul>`:"")+
     (cm.length?`<div class="comicrow">${cm.map(x=>`<a href="reading.html#comic-${x.u.replace("/","--")}" title="${esc(x.t)}" style="--ar:${x.ar}"><img src="https://cmsassets.rgpub.io/sanity/images/dsfx7636/universe/${x.img}?w=${x.ar>1?360:200}&fm=webp" alt="${esc(x.t)}" loading="lazy" decoding="async"></a>`).join("")}</div>`:"");
 }
 // Skins strip: data/skins.js is large, so it loads only when a champion panel first opens
@@ -1462,7 +1463,7 @@ function renderDetail(){
       <figure class="portrait"><img src="${esc(c.full)}" alt="${esc(c.name)} loading screen art"></figure>
       <div class="dinfo">
         <h4>${esc(c.name)}</h4><div class="ttl">${esc(c.title)}</div>
-        <a class="journey-cta" href="journey.html?c=${c.id}">Take the ${esc(c.name)} journey →</a>
+        <a class="journey-cta" href="journey.html?c=${c.id}">Take the ${esc(c.name)} journey →</a><button type="button" class="fav-btn" data-fav="${c.id}" data-fav-label style="margin:6px 0 10px">Add to my champions</button><br>
         ${(()=>{const R=(window.ATLAS_RELEASES||{})[c.id];if(!R)return "";const [y,m,d]=R[0].split("-");const M=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];return `<a class="released" href="timeline.html#t-${c.id}" title="See ${esc(c.name)} on the release timeline">Released <b>${+d} ${M[+m-1]} ${y}</b>${R[1]?` · ${esc(R[1].replace(/^V/,"patch "))}`:""} →</a>`;})()}
         ${c.hand?`<div class="role">${esc(c.role)}</div>`:""}
         <p class="bio">${esc(c.bio)}</p>

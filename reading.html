@@ -160,6 +160,7 @@ footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width
 @media (max-width:860px){.feature{grid-template-columns:1fr}.feature .pic{min-height:0;aspect-ratio:16/8}.plate.comic .inner{grid-template-columns:1fr;padding:20px}.plate.comic .cov{max-width:240px;margin-inline:auto;display:block}.plate .body{padding:20px}}
 @media (max-width:480px){.filters{position:static}.seg button{padding:8px 9px;font-size:11px}.chip{font-size:11px}.grid{grid-template-columns:minmax(0,1fr)}.rack{--h:220px}.feature .cap{padding:18px}.tabs button{font-size:19px;padding:10px 12px}.counts{gap:16px}.counts div b{font-size:32px}}
 </style>
+<script src="site.js" defer></script>
 </head>
 <body>
 <div class="wrap">
@@ -284,7 +285,7 @@ function render(){
   document.getElementById("grid").innerHTML=list.slice(0,S.shown).map((s,i)=>`<button class="story" type="button" data-i="${i}">
     <div class="pic"><img src="${img(s.img,560)}" alt="" loading="lazy" decoding="async" onerror="this.style.visibility='hidden'"><span class="mins"><b>${s.min}</b>min read</span></div>
     <h3>${esc(s.t)}</h3>
-    <div class="meta"><span class="yr">${s.date.slice(0,4)}</span>${s.by?`<span>by ${esc(s.by)}</span>`:""}</div>
+    <div class="meta"><span class="yr">${s.date.slice(0,4)}</span>${s.by?`<span>by ${esc(s.by)}</span>`:""}<span class="read-badge" data-read="${esc(s.s)}">✓ Read</span></div>
     <p class="tease">${esc(s.d)}</p>${faces(s.ch)}</button>`).join("");
   document.getElementById("empty").hidden=list.length>0;
   document.getElementById("more").hidden=S.shown>=list.length;
@@ -351,9 +352,10 @@ function open(x,L){
       <div class="body">
         <div class="eyebrow" style="color:var(--rc)">Short story · ${fdate(x.date)}</div>
         <h2>${esc(x.t)}</h2>${x.by?`<div class="by">by ${esc(x.by)}</div>`:""}
-        <div class="tags"><span class="tagm"><b>${x.min}</b> min read</span><span class="tagm"><b>${x.w.toLocaleString()}</b> words</span></div>
+        <div class="tags"><span class="tagm"><b>${x.min}</b> min read</span><span class="read-badge" data-read="${esc(x.s)}" style="align-self:center">✓ Read</span><span class="tagm"><b>${x.w.toLocaleString()}</b> words</span></div>
         ${x.d?`<p class="tease">${esc(x.d)}</p>`:""}
         <a class="btn" href="${sUrl(x)}" target="_blank" rel="noopener">Read it on Universe ↗</a>
+        <button class="btn ghost" type="button" id="rTog" style="margin-left:6px"></button>
         ${who(x.ch)}${nav}
         <div class="note">Opens Riot's official Universe site in a new tab.</div>
       </div>`;
@@ -370,6 +372,9 @@ function open(x,L){
         <div class="note">Opens Riot's official Universe site in a new tab.</div>
       </div></div>`;
   }
+  const tog=document.getElementById("rTog");
+  if(tog&&window.AtlasMine){const upd=()=>{tog.textContent=AtlasMine.isRead(x.s)?"Mark as unread":"I've read this";};upd();
+    tog.onclick=()=>{AtlasMine.isRead(x.s)?AtlasMine.unmarkRead(x.s):AtlasMine.markRead(x.s);upd();};}
   document.getElementById("x").onclick=()=>dlg.close();
   const pv=document.getElementById("pv"),nx=document.getElementById("nx");
   if(pv)pv.onclick=()=>step(-1); if(nx)nx.onclick=()=>step(1);

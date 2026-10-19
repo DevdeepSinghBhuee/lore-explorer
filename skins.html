@@ -156,6 +156,7 @@ footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width
 }
 @media (max-width:480px){.gem{width:23px;height:23px;top:4px;left:4px}.filters{position:static}.seg button{padding:8px 9px;font-size:11px}.chip{font-size:11px}.grid{grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:12px 8px}.card .nm{font-size:12.5px}.counts{gap:16px}.counts div b{font-size:32px}}
 </style>
+<script src="site.js" defer></script>
 </head>
 <body>
 <div class="wrap">
@@ -346,6 +347,7 @@ function open(s){
         <h3>Champion</h3>
         <a class="who" href="./#c-${c.id}"><img src="img/${c.id}-tile.webp" alt=""><div><b>${esc(c.name)}</b><span>${esc(c.title)}</span></div></a>
         <div class="links">
+          <button type="button" class="fav-btn" data-fav="${c.id}" data-fav-label>Add to my champions</button>
           <a href="journey.html?c=${c.id}">Take the ${esc(c.name)} journey →</a>
           <a href="./#c-${c.id}">Meet ${esc(c.name)} in the Atlas →</a>
           <a href="#" id="allc">All ${total} ${esc(c.name)} skins →</a>

@@ -13,6 +13,7 @@ Custom domain is possible later via Pages settings + CNAME file (not set up).
 |---|---|
 | index.html | The Atlas: painted terrain map (canvas → SVG `<image>`), region themes (THEMES), WebGL depth-parallax banners (Scene class, Depth Anything V2 depth maps in assets/), "web of bonds" relationship graph (renderWeb: all champions of the region + outside partners of the selected champion), champion detail panel (bio, official Universe stories, LoR cards, Riftbound cards, videos). Deep link `#c-<id>`. |
 | journey.html | Champion Journeys: `?c=<id>` = guided tour in up to 9 chapters (who they are + region; read first = their "-color" story else shortest, other stories, comics; watch = videos.js minus login/making/music, own cinematics first, play in place; listen = login theme + music videos + music.js tracks naming them; bonds; 6 rarest skins; LoR + Riftbound cards; arrival stats; where next = official bonds + same-region picks). No `?c` = picker by region with search + Surprise me. Empty chapters are skipped. Linked from Atlas panel, Timeline and Skins plates. |
+| mine.html | "My champions": favourites (★) with per-champion story progress, "read next" (unread stories about favourites, shortest first), log of stories read (unmark), clear-all (two-click). Data lives only in localStorage via site.js. |
 | worlds.html | Live Worlds 2026: hero scoreboard + countdown, schedule tabs in viewer's time zone, 19 teams + rosters, anthem, champions history 2011–2025. Refreshes every 60 s; falls back to WORLDS_SNAPSHOT. |
 | library.html | 1,647 Legends of Runeterra cards, filters, card dialog, deep links. |
 | riftbound.html | 1,407 Riftbound TCG cards, domain chips; images hotlinked from Riot CDN. |
@@ -23,7 +24,12 @@ Custom domain is possible later via Pages settings + CNAME file (not set up).
 | timeline.html | Release timeline: 173 champions in release order. Pulse bar chart (releases per year, drawn at real width, hover tooltip, click jumps), 6 computed milestones, year bands with release-day rows (date + patch, #order), filters (search, class = tags[0], region, oldest/newest). Plate: released/revealed dates, same-day & before/after champs, links to Atlas/Skins/Reading. `?region=`, `#y<year>`, `#t-<id>`. Atlas panel shows "Released <date> · patch" linking here. |
 | music.html | Music hub: 13 shelves (anthems, virtual bands, Arcane S1/S2/score, Pentakill, Star Guardian, login themes from videos.js, champion songs, Warsongs, DJ Sona, LoR, long listens). One docked YouTube IFrame-API player (youtube-nocookie; kept ≥200px tall per YouTube's rules) plays a shelf in order, shuffle, Media Session controls. Deep links `#s-<shelf>`, `#t-<shelf>-<n>`. |
 
-Nav on every page: Atlas(./) · Journeys · Worlds · Players · Music · Skins · Reading · Timeline · Library · Riftbound · Theater. Every footer carries Riot's
+Menu: site.js (loaded with `defer` on every page) replaces each page's <nav class="nav"> with grouped dropdowns — Champions (Journeys, Skins, Timeline) ·
+Lore (Atlas, Reading Room) · Esports (Worlds, Players) · Watch & Listen (Theater, Music) · Card games (Runeterra cards, Riftbound) · ★ My champions;
+phone = star + "Menu" sheet. Edit GROUPS in site.js to change it (the plain links left in each page are only a no-JS fallback).
+site.js also owns window.AtlasMine (localStorage atlas.mine.favs / atlas.mine.read): any `[data-fav="<id>"]` is a star button (add
+`data-fav-label` for the text label), any `[data-read="<slug>"]` badge shows when read, and clicking a Universe story link marks it read.
+Every footer carries Riot's
 "Legal Jibber Jabber" fan-content notice — keep it on any new page.
 
 ## Data (data/*.js, plain globals)
@@ -79,5 +85,5 @@ Must work at phone width with no horizontal scroll (watch grid children: `min-wi
 6. ~~Skins gallery~~ (done 2026-10-19). 
 7. ~~Comics & short stories (Reading Room)~~ (done 2026-10-19).
 8. ~~Champion release timeline~~ (done 2026-10-19).
-9. ~~Champion journeys~~ (done 2026-10-20). Agreed next, in order: tidier menu (group the 11 links) + "My champions" (favourites & read stories in
-   localStorage) → daily guessing game (study LoLdle-style games Caedrel plays on stream first) → abilities ("how they play") → LoL streamers.
+9. ~~Champion journeys~~ (done 2026-10-20). 10. ~~Grouped menu + My champions~~ (done 2026-10-20). Agreed next, in order:
+   daily guessing game (study LoLdle-style games Caedrel plays on stream first) → abilities ("how they play") → LoL streamers.
