@@ -1,0 +1,414 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Runeterra Reading Room</title>
+<meta name="description" content="Every official League of Legends short story and comic from Riot's Universe, by champion, region and reading time, with links to read them on Riot's site.">
+<meta property="og:title" content="Runeterra Reading Room">
+<meta property="og:description" content="Every official League of Legends short story and comic, in one reading room.">
+<link rel="icon" href="img/emblem/wanderers.webp">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://cmsassets.rgpub.io">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus+SC&family=Alegreya:ital,wght@0,400;0,500;0,700;1,400&family=Spline+Sans+Mono:wght@400;500&family=Teko:wght@500;600&display=swap">
+<style>
+/* Layout: a reading room. A featured story up top, two shelves (stories as illustrated cards, comics as racks of covers per series); one item opens into a plate that links out to Riot. Shares the Atlas tokens. */
+:root{
+  color-scheme:dark;
+  --ink:#080d18; --panel:#0f1a2e; --panel-2:#142238;
+  --gold:#c8aa6e; --gold-dim:#7d6a45; --text:#ebe4d3; --muted:#939bb0; --faint:#5b6580;
+  --rule:rgba(200,170,110,.22);
+  --rc:#c8aa6e;
+  --f-display:"Marcellus SC","Cinzel",Georgia,serif;
+  --f-body:"Alegreya",Georgia,"Times New Roman",serif;
+  --f-mono:"Spline Sans Mono",ui-monospace,Menlo,monospace;
+  --f-num:"Teko","Oxanium",var(--f-display),sans-serif;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ink);color:var(--text);font-family:var(--f-body);font-size:18px;line-height:1.55;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+img{max-width:100%}
+[hidden]{display:none!important}
+a{color:var(--gold)}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.wrap{max-width:1240px;margin-inline:auto}
+
+.bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:18px;border-bottom:1px solid var(--rule);flex-wrap:wrap}
+.brand{font-family:var(--f-display);font-size:20px;letter-spacing:.08em;color:var(--gold);display:flex;align-items:center;gap:10px;text-decoration:none}
+.brand svg{width:26px;height:26px}
+.nav{display:flex;gap:4px;flex-wrap:wrap}
+.nav a{font-family:var(--f-mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-decoration:none;padding:7px 12px;border:1px solid transparent}
+.nav a:hover{color:var(--text)}
+.nav a[aria-current="page"]{color:var(--ink);background:var(--gold)}
+
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+.intro{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;padding-block:40px 22px}
+h1{font-family:var(--f-display);font-weight:400;font-size:clamp(40px,6vw,78px);line-height:.95;margin:12px 0 14px;text-wrap:balance}
+h1 em{font-style:normal;color:var(--gold)}
+.lede{font-size:19px;max-width:48ch;margin:0}
+.counts{display:flex;gap:22px;flex-wrap:wrap}
+.counts div b{display:block;font-family:var(--f-num);font-weight:600;font-size:40px;line-height:.9;color:var(--gold);font-variant-numeric:tabular-nums}
+.counts div span{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+
+/* featured story */
+.feature{position:relative;margin:0 0 28px;display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);border:1px solid color-mix(in srgb,var(--rc) 40%,transparent);background:linear-gradient(120deg,color-mix(in srgb,var(--rc) 10%,var(--panel)),var(--panel) 60%)}
+.feature .pic{position:relative;min-height:300px;overflow:hidden;background:var(--panel-2)}
+.feature .pic img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity .5s}
+.feature .cap{padding:28px;display:flex;flex-direction:column;justify-content:center;min-width:0}
+.feature h2{font-family:var(--f-display);font-weight:400;font-size:clamp(28px,3.4vw,42px);line-height:1;margin:8px 0 6px}
+.feature .by{font-size:15px;color:var(--muted);font-style:italic;margin-bottom:12px}
+.feature p{margin:0 0 16px;font-size:17px;line-height:1.55;font-style:italic;color:#d9dbe2}
+.acts{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.btn{display:inline-block;font-family:var(--f-mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;padding:9px 14px;text-decoration:none;cursor:pointer;border:1px solid var(--gold);background:var(--gold);color:var(--ink)}
+.btn.ghost{background:transparent;color:var(--text);border-color:var(--rule)}
+.btn.ghost:hover{border-color:var(--gold)}
+
+.tabs{display:flex;gap:0;border-bottom:1px solid var(--rule);margin-bottom:0}
+.tabs button{background:none;border:0;border-bottom:2px solid transparent;padding:12px 18px;font-family:var(--f-display);font-size:22px;color:var(--muted);cursor:pointer;display:flex;align-items:baseline;gap:8px}
+.tabs button b{font-family:var(--f-num);font-weight:500;font-size:20px;color:var(--faint)}
+.tabs button[aria-selected="true"]{color:var(--text);border-bottom-color:var(--gold)}
+.tabs button[aria-selected="true"] b{color:var(--gold)}
+
+.filters{min-width:0;position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:color-mix(in srgb,var(--ink) 92%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--rule);padding-block:12px;display:grid;grid-template-columns:minmax(0,1fr);gap:10px}
+.filters>*{min-width:0}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.search{flex:1 1 260px;min-width:0}
+.search input{width:100%;background:var(--panel);border:1px solid var(--rule);padding:9px 12px;font-size:16px}
+select{flex:0 1 190px;min-width:0;max-width:100%;background:var(--panel);border:1px solid var(--rule);padding:9px 10px;font-size:14px;font-family:var(--f-mono);letter-spacing:.04em}
+.seg{display:flex;border:1px solid var(--rule);max-width:100%;overflow-x:auto;scrollbar-width:none}
+.seg::-webkit-scrollbar{display:none}
+.seg button{flex:none;background:transparent;border:0;border-right:1px solid var(--rule);padding:8px 11px;font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);cursor:pointer}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--gold);color:var(--ink)}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{display:inline-flex;align-items:center;gap:6px;background:transparent;border:1px solid var(--rule);padding:4px 10px 4px 5px;font-family:var(--f-mono);font-size:12px;color:var(--muted);cursor:pointer}
+.chip img,.chip i{width:20px;height:20px;flex:none}
+.chip i{display:inline-block;border-radius:50%;background:var(--chip);transform:scale(.55)}
+.chip:hover{color:var(--text)}
+.chip[aria-pressed="true"]{color:var(--text);border-color:var(--chip);background:color-mix(in srgb,var(--chip) 18%,transparent)}
+.status{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;color:var(--muted);margin:16px 0 14px}
+.status b{color:var(--text);font-weight:500;font-family:var(--f-num);font-size:15px;font-variant-numeric:tabular-nums}
+.clear{background:none;border:0;color:var(--gold);text-decoration:underline;cursor:pointer;font-family:var(--f-mono);font-size:12px}
+
+/* story cards */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:22px 18px}
+.story{background:none;border:0;padding:0;cursor:pointer;text-align:left;display:flex;flex-direction:column;min-width:0;color:inherit}
+.story .pic{position:relative;aspect-ratio:1215/640;overflow:hidden;background:var(--panel-2);border:1px solid var(--rule)}
+.story .pic img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s cubic-bezier(.2,.8,.2,1),filter .3s}
+.story:hover .pic img,.story:focus-visible .pic img{transform:scale(1.04);filter:brightness(1.08)}
+.story .mins{position:absolute;right:8px;bottom:8px;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;background:rgba(6,9,18,.82);color:var(--text);padding:4px 7px;border:1px solid var(--rule)}
+.story .mins b{font-family:var(--f-num);font-weight:500;font-size:14px;color:var(--gold);margin-right:3px}
+.story h3{font-family:var(--f-display);font-weight:400;font-size:22px;line-height:1.1;margin:12px 0 4px}
+.story .meta{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.story .meta .yr{font-family:var(--f-num);font-size:15px;letter-spacing:.04em;color:var(--muted)}
+.story .tease{margin:8px 0 0;font-size:15.5px;line-height:1.45;color:#c4c8d3;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.faces{display:flex;align-items:center;margin-top:10px}
+.faces img{width:28px;height:28px;object-fit:cover;border:1px solid var(--ink);border-radius:50%;margin-right:-6px;background:var(--panel)}
+.faces span{margin-left:12px;font-family:var(--f-mono);font-size:11px;color:var(--muted)}
+.more{display:block;margin:28px auto 8px;background:transparent;border:1px solid var(--gold);color:var(--gold);padding:11px 20px;font-family:var(--f-mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;cursor:pointer}
+.more:hover{background:var(--gold);color:var(--ink)}
+.empty{padding:60px 0;text-align:center;color:var(--muted);font-style:italic}
+
+/* comic racks */
+.series{padding-block:26px;border-bottom:1px solid var(--rule)}
+.series:last-child{border-bottom:0}
+.series header{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 18px;align-items:end;margin-bottom:14px}
+.series h3{font-family:var(--f-display);font-weight:400;font-size:clamp(26px,3vw,34px);line-height:1;margin:4px 0 0}
+.series p{grid-column:1/-1;margin:4px 0 0;font-size:16px;color:#c4c8d3;max-width:80ch;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.series .cnt{font-family:var(--f-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.rack{display:flex;gap:14px;overflow-x:auto;padding:4px 2px 14px;min-width:0;scrollbar-width:thin;scrollbar-color:var(--gold-dim) transparent}
+.issue{flex:none;background:none;border:0;padding:0;cursor:pointer;text-align:left;color:inherit;width:calc(var(--h) * var(--ar));min-width:0}
+.issue .cov{height:var(--h);overflow:hidden;background:var(--panel-2);box-shadow:0 10px 22px rgba(0,0,0,.45);border:1px solid var(--rule);transition:transform .25s cubic-bezier(.2,.8,.2,1)}
+.issue .cov img{width:100%;height:100%;object-fit:cover;display:block}
+.issue:hover .cov,.issue:focus-visible .cov{transform:translateY(-5px) rotate(-.6deg)}
+.issue .nm{display:block;margin-top:9px;font-size:15px;line-height:1.25;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.issue .dt{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+.rack{--h:300px}
+
+/* plate */
+dialog{border:0;padding:0;background:transparent;color:var(--text);max-width:min(980px,calc(100vw - 24px));width:100%;max-height:calc(100vh - 24px)}
+dialog::backdrop{background:rgba(4,6,12,.86);backdrop-filter:blur(4px)}
+.plate{position:relative;background:linear-gradient(160deg,color-mix(in srgb,var(--rc) 14%,#0d1424),#0b1120 60%);border:1px solid color-mix(in srgb,var(--rc) 45%,transparent);max-height:calc(100vh - 24px);overflow:auto}
+.plate .hero{display:block;width:100%;aspect-ratio:1215/560;object-fit:cover;background:var(--panel)}
+.plate.comic .inner{display:grid;grid-template-columns:minmax(0,300px) minmax(0,1fr);gap:28px;padding:28px}
+.plate.comic .cov{width:100%;box-shadow:0 18px 30px rgba(0,0,0,.6);background:var(--panel)}
+.plate .body{padding:24px 28px 28px;min-width:0}
+.plate.comic .body{padding:0}
+.plate h2{font-family:var(--f-display);font-weight:400;font-size:clamp(28px,3.6vw,42px);line-height:1.02;margin:6px 0 6px}
+.plate .by{font-size:15.5px;color:var(--muted);font-style:italic;margin-bottom:12px}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 16px}
+.tagm{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;padding:3px 7px;border:1px solid var(--rule);color:var(--muted)}
+.tagm b{font-family:var(--f-num);font-weight:500;font-size:14px;color:var(--text);letter-spacing:.02em}
+.plate .tease{margin:0 0 18px;font-size:18px;line-height:1.55;font-style:italic;color:#d9dbe2;padding-left:16px;border-left:2px solid var(--rc)}
+.plate h4{font-family:var(--f-mono);font-weight:400;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin:18px 0 8px}
+.who{display:flex;flex-wrap:wrap;gap:8px}
+.who a{display:inline-flex;align-items:center;gap:8px;padding:4px 10px 4px 4px;border:1px solid var(--rule);text-decoration:none;color:var(--text);font-size:15px}
+.who a:hover{border-color:var(--gold)}
+.who img{width:30px;height:30px;object-fit:cover}
+.plate .note{margin-top:16px;font-family:var(--f-mono);font-size:11px;letter-spacing:.06em;color:var(--faint)}
+.x{position:absolute;top:10px;right:10px;z-index:2;width:36px;height:36px;background:rgba(0,0,0,.55);border:1px solid var(--rule);color:var(--text);font-size:20px;line-height:1;cursor:pointer}
+.step{display:flex;gap:8px;margin-top:18px}
+.step button{background:transparent;border:1px solid var(--rule);color:var(--muted);padding:8px 12px;font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;cursor:pointer}
+.step button:hover{color:var(--text);border-color:var(--gold)}
+
+footer{border-top:1px solid var(--rule);margin-top:48px;padding-block:24px 40px;color:var(--muted);font-size:14px;display:grid;gap:8px}
+footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width:80ch}
+
+@media (max-width:860px){.feature{grid-template-columns:1fr}.feature .pic{min-height:0;aspect-ratio:16/8}.plate.comic .inner{grid-template-columns:1fr;padding:20px}.plate.comic .cov{max-width:240px;margin-inline:auto;display:block}.plate .body{padding:20px}}
+@media (max-width:480px){.filters{position:static}.seg button{padding:8px 9px;font-size:11px}.chip{font-size:11px}.grid{grid-template-columns:minmax(0,1fr)}.rack{--h:220px}.feature .cap{padding:18px}.tabs button{font-size:19px;padding:10px 12px}.counts{gap:16px}.counts div b{font-size:32px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="bar">
+    <a class="brand" href="./">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><polygon points="16,2 29,9.5 29,22.5 16,30 3,22.5 3,9.5" fill="none" stroke="#c8aa6e" stroke-width="1.5"/><circle cx="16" cy="16" r="5" fill="none" stroke="#c8aa6e" stroke-width="1.5"/><path d="M16 2v9M16 21v9M3 9.5l8 4.5M21 18l8 4.5M29 9.5l-8 4.5M11 18l-8 4.5" stroke="#c8aa6e" stroke-width="1"/></svg>
+      Runeterra Atlas
+    </a>
+    <nav class="nav" aria-label="Site"><a href="./">Atlas</a><a href="worlds.html">Worlds</a><a href="players.html">Players</a><a href="music.html">Music</a><a href="skins.html">Skins</a><a href="reading.html" aria-current="page">Reading</a><a href="library.html">Library</a><a href="riftbound.html">Riftbound</a><a href="theater.html">Theater</a></nav>
+  </header>
+
+  <section class="intro">
+    <div>
+      <div class="eyebrow">Riot's Universe · the reading room</div>
+      <h1>Every story Riot <em>has told so far.</em></h1>
+      <p class="lede">All the official League of Legends short stories and comics in one place. Find them by champion, region or how long you have, then read them on Riot's Universe site.</p>
+    </div>
+    <div class="counts" id="counts"></div>
+  </section>
+
+  <section class="feature" id="feature" aria-label="Featured story">
+    <div class="pic"><img id="fImg" alt=""></div>
+    <div class="cap">
+      <div class="eyebrow" id="fEye"></div>
+      <h2 id="fTitle"></h2>
+      <div class="by" id="fBy"></div>
+      <p id="fTease"></p>
+      <div class="acts"><a class="btn" id="fRead" target="_blank" rel="noopener">Read on Universe ↗</a><button class="btn ghost" type="button" id="fOpen">Details</button><button class="btn ghost" type="button" id="fAgain">Another</button></div>
+    </div>
+  </section>
+
+  <div class="tabs" role="tablist" aria-label="Shelves">
+    <button type="button" role="tab" id="tStories" aria-selected="true" aria-controls="pStories">Short stories <b id="nStories"></b></button>
+    <button type="button" role="tab" id="tComics" aria-selected="false" aria-controls="pComics">Comics <b id="nComics"></b></button>
+  </div>
+
+  <section id="pStories" role="tabpanel" aria-labelledby="tStories">
+    <div class="filters" aria-label="Filter stories">
+      <div class="row">
+        <label class="search"><span hidden>Search stories</span><input id="q" type="search" placeholder="Search titles, authors, champions…" autocomplete="off"></label>
+        <div class="seg" id="len" role="group" aria-label="Reading time">
+          <button type="button" data-v="all" aria-pressed="true">Any length</button><button type="button" data-v="s" aria-pressed="false">Under 5 min</button><button type="button" data-v="m" aria-pressed="false">5–15 min</button><button type="button" data-v="l" aria-pressed="false">Long reads</button>
+        </div>
+        <select id="sort" aria-label="Sort"><option value="new">Newest first</option><option value="old">Oldest first</option><option value="short">Shortest first</option><option value="long">Longest first</option></select>
+      </div>
+      <div class="chips" id="regions" role="group" aria-label="Region"></div>
+    </div>
+    <div class="status" id="status" aria-live="polite"></div>
+    <div class="grid" id="grid"></div>
+    <p class="empty" id="empty" hidden>No stories match. Try fewer filters.</p>
+    <button class="more" id="more" type="button" hidden>Show more stories</button>
+  </section>
+
+  <section id="pComics" role="tabpanel" aria-labelledby="tComics" hidden>
+    <div class="status" id="cstatus"></div>
+    <div id="racks"></div>
+  </section>
+
+  <footer>
+    <div>Titles, teasers, dates, reading times, covers and art belong to Riot Games and come from <a href="https://universe.leagueoflegends.com/" rel="noopener">League of Legends Universe</a>. The stories and comics themselves are on Riot's site. Saved 19 Oct 2026.</div>
+    <div class="legal">Runeterra Atlas was created under Riot Games' "Legal Jibber Jabber" policy using assets owned by Riot Games. Riot Games does not endorse or sponsor this project.</div>
+  </footer>
+</div>
+
+<dialog id="dlg" aria-label="Details">
+  <div class="plate" id="plate"></div>
+</dialog>
+
+<script src="data/champions.js"></script>
+<script src="data/reading.js"></script>
+<script>
+const CHAMPS=window.ATLAS_CHAMPS||[];
+const CH=Object.fromEntries(CHAMPS.map(c=>[c.id,c]));
+const STORIES=window.ATLAS_READ_STORIES||[], COMICS=window.ATLAS_READ_COMICS||[], SERIES=window.ATLAS_READ_SERIES||{};
+const REG={
+  demacia:["Demacia","#e8d395",1],noxus:["Noxus","#e0503f",1],piltover:["Piltover","#e8ab4f",1],zaun:["Zaun","#7ee06f",1],
+  freljord:["Freljord","#93d8f4",1],ionia:["Ionia","#ef84b0",1],shurima:["Shurima","#f2c443",1],targon:["Targon","#a596ff",1],
+  bilgewater:["Bilgewater","#46a8e8",1],shadowisles:["Shadow Isles","#7af0d2",1],bandle:["Bandle City","#d9ea5e",1],
+  ixtal:["Ixtal","#36cfa6",0],void:["The Void","#b764ea",0],wanderers:["The Wanderers","#e9c46a",1]
+};
+const IMG="https://cmsassets.rgpub.io/sanity/images/dsfx7636/universe/";
+const img=(f,w)=>`${IMG}${f}?w=${w}&fm=webp`;
+const U="https://universe.leagueoflegends.com/en_US/";
+const sUrl=s=>`${U}story/${s.s}/`, cUrl=c=>`${U}comic/${c.u}/`;
+const esc=s=>String(s??"").replace(/[&<>"]/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch]));
+const MON=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const fdate=d=>{const [y,m,dd]=d.split("-");return `${+dd} ${MON[+m-1]} ${y}`;};
+const rc=ch=>(REG[(CH[ch[0]]||{}).region]||REG.wanderers)[1];
+STORIES.forEach(s=>{s.kind="story";s.regs=new Set(s.ch.map(c=>CH[c]&&CH[c].region));
+  s.hay=(s.t+" "+s.by+" "+s.ch.map(c=>CH[c]?CH[c].name:"").join(" ")).toLowerCase();});
+COMICS.forEach(c=>c.kind="comic");
+
+// counts
+const mins=STORIES.reduce((a,s)=>a+(s.min||0),0);
+document.getElementById("counts").innerHTML=[[STORIES.length,"Short stories"],[COMICS.length,"Comic issues"],[Math.round(mins/60),"Hours of reading"],[`${STORIES[STORIES.length-1].date.slice(0,4)}–${STORIES[0].date.slice(0,4)}`,"Published"]]
+  .map(([v,l])=>`<div><b>${typeof v==="number"?v.toLocaleString():v}</b><span>${l}</span></div>`).join("");
+document.getElementById("nStories").textContent=STORIES.length;
+document.getElementById("nComics").textContent=COMICS.length;
+
+// state
+const PAGE=24;
+const S={q:"",len:"all",regions:new Set(),sort:"new",champ:"",shown:PAGE};
+let list=[];
+document.getElementById("regions").innerHTML=Object.entries(REG).map(([k,[n,col,emb]])=>`<button class="chip" type="button" data-v="${k}" aria-pressed="false" style="--chip:${col}">${emb?`<img src="img/emblem/${k}.webp" alt="">`:`<i></i>`}${n}</button>`).join("");
+
+const faces=ch=>ch.length?`<div class="faces">${ch.slice(0,5).map(c=>`<img src="img/${c}-tile.webp" alt="${esc(CH[c].name)}" title="${esc(CH[c].name)}" loading="lazy">`).join("")}<span>${esc(ch.slice(0,2).map(c=>CH[c].name).join(", "))}${ch.length>2?` +${ch.length-2}`:""}</span></div>`:"";
+function apply(){
+  const q=S.q.trim().toLowerCase();
+  list=STORIES.filter(s=>{
+    if(S.champ&&!s.ch.includes(S.champ))return false;
+    if(S.len==="s"&&!(s.min<5))return false;
+    if(S.len==="m"&&!(s.min>=5&&s.min<=15))return false;
+    if(S.len==="l"&&!(s.min>15))return false;
+    if(S.regions.size&&![...S.regions].some(r=>s.regs.has(r)))return false;
+    if(q&&!s.hay.includes(q))return false;
+    return true;
+  });
+  const by={new:(a,b)=>b.date.localeCompare(a.date),old:(a,b)=>a.date.localeCompare(b.date),short:(a,b)=>a.min-b.min||b.date.localeCompare(a.date),long:(a,b)=>b.min-a.min||b.date.localeCompare(a.date)}[S.sort];
+  list.sort(by); render();
+}
+function render(){
+  document.getElementById("grid").innerHTML=list.slice(0,S.shown).map((s,i)=>`<button class="story" type="button" data-i="${i}">
+    <div class="pic"><img src="${img(s.img,560)}" alt="" loading="lazy" decoding="async"><span class="mins"><b>${s.min}</b>min read</span></div>
+    <h3>${esc(s.t)}</h3>
+    <div class="meta"><span class="yr">${s.date.slice(0,4)}</span>${s.by?`<span>by ${esc(s.by)}</span>`:""}</div>
+    <p class="tease">${esc(s.d)}</p>${faces(s.ch)}</button>`).join("");
+  document.getElementById("empty").hidden=list.length>0;
+  document.getElementById("more").hidden=S.shown>=list.length;
+  const filtered=S.q||S.len!=="all"||S.regions.size||S.champ;
+  const lm=list.reduce((a,s)=>a+s.min,0);
+  document.getElementById("status").innerHTML=`<b>${list.length}</b> ${list.length===1?"story":"stories"}${S.champ?` featuring <a href="./#c-${S.champ}">${esc(CH[S.champ].name)}</a>`:""} · about <b>${lm<90?lm:Math.round(lm/60)}</b> ${lm<90?"minutes":"hours"} of reading${filtered?` · <button class="clear" type="button" id="clear">Clear filters</button>`:""}`;
+  const cl=document.getElementById("clear"); if(cl)cl.onclick=()=>{reset();apply();renderComics();};
+}
+function reset(){S.q="";S.len="all";S.regions.clear();S.champ="";S.shown=PAGE;
+  document.getElementById("q").value="";
+  document.querySelectorAll("#len button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.v==="all")));
+  document.querySelectorAll("#regions .chip").forEach(b=>b.setAttribute("aria-pressed","false"));}
+let t; document.getElementById("q").addEventListener("input",e=>{clearTimeout(t);t=setTimeout(()=>{S.q=e.target.value;S.shown=PAGE;apply();},160);});
+document.getElementById("len").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;S.len=b.dataset.v;S.shown=PAGE;document.querySelectorAll("#len button").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));apply();});
+document.getElementById("regions").addEventListener("click",e=>{const b=e.target.closest(".chip");if(!b)return;const v=b.dataset.v;S.regions.has(v)?S.regions.delete(v):S.regions.add(v);b.setAttribute("aria-pressed",String(S.regions.has(v)));S.shown=PAGE;apply();});
+document.getElementById("sort").addEventListener("change",e=>{S.sort=e.target.value;apply();});
+document.getElementById("more").addEventListener("click",()=>{S.shown+=PAGE*2;render();});
+if("IntersectionObserver" in window){new IntersectionObserver(es=>{if(es[0].isIntersecting&&S.shown<list.length){S.shown+=PAGE;render();}},{rootMargin:"700px"}).observe(document.getElementById("more"));}
+document.getElementById("grid").addEventListener("click",e=>{const b=e.target.closest(".story");if(b)open(list[+b.dataset.i],list);});
+
+// comics: one rack per series (newest series first), then one-shots
+function renderComics(){
+  const pool=COMICS.filter(c=>!S.champ||c.ch.includes(S.champ));
+  const groups={};pool.forEach(c=>(groups[c.sr||"_one"]=groups[c.sr||"_one"]||[]).push(c));
+  const order=Object.keys(groups).filter(k=>k!=="_one").sort((a,b)=>Math.max(...groups[b].map(c=>+c.date.replace(/-/g,"")))-Math.max(...groups[a].map(c=>+c.date.replace(/-/g,""))));
+  if(groups._one)order.push("_one");
+  const rackOf=k=>{const L=k==="_one"?groups[k].slice().sort((a,b)=>b.date.localeCompare(a.date)):groups[k].slice().sort((a,b)=>a.n-b.n);groups[k]=L;return L;};
+  document.getElementById("racks").innerHTML=order.map(k=>{const L=rackOf(k),s=SERIES[k];
+    const yrs=[...new Set(L.map(c=>c.date.slice(0,4)))].sort();
+    return `<section class="series" style="--rc:${rc(L[0].ch)}">
+      <header><div><div class="eyebrow" style="color:var(--rc)">${k==="_one"?"Standalone comics":"Comic series"}</div><h3>${esc(k==="_one"?"One-shots":s.t)}</h3></div>
+      <span class="cnt"><b class="num" style="font-family:var(--f-num);font-size:16px;color:var(--text)">${L.length}</b> ${L.length===1?"issue":"issues"} · ${yrs[0]}${yrs.length>1?"–"+yrs[yrs.length-1]:""}</span>
+      ${k!=="_one"&&s.d?`<p>${esc(s.d)}</p>`:""}</header>
+      <div class="rack">${L.map((c,i)=>`<button class="issue" type="button" data-k="${k}" data-i="${i}" style="--ar:${c.ar}">
+        <div class="cov"><img src="${img(c.img,c.ar>1?720:420)}" alt="${esc(c.t)} cover" loading="lazy" decoding="async"></div>
+        <span class="nm">${esc(c.t)}</span><span class="dt">${fdate(c.date)}</span></button>`).join("")}</div></section>`;}).join("");
+  window._groups=groups;
+  document.getElementById("cstatus").innerHTML=`<b>${pool.length}</b> comic ${pool.length===1?"issue":"issues"}${S.champ?` featuring <a href="./#c-${S.champ}">${esc(CH[S.champ].name)}</a>`:""}${pool.length?"":" — none yet for this champion."}`;
+}
+document.getElementById("racks").addEventListener("click",e=>{const b=e.target.closest(".issue");if(b){const L=window._groups[b.dataset.k];open(L[+b.dataset.i],L);}});
+
+// tabs
+function tab(which){
+  const st=which==="stories";
+  document.getElementById("tStories").setAttribute("aria-selected",String(st));
+  document.getElementById("tComics").setAttribute("aria-selected",String(!st));
+  document.getElementById("pStories").hidden=!st; document.getElementById("pComics").hidden=st;
+}
+document.getElementById("tStories").onclick=()=>{tab("stories");try{history.replaceState(null,"",location.pathname+location.search);}catch(e){}};
+document.getElementById("tComics").onclick=()=>{tab("comics");try{history.replaceState(null,"",location.pathname+location.search+"#comics");}catch(e){}};
+
+// plate
+const dlg=document.getElementById("dlg"), plate=document.getElementById("plate");
+let cur=null, curList=[];
+const who=ch=>ch.length?`<h4>Featuring</h4><div class="who">${ch.map(c=>`<a href="./#c-${c}"><img src="img/${c}-tile.webp" alt="">${esc(CH[c].name)}</a>`).join("")}</div>`:"";
+function open(x,L){
+  if(!x)return; cur=x; curList=L||[x];
+  plate.style.setProperty("--rc",rc(x.ch));
+  plate.className="plate"+(x.kind==="comic"?" comic":"");
+  const nav=curList.length>1?`<div class="step"><button type="button" id="pv">← Previous</button><button type="button" id="nx">Next →</button></div>`:"";
+  if(x.kind==="story"){
+    plate.innerHTML=`<button class="x" type="button" aria-label="Close" id="x">×</button>
+      <img class="hero" src="${img(x.img,1100)}" alt="">
+      <div class="body">
+        <div class="eyebrow" style="color:var(--rc)">Short story · ${fdate(x.date)}</div>
+        <h2>${esc(x.t)}</h2>${x.by?`<div class="by">by ${esc(x.by)}</div>`:""}
+        <div class="tags"><span class="tagm"><b>${x.min}</b> min read</span><span class="tagm"><b>${x.w.toLocaleString()}</b> words</span></div>
+        ${x.d?`<p class="tease">${esc(x.d)}</p>`:""}
+        <a class="btn" href="${sUrl(x)}" target="_blank" rel="noopener">Read it on Universe ↗</a>
+        ${who(x.ch)}${nav}
+        <div class="note">Opens Riot's official Universe site in a new tab.</div>
+      </div>`;
+  } else {
+    const s=SERIES[x.sr];
+    plate.innerHTML=`<button class="x" type="button" aria-label="Close" id="x">×</button>
+      <div class="inner"><img class="cov" src="${img(x.img,x.ar>1?900:600)}" alt="${esc(x.t)} cover">
+      <div class="body">
+        <div class="eyebrow" style="color:var(--rc)">${s?`${esc(s.t)} · issue ${x.n}`:"Comic"} · ${fdate(x.date)}</div>
+        <h2>${esc(x.t)}</h2>
+        ${x.d?`<p class="tease" style="margin-top:12px">${esc(x.d)}</p>`:""}
+        <a class="btn" href="${cUrl(x)}" target="_blank" rel="noopener">Read it on Universe ↗</a>
+        ${who(x.ch)}${nav}
+        <div class="note">Opens Riot's official Universe site in a new tab.</div>
+      </div></div>`;
+  }
+  document.getElementById("x").onclick=()=>dlg.close();
+  const pv=document.getElementById("pv"),nx=document.getElementById("nx");
+  if(pv)pv.onclick=()=>step(-1); if(nx)nx.onclick=()=>step(1);
+  plate.scrollTop=0;
+  if(!dlg.open)dlg.showModal();
+  try{history.replaceState(null,"",location.pathname+location.search+(x.kind==="story"?"#story-"+x.s:"#comic-"+x.u.replace("/","--")));}catch(e){}
+}
+function step(d){const i=curList.indexOf(cur);open(curList[(i+d+curList.length)%curList.length],curList);}
+dlg.addEventListener("close",()=>{try{history.replaceState(null,"",location.pathname+location.search+(document.getElementById("pComics").hidden?"":"#comics"));}catch(e){}});
+dlg.addEventListener("click",e=>{if(e.target===dlg)dlg.close();});
+dlg.addEventListener("keydown",e=>{if(curList.length<2)return;if(e.key==="ArrowRight")step(1);if(e.key==="ArrowLeft")step(-1);});
+
+// featured story: one with a champion and a few minutes of reading
+const FEAT=STORIES.filter(s=>s.min>=4&&s.ch.length&&s.d.length>60);
+let fCur=null;
+function feature(){
+  fCur=FEAT[Math.floor(Math.random()*FEAT.length)];
+  document.getElementById("feature").style.setProperty("--rc",rc(fCur.ch));
+  const im=document.getElementById("fImg"); im.style.opacity="0"; im.onload=()=>im.style.opacity="1"; im.src=img(fCur.img,1000);
+  document.getElementById("fEye").textContent=`Tonight's read · ${fCur.min} min · ${fCur.date.slice(0,4)}`;
+  document.getElementById("fEye").style.color="var(--rc)";
+  document.getElementById("fTitle").textContent=fCur.t;
+  document.getElementById("fBy").textContent=[fCur.by?"by "+fCur.by:"",fCur.ch.slice(0,3).map(c=>CH[c].name).join(", ")].filter(Boolean).join(" · ");
+  document.getElementById("fTease").textContent=fCur.d;
+  document.getElementById("fRead").href=sUrl(fCur);
+}
+document.getElementById("fAgain").onclick=feature;
+document.getElementById("fOpen").onclick=()=>open(fCur,list.includes(fCur)?list:[fCur]);
+
+// URL: reading.html?champion=ahri · #comics · #story-<slug> · #comic-<series>--<issue>
+const P=new URLSearchParams(location.search);
+if(P.get("champion")&&CH[P.get("champion")])S.champ=P.get("champion");
+if(P.get("q")){S.q=P.get("q");document.getElementById("q").value=S.q;}
+feature(); apply(); renderComics();
+const h=location.hash||"";
+if(h==="#comics")tab("comics");
+let m;
+if((m=h.match(/^#story-(.+)$/))){const s=STORIES.find(x=>x.s===decodeURIComponent(m[1]));if(s)open(s,list.includes(s)?list:[s]);}
+if((m=h.match(/^#comic-(.+)$/))){const u=decodeURIComponent(m[1]).replace("--","/");const c=COMICS.find(x=>x.u===u);if(c){tab("comics");const L=window._groups[c.sr||"_one"]||[c];open(c,L);}}
+</script>
+</body>
+</html>
