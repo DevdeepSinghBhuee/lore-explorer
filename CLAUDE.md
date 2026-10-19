@@ -17,16 +17,15 @@ Custom domain is possible later via Pages settings + CNAME file (not set up).
 | riftbound.html | 1,407 Riftbound TCG cards, domain chips; images hotlinked from Riot CDN. |
 | theater.html | 147 official videos in 8 shelves, youtube-nocookie embeds, `#v-<id>`. |
 | players.html | 97 Worlds 2026 players: search/role/team filters (`?team=CODE`), dossier dialog with 6 signature champions (link to Atlas `#c-<id>`) and a Worlds timeline. Deep link `#p-<slug>`. Worlds rosters link here. |
-| sizes.html | Lore-accurate size chart ("encyclopedia plate"): only heights from official/cited sources (data/sizes.js), figures = League Wiki full-body renders hotlinked with referrerpolicy=no-referrer, scaled by hand-measured head/feet fractions; human/giant scale, silhouette/artwork modes; outline for champs without full-body art. Deep link `#h-<id>`. |
 | music.html | Music hub: 13 shelves (anthems, virtual bands, Arcane S1/S2/score, Pentakill, Star Guardian, login themes from videos.js, champion songs, Warsongs, DJ Sona, LoR, long listens). One docked YouTube IFrame-API player (youtube-nocookie; kept ≥200px tall per YouTube's rules) plays a shelf in order, shuffle, Media Session controls. Deep links `#s-<shelf>`, `#t-<shelf>-<n>`. |
 
-Nav on every page: Atlas(./) · Worlds · Players · Music · Sizes · Library · Riftbound · Theater. Every footer carries Riot's
+Nav on every page: Atlas(./) · Worlds · Players · Music · Library · Riftbound · Theater. Every footer carries Riot's
 "Legal Jibber Jabber" fan-content notice — keep it on any new page.
 
 ## Data (data/*.js, plain globals)
 champions.js (173 champs: id, dd, name, title, region, role, tags, bio, hand) · cards.js · stories.js ·
 champcards.js · riftbound.js (RB_SETS, RB_CARDS) · champrb.js · videos.js (ATLAS_VIDEOS shelves) ·
-worlds.js (WORLDS_TEAMS, WORLDS_SNAPSHOT) · players.js (ATLAS_PLAYERS, saved 2026-10-19) · music.js (ATLAS_MUSIC shelves, saved 2026-10-19) · sizes.js (ATLAS_SIZES, 12 sourced heights). Bonds live in index.html as [a,b,type,note,source,necritVideo]; source r = Riot Universe text, w = League Wiki Relations,
+worlds.js (WORLDS_TEAMS, WORLDS_SNAPSHOT) · players.js (ATLAS_PLAYERS, saved 2026-10-19) · music.js (ATLAS_MUSIC shelves, saved 2026-10-19). Bonds live in index.html as [a,b,type,note,source,necritVideo]; source r = Riot Universe text, w = League Wiki Relations,
 u = only listed as related by Riot (note says no official story explains it). Reviewed 2026-10-19: 77 re-typed, 34 verified as Linked, 129 'u'.
 
 ## Sources (all free)
@@ -43,8 +42,6 @@ u = only listed as related by Riot (note says no official story explains it). Re
   lockupViewModel items on /playlist?list=…; check embeddability with /oembed (non-200 = can't embed). Each shelf keeps its source playlist id.
 - Lore cross-checks: League Wiki API leagueoflegends.fandom.com/api.php (action=parse, Relations section); Necrit's uploads
   (channel UCiUHGAbtjCrLO3ZPrTfle3Q) matched by champion names in titles.
-- Heights: League Wiki wikitext (api.php action=query&prop=revisions, 50 titles per call — fast; action=parse is rate-limited)
-  searched for stated heights + their <ref> citations. Renders: File:<Name> Render.png / <Name> Arcane Render.png via list=allimages.
 - Esports: esports-api.lolesports.com/persisted/gw/ (getSchedule, getTeams, getStandings), header
   `x-api-key: 0TvQnueqKa5mxJntVWt0w4LpLfEkrV1Ta8rQBb9Z` (public key the official site uses). Worlds leagueId 98767975604431411,
   worlds_2026 tournament 115660540725177488. CORS works from github.io.
@@ -64,6 +61,5 @@ Must work at phone width with no horizontal scroll (watch grid children: `min-wi
 1. ~~Player pages~~ (done 2026-10-19; refresh players.js after the 2026 final).
 2. ~~Music hub~~ (done 2026-10-19).
 3. ~~Enrich Linked bonds~~ (done 2026-10-19; 129 still have no official explanation — revisit when Riot publishes more).
-5. ~~Champion size chart~~ (done 2026-10-19 with 12 sourced heights; add more as Riot states them. Excluded: Darius 6'5" (Dunkmaster skin trailer),
-   old-lore numbers (Mordekaiser 8 ft, Alistar 10 ft), unsourced Wiki guesses (Akali, Taliyah, Zac).)
+5. Champion size chart: built and REMOVED 2026-10-19 at Devdeep's request (didn't like it; too few official heights — only 12). Don't rebuild.
 4. Custom domain.
