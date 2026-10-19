@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>League Music</title>
+<meta name="description" content="Listen to League of Legends music in one place: every Worlds anthem, K/DA, True Damage, HEARTSTEEL, Pentakill, the Arcane soundtrack and score, login themes and long-listen mixes.">
+<meta property="og:title" content="Music · Runeterra Atlas">
+<meta property="og:description" content="Worlds anthems, virtual bands, Arcane and more, playing back-to-back from Riot's official uploads.">
+<link rel="icon" href="img/emblem/wanderers.webp">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://i.ytimg.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus+SC&family=Alegreya:ital,wght@0,400;0,500;0,700;1,400&family=Spline+Sans+Mono:wght@400;500&family=Teko:wght@500;600&display=swap">
+<style>
+/* Layout: a listening room. Shelf list on the left (chips on phones), the open shelf as an album
+   with a numbered tracklist, and one docked player that plays the shelf in order. Atlas tokens. */
+:root{
+  color-scheme:dark;
+  --ink:#070a12; --panel:#0f1a2e; --panel-2:#142238;
+  --gold:#c8aa6e; --gold-hi:#f0d9a0; --text:#ebe4d3; --muted:#939bb0; --faint:#5b6580;
+  --rule:rgba(200,170,110,.22); --live:#4fd1a5;
+  --f-display:"Marcellus SC","Cinzel",Georgia,serif;
+  --f-body:"Alegreya",Georgia,"Times New Roman",serif;
+  --f-mono:"Spline Sans Mono",ui-monospace,Menlo,monospace;
+  --f-num:"Teko","Oxanium",var(--f-display),sans-serif;
+  --dock:0px;
+  padding-top:env(safe-area-inset-top,0px);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ink);color:var(--text);font-family:var(--f-body);font-size:18px;line-height:1.55;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-bottom:calc(var(--dock) + env(safe-area-inset-bottom,0px))}
+img{max-width:100%}
+[hidden]{display:none!important}
+a{color:var(--gold)}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.wrap{max-width:1180px;margin-inline:auto}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:18px;border-bottom:1px solid var(--rule);flex-wrap:wrap}
+.brand{font-family:var(--f-display);font-size:20px;letter-spacing:.08em;color:var(--gold);display:flex;align-items:center;gap:10px;text-decoration:none}
+.brand svg{width:26px;height:26px}
+.nav{display:flex;gap:4px;flex-wrap:wrap}
+.nav a{font-family:var(--f-mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-decoration:none;padding:7px 12px}
+.nav a:hover{color:var(--text)}
+.nav a[aria-current="page"]{color:var(--ink);background:var(--gold)}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+.num{font-family:var(--f-num);font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:.02em}
+
+.hero{padding-block:44px 28px;display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:32px;align-items:end}
+h1{font-family:var(--f-display);font-weight:400;font-size:clamp(46px,7vw,92px);line-height:.9;margin:10px 0 14px}
+h1 span{display:block;font-size:.4em;letter-spacing:.24em;color:var(--gold);margin-top:10px}
+.lede{margin:0;font-size:19px;max-width:46ch}
+.facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:1px solid var(--rule);background:var(--panel)}
+.facts div{padding:14px 10px;border-right:1px solid var(--rule);text-align:center;min-width:0}
+.facts div:last-child{border-right:0}
+.facts b{display:block;font-family:var(--f-num);font-weight:600;font-size:40px;line-height:1;color:var(--gold-hi)}
+.facts span{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+
+.room{display:grid;grid-template-columns:250px minmax(0,1fr);gap:28px;align-items:start}
+.shelves{position:sticky;top:12px;display:grid;border:1px solid var(--rule);background:var(--panel)}
+.shelves button{display:grid;grid-template-columns:44px minmax(0,1fr);gap:10px;align-items:center;text-align:left;background:transparent;border:0;border-bottom:1px solid var(--rule);padding:8px 10px;cursor:pointer;color:var(--muted)}
+.shelves button:last-child{border-bottom:0}
+.shelves button img{width:44px;height:44px;object-fit:cover;opacity:.75}
+.shelves button b{display:block;font-family:var(--f-display);font-weight:400;font-size:16px;line-height:1.15;color:var(--text)}
+.shelves button small{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.06em}
+.shelves button:hover b{color:var(--gold-hi)}
+.shelves button[aria-current="true"]{background:color-mix(in srgb,var(--gold) 14%,var(--panel));box-shadow:inset 3px 0 0 var(--gold)}
+.shelves button[aria-current="true"] img{opacity:1}
+.shelves .eq{display:inline-block;margin-left:6px;color:var(--live)}
+
+.album{display:grid;grid-template-columns:220px minmax(0,1fr);gap:24px;align-items:end;padding-bottom:20px;border-bottom:1px solid var(--rule)}
+.cover{position:relative;aspect-ratio:1;overflow:hidden;border:1px solid var(--rule);background:var(--panel)}
+.cover img{position:absolute;width:50%;height:50%;object-fit:cover}
+.cover img:nth-child(2){left:50%}.cover img:nth-child(3){top:50%}.cover img:nth-child(4){left:50%;top:50%}
+.cover::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 45%,rgba(7,10,18,.85));pointer-events:none}
+.cover span{position:absolute;left:12px;bottom:10px;z-index:1;font-family:var(--f-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-hi)}
+.album h2{font-family:var(--f-display);font-weight:400;font-size:clamp(32px,4.4vw,52px);line-height:1;margin:6px 0 8px;overflow-wrap:anywhere}
+.album p{margin:0 0 16px;color:var(--muted);font-size:17px;max-width:52ch}
+.acts{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.btn{display:inline-flex;align-items:center;gap:8px;font-family:var(--f-mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;padding:10px 16px;border:1px solid var(--gold);background:transparent;color:var(--gold);cursor:pointer;text-decoration:none}
+.btn.primary{background:var(--gold);color:var(--ink)}
+.btn svg{width:14px;height:14px}
+.meta{font-family:var(--f-mono);font-size:11px;color:var(--muted);letter-spacing:.06em}
+
+.tracks{list-style:none;margin:0;padding:0}
+.tr{display:grid;grid-template-columns:34px 64px minmax(0,1fr) auto;gap:14px;align-items:center;padding:8px 6px;border-bottom:1px solid rgba(200,170,110,.1);cursor:pointer}
+.tr:hover{background:var(--panel)}
+.tr .n{font-family:var(--f-num);font-weight:600;font-size:20px;color:var(--faint);text-align:right}
+.tr img{width:64px;aspect-ratio:16/9;object-fit:cover;display:block}
+.tr .tt{min-width:0}
+.tr .tt b{display:block;font-weight:500;font-size:17px;line-height:1.25;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tr .tt span{display:block;font-size:14px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tr .d{font-family:var(--f-num);font-weight:500;font-size:18px;color:var(--muted);font-variant-numeric:tabular-nums}
+.tr[aria-current="true"]{background:color-mix(in srgb,var(--gold) 10%,var(--panel))}
+.tr[aria-current="true"] .n{color:var(--live)}
+.tr[aria-current="true"] b{color:var(--gold-hi)}
+.bars{display:inline-flex;gap:2px;align-items:flex-end;height:14px}
+.bars i{width:3px;background:var(--live);animation:eq 1s ease-in-out infinite}
+.bars i:nth-child(2){animation-delay:-.4s}.bars i:nth-child(3){animation-delay:-.7s}
+.paused .bars i{animation-play-state:paused}
+@keyframes eq{0%,100%{height:3px}50%{height:14px}}
+
+/* Docked player: the YouTube video stays visible (as YouTube requires) */
+.dock{position:fixed;left:0;right:0;bottom:0;z-index:20;background:rgba(10,15,27,.97);border-top:1px solid var(--gold);backdrop-filter:blur(8px);
+  padding:10px max(16px,env(safe-area-inset-left,0px)) calc(10px + env(safe-area-inset-bottom,0px));transform:translateY(110%);transition:transform .35s}
+.dock.on{transform:none}
+.dock-in{max-width:1180px;margin-inline:auto;display:grid;grid-template-columns:356px minmax(0,1fr) auto;gap:18px;align-items:center}
+.vid{width:356px;height:200px;background:#000;border:1px solid var(--rule)} /* YouTube needs at least 200px of player */
+.vid iframe,.vid>div{width:100%;height:100%;display:block;border:0}
+.now{min-width:0}
+.now .sh{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+.now b{display:block;font-family:var(--f-display);font-weight:400;font-size:24px;line-height:1.1;margin:2px 0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.now .ar{font-size:15px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.prog{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:center;margin-top:8px;font-family:var(--f-num);font-size:17px;color:var(--muted);font-variant-numeric:tabular-nums}
+.prog input{width:100%;accent-color:var(--gold);margin:0}
+.ctl{display:flex;gap:6px;align-items:center}
+.ic{width:44px;height:44px;display:grid;place-items:center;border:1px solid var(--rule);background:transparent;cursor:pointer;color:var(--text)}
+.ic:hover{border-color:var(--gold);color:var(--gold-hi)}
+.ic svg{width:18px;height:18px}
+.ic.big{width:54px;height:54px;background:var(--gold);color:var(--ink);border-color:var(--gold)}
+.ic.big:hover{color:var(--ink);background:var(--gold-hi)}
+.ic[aria-pressed="true"]{color:var(--gold-hi);border-color:var(--gold)}
+
+footer{border-top:1px solid var(--rule);margin-top:56px;padding-block:24px 40px;color:var(--muted);font-size:14px;display:grid;gap:8px}
+footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width:80ch}
+
+@media (max-width:900px){
+  .hero{grid-template-columns:1fr;padding-block:30px 22px}
+  .room{grid-template-columns:1fr;gap:18px}
+  .shelves{position:static;display:flex;overflow-x:auto;scrollbar-width:thin}
+  .shelves button{flex:none;grid-template-columns:auto;border-bottom:0;border-right:1px solid var(--rule);padding:10px 14px}
+  .shelves button img{display:none}
+  .shelves button b{font-size:15px;white-space:nowrap}
+  .shelves button[aria-current="true"]{box-shadow:inset 0 -3px 0 var(--gold)}
+  .dock-in{grid-template-columns:356px minmax(0,1fr);gap:14px}
+  .ctl{grid-column:2;justify-content:flex-start}
+}
+@media (max-width:600px){
+  .album{grid-template-columns:110px minmax(0,1fr);gap:14px}
+  .album p{font-size:15px}
+  .tr{grid-template-columns:26px minmax(0,1fr) auto;gap:10px}
+  .tr img{display:none}
+  .tr .n{font-size:17px}
+  .dock{padding-top:8px}
+  .dock-in{grid-template-columns:minmax(0,1fr) auto;gap:6px 10px}
+  .vid{grid-column:1/-1;width:min(100%,356px);justify-self:center}
+  .now .sh,.now .ar{display:none}
+  .now b{font-size:18px;margin:0}
+  .prog{margin-top:2px;font-size:15px;gap:6px}
+  .ctl{grid-column:2;grid-row:2;gap:2px}
+  .ic{width:38px;height:38px}.ic.big{width:46px;height:46px}
+  #bShuf,#bYT{display:none}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="bar">
+    <a class="brand" href="./">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><polygon points="16,2 29,9.5 29,22.5 16,30 3,22.5 3,9.5" fill="none" stroke="#c8aa6e" stroke-width="1.5"/><circle cx="16" cy="16" r="5" fill="none" stroke="#c8aa6e" stroke-width="1.5"/><path d="M16 2v9M16 21v9M3 9.5l8 4.5M21 18l8 4.5M29 9.5l-8 4.5M11 18l-8 4.5" stroke="#c8aa6e" stroke-width="1"/></svg>
+      Runeterra Atlas
+    </a>
+    <nav class="nav" aria-label="Site"><a href="./">Atlas</a><a href="worlds.html">Worlds</a><a href="players.html">Players</a><a href="music.html" aria-current="page">Music</a><a href="library.html">Library</a><a href="riftbound.html">Riftbound</a><a href="theater.html">Theater</a></nav>
+  </header>
+
+  <section class="hero">
+    <div>
+      <div class="eyebrow">The sound of Runeterra</div>
+      <h1>Music<span>of the League</span></h1>
+      <p class="lede">Anthems, virtual bands, Arcane and hours of soundtrack, straight from Riot's official uploads. Pick a shelf and press play; it keeps going track after track.</p>
+    </div>
+    <div class="facts" id="facts"></div>
+  </section>
+
+  <div class="room">
+    <nav class="shelves" id="shelves" aria-label="Shelves"></nav>
+    <main id="main" aria-live="polite"></main>
+  </div>
+
+  <footer>
+    <div>All music plays from official Riot Games uploads on YouTube (Riot Games Music, League of Legends, Legends of Runeterra and Teamfight Tactics channels), using YouTube's privacy-enhanced player. Track lists follow Riot Games Music's own playlists. <span id="upd"></span></div>
+    <div class="legal">Runeterra Atlas was created under Riot Games' "Legal Jibber Jabber" policy using assets owned by Riot Games. Riot Games does not endorse or sponsor this project.</div>
+  </footer>
+</div>
+
+<div class="dock" id="dock" aria-label="Now playing">
+  <div class="dock-in">
+    <div class="vid"><div id="yt"></div></div>
+    <div class="now">
+      <div class="sh" id="nShelf"></div>
+      <b id="nTitle">—</b>
+      <div class="ar" id="nArtist"></div>
+      <div class="prog"><span id="tCur">0:00</span><input id="seek" type="range" min="0" max="1000" value="0" aria-label="Seek"><span id="tDur">0:00</span></div>
+    </div>
+    <div class="ctl">
+      <button class="ic" id="bShuf" type="button" aria-label="Shuffle" aria-pressed="false" title="Shuffle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg></button>
+      <button class="ic" id="bPrev" type="button" aria-label="Previous track"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h2v14H6zM20 5v14L9 12z"/></svg></button>
+      <button class="ic big" id="bPlay" type="button" aria-label="Play"><svg viewBox="0 0 24 24" fill="currentColor" id="playIcon"><path d="M7 4v16l13-8z"/></svg></button>
+      <button class="ic" id="bNext" type="button" aria-label="Next track"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 5h2v14h-2zM4 5v14l11-7z"/></svg></button>
+      <a class="ic" id="bYT" href="#" target="_blank" rel="noopener" aria-label="Open on YouTube" title="Open on YouTube"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 4h6v6M20 4l-9 9M18 14v6H4V6h6"/></svg></a>
+    </div>
+  </div>
+</div>
+
+<script src="data/videos.js"></script>
+<script src="data/music.js"></script>
+<script>
+const esc=s=>String(s??"").replace(/[&<>"]/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch]));
+const thumb=id=>`https://i.ytimg.com/vi/${id}/mqdefault.jpg`;
+const DATA=window.ATLAS_MUSIC||{shelves:[]};
+const SHELVES=DATA.shelves.map(s=>({id:s.id,t:s.t,d:s.d,src:s.src,k:s.k.map(([y,t,a,d])=>({y,t,a,d}))}));
+// Login themes come from the Theater's data, so both pages stay in step
+(function(){const L=(window.ATLAS_VIDEOS||[]).find(s=>s.id==="login");if(!L)return;
+  SHELVES.splice(5,0,{id:"login",t:"Login themes",d:L.d||"The music that played when each champion arrived.",k:L.v.map(v=>({y:v.y,t:v.t.replace(/:\s*Login Theme$/i,""),a:"Login theme · "+v.yr,d:""}))});})();
+const byShelf=Object.fromEntries(SHELVES.map(s=>[s.id,s]));
+const secs=d=>!d?0:d.split(":").reduce((a,x)=>a*60+ +x,0);
+const fmt=s=>{s=Math.max(0,Math.round(s));const h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=String(s%60).padStart(2,"0");return h?`${h}:${String(m).padStart(2,"0")}:${x}`:`${m}:${x}`;};
+const total=s=>s.k.reduce((a,t)=>a+secs(t.d),0);
+const hrs=x=>x>=3600?`${Math.floor(x/3600)} h ${Math.round(x%3600/60)} min`:`${Math.round(x/60)} min`;
+
+/* Facts */
+(function(){
+  const ids=new Set(SHELVES.flatMap(s=>s.k.map(t=>t.y)));
+  const timed=SHELVES.reduce((a,s)=>a+total(s),0);
+  document.getElementById("facts").innerHTML=`<div><b>${ids.size}</b><span>Tracks</span></div><div><b>${SHELVES.length}</b><span>Shelves</span></div><div><b>${Math.round(timed/3600)}+</b><span>Hours</span></div>`;
+  if(DATA.updated)document.getElementById("upd").textContent=`Track lists saved ${new Date(DATA.updated+"T12:00:00Z").toLocaleDateString(undefined,{day:"numeric",month:"long",year:"numeric"})}.`;
+})();
+
+/* State */
+let view=SHELVES[0].id, queue=[], qShelf=null, pos=-1, shuffle=false, playing=false, player=null, ready=false, pendingPlay=null;
+
+function renderShelves(){
+  document.getElementById("shelves").innerHTML=SHELVES.map(s=>`<button type="button" data-s="${s.id}" aria-current="${s.id===view}">
+    <img src="${thumb(s.k[0].y)}" alt="" loading="lazy"><span><b>${esc(s.t)}${qShelf===s.id&&playing?`<span class="eq" aria-label="playing">♪</span>`:""}</b><small>${s.k.length} tracks</small></span></button>`).join("");
+}
+function renderMain(){
+  const s=byShelf[view], t=total(s);
+  const cur=qShelf===view&&pos>=0?queue[pos]:null;
+  document.getElementById("main").innerHTML=`<section class="album">
+      <div class="cover">${s.k.slice(0,4).map(x=>`<img src="${thumb(x.y)}" alt="" loading="lazy">`).join("")}<span>${s.k.length} tracks</span></div>
+      <div style="min-width:0"><div class="eyebrow">Shelf</div><h2>${esc(s.t)}</h2><p>${esc(s.d)}</p>
+        <div class="acts"><button class="btn primary" type="button" data-play="0"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4v16l13-8z"/></svg>Play all</button>
+        <button class="btn" type="button" data-shuffle><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg>Shuffle</button>
+        <span class="meta">${t?hrs(t):""}${s.src?` · <a href="https://www.youtube.com/playlist?list=${s.src}" target="_blank" rel="noopener">Riot's playlist ↗</a>`:""}</span></div></div>
+    </section>
+    <ol class="tracks ${playing?"":"paused"}">${s.k.map((x,i)=>{const on=cur&&cur.y===x.y&&cur.i===i;return `<li class="tr" data-play="${i}" aria-current="${!!on}" tabindex="0" role="button" aria-label="Play ${esc(x.t)}">
+      <span class="n">${on?`<span class="bars" aria-hidden="true"><i></i><i></i><i></i></span>`:i+1}</span>
+      <img src="${thumb(x.y)}" alt="" loading="lazy">
+      <span class="tt"><b>${esc(x.t)}</b><span>${esc(x.a)}</span></span>
+      <span class="d">${esc(x.d)}</span></li>`;}).join("")}</ol>`;
+}
+function show(id,push=true){if(!byShelf[id])return;view=id;renderShelves();renderMain();if(push)history.replaceState(null,"","#s-"+id);}
+
+document.getElementById("shelves").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;show(b.dataset.s);
+  if(innerWidth<=900)document.getElementById("main").scrollIntoView({behavior:"smooth",block:"start"});});
+document.getElementById("main").addEventListener("click",e=>{
+  const p=e.target.closest("[data-play]"); if(p){startShelf(view,+p.dataset.play,false);return;}
+  if(e.target.closest("[data-shuffle]")){startShelf(view,null,true);}
+});
+document.getElementById("main").addEventListener("keydown",e=>{if((e.key==="Enter"||e.key===" ")&&e.target.matches(".tr")){e.preventDefault();e.target.click();}});
+
+/* Queue */
+function startShelf(id,i,shuf){
+  const s=byShelf[id]; qShelf=id; shuffle=!!shuf;
+  document.getElementById("bShuf").setAttribute("aria-pressed",shuffle);
+  queue=s.k.map((t,j)=>({...t,i:j}));
+  if(shuffle){for(let j=queue.length-1;j>0;j--){const r=Math.floor(Math.random()*(j+1));[queue[j],queue[r]]=[queue[r],queue[j]];}pos=0;}
+  else pos=i||0;
+  load(true);
+}
+function load(autoplay){
+  const t=queue[pos]; if(!t)return;
+  const s=byShelf[qShelf];
+  document.getElementById("nShelf").textContent=`${s.t} · ${pos+1} of ${queue.length}`;
+  document.getElementById("nTitle").textContent=t.t;
+  document.getElementById("nArtist").textContent=t.a;
+  document.getElementById("bYT").href=`https://www.youtube.com/watch?v=${t.y}`;
+  document.getElementById("tDur").textContent=t.d||"0:00";
+  document.getElementById("tCur").textContent="0:00";document.getElementById("seek").value=0;
+  openDock();
+  if(!ready){pendingPlay={id:t.y,autoplay};return;}
+  autoplay?player.loadVideoById(t.y):player.cueVideoById(t.y);
+  media(t);
+  renderShelves();renderMain();
+}
+function next(){if(!queue.length)return;if(pos<queue.length-1){pos++;load(true);}else{pos=0;load(false);setPlaying(false);}}
+function prev(){if(!queue.length)return;if(ready&&player.getCurrentTime&&player.getCurrentTime()>4){player.seekTo(0,true);return;}pos=Math.max(0,pos-1);load(true);}
+function openDock(){const d=document.getElementById("dock");if(!d.classList.contains("on")){d.classList.add("on");requestAnimationFrame(()=>document.documentElement.style.setProperty("--dock",d.offsetHeight+"px"));}}
+addEventListener("resize",()=>{const d=document.getElementById("dock");if(d.classList.contains("on"))document.documentElement.style.setProperty("--dock",d.offsetHeight+"px");});
+function setPlaying(v){playing=v;document.getElementById("bPlay").setAttribute("aria-label",v?"Pause":"Play");
+  document.getElementById("playIcon").innerHTML=v?'<path d="M6 4h4v16H6zM14 4h4v16h-4z"/>':'<path d="M7 4v16l13-8z"/>';
+  document.querySelector(".tracks")?.classList.toggle("paused",!v);renderShelves();}
+
+document.getElementById("bPlay").addEventListener("click",()=>{if(!ready)return;if(playing)player.pauseVideo();else player.playVideo();});
+document.getElementById("bNext").addEventListener("click",next);
+document.getElementById("bPrev").addEventListener("click",prev);
+// Toggling shuffle reorders what's left without interrupting the current track
+document.getElementById("bShuf").addEventListener("click",()=>{if(!qShelf)return;const cur=queue[pos];shuffle=!shuffle;
+  document.getElementById("bShuf").setAttribute("aria-pressed",shuffle);
+  const all=byShelf[qShelf].k.map((t,j)=>({...t,i:j}));
+  if(shuffle){const rest=all.filter(t=>!cur||t.i!==cur.i);for(let j=rest.length-1;j>0;j--){const r=Math.floor(Math.random()*(j+1));[rest[j],rest[r]]=[rest[r],rest[j]];}queue=cur?[cur,...rest]:rest;pos=0;}
+  else{queue=all;pos=cur?cur.i:0;}
+  document.getElementById("nShelf").textContent=`${byShelf[qShelf].t} · ${pos+1} of ${queue.length}`;});
+const seek=document.getElementById("seek");let seeking=false;
+seek.addEventListener("input",()=>{seeking=true;const d=ready&&player.getDuration?player.getDuration():0;document.getElementById("tCur").textContent=fmt(seek.value/1000*d);});
+seek.addEventListener("change",()=>{const d=ready&&player.getDuration?player.getDuration():0;if(d)player.seekTo(seek.value/1000*d,true);seeking=false;});
+setInterval(()=>{if(!ready||!player.getDuration||seeking)return;const d=player.getDuration(),c=player.getCurrentTime();if(d>0){seek.value=Math.round(c/d*1000);document.getElementById("tCur").textContent=fmt(c);document.getElementById("tDur").textContent=fmt(d);}},500);
+
+/* Lock-screen / headphone controls where the browser supports them */
+function media(t){if(!("mediaSession" in navigator))return;try{
+  navigator.mediaSession.metadata=new MediaMetadata({title:t.t,artist:t.a,album:byShelf[qShelf].t,artwork:[{src:thumb(t.y),sizes:"320x180",type:"image/jpeg"}]});
+  navigator.mediaSession.setActionHandler("nexttrack",next);navigator.mediaSession.setActionHandler("previoustrack",prev);
+  navigator.mediaSession.setActionHandler("play",()=>player.playVideo());navigator.mediaSession.setActionHandler("pause",()=>player.pauseVideo());}catch(e){}}
+
+/* YouTube player (privacy-enhanced) */
+window.onYouTubeIframeAPIReady=function(){
+  player=new YT.Player("yt",{host:"https://www.youtube-nocookie.com",width:"100%",height:"100%",
+    playerVars:{playsinline:1,rel:0,modestbranding:1,origin:location.origin},
+    events:{
+      onReady:()=>{ready=true;if(pendingPlay){const p=pendingPlay;pendingPlay=null;p.autoplay?player.loadVideoById(p.id):player.cueVideoById(p.id);media(queue[pos]);renderShelves();renderMain();}},
+      onStateChange:e=>{if(e.data===YT.PlayerState.PLAYING)setPlaying(true);else if(e.data===YT.PlayerState.PAUSED)setPlaying(false);else if(e.data===YT.PlayerState.ENDED){setPlaying(false);next();}},
+      onError:()=>{setTimeout(next,800);} // a video that can't play here is skipped
+    }});
+};
+(function(){const s=document.createElement("script");s.src="https://www.youtube.com/iframe_api";s.async=true;document.head.appendChild(s);})();
+
+/* Start: #s-<shelf> opens a shelf, #t-<shelf>-<n> also cues that track */
+(function(){const h=decodeURIComponent(location.hash.slice(1));let m;
+  if((m=h.match(/^t-([a-z0-9]+)-(\d+)$/))&&byShelf[m[1]]){show(m[1],false);const i=Math.min(+m[2]-1,byShelf[m[1]].k.length-1);qShelf=m[1];queue=byShelf[m[1]].k.map((t,j)=>({...t,i:j}));pos=Math.max(0,i);load(false);}
+  else if((m=h.match(/^s-([a-z0-9]+)$/))&&byShelf[m[1]])show(m[1],false);
+  else show(view,false);})();
+</script>
+</body>
+</html>

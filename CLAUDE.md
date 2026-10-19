@@ -17,14 +17,15 @@ Custom domain is possible later via Pages settings + CNAME file (not set up).
 | riftbound.html | 1,407 Riftbound TCG cards, domain chips; images hotlinked from Riot CDN. |
 | theater.html | 147 official videos in 8 shelves, youtube-nocookie embeds, `#v-<id>`. |
 | players.html | 97 Worlds 2026 players: search/role/team filters (`?team=CODE`), dossier dialog with 6 signature champions (link to Atlas `#c-<id>`) and a Worlds timeline. Deep link `#p-<slug>`. Worlds rosters link here. |
+| music.html | Music hub: 13 shelves (anthems, virtual bands, Arcane S1/S2/score, Pentakill, Star Guardian, login themes from videos.js, champion songs, Warsongs, DJ Sona, LoR, long listens). One docked YouTube IFrame-API player (youtube-nocookie; kept ≥200px tall per YouTube's rules) plays a shelf in order, shuffle, Media Session controls. Deep links `#s-<shelf>`, `#t-<shelf>-<n>`. |
 
-Nav on every page: Atlas(./) · Worlds · Players · Library · Riftbound · Theater. Every footer carries Riot's
+Nav on every page: Atlas(./) · Worlds · Players · Music · Library · Riftbound · Theater. Every footer carries Riot's
 "Legal Jibber Jabber" fan-content notice — keep it on any new page.
 
 ## Data (data/*.js, plain globals)
 champions.js (173 champs: id, dd, name, title, region, role, tags, bio, hand) · cards.js · stories.js ·
 champcards.js · riftbound.js (RB_SETS, RB_CARDS) · champrb.js · videos.js (ATLAS_VIDEOS shelves) ·
-worlds.js (WORLDS_TEAMS, WORLDS_SNAPSHOT) · players.js (ATLAS_PLAYERS, saved 2026-10-19). Bonds live in index.html; 236 are generic "Linked" bonds that
+worlds.js (WORLDS_TEAMS, WORLDS_SNAPSHOT) · players.js (ATLAS_PLAYERS, saved 2026-10-19) · music.js (ATLAS_MUSIC shelves, saved 2026-10-19). Bonds live in index.html; 236 are generic "Linked" bonds that
 could be enriched from official stories.
 
 ## Sources (all free)
@@ -37,6 +38,8 @@ could be enriched from official stories.
   browser pane since the workspace can't reach it. Tables: TournamentPlayers (rosters), ScoreboardPlayers (champion counts; incomplete for wins, so
   only games are shown), MatchSchedule (reliable series/game records), TournamentResults (placings), PlayerRedirects (old names, e.g. Thanatos kyu/gyu).
   Credit Leaguepedia (CC BY-SA 3.0) in the footer. Refresh after Worlds ends to fill 2026 placings.
+- Music: Riot Games Music's YouTube playlists (youtube.com/@RiotGamesMusic/playlists), read in the browser pane: parse ytInitialData
+  lockupViewModel items on /playlist?list=…; check embeddability with /oembed (non-200 = can't embed). Each shelf keeps its source playlist id.
 - Esports: esports-api.lolesports.com/persisted/gw/ (getSchedule, getTeams, getStandings), header
   `x-api-key: 0TvQnueqKa5mxJntVWt0w4LpLfEkrV1Ta8rQBb9Z` (public key the official site uses). Worlds leagueId 98767975604431411,
   worlds_2026 tournament 115660540725177488. CORS works from github.io.
@@ -54,6 +57,6 @@ Must work at phone width with no horizontal scroll (watch grid children: `min-wi
 
 ## Ideas not started yet (ask Devdeep which next)
 1. ~~Player pages~~ (done 2026-10-19; refresh players.js after the 2026 final).
-2. Music hub — League music, anthems, Arcane soundtrack (embeds only).
+2. ~~Music hub~~ (done 2026-10-19).
 3. Enrich the 236 generic "Linked" bonds using official stories.
 4. Custom domain.
