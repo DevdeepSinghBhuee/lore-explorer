@@ -25,8 +25,8 @@ Nav on every page: Atlas(./) · Worlds · Players · Music · Library · Riftbou
 ## Data (data/*.js, plain globals)
 champions.js (173 champs: id, dd, name, title, region, role, tags, bio, hand) · cards.js · stories.js ·
 champcards.js · riftbound.js (RB_SETS, RB_CARDS) · champrb.js · videos.js (ATLAS_VIDEOS shelves) ·
-worlds.js (WORLDS_TEAMS, WORLDS_SNAPSHOT) · players.js (ATLAS_PLAYERS, saved 2026-10-19) · music.js (ATLAS_MUSIC shelves, saved 2026-10-19). Bonds live in index.html; 236 are generic "Linked" bonds that
-could be enriched from official stories.
+worlds.js (WORLDS_TEAMS, WORLDS_SNAPSHOT) · players.js (ATLAS_PLAYERS, saved 2026-10-19) · music.js (ATLAS_MUSIC shelves, saved 2026-10-19). Bonds live in index.html as [a,b,type,note,source,necritVideo]; source r = Riot Universe text, w = League Wiki Relations,
+u = only listed as related by Riot (note says no official story explains it). Reviewed 2026-10-19: 77 re-typed, 34 verified as Linked, 129 'u'.
 
 ## Sources (all free)
 - Champion art/data: Data Dragon mirror raw.githubusercontent.com/InFinity54/LoL_DDragon
@@ -40,6 +40,8 @@ could be enriched from official stories.
   Credit Leaguepedia (CC BY-SA 3.0) in the footer. Refresh after Worlds ends to fill 2026 placings.
 - Music: Riot Games Music's YouTube playlists (youtube.com/@RiotGamesMusic/playlists), read in the browser pane: parse ytInitialData
   lockupViewModel items on /playlist?list=…; check embeddability with /oembed (non-200 = can't embed). Each shelf keeps its source playlist id.
+- Lore cross-checks: League Wiki API leagueoflegends.fandom.com/api.php (action=parse, Relations section); Necrit's uploads
+  (channel UCiUHGAbtjCrLO3ZPrTfle3Q) matched by champion names in titles.
 - Esports: esports-api.lolesports.com/persisted/gw/ (getSchedule, getTeams, getStandings), header
   `x-api-key: 0TvQnueqKa5mxJntVWt0w4LpLfEkrV1Ta8rQBb9Z` (public key the official site uses). Worlds leagueId 98767975604431411,
   worlds_2026 tournament 115660540725177488. CORS works from github.io.
@@ -58,5 +60,6 @@ Must work at phone width with no horizontal scroll (watch grid children: `min-wi
 ## Ideas not started yet (ask Devdeep which next)
 1. ~~Player pages~~ (done 2026-10-19; refresh players.js after the 2026 final).
 2. ~~Music hub~~ (done 2026-10-19).
-3. Enrich the 236 generic "Linked" bonds using official stories.
+3. ~~Enrich Linked bonds~~ (done 2026-10-19; 129 still have no official explanation — revisit when Riot publishes more).
+5. Champion size chart (Devdeep's idea): grayscale silhouettes side by side with a height scale, like encyclopedia dinosaur-vs-human charts.
 4. Custom domain.
