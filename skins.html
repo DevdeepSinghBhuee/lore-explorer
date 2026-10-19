@@ -227,14 +227,14 @@ const plain=s=>String(s||"").replace(/<br\s*\/?>/gi," ").replace(/<\/?i>/gi,"");
 
 const SKINS=[];
 for(const c of CHAMPS){
-  (window.ATLAS_SKINS[c.id]||[]).forEach(([num,name,rar,leg,lines,chromas,desc,path])=>{
-    SKINS.push({key:c.id+"-"+num,num,name,rar,leg:!!leg,lines,chromas,desc,path,champ:c,
+  (window.ATLAS_SKINS[c.id]||[]).forEach(([num,name,rar,leg,lines,chromas,desc,path,spl])=>{
+    SKINS.push({key:c.id+"-"+num,num,name,rar,leg:!!leg,lines,chromas,desc,path,spl,champ:c,
       hay:(name+" "+c.name+" "+lines.map(l=>LINES[l]||"").join(" ")).toLowerCase()});
   });
 }
 const BY=Object.fromEntries(SKINS.map(s=>[s.key,s]));
 const load=s=>s.path?CD+s.path:`${DD}loading/${s.champ.dd}_${s.num}.jpg`;
-const splash=s=>s.path?CD+s.path:`${DD}splash/${s.champ.dd}_${s.num}.jpg`;
+const splash=s=>s.spl?CD+s.spl:s.path?CD+s.path:`${DD}splash/${s.champ.dd}_${s.num}.jpg`;
 
 const PAGE=60;
 const S={q:"",champ:"",rar:"all",line:"",regions:new Set(),legacy:false,sort:"champ",shown:PAGE};
@@ -309,7 +309,7 @@ function open(s){
   plate.style.setProperty("--rc",rc);
   const total=(window.ATLAS_SKINS[c.id]||[]).length;
   plate.innerHTML=`<button class="x" type="button" aria-label="Close" id="x">×</button>
-    <img class="splash${s.path?" tall":""}" src="${splash(s)}" alt="${esc(s.name)} splash art" referrerpolicy="no-referrer">
+    <img class="splash${s.path&&!s.spl?" tall":""}" src="${splash(s)}" alt="${esc(s.name)} splash art" referrerpolicy="no-referrer">
     <div class="body">
       <div style="min-width:0">
         <div class="eyebrow" style="color:var(--rc)">${esc(c.name)} · ${esc((REG[c.region]||REG.wanderers)[0])}</div>
@@ -347,7 +347,7 @@ dlg.addEventListener("click",e=>{if(e.target===dlg)dlg.close();});
 dlg.addEventListener("keydown",e=>{if(e.key==="ArrowRight")step(1);if(e.key==="ArrowLeft")step(-1);});
 
 // featured skin: a random Legendary-or-rarer skin that has a description
-const FEAT=SKINS.filter(s=>s.rar>=3&&s.desc&&!s.path);
+const FEAT=SKINS.filter(s=>s.rar>=3&&s.desc&&(!s.path||s.spl));
 let fCur=null;
 function feature(){
   fCur=FEAT[Math.floor(Math.random()*FEAT.length)]; const c=fCur.champ;
