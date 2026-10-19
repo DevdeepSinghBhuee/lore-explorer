@@ -1,0 +1,398 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Runeterra Daily</title>
+<meta name="description" content="A free daily League of Legends guessing game: find the champion from clues, a zoomed-in splash, or their lore. New puzzles every day.">
+<meta property="og:title" content="Runeterra Daily">
+<meta property="og:description" content="Guess today's League of Legends champion from clues, splash art or lore.">
+<link rel="icon" href="img/emblem/wanderers.webp">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://ddragon.leagueoflegends.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus+SC&family=Alegreya:ital,wght@0,400;0,500;0,700;1,400&family=Spline+Sans+Mono:wght@400;500&family=Teko:wght@400;500;600&display=swap">
+<style>
+/* Layout: a game table. Title strip with puzzle number and countdown, three mode tabs, one centred play column: the clue (grid / splash / lore), the guess box, then guesses. A win opens a result card with share + stats. */
+:root{
+  color-scheme:dark;
+  --ink:#080d18; --panel:#0f1a2e; --panel-2:#142238;
+  --gold:#c8aa6e; --gold-dim:#7d6a45; --text:#ebe4d3; --muted:#939bb0; --faint:#5b6580;
+  --rule:rgba(200,170,110,.22);
+  --hit:#2f8a57; --near:#b9822a; --miss:#8e2f3a;
+  --f-display:"Marcellus SC","Cinzel",Georgia,serif;
+  --f-body:"Alegreya",Georgia,"Times New Roman",serif;
+  --f-mono:"Spline Sans Mono",ui-monospace,Menlo,monospace;
+  --f-num:"Teko","Oxanium",var(--f-display),sans-serif;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ink);color:var(--text);font-family:var(--f-body);font-size:18px;line-height:1.55;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+img{max-width:100%}
+[hidden]{display:none!important}
+a{color:var(--gold)}
+button,input{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.wrap{max-width:1240px;margin-inline:auto}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:18px;border-bottom:1px solid var(--rule);flex-wrap:wrap}
+.brand{font-family:var(--f-display);font-size:20px;letter-spacing:.08em;color:var(--gold);display:flex;align-items:center;gap:10px;text-decoration:none}
+.brand svg{width:26px;height:26px}
+.nav{display:flex;gap:4px;flex-wrap:wrap}
+.nav a{font-family:var(--f-mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-decoration:none;padding:7px 12px}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+
+.head{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap;padding-block:34px 18px}
+h1{font-family:var(--f-display);font-weight:400;font-size:clamp(38px,5.6vw,66px);line-height:.95;margin:10px 0 8px}
+h1 em{font-style:normal;color:var(--gold)}
+.head p{margin:0;color:#c4c8d3;max-width:52ch}
+.clock{text-align:right}
+.clock b{display:block;font-family:var(--f-num);font-weight:500;font-size:38px;line-height:.9;color:var(--gold);font-variant-numeric:tabular-nums}
+.clock span{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+
+.modes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:22px}
+.mode{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--panel);border:1px solid var(--rule);cursor:pointer;text-align:left;min-width:0}
+.mode i{font-style:normal;width:36px;height:36px;flex:none;display:grid;place-items:center;border:1px solid var(--gold-dim);font-family:var(--f-display);font-size:18px;color:var(--gold)}
+.mode b{display:block;font-family:var(--f-display);font-weight:400;font-size:20px;line-height:1.1}
+.mode small{display:block;font-size:13.5px;color:var(--muted);line-height:1.3}
+.mode[aria-selected="true"]{border-color:var(--gold);background:linear-gradient(135deg,rgba(200,170,110,.14),var(--panel) 70%)}
+.mode .st{margin-left:auto;font-family:var(--f-mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);white-space:nowrap}
+.mode .st.done{color:#7fd1a0}
+
+.play{max-width:880px;margin:0 auto}
+.stage{border:1px solid var(--rule);background:var(--panel);padding:18px;margin-bottom:14px}
+.stage h2{font-family:var(--f-mono);font-weight:400;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin:0 0 10px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+
+/* splash */
+.crop{position:relative;aspect-ratio:1215/717;overflow:hidden;background:#000;border:1px solid var(--rule)}
+.crop img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform-origin:var(--fx) var(--fy);transform:scale(var(--z));transition:transform .7s cubic-bezier(.2,.8,.2,1);filter:var(--flt,none)}
+.zoomtag{font-family:var(--f-num);font-size:16px;color:var(--text)}
+.bonus{margin-top:14px;display:grid;gap:8px}
+.bonus .opts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.bonus button{padding:10px 12px;background:var(--panel-2);border:1px solid var(--rule);cursor:pointer;text-align:left}
+.bonus button:hover:not(:disabled){border-color:var(--gold)}
+.bonus button.right{background:color-mix(in srgb,var(--hit) 45%,var(--panel-2));border-color:var(--hit)}
+.bonus button.wrong{background:color-mix(in srgb,var(--miss) 45%,var(--panel-2));border-color:var(--miss)}
+
+/* lore */
+.lore{font-size:20px;line-height:1.65;margin:0}
+.lore .s{animation:fadein .6s}
+.lore .hid{color:var(--faint);letter-spacing:.06em}
+.lore mark{background:none;color:var(--gold);font-family:var(--f-mono);font-size:.8em;letter-spacing:.1em}
+@keyframes fadein{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+/* clues legend */
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:14px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:14px;height:14px;display:inline-block}
+
+/* guess box */
+.guess{position:relative;display:flex;gap:8px}
+.guess input{flex:1;min-width:0;background:var(--ink);border:1px solid var(--gold-dim);padding:13px 14px;font-size:17px}
+.guess input:focus{border-color:var(--gold);outline:none}
+.guess button{font-family:var(--f-mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;padding:0 18px;border:1px solid var(--gold);background:var(--gold);color:var(--ink);cursor:pointer}
+.sugg{position:absolute;left:0;right:0;top:calc(100% + 4px);z-index:20;background:#0b1120;border:1px solid var(--gold-dim);max-height:300px;overflow:auto;box-shadow:0 18px 40px rgba(0,0,0,.6)}
+.sugg button{display:flex;align-items:center;gap:10px;width:100%;background:none;border:0;padding:7px 10px;cursor:pointer;text-align:left}
+.sugg button img{width:34px;height:34px;object-fit:cover}
+.sugg button[aria-selected="true"],.sugg button:hover{background:rgba(200,170,110,.12)}
+.sugg small{color:var(--muted);font-size:13px;margin-left:auto}
+.meta-line{display:flex;justify-content:space-between;gap:10px;margin:10px 0 0;font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);flex-wrap:wrap}
+.meta-line button{background:none;border:0;color:var(--faint);cursor:pointer;font:inherit;letter-spacing:inherit;text-transform:inherit;text-decoration:underline}
+
+/* clues grid */
+.grid-wrap{overflow-x:auto;margin-top:16px}
+.cgrid{display:grid;grid-template-columns:62px repeat(6,minmax(84px,1fr));gap:5px;min-width:620px}
+.cgrid .h{font-family:var(--f-mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-align:center;padding:4px 2px;border-bottom:1px solid var(--rule)}
+.cell{min-height:62px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:6px 4px;font-size:14px;line-height:1.2;border:1px solid rgba(0,0,0,.35);animation:flip .5s both;animation-delay:calc(var(--i) * 120ms)}
+.cell.p{padding:0;border:1px solid var(--rule)}
+.cell.p img{width:100%;height:100%;object-fit:cover;display:block}
+.cell.hit{background:var(--hit)}.cell.near{background:var(--near)}.cell.miss{background:var(--miss)}
+.cell .ic{font-size:11px;opacity:.85;margin-top:3px;font-family:var(--f-mono);letter-spacing:.06em}
+.cell b{font-family:var(--f-num);font-weight:500;font-size:22px;line-height:1}
+@keyframes flip{from{transform:rotateX(90deg);opacity:0}to{transform:none;opacity:1}}
+
+/* plain guess list (splash / lore) */
+.glist{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
+.glist span{display:inline-flex;align-items:center;gap:6px;padding:3px 9px 3px 3px;border:1px solid var(--miss);background:color-mix(in srgb,var(--miss) 25%,transparent);font-size:14px}
+.glist span img{width:26px;height:26px;object-fit:cover}
+.glist span.ok{border-color:var(--hit);background:color-mix(in srgb,var(--hit) 30%,transparent)}
+
+/* result */
+.result{border:1px solid var(--gold);background:linear-gradient(150deg,rgba(200,170,110,.12),var(--panel) 55%);margin-bottom:14px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr)}
+.result .pic{background:#000 center/cover no-repeat;min-height:240px}
+.result .body{padding:20px 22px}
+.result h3{font-family:var(--f-display);font-weight:400;font-size:32px;line-height:1;margin:6px 0 4px}
+.result p{margin:0 0 12px;color:#c4c8d3}
+.acts{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 16px}
+.btn{display:inline-flex;align-items:center;gap:8px;font-family:var(--f-mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;padding:10px 14px;text-decoration:none;cursor:pointer;border:1px solid var(--gold);background:var(--gold);color:var(--ink)}
+.btn.ghost{background:transparent;color:var(--text);border-color:var(--rule)}
+.btn.ghost:hover{border-color:var(--gold)}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:12px}
+.stats div{text-align:center;border:1px solid var(--rule);padding:6px 4px}
+.stats b{display:block;font-family:var(--f-num);font-weight:500;font-size:28px;line-height:1;color:var(--text)}
+.stats span{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.dist{display:grid;gap:3px}
+.dist div{display:grid;grid-template-columns:34px minmax(0,1fr);gap:6px;align-items:center;font-family:var(--f-num);font-size:15px;color:var(--muted)}
+.dist i{display:block;height:16px;background:var(--gold-dim);min-width:18px;text-align:right;padding-right:5px;font-style:normal;color:var(--ink);font-size:13px;line-height:16px}
+.dist i.me{background:var(--gold)}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--gold);color:var(--ink);font-family:var(--f-mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;padding:10px 16px;z-index:50}
+
+.how{max-width:880px;margin:26px auto 0;color:#c4c8d3;font-size:16px;border-top:1px solid var(--rule);padding-top:18px}
+.how h3{font-family:var(--f-mono);font-weight:400;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+.how ul{margin:0;padding-left:20px}
+footer{border-top:1px solid var(--rule);margin-top:48px;padding-block:24px 40px;color:var(--muted);font-size:14px;display:grid;gap:8px}
+footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width:80ch}
+@media (max-width:760px){.modes{grid-template-columns:1fr}.mode .st{display:none}.result{grid-template-columns:1fr}.result .pic{min-height:0;aspect-ratio:16/8}.clock{text-align:left}}
+@media (max-width:480px){.bonus .opts{grid-template-columns:1fr}.lore{font-size:18px}.stage{padding:14px}}
+</style>
+<script src="site.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header class="bar">
+    <a class="brand" href="./">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><polygon points="16,2 29,9.5 29,22.5 16,30 3,22.5 3,9.5" fill="none" stroke="#c8aa6e" stroke-width="1.5"/><circle cx="16" cy="16" r="5" fill="none" stroke="#c8aa6e" stroke-width="1.5"/><path d="M16 2v9M16 21v9M3 9.5l8 4.5M21 18l8 4.5M29 9.5l-8 4.5M11 18l-8 4.5" stroke="#c8aa6e" stroke-width="1"/></svg>
+      Runeterra Atlas
+    </a>
+    <nav class="nav" aria-label="Site"><a href="./">Atlas</a><a href="journey.html">Journeys</a><a href="daily.html" aria-current="page">Daily</a></nav>
+  </header>
+
+  <section class="head">
+    <div>
+      <div class="eyebrow" id="eye"></div>
+      <h1>Runeterra <em>Daily</em></h1>
+      <p>Three new champions to find every day: one from clues, one from a zoomed-in splash, one from their lore. Same puzzles for everyone.</p>
+    </div>
+    <div class="clock"><b id="clock">--:--:--</b><span>until tomorrow's puzzles</span></div>
+  </section>
+
+  <div class="modes" role="tablist" aria-label="Game mode">
+    <button class="mode" role="tab" data-m="clues" aria-selected="true"><i>?</i><span><b>Clues</b><small>Region, class, range and more</small></span><span class="st" data-st="clues"></span></button>
+    <button class="mode" role="tab" data-m="splash" aria-selected="false"><i>◩</i><span><b>Splash</b><small>Zoomed-in art, then name the skin</small></span><span class="st" data-st="splash"></span></button>
+    <button class="mode" role="tab" data-m="lore" aria-selected="false"><i>¶</i><span><b>Lore</b><small>Their biography, name hidden</small></span><span class="st" data-st="lore"></span></button>
+  </div>
+
+  <div class="play" id="play"></div>
+
+  <section class="how" id="how"></section>
+
+  <footer>
+    <div>Inspired by fan games like LoLdle. Champion facts from Riot's Data Dragon, the League Wiki and Leaguepedia; biographies are Riot's (or, where marked on the Atlas, written for this site). Results and streaks are kept in your browser only.</div>
+    <div class="legal">Runeterra Atlas was created under Riot Games' "Legal Jibber Jabber" policy using assets owned by Riot Games. Riot Games does not endorse or sponsor this project.</div>
+  </footer>
+</div>
+
+<script src="data/champions.js"></script>
+<script src="data/regions.js"></script>
+<script src="data/releases.js"></script>
+<script src="data/skins.js"></script>
+<script src="data/game.js"></script>
+<script>
+const CHAMPS=(window.ATLAS_CHAMPS||[]).slice().sort((a,b)=>a.id.localeCompare(b.id));
+const CH=Object.fromEntries(CHAMPS.map(c=>[c.id,c]));
+const RG=Object.fromEntries((window.ATLAS_REGIONS||[]).map(r=>[r.id,r]));
+const REL=window.ATLAS_RELEASES||{}, SK=window.ATLAS_SKINS||{}, GM=window.ATLAS_GAME||{};
+const DD="https://ddragon.leagueoflegends.com/cdn/img/champion/";
+const esc=s=>String(s??"").replace(/[&<>"]/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch]));
+const MODES={clues:"Clues",splash:"Splash",lore:"Lore"};
+
+/* ---------- the day's puzzle: same for everyone, by the visitor's calendar date ---------- */
+const EPOCH=Date.UTC(2026,9,20); // puzzle #1 = 20 Oct 2026
+function todayKey(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;}
+const dayNo=k=>{const [y,m,d]=k.split("-").map(Number);return Math.round((Date.UTC(y,m-1,d)-EPOCH)/864e5)+1;};
+function rng(seed){let a=seed>>>0;return()=>{a=(a+0x6D2B79F5)>>>0;let t=a;t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return((t^(t>>>14))>>>0)/4294967296;};}
+const hash=s=>{let h=2166136261;for(const ch of s){h^=ch.codePointAt(0);h=Math.imul(h,16777619);}return h>>>0;};
+// each mode walks its own fixed shuffle of all champions, so no champion repeats in a mode until all 173 have come up
+function shuffled(mode){const r=rng(hash("atlas-daily-"+mode));const a=CHAMPS.map(c=>c.id);for(let i=a.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+const ORDER={clues:shuffled("clues"),splash:shuffled("splash"),lore:shuffled("lore")};
+function puzzle(mode,key,practiceSeed){
+  const n=practiceSeed!=null?practiceSeed:dayNo(key);
+  const L=ORDER[mode], id=L[((n-1)%L.length+L.length)%L.length];
+  const r=rng(hash(`${mode}|${n}|${practiceSeed!=null?"p":""}`));
+  const p={mode,n,id,practice:practiceSeed!=null};
+  if(mode==="splash"){
+    // a skin that has a Data Dragon splash (base art counts), and a focal point away from the edges
+    const sk=[[0,"Original"]].concat((SK[id]||[]).filter(k=>typeof k[0]==="number"&&!k[7]).map(k=>[k[0],k[1]]));
+    const s=sk[Math.floor(r()*sk.length)];p.skin=s;p.skins=sk;
+    p.fx=(30+r()*40).toFixed(1)+"%";p.fy=(18+r()*40).toFixed(1)+"%";
+    // bonus options: the right skin + up to three others of the same champion
+    const others=sk.filter(x=>x[0]!==s[0]);for(let i=others.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[others[i],others[j]]=[others[j],others[i]];}
+    p.opts=[s].concat(others.slice(0,3));for(let i=p.opts.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[p.opts[i],p.opts[j]]=[p.opts[j],p.opts[i]];}
+  }
+  return p;
+}
+
+/* ---------- storage (this browser only) ---------- */
+const LS={get(k,d){try{const v=JSON.parse(localStorage.getItem(k));return v??d;}catch(e){return d;}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}};
+const sKey=(p,key)=>p.practice?null:`atlas.daily.${p.mode}.${key}`;
+function stats(mode){return LS.get(`atlas.daily.stats.${mode}`,{played:0,won:0,streak:0,best:0,last:null,dist:{}});}
+function record(p,key,state){
+  if(p.practice)return;const s=stats(p.mode);if(s.lastKey===key)return;
+  s.played++;s.lastKey=key;
+  if(state.won){s.won++;const prev=s.lastWin;const y=new Date(Date.parse(key)-864e5);const yk=`${y.getUTCFullYear()}-${String(y.getUTCMonth()+1).padStart(2,"0")}-${String(y.getUTCDate()).padStart(2,"0")}`;
+    s.streak=(prev===yk)?s.streak+1:1;s.best=Math.max(s.best,s.streak);s.lastWin=key;const g=Math.min(state.g.length,7);s.dist[g]=(s.dist[g]||0)+1;}
+  else{s.streak=0;}
+  LS.set(`atlas.daily.stats.${p.mode}`,s);
+}
+
+/* ---------- helpers ---------- */
+const year=id=>REL[id]?+REL[id][0].slice(0,4):null;
+const skins=id=>(SK[id]||[]).length;
+const regName=id=>(RG[id]||{}).name||id;
+let toastT;function toast(t){let el=document.querySelector(".toast");if(!el){el=document.createElement("div");el.className="toast";document.body.appendChild(el);}el.textContent=t;el.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>el.hidden=true,1800);}
+
+/* ---------- clue comparison ---------- */
+function compare(g,a){
+  const G=CH[g],A=CH[a];
+  const reg={v:regName(G.region),r:G.region===A.region?"hit":"miss"};
+  const gt=G.tags||[],at=A.tags||[];const same=gt.filter(t=>at.includes(t)).length;
+  const cls={v:gt.join(", "),r:same===gt.length&&same===at.length?"hit":same?"near":"miss"};
+  const rng_={v:GM[g][1],r:GM[g][1]===GM[a][1]?"hit":"miss"};
+  const res={v:GM[g][0],r:GM[g][0]===GM[a][0]?"hit":"miss"};
+  const yg=year(g),ya=year(a);const yr={v:yg,r:yg===ya?"hit":Math.abs(yg-ya)<=2?"near":"miss",dir:yg<ya?"↑":yg>ya?"↓":""};
+  const sg=skins(g),sa=skins(a);const sk={v:sg,r:sg===sa?"hit":Math.abs(sg-sa)<=2?"near":"miss",dir:sg<sa?"↑":sg>sa?"↓":""};
+  return [reg,cls,rng_,res,yr,sk];
+}
+const SYM={hit:"✓",near:"≈",miss:"✗"};
+const EMO={hit:"🟩",near:"🟧",miss:"🟥"};
+
+/* ---------- game ---------- */
+let mode=(location.hash.slice(1) in MODES)?location.hash.slice(1):"clues";
+let practice=null; // {mode:seed}
+const play=document.getElementById("play");
+
+function render(){
+  document.querySelectorAll(".mode").forEach(b=>b.setAttribute("aria-selected",String(b.dataset.m===mode)));
+  const key=todayKey();const pseed=practice&&practice.mode===mode?practice.seed:null;
+  const p=puzzle(mode,key,pseed);
+  const k=sKey(p,key);
+  const state=(k&&LS.get(k,null))||p._state||{g:[],won:false,lost:false,bonus:null};
+  p._state=state;
+  const save=()=>{if(k)LS.set(k,state);else practice.state=state;};
+  if(pseed!=null&&practice.state)Object.assign(state,practice.state);
+  const done=state.won||state.lost, ans=CH[p.id];
+  document.getElementById("eye").textContent=p.practice?`Practice round · ${MODES[mode]}`:`Puzzle #${p.n} · ${new Date().toLocaleDateString(undefined,{day:"numeric",month:"long",year:"numeric"})}`;
+
+  let stage="";
+  if(mode==="clues"){
+    stage=`<div class="stage"><h2><span>Guess the champion</span><span>${state.g.length} ${state.g.length===1?"guess":"guesses"}</span></h2>
+      <div class="legend"><span><i style="background:var(--hit)"></i>✓ match</span><span><i style="background:var(--near)"></i>≈ close (shares a class · within 2 years · within 2 skins)</span><span><i style="background:var(--miss)"></i>✗ no match</span><span>↑ ↓ the answer is higher / lower</span></div></div>`;
+  }else if(mode==="splash"){
+    const wrong=state.g.filter(x=>x!==p.id).length;const z=done?1:Math.max(1,6-wrong*0.85);
+    stage=`<div class="stage"><h2><span>Whose splash art is this?</span><span class="zoomtag">${done?"Full view":`${z.toFixed(1)}× zoom`}</span></h2>
+      <div class="crop" style="--fx:${p.fx};--fy:${p.fy};--z:${z};${done?"":"--flt:saturate(1.05)"}"><img src="${DD}splash/${ans.dd}_${p.skin[0]}.jpg" alt="${done?esc(p.skin[1]==="Original"?ans.name:p.skin[1]):"Mystery splash art"}"></div>
+      ${state.won?bonusHTML(p,state):""}</div>`;
+  }else{
+    const ch=bioChunks(ans), wrong=state.g.filter(x=>x!==p.id).length, show=done?ch.length:Math.min(ch.length,1+wrong);
+    const hints=[];if(done||wrong>=3)hints.push(`From <b>${esc(regName(ans.region))}</b>`);if(done||wrong>=5)hints.push(`Class: <b>${esc((ans.tags||[]).join(", "))}</b>`);
+    stage=`<div class="stage"><h2><span>Who is this?</span><span>${show} of ${ch.length} parts shown${done?"":wrong<3?" · region hint after 3 misses":wrong<5?" · class hint after 5 misses":""}</span></h2>
+      <p class="lore">${ch.map((ws,i)=>i<show?`<span class="s">${ws.join(" ")} </span>`:`<span class="hid">${ws.map(w=>"▒".repeat(Math.max(2,Math.min(9,w.replace(/<[^>]+>/g,"").length)))).join(" ")} </span>`).join("")}</p>
+      ${hints.length?`<p style="margin:12px 0 0;font-size:15px;color:var(--muted)">${hints.join(" · ")}</p>`:""}</div>`;
+  }
+
+  const input=done?"":`<div class="guess"><input id="gi" type="text" placeholder="Type a champion…" autocomplete="off" aria-label="Your guess" aria-autocomplete="list" aria-controls="sugg"><button type="button" id="gb">Guess</button><div class="sugg" id="sugg" role="listbox" hidden></div></div>
+    <div class="meta-line"><span>${state.g.length?`${state.g.length} tried`:"Start typing to see champions"}</span>${state.g.length>=8?`<button type="button" id="giveup">Reveal the answer</button>`:""}</div>`;
+
+  let guesses="";
+  if(mode==="clues"&&state.g.length){
+    guesses=`<div class="grid-wrap"><div class="cgrid"><div class="h">Champion</div><div class="h">Region</div><div class="h">Class</div><div class="h">Range</div><div class="h">Resource</div><div class="h">Released</div><div class="h">Skins</div>
+      ${state.g.slice().reverse().map((g,ri)=>{const c=compare(g,p.id);const fresh=ri===0&&!state._seen;return `<div class="cell p" style="--i:0" title="${esc(CH[g].name)}"><img src="img/${g}-tile.webp" alt="${esc(CH[g].name)}"></div>`+c.map((x,i)=>`<div class="cell ${x.r}" style="--i:${fresh?i+1:0};${fresh?"":"animation:none"}">${i>=4?`<b>${x.v}</b>`:esc(x.v)}<span class="ic">${SYM[x.r]}${x.dir?" "+x.dir:""}</span></div>`).join("");}).join("")}</div></div>`;
+  }else if(state.g.length){
+    guesses=`<div class="glist">${state.g.map(g=>`<span class="${g===p.id?"ok":""}"><img src="img/${g}-tile.webp" alt="">${esc(CH[g].name)}</span>`).join("")}</div>`;
+  }
+
+  play.innerHTML=(done?resultHTML(p,state,key):"")+stage+input+guesses;
+  state._seen=true;
+  wire(p,state,save,key);
+  statusChips();
+}
+
+function bioChunks(c){
+  // Riot's biography, split into 5 roughly even chunks of words, with the champion's name (and each part of it) hidden
+  const parts=new Set([c.name,...c.name.split(/[\s&.]+/)].map(w=>w.toLowerCase().replace(/[^a-z']/g,"")).filter(w=>w.length>2));
+  const words=c.bio.split(/\s+/).map(w=>{const core=w.toLowerCase().replace(/[^a-z']/g,"").replace(/'s$/,"");
+    return parts.has(core)||[...parts].some(p=>p.includes(" ")?false:core===p)?`<mark>▇▇▇${/'s\W*$/.test(w)?"'s":""}</mark>${(w.match(/[.,;:!?]+$/)||[""])[0]}`:esc(w);});
+  const n=Math.min(5,words.length), size=Math.ceil(words.length/n), out=[];
+  for(let i=0;i<words.length;i+=size)out.push(words.slice(i,i+size));
+  return out;
+}
+function bonusHTML(p,state){
+  const b=state.bonus;
+  return `<div class="bonus"><h2 style="margin:0;font-family:var(--f-mono);font-weight:400;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)">Bonus · which skin is it?</h2>
+    <div class="opts">${p.opts.map(o=>{const cls=b==null?"":o[0]===p.skin[0]?"right":o[0]===b?"wrong":"";return `<button type="button" data-skin="${o[0]}" class="${cls}" ${b!=null?"disabled":""}>${esc(o[1]==="Original"?`Original ${CH[p.id].name}`:o[1])}</button>`;}).join("")}</div></div>`;
+}
+
+function resultHTML(p,state,key){
+  const ans=CH[p.id];const n=state.g.length;
+  const s=stats(p.mode);const maxD=Math.max(1,...Object.values(s.dist||{}));const me=Math.min(n,7);
+  const art=p.mode==="splash"?`${DD}splash/${ans.dd}_${p.skin[0]}.jpg`:`${DD}splash/${ans.dd}_0.jpg`;
+  return `<div class="result"><div class="pic" style="background-image:url('${art}')"></div><div class="body">
+    <div class="eyebrow">${state.won?(n===1?"First try!":"Found it"):"Better luck tomorrow"}</div>
+    <h3>${esc(ans.name)}</h3><p>${state.won?`in ${n} ${n===1?"guess":"guesses"}`:"The answer was revealed."}${p.mode==="splash"&&state.bonus!=null?` · skin: ${state.bonus===p.skin[0]?"✓ ":"✗ "}${esc(p.skin[1]==="Original"?"Original":p.skin[1])}`:""}</p>
+    <div class="acts"><button class="btn" type="button" id="share">Share result</button><a class="btn ghost" href="journey.html?c=${ans.id}">${esc(ans.name)}'s journey</a><button class="btn ghost" type="button" id="practice">Practice round</button></div>
+    ${p.practice?`<p style="font-size:14px;color:var(--muted)">Practice rounds don't count towards your streak.</p>`:`<div class="stats"><div><b>${s.played}</b><span>Played</span></div><div><b>${s.played?Math.round(s.won/s.played*100):0}%</b><span>Won</span></div><div><b>${s.streak}</b><span>Streak</span></div><div><b>${s.best}</b><span>Best</span></div></div>
+    <div class="dist">${[1,2,3,4,5,6,7].map(i=>{const v=(s.dist||{})[i]||0;return `<div><span>${i===7?"7+":i}</span><i class="${state.won&&i===me?"me":""}" style="width:${Math.max(6,v/maxD*100)}%">${v}</i></div>`;}).join("")}</div>`}
+  </div></div>`;
+}
+
+function shareText(p,state){
+  const head=`Runeterra Daily${p.practice?" (practice)":` #${p.n}`} · ${MODES[p.mode]} · ${state.won?`${state.g.length} ${state.g.length===1?"guess":"guesses"}`:"X"}`;
+  let body="";
+  if(p.mode==="clues")body=state.g.map(g=>compare(g,p.id).map(x=>EMO[x.r]).join("")).join("\n");
+  else body=state.g.map(g=>g===p.id?"🟩":"🟥").join("")+(p.mode==="splash"&&state.bonus!=null?`\nSkin bonus ${state.bonus===p.skin[0]?"✅":"❌"}`:"");
+  return `${head}\n${body}\n${location.origin}${location.pathname}`;
+}
+
+function wire(p,state,save,key){
+  const gi=document.getElementById("gi"),sugg=document.getElementById("sugg");
+  if(gi){
+    let sel=0,list=[];
+    const draw=()=>{const q=gi.value.trim().toLowerCase().replace(/[^a-z]/g,"");
+      list=q?CHAMPS.filter(c=>!state.g.includes(c.id)&&c.name.toLowerCase().replace(/[^a-z]/g,"").startsWith(q)).concat(CHAMPS.filter(c=>!state.g.includes(c.id)&&!c.name.toLowerCase().replace(/[^a-z]/g,"").startsWith(q)&&c.name.toLowerCase().replace(/[^a-z]/g,"").includes(q))).slice(0,8):[];
+      sel=0;sugg.hidden=!list.length;
+      sugg.innerHTML=list.map((c,i)=>`<button type="button" role="option" data-id="${c.id}" aria-selected="${i===sel}"><img src="img/${c.id}-tile.webp" alt="">${esc(c.name)}<small>${esc(regName(c.region))}</small></button>`).join("");};
+    const choose=id=>{if(!id||state.g.includes(id))return;state.g.push(id);state._seen=false;if(id===p.id){state.won=true;record(p,key,state);}save();render();
+      const g2=document.getElementById("gi");if(g2)g2.focus();};
+    gi.addEventListener("input",draw);
+    gi.addEventListener("keydown",e=>{
+      if(e.key==="ArrowDown"&&list.length){e.preventDefault();sel=(sel+1)%list.length;}
+      else if(e.key==="ArrowUp"&&list.length){e.preventDefault();sel=(sel-1+list.length)%list.length;}
+      else if(e.key==="Enter"){e.preventDefault();if(list[sel])choose(list[sel].id);return;}
+      else if(e.key==="Escape"){sugg.hidden=true;return;}else return;
+      sugg.querySelectorAll("button").forEach((b,i)=>b.setAttribute("aria-selected",String(i===sel)));});
+    sugg.addEventListener("click",e=>{const b=e.target.closest("button");if(b)choose(b.dataset.id);});
+    document.getElementById("gb").onclick=()=>{if(list[sel])choose(list[sel].id);else{const exact=CHAMPS.find(c=>c.name.toLowerCase()===gi.value.trim().toLowerCase());if(exact)choose(exact.id);}};
+    if(!matchMedia("(hover:none)").matches)gi.focus();
+  }
+  const gu=document.getElementById("giveup");if(gu)gu.onclick=()=>{state.lost=true;record(p,key,state);save();render();};
+  play.querySelectorAll("[data-skin]").forEach(b=>b.onclick=()=>{state.bonus=+b.dataset.skin;save();render();});
+  const sh=document.getElementById("share");if(sh)sh.onclick=async()=>{const t=shareText(p,state);
+    try{if(navigator.share&&matchMedia("(hover:none)").matches){await navigator.share({text:t});return;}await navigator.clipboard.writeText(t);toast("Copied — paste it anywhere");}catch(e){toast("Couldn't copy on this browser");}};
+  const pr=document.getElementById("practice");if(pr)pr.onclick=()=>{practice={mode,seed:1000+Math.floor(Math.random()*100000),state:null};render();window.scrollTo({top:0,behavior:"smooth"});};
+}
+
+function statusChips(){
+  const key=todayKey();
+  document.querySelectorAll("[data-st]").forEach(el=>{const m=el.dataset.st;const s=LS.get(`atlas.daily.${m}.${key}`,null);
+    el.textContent=s&&s.won?`✓ ${s.g.length}`:s&&s.lost?"✗":s&&s.g.length?`${s.g.length} tried`:"New";el.classList.toggle("done",!!(s&&s.won));});
+}
+
+document.querySelectorAll(".mode").forEach(b=>b.onclick=()=>{mode=b.dataset.m;practice=null;try{history.replaceState(null,"","#"+mode);}catch(e){}render();});
+
+// how to play
+document.getElementById("how").innerHTML=`<h3>How to play</h3><ul>
+  <li><b>Clues:</b> guess any champion. Each column compares your guess with the answer: region, class, melee or ranged, resource (mana, energy…), release year and number of skins. Green is a match, orange is close, red is a miss; arrows say whether the answer's year or skin count is higher or lower.</li>
+  <li><b>Splash:</b> a piece of one of the champion's splash arts. Every wrong guess zooms out. Once you have the champion, a bonus asks which skin it is.</li>
+  <li><b>Lore:</b> the champion's biography with their name hidden, shown a part at a time. Each wrong guess reveals more; after 3 misses you get their region, after 5 their class.</li>
+  <li>New puzzles at midnight your time. Share your result without spoilers. Practice rounds are unlimited and don't affect your streak.</li></ul>`;
+
+// countdown to local midnight; roll over to the new day's puzzles automatically
+let lastKey=todayKey();
+function tick(){const n=new Date(),m=new Date(n);m.setHours(24,0,0,0);const s=Math.max(0,Math.floor((m-n)/1000));
+  document.getElementById("clock").textContent=[Math.floor(s/3600),Math.floor(s/60)%60,s%60].map(x=>String(x).padStart(2,"0")).join(":");
+  if(todayKey()!==lastKey){lastKey=todayKey();practice=null;render();}}
+setInterval(tick,1000);tick();
+render();
+</script>
+</body>
+</html>

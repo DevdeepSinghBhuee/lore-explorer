@@ -13,6 +13,7 @@ Custom domain is possible later via Pages settings + CNAME file (not set up).
 |---|---|
 | index.html | The Atlas: painted terrain map (canvas → SVG `<image>`), region themes (THEMES), WebGL depth-parallax banners (Scene class, Depth Anything V2 depth maps in assets/), "web of bonds" relationship graph (renderWeb: all champions of the region + outside partners of the selected champion), champion detail panel (bio, official Universe stories, LoR cards, Riftbound cards, videos). Deep link `#c-<id>`. |
 | journey.html | Champion Journeys: `?c=<id>` = guided tour in up to 9 chapters (who they are + region; read first = their "-color" story else shortest, other stories, comics; watch = videos.js minus login/making/music, own cinematics first, play in place; listen = login theme + music videos + music.js tracks naming them; bonds; 6 rarest skins; LoR + Riftbound cards; arrival stats; where next = official bonds + same-region picks). No `?c` = picker by region with search + Surprise me. Empty chapters are skipped. Linked from Atlas panel, Timeline and Skins plates. |
+| daily.html | Runeterra Daily (LoLdle-style, our data only): 3 modes per day — Clues (region, class=tags partial, range, resource, release year ↑↓ ±2 = close, skin count ↑↓ ±2), Splash (DDragon splash zoom 6×→1× per miss, seeded focal point; bonus: pick the skin of 4), Lore (bio in 5 word-chunks, name parts redacted, region hint at 3 misses, class at 5). Puzzle #1 = 2026-10-20 (visitor's local date); each mode walks a fixed seeded shuffle of all champions. State/streaks in localStorage atlas.daily.*; share = emoji grid; practice rounds unlimited (no stats); reveal after 8 guesses. `#clues|#splash|#lore`. |
 | mine.html | "My champions": favourites (★) with per-champion story progress, "read next" (unread stories about favourites, shortest first), log of stories read (unmark), clear-all (two-click). Data lives only in localStorage via site.js. |
 | worlds.html | Live Worlds 2026: hero scoreboard + countdown, schedule tabs in viewer's time zone, 19 teams + rosters, anthem, champions history 2011–2025. Refreshes every 60 s; falls back to WORLDS_SNAPSHOT. |
 | library.html | 1,647 Legends of Runeterra cards, filters, card dialog, deep links. |
@@ -25,7 +26,7 @@ Custom domain is possible later via Pages settings + CNAME file (not set up).
 | music.html | Music hub: 13 shelves (anthems, virtual bands, Arcane S1/S2/score, Pentakill, Star Guardian, login themes from videos.js, champion songs, Warsongs, DJ Sona, LoR, long listens). One docked YouTube IFrame-API player (youtube-nocookie; kept ≥200px tall per YouTube's rules) plays a shelf in order, shuffle, Media Session controls. Deep links `#s-<shelf>`, `#t-<shelf>-<n>`. |
 
 Menu: site.js (loaded with `defer` on every page) replaces each page's <nav class="nav"> with grouped dropdowns — Champions (Journeys, Skins, Timeline) ·
-Lore (Atlas, Reading Room) · Esports (Worlds, Players) · Watch & Listen (Theater, Music) · Card games (Runeterra cards, Riftbound) · ★ My champions;
+Lore (Atlas, Reading Room) · Play (Runeterra Daily) · Esports (Worlds, Players) · Watch & Listen (Theater, Music) · Card games (Runeterra cards, Riftbound) · ★ My champions;
 phone = star + "Menu" sheet. Edit GROUPS in site.js to change it (the plain links left in each page are only a no-JS fallback).
 site.js also owns window.AtlasMine (localStorage atlas.mine.favs / atlas.mine.read): any `[data-fav="<id>"]` is a star button (add
 `data-fav-label` for the text label), any `[data-read="<slug>"]` badge shows when read, and clicking a Universe story link marks it read.
@@ -35,7 +36,7 @@ Every footer carries Riot's
 ## Data (data/*.js, plain globals)
 champions.js (173 champs: id, dd, name, title, region, role, tags, bio, hand) · regions.js (ATLAS_REGIONS) · bonds.js (ATLAS_BONDS; index.html reads both) · cards.js · stories.js ·
 champcards.js · riftbound.js (RB_SETS, RB_CARDS) · champrb.js · videos.js (ATLAS_VIDEOS shelves) ·
-worlds.js (WORLDS_TEAMS, WORLDS_SNAPSHOT) · players.js (ATLAS_PLAYERS, saved 2026-10-19) · music.js (ATLAS_MUSIC shelves, saved 2026-10-19) · skins.js (ATLAS_SKINS by champion + ATLAS_SKIN_LINES, saved 2026-10-19, patch 16.20) · reading.js (ATLAS_READ_STORIES, ATLAS_READ_COMICS, ATLAS_READ_SERIES, saved 2026-10-19) · releases.js (ATLAS_RELEASES id → [released, patch, revealed]). Bonds (data/bonds.js) are [a,b,type,note,source,necritVideo]; source r = Riot Universe text, w = League Wiki Relations,
+worlds.js (WORLDS_TEAMS, WORLDS_SNAPSHOT) · players.js (ATLAS_PLAYERS, saved 2026-10-19) · music.js (ATLAS_MUSIC shelves, saved 2026-10-19) · skins.js (ATLAS_SKINS by champion + ATLAS_SKIN_LINES, saved 2026-10-19, patch 16.20) · reading.js (ATLAS_READ_STORIES, ATLAS_READ_COMICS, ATLAS_READ_SERIES, saved 2026-10-19) · game.js (ATLAS_GAME id → [resource, Melee/Ranged]; DDragon 16.20.1, Gnar = Ranged per Wiki) · releases.js (ATLAS_RELEASES id → [released, patch, revealed]). Bonds (data/bonds.js) are [a,b,type,note,source,necritVideo]; source r = Riot Universe text, w = League Wiki Relations,
 u = only listed as related by Riot (note says no official story explains it). Reviewed 2026-10-19: 77 re-typed, 34 verified as Linked, 129 'u'.
 
 ## Sources (all free)
@@ -86,4 +87,4 @@ Must work at phone width with no horizontal scroll (watch grid children: `min-wi
 7. ~~Comics & short stories (Reading Room)~~ (done 2026-10-19).
 8. ~~Champion release timeline~~ (done 2026-10-19).
 9. ~~Champion journeys~~ (done 2026-10-20). 10. ~~Grouped menu + My champions~~ (done 2026-10-20). Agreed next, in order:
-   daily guessing game (study LoLdle-style games Caedrel plays on stream first) → abilities ("how they play") → LoL streamers.
+   11. ~~Daily guessing game~~ (done 2026-10-20; LoLdle modes studied: Classic, Quote, Ability, Emoji, Splash). Next: abilities (+ an Ability mode for Daily) ("how they play") → LoL streamers.
