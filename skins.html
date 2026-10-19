@@ -91,7 +91,21 @@ select{flex:1 1 170px;min-width:0;max-width:100%;background:var(--panel);border:
 .card{background:none;border:0;padding:0;cursor:pointer;text-align:left;display:flex;flex-direction:column;gap:5px;min-width:0}
 .card .img{position:relative;aspect-ratio:308/560;width:100%;background:radial-gradient(ellipse at 50% 40%,var(--panel-2),var(--panel));overflow:hidden;border:1px solid color-mix(in srgb,var(--rar) 55%,transparent);transition:transform .2s cubic-bezier(.2,.8,.2,1),filter .2s}
 .card img{width:100%;height:100%;object-fit:cover;display:block}
-.card .gem{position:absolute;top:6px;left:6px;width:10px;height:10px;transform:rotate(45deg);background:var(--rar);box-shadow:0 0 0 2px rgba(0,0,0,.5)}
+/* rarity gem: the client's own gem icons, with a light sweep clipped to the gem's shape */
+.card .img.gemmed::after{content:"";position:absolute;left:0;top:0;width:64px;height:64px;background:radial-gradient(circle at 0 0,rgba(4,7,14,.7),rgba(4,7,14,0) 70%);pointer-events:none}
+.gem{position:absolute;z-index:1;top:6px;left:6px;width:30px;height:30px;background:var(--gi) center/contain no-repeat;filter:drop-shadow(0 0 3px color-mix(in srgb,var(--rar) 80%,transparent)) drop-shadow(0 1px 1px rgba(0,0,0,.9))}
+.gem::after{content:"";position:absolute;inset:0;-webkit-mask:var(--gi) center/contain no-repeat;mask:var(--gi) center/contain no-repeat;
+  background:linear-gradient(115deg,transparent 38%,rgba(255,255,255,.95) 50%,transparent 62%);background-size:300% 100%;background-position:160% 0;
+  mix-blend-mode:screen;animation:gemshine 4.2s ease-in-out infinite;animation-delay:var(--d,0s)}
+.gem.big{animation:gemglow 2.8s ease-in-out infinite;animation-delay:var(--d,0s)}
+.gem.diamond{background:none;width:14px;height:14px;top:9px;left:9px}
+.gem.diamond::before{content:"";position:absolute;inset:0;transform:rotate(45deg) scale(.8);background:linear-gradient(135deg,#d6ecff,var(--rar) 45%,#1d4f86);box-shadow:inset 0 0 0 1px rgba(255,255,255,.35)}
+.gem.diamond::after{-webkit-mask:none;mask:none;transform:rotate(45deg) scale(.8)}
+.card:hover .gem::after,.card:focus-visible .gem::after{animation-duration:1.1s;animation-delay:0s}
+@keyframes gemshine{0%,55%{background-position:160% 0}80%,100%{background-position:-60% 0}}
+@keyframes gemglow{0%,100%{filter:drop-shadow(0 0 3px color-mix(in srgb,var(--rar) 80%,transparent)) drop-shadow(0 1px 1px rgba(0,0,0,.9))}50%{filter:drop-shadow(0 0 8px var(--rar)) drop-shadow(0 1px 1px rgba(0,0,0,.9))}}
+.tagm .gi{width:15px;height:15px;object-fit:contain;filter:drop-shadow(0 0 3px var(--rar))}
+.tagm.rar.hasgi::before{display:none}
 .card:hover .img,.card:focus-visible .img{transform:translateY(-4px);filter:drop-shadow(0 10px 18px rgba(0,0,0,.6)) brightness(1.08)}
 .card .nm{font-size:14.5px;line-height:1.25;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .card .mt{font-family:var(--f-mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -139,7 +153,7 @@ footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width
   .feature .cap{padding:18px}
   .feature p{font-size:15.5px;-webkit-line-clamp:3}
 }
-@media (max-width:480px){.filters{position:static}.seg button{padding:8px 9px;font-size:11px}.chip{font-size:11px}.grid{grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:12px 8px}.card .nm{font-size:12.5px}.counts{gap:16px}.counts div b{font-size:32px}}
+@media (max-width:480px){.gem{width:23px;height:23px;top:4px;left:4px}.filters{position:static}.seg button{padding:8px 9px;font-size:11px}.chip{font-size:11px}.grid{grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:12px 8px}.card .nm{font-size:12.5px}.counts{gap:16px}.counts div b{font-size:32px}}
 </style>
 </head>
 <body>
@@ -219,6 +233,11 @@ const REG={
 // rarity gems, colored like the in-game client
 const RAR=[["Standard","#7d8597"],["Rare","#5aa9e6"],["Epic","#3ccfe0"],["Legendary","#e8513f"],["Mythic","#b25fe8"],["Ultimate","#f0a03c"],["Exalted","#f7d774"],["Transcendent","#f4f0ff"]];
 const DD="https://ddragon.leagueoflegends.com/cdn/img/champion/";
+// the client has no gem icon for Rare, so that one is drawn
+const GEM=[null,null,"epic","legendary","mythic","ultimate","exalted","transcendent"];
+const gem=(s,i)=>!s.rar?"":GEM[s.rar]
+  ?`<span class="gem${s.rar>=4?" big":""}" title="${RAR[s.rar][0]}" style="--gi:url('img/rarity/${GEM[s.rar]}.png');--d:${((i*0.37)%4).toFixed(2)}s"></span>`
+  :`<span class="gem diamond" title="${RAR[s.rar][0]}" style="--d:${((i*0.37)%4).toFixed(2)}s"></span>`;
 const CD="https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/";
 const esc=s=>String(s??"").replace(/[&<>"]/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch]));
 // Riot's descriptions carry a few <br> and <i> tags: keep only those
@@ -273,7 +292,7 @@ function apply(){
 }
 function render(){
   grid.innerHTML=list.slice(0,S.shown).map((s,i)=>`<button class="card" type="button" data-i="${i}" style="--rar:${RAR[s.rar][1]}">
-    <div class="img"><img src="${load(s)}" alt="${esc(s.name)}" loading="lazy" decoding="async" referrerpolicy="no-referrer">${s.rar?`<span class="gem" title="${RAR[s.rar][0]}"></span>`:""}</div>
+    <div class="img${s.rar?" gemmed":""}"><img src="${load(s)}" alt="${esc(s.name)}" loading="lazy" decoding="async" referrerpolicy="no-referrer">${gem(s,i)}</div>
     <span class="nm">${esc(s.name)}</span><span class="mt">${esc(s.champ.name)}${s.rar?" · "+RAR[s.rar][0]:""}${s.leg?" · Legacy":""}</span></button>`).join("");
   document.getElementById("empty").hidden=list.length>0;
   document.getElementById("more").hidden=S.shown>=list.length;
@@ -315,7 +334,7 @@ function open(s){
         <div class="eyebrow" style="color:var(--rc)">${esc(c.name)} · ${esc((REG[c.region]||REG.wanderers)[0])}</div>
         <h2>${esc(s.name)}</h2>
         <div class="meta">
-          <span class="tagm rar" style="--rar:${RAR[s.rar][1]}">${RAR[s.rar][0]}</span>
+          <span class="tagm rar${GEM[s.rar]?" hasgi":""}" style="--rar:${RAR[s.rar][1]}">${GEM[s.rar]?`<img class="gi" src="img/rarity/${GEM[s.rar]}.png" alt="">`:""}${RAR[s.rar][0]}</span>
           ${s.lines.filter(l=>LINES[l]).map(l=>`<button class="tagm" type="button" data-line="${l}" title="Show every ${esc(LINES[l])} skin">${esc(LINES[l])} · ${lineCount[l]}</button>`).join("")}
           ${s.chromas?`<span class="tagm">${s.chromas} chroma${s.chromas>1?"s":""}</span>`:""}
           ${s.leg?`<span class="tagm" title="Sold only in occasional Legacy Vault sales">Legacy</span>`:""}
