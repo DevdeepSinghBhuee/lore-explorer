@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Champion Sizes</title>
+<meta name="description" content="How tall are League of Legends champions really? A lore-accurate size chart using only heights Riot and official sources have stated.">
+<meta property="og:title" content="Sizes · Runeterra Atlas">
+<meta property="og:description" content="A lore-accurate height chart of League champions, from 90 cm Heimerdinger to 25 m Galio.">
+<link rel="icon" href="img/emblem/wanderers.webp">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://static.wikia.nocookie.net">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus+SC&family=Alegreya:ital,wght@0,400;0,500;0,700;1,400&family=Spline+Sans+Mono:wght@400;500&family=Teko:wght@500;600&display=swap">
+<style>
+/* Layout: an encyclopedia plate. A cream "paper" panel with a ruled height scale, figures standing on one ground
+   line in grey ink, a human for reference, and a caption card for the selected figure. Atlas tokens around it. */
+:root{
+  color-scheme:dark;
+  --ink:#070a12; --panel:#0f1a2e; --panel-2:#142238;
+  --gold:#c8aa6e; --gold-hi:#f0d9a0; --text:#ebe4d3; --muted:#939bb0; --faint:#5b6580;
+  --rule:rgba(200,170,110,.22);
+  --paper:#ebe3d0; --paper-2:#e2d8c1; --paper-ink:#2b2a2e; --paper-rule:rgba(43,42,46,.18); --paper-muted:#6d6658;
+  --f-display:"Marcellus SC","Cinzel",Georgia,serif;
+  --f-body:"Alegreya",Georgia,"Times New Roman",serif;
+  --f-mono:"Spline Sans Mono",ui-monospace,Menlo,monospace;
+  --f-num:"Teko","Oxanium",var(--f-display),sans-serif;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ink);color:var(--text);font-family:var(--f-body);font-size:18px;line-height:1.55;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+img{max-width:none}
+[hidden]{display:none!important}
+a{color:var(--gold)}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.wrap{max-width:1180px;margin-inline:auto}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:18px;border-bottom:1px solid var(--rule);flex-wrap:wrap}
+.brand{font-family:var(--f-display);font-size:20px;letter-spacing:.08em;color:var(--gold);display:flex;align-items:center;gap:10px;text-decoration:none}
+.brand svg{width:26px;height:26px}
+.nav{display:flex;gap:4px;flex-wrap:wrap}
+.nav a{font-family:var(--f-mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-decoration:none;padding:7px 12px}
+.nav a:hover{color:var(--text)}
+.nav a[aria-current="page"]{color:var(--ink);background:var(--gold)}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+
+.hero{padding-block:44px 24px;display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:32px;align-items:end}
+h1{font-family:var(--f-display);font-weight:400;font-size:clamp(46px,7vw,92px);line-height:.9;margin:10px 0 14px}
+h1 span{display:block;font-size:.4em;letter-spacing:.24em;color:var(--gold);margin-top:10px}
+.lede{margin:0;font-size:19px;max-width:46ch}
+.why{font-size:16px;color:var(--muted);margin:0;border-left:2px solid var(--gold);padding-left:14px}
+
+.ctl{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+.seg{display:flex;border:1px solid var(--rule)}
+.seg button{background:transparent;border:0;border-right:1px solid var(--rule);padding:9px 14px;font-family:var(--f-mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);cursor:pointer}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--gold);color:var(--ink)}
+.ctl .hint{font-family:var(--f-mono);font-size:11px;color:var(--muted);letter-spacing:.04em}
+
+/* The plate */
+.plate{position:relative;background:var(--paper);color:var(--paper-ink);border:1px solid #c9bc9c;box-shadow:inset 0 0 80px rgba(120,100,60,.18),0 30px 70px -40px rgba(200,170,110,.4)}
+.plate-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:14px 18px 0;flex-wrap:wrap}
+.plate-head b{font-family:var(--f-display);font-weight:400;font-size:22px;letter-spacing:.04em}
+.plate-head span{font-family:var(--f-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--paper-muted)}
+.scroller{position:relative;overflow-x:auto;overflow-y:hidden;scrollbar-width:thin}
+.stage{position:relative;height:var(--stage-h,540px);min-width:100%}
+.grid-lines{position:absolute;inset:0;pointer-events:none}
+.gl{position:absolute;left:0;right:0;border-top:1px dashed var(--paper-rule)}
+.gl span{position:sticky;left:0;display:inline-block;transform:translateY(-55%);background:var(--paper);padding:0 6px;font-family:var(--f-num);font-size:16px;color:var(--paper-muted);font-variant-numeric:tabular-nums}
+.ground{position:absolute;left:0;right:0;bottom:var(--ground,46px);border-top:2px solid var(--paper-ink)}
+.row{position:absolute;left:0;bottom:var(--ground,46px);display:flex;align-items:flex-end;gap:var(--gap,26px);padding:0 30px 0 64px}
+.fig{position:relative;flex:none;cursor:pointer;background:none;border:0;padding:0;display:block}
+.fig .body{position:relative;margin-inline:auto}
+.fig img{position:absolute;left:50%;transform:translateX(-50%);pointer-events:none;transition:filter .25s}
+.mode-sil .fig img{filter:brightness(0) opacity(.62)}
+.mode-art .fig img{filter:grayscale(1) contrast(1.08) brightness(.92)}
+.fig:hover img,.fig[aria-pressed="true"] img{filter:none!important}
+.fig .outline{position:absolute;inset:0;margin:auto}
+.fig .outline path{fill:rgba(43,42,46,.14);stroke:var(--paper-ink);stroke-width:1.4;stroke-dasharray:4 3;vector-effect:non-scaling-stroke}
+.fig.human .outline path{fill:rgba(43,42,46,.28);stroke-dasharray:none}
+.fig .head{position:absolute;left:-6px;right:-6px;top:0;border-top:1px solid rgba(43,42,46,.45)}
+.fig .cap{position:absolute;top:calc(100% + 6px);left:50%;transform:translateX(-50%);text-align:center;white-space:nowrap;line-height:1.1}
+.fig .cap b{display:block;font-family:var(--f-display);font-weight:400;font-size:15px}
+.fig .cap i{font-style:normal;font-family:var(--f-num);font-size:16px;color:var(--paper-muted);font-variant-numeric:tabular-nums}
+.fig[aria-pressed="true"] .cap b{color:#8a5a12}
+.over{position:absolute;top:8px;font-family:var(--f-mono);font-size:11px;letter-spacing:.06em;background:var(--paper-ink);color:var(--paper);padding:4px 8px;white-space:nowrap;transform:translateX(-50%);pointer-events:none}
+
+/* Caption card */
+.card{display:grid;grid-template-columns:auto minmax(0,1fr);gap:18px;align-items:center;margin-top:16px;padding:16px 18px;border:1px solid var(--rule);background:var(--panel)}
+.card img{width:72px;height:72px;object-fit:cover;border:1px solid var(--rule)}
+.card h2{font-family:var(--f-display);font-weight:400;font-size:28px;margin:0;line-height:1.1}
+.card .ht{font-family:var(--f-num);font-weight:600;font-size:28px;color:var(--gold-hi);line-height:1;font-variant-numeric:tabular-nums}
+.card .ht small{font-size:.65em;color:var(--muted);font-weight:500;margin-left:6px}
+.card p{margin:6px 0 0;font-size:15px;color:var(--muted)}
+.card .links{display:flex;gap:14px;flex-wrap:wrap;margin-top:8px;font-family:var(--f-mono);font-size:12px;letter-spacing:.04em}
+
+.wait{margin-top:40px}
+.wait h3{font-family:var(--f-display);font-weight:400;font-size:26px;margin:0 0 6px}
+.wait p{margin:0 0 12px;color:var(--muted);font-size:16px;max-width:70ch}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips a{display:inline-flex;align-items:center;gap:6px;font-size:14px;text-decoration:none;color:var(--muted);border:1px solid var(--rule);padding:3px 8px 3px 3px}
+.chips a:hover{color:var(--text);border-color:var(--gold)}
+.chips img{width:22px;height:22px;object-fit:cover}
+
+footer{border-top:1px solid var(--rule);margin-top:56px;padding-block:24px 40px;color:var(--muted);font-size:14px;display:grid;gap:8px}
+footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width:80ch}
+@media (max-width:860px){.hero{grid-template-columns:1fr;padding-block:30px 18px}}
+@media (max-width:600px){
+  .stage{--stage-h:440px}
+  .row{gap:18px;padding-left:52px}
+  .card{grid-template-columns:1fr}
+  .card img{display:none}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="bar">
+    <a class="brand" href="./">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><polygon points="16,2 29,9.5 29,22.5 16,30 3,22.5 3,9.5" fill="none" stroke="#c8aa6e" stroke-width="1.5"/><circle cx="16" cy="16" r="5" fill="none" stroke="#c8aa6e" stroke-width="1.5"/><path d="M16 2v9M16 21v9M3 9.5l8 4.5M21 18l8 4.5M29 9.5l-8 4.5M11 18l-8 4.5" stroke="#c8aa6e" stroke-width="1"/></svg>
+      Runeterra Atlas
+    </a>
+    <nav class="nav" aria-label="Site"><a href="./">Atlas</a><a href="worlds.html">Worlds</a><a href="players.html">Players</a><a href="music.html">Music</a><a href="sizes.html" aria-current="page">Sizes</a><a href="library.html">Library</a><a href="riftbound.html">Riftbound</a><a href="theater.html">Theater</a></nav>
+  </header>
+
+  <section class="hero">
+    <div>
+      <div class="eyebrow">Plate I · Champions to scale</div>
+      <h1>Sizes<span>of Runeterra</span></h1>
+      <p class="lede">In the game every champion is roughly the same size so the fight stays fair. In the lore they're not. Here they stand side by side at their real, stated heights.</p>
+    </div>
+    <p class="why">Only heights Riot or an official source has actually stated are drawn here; each one shows where it comes from. More champions join the plate as Riot reveals their sizes.</p>
+  </section>
+
+  <div class="ctl">
+    <div class="seg" role="group" aria-label="Scale">
+      <button type="button" data-scale="human" aria-pressed="true">Human scale</button>
+      <button type="button" data-scale="giant" aria-pressed="false">Giant scale</button>
+    </div>
+    <div class="seg" role="group" aria-label="Style">
+      <button type="button" data-style="sil" aria-pressed="true">Silhouettes</button>
+      <button type="button" data-style="art" aria-pressed="false">Artwork</button>
+    </div>
+    <span class="hint">Tap a figure for its height and source</span>
+  </div>
+
+  <figure class="plate mode-sil" id="plate" style="margin:0">
+    <div class="plate-head"><b id="plateTitle">Champions to scale</b><span id="plateScale"></span></div>
+    <div class="scroller" id="scroller"><div class="stage" id="stage"></div></div>
+  </figure>
+
+  <div class="card" id="card" aria-live="polite"></div>
+
+  <section class="wait">
+    <h3>Waiting for an official height</h3>
+    <p id="waitP"></p>
+    <div class="chips" id="waitChips"></div>
+  </section>
+
+  <footer>
+    <div>Heights come from official sources cited by the <a href="https://leagueoflegends.fandom.com/" rel="noopener">League of Legends Wiki</a>, including Arcane's official character height chart; each figure links to its source. Figures are the Wiki's full-body renders (CC BY-SA 3.0 pages; artwork © Riot Games). Heights from skin universes or older, rewritten lore are not used. <span id="upd"></span></div>
+    <div class="legal">Runeterra Atlas was created under Riot Games' "Legal Jibber Jabber" policy using assets owned by Riot Games. Riot Games does not endorse or sponsor this project.</div>
+  </footer>
+</div>
+
+<script src="data/champions.js"></script>
+<script src="data/sizes.js"></script>
+<script>
+const esc=s=>String(s??"").replace(/[&<>"]/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch]));
+const D=window.ATLAS_SIZES, CH=window.ATLAS_CHAMPS||[], byId=Object.fromEntries(CH.map(c=>[c.id,c]));
+const HUMAN={id:"_human",cm:D.human,human:true};
+const people=[...D.list.map(x=>({...x})),HUMAN].sort((a,b)=>a.cm-b.cm);
+// A standing person outline (viewBox 0 0 40 100): used for the reference human and figures without full-body art
+const PERSON='<svg class="outline" viewBox="0 0 40 100" preserveAspectRatio="none" aria-hidden="true"><path d="M20 1.5c4.2 0 7 3.2 7 7.4 0 3.9-2.4 7.1-6 7.6v1.7c5.2.6 9.6 2.3 11.2 5.6l3.6 19.6c.4 2.2-2.6 3-3.2.8l-3.4-15.6-.6 22.6-1.8 25.8c-.2 2.6-3.8 2.6-4 0L21 49.6h-2l-1.8 27.4c-.2 2.6-3.8 2.6-4 0L11.4 51.2l-.6-22.6-3.4 15.6c-.6 2.2-3.6 1.4-3.2-.8l3.6-19.6c1.6-3.3 6-5 11.2-5.6v-1.7c-3.6-.5-6-3.7-6-7.6 0-4.2 2.8-7.4 7-7.4z"/></svg>';
+const ftin=cm=>{const t=cm/2.54,f=Math.floor(t/12),i=Math.round(t-f*12);return i===12?`${f+1}′0″`:`${f}′${i}″`;};
+const fmtH=cm=>cm>=1000?`${(cm/100).toLocaleString(undefined,{maximumFractionDigits:1})} m`:`${(cm/100).toFixed(2)} m`;
+let scale="human", sel="jinx";
+
+function render(){
+  const stage=document.getElementById("stage");
+  const H=stage.clientHeight||540, ground=46, top=40;
+  const fit=scale==="human"? 340 : Math.max(...people.map(p=>p.cm))*1.06;   // cm shown up to the top of the plate
+  const k=(H-ground-top)/fit;                                               // px per cm
+  const step=scale==="human"?50:500;                                        // grid every 50 cm or 5 m
+  document.getElementById("plateScale").textContent=scale==="human"?"Grid: 50 cm":"Grid: 5 m";
+  // grid lines
+  let g='<div class="grid-lines">';
+  for(let c=step;c<=fit;c+=step){const y=H-ground-c*k;if(y<14)break;g+=`<div class="gl" style="top:${y}px"><span>${c>=100?(c/100)+" m":c+" cm"}</span></div>`;}
+  g+='</div><div class="ground" style="--ground:'+ground+'px"></div>';
+  // figures
+  const figs=people.map(p=>{
+    const h=p.cm*k, c=p.human?null:byId[p.id];
+    let w, inner;
+    if(p.img){const [u,iw,ih,t,b]=p.img;const imgH=h/(b-t);w=Math.max(18,imgH*iw/ih*0.62);
+      inner=`<img src="${esc(u)}" referrerpolicy="no-referrer" alt="" loading="lazy" style="height:${imgH}px;bottom:${-(1-b)*imgH}px">`;}
+    else{w=Math.max(10,h*0.4);inner=PERSON;}
+    const name=p.human?"Average adult":c.name;
+    const over=h>H-ground-top-8?`<span class="over" style="left:50%">↑ ${fmtH(p.cm)}</span>`:"";
+    return `<button type="button" class="fig${p.human?" human":""}" data-id="${p.id}" aria-pressed="${p.id===sel}" aria-label="${esc(name)}, ${fmtH(p.cm)}" style="width:${w}px">
+      <div class="body" style="height:${h}px;width:${w}px">${inner}<div class="head"></div></div>${over}
+      <span class="cap"><b>${esc(name)}</b><i>${fmtH(p.cm)} · ${ftin(p.cm)}</i></span></button>`;
+  }).join("");
+  stage.innerHTML=g+`<div class="row" style="--ground:${ground}px;--gap:${scale==="human"?26:14}px">${figs}</div>`;
+  // the row can be wider than the plate (Galio at human scale); stretch the stage to match so the grid spans it
+  const row=stage.querySelector(".row");stage.style.width=Math.max(row.scrollWidth,stage.parentElement.clientWidth)+"px";
+  document.querySelectorAll(".fig").forEach(f=>f.addEventListener("click",()=>{sel=f.dataset.id;document.querySelectorAll(".fig").forEach(x=>x.setAttribute("aria-pressed",x===f));card();history.replaceState(null,"","#h-"+sel);}));
+}
+function card(){
+  const p=people.find(x=>x.id===sel)||people[people.length-1];const el=document.getElementById("card");
+  if(p.human){el.innerHTML=`<div></div><div><h2>Average adult</h2><div class="ht">${fmtH(p.cm)}<small>${ftin(p.cm)}</small></div><p>A typical grown human, drawn for scale.</p></div>`;return;}
+  const c=byId[p.id];
+  el.innerHTML=`<img src="img/${c.id}-tile.webp" alt="">
+    <div><h2>${esc(c.name)}</h2><div class="ht">${fmtH(p.cm)}<small>${ftin(p.cm)}${p.note?` · ${esc(p.note)}`:""}</small></div>
+    <p>${(p.cm/D.human).toFixed(p.cm>=1000?0:2)}× the height of an average adult.${p.img?"":" No full-body artwork is available yet, so they're drawn as an outline."}</p>
+    <div class="links"><a href="${esc(p.url)}" target="_blank" rel="noopener">Source: ${esc(p.src)} ↗</a><a href="./#c-${c.id}">${esc(c.name)} in the Atlas →</a></div></div>`;
+}
+document.querySelectorAll("[data-scale]").forEach(b=>b.addEventListener("click",()=>{scale=b.dataset.scale;document.querySelectorAll("[data-scale]").forEach(x=>x.setAttribute("aria-pressed",x===b));render();}));
+document.querySelectorAll("[data-style]").forEach(b=>b.addEventListener("click",()=>{document.getElementById("plate").className="plate mode-"+b.dataset.style;document.querySelectorAll("[data-style]").forEach(x=>x.setAttribute("aria-pressed",x===b));}));
+let rt;addEventListener("resize",()=>{clearTimeout(rt);rt=setTimeout(render,150);});
+
+// Champions still waiting
+(function(){const have=new Set(D.list.map(x=>x.id));const rest=CH.filter(c=>!have.has(c.id)).sort((a,b)=>a.name.localeCompare(b.name));
+  document.getElementById("waitP").textContent=`${rest.length} champions don't have a height Riot has stated yet. Some lore only says "towering" or "tiny", and some numbers online come from skins or old, rewritten lore, so they're left off until there's a real figure.`;
+  document.getElementById("waitChips").innerHTML=rest.map(c=>`<a href="./#c-${c.id}"><img src="img/${c.id}-tile.webp" alt="" loading="lazy">${esc(c.name)}</a>`).join("");
+  if(D.updated)document.getElementById("upd").textContent=`Heights checked ${new Date(D.updated+"T12:00:00Z").toLocaleDateString(undefined,{day:"numeric",month:"long",year:"numeric"})}.`;})();
+
+(function(){const h=location.hash.match(/^#h-(.+)$/);if(h&&people.some(p=>p.id===h[1]))sel=h[1];})();
+render();card();
+// start the plate scrolled so the selected figure is in view
+requestAnimationFrame(()=>{const f=document.querySelector(`.fig[data-id="${sel}"]`);if(f)f.scrollIntoView({block:"nearest",inline:"center"});window.scrollTo(0,0);});
+</script>
+</body>
+</html>
