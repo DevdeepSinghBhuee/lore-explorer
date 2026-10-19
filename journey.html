@@ -1,0 +1,438 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Runeterra Journeys</title>
+<meta name="description" content="Pick a League of Legends champion and take a guided tour: who they are, what to read and watch first, their music, their bonds, their best skins and when they arrived.">
+<meta property="og:title" content="Runeterra Journeys">
+<meta property="og:description" content="Pick a champion. We'll show you everything worth knowing, in order.">
+<link rel="icon" href="img/emblem/wanderers.webp">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://ddragon.leagueoflegends.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus+SC&family=Alegreya:ital,wght@0,400;0,500;0,700;1,400&family=Spline+Sans+Mono:wght@400;500&family=Teko:wght@400;500;600&display=swap">
+<style>
+/* Layout: a guided tour. Full-bleed splash title, a sticky chapter rail, then numbered chapters (each a different shape: prose, a reading list, a screening room, a playlist, a web of people, a wardrobe, cards, a date); ends with where to go next. Picker view when no champion is chosen. */
+:root{
+  color-scheme:dark;
+  --ink:#080d18; --panel:#0f1a2e; --panel-2:#142238;
+  --gold:#c8aa6e; --gold-dim:#7d6a45; --text:#ebe4d3; --muted:#939bb0; --faint:#5b6580;
+  --rule:rgba(200,170,110,.22);
+  --rc:#c8aa6e;
+  --family:#e6c46a; --ally:#4fd1c5; --mentor:#6aa2ff; --enemy:#ff5d5d; --complicated:#c08cff; --linked:#8a93a8;
+  --f-display:"Marcellus SC","Cinzel",Georgia,serif;
+  --f-body:"Alegreya",Georgia,"Times New Roman",serif;
+  --f-mono:"Spline Sans Mono",ui-monospace,Menlo,monospace;
+  --f-num:"Teko","Oxanium",var(--f-display),sans-serif;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:20px}
+body{margin:0;background:var(--ink);color:var(--text);font-family:var(--f-body);font-size:18px;line-height:1.6;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+img{max-width:100%}
+[hidden]{display:none!important}
+a{color:var(--gold)}
+button,input{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+.wrap{max-width:1240px;margin-inline:auto}
+
+.bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:18px;border-bottom:1px solid var(--rule);flex-wrap:wrap}
+.brand{font-family:var(--f-display);font-size:20px;letter-spacing:.08em;color:var(--gold);display:flex;align-items:center;gap:10px;text-decoration:none}
+.brand svg{width:26px;height:26px}
+.nav{display:flex;gap:4px;flex-wrap:wrap}
+.nav a{font-family:var(--f-mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-decoration:none;padding:7px 12px;border:1px solid transparent}
+.nav a:hover{color:var(--text)}
+.nav a[aria-current="page"]{color:var(--ink);background:var(--gold)}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+
+/* ---------- picker ---------- */
+.pick-intro{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:32px;align-items:end;padding-block:44px 24px}
+.pick-intro h1{font-family:var(--f-display);font-weight:400;font-size:clamp(40px,6vw,78px);line-height:.95;margin:12px 0 14px;text-wrap:balance}
+.pick-intro h1 em{font-style:normal;color:var(--gold)}
+.pick-intro p{font-size:19px;margin:0;max-width:46ch}
+.pick-tools{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.pick-tools input{flex:1 1 220px;min-width:0;background:var(--panel);border:1px solid var(--rule);padding:11px 14px;font-size:16px}
+.btn{display:inline-flex;align-items:center;gap:8px;font-family:var(--f-mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;padding:11px 15px;text-decoration:none;cursor:pointer;border:1px solid var(--gold);background:var(--gold);color:var(--ink)}
+.btn.ghost{background:transparent;color:var(--text);border-color:var(--rule)}
+.btn.ghost:hover{border-color:var(--gold)}
+.region-block{padding-block:20px;border-top:1px solid var(--rule)}
+.region-block h2{font-family:var(--f-display);font-weight:400;font-size:26px;margin:0 0 4px;display:flex;align-items:center;gap:10px}
+.region-block h2 img{width:28px;height:28px}
+.region-block p{margin:0 0 14px;color:#c4c8d3;font-size:16px;max-width:70ch}
+.faces{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:14px 10px}
+.face{display:flex;flex-direction:column;align-items:center;gap:6px;text-decoration:none;color:var(--text);min-width:0;text-align:center}
+.face img{width:76px;height:76px;object-fit:cover;border:1px solid color-mix(in srgb,var(--rc) 50%,transparent);transition:transform .2s cubic-bezier(.2,.8,.2,1),box-shadow .2s}
+.face:hover img,.face:focus-visible img{transform:translateY(-3px);box-shadow:0 8px 16px rgba(0,0,0,.5),0 0 0 1px var(--rc)}
+.face span{font-size:14px;line-height:1.2;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* ---------- journey ---------- */
+.hero{position:relative;margin:0 calc(-1 * max(16px,env(safe-area-inset-left,0px)));min-height:min(78vh,720px);display:flex;align-items:flex-end;overflow:hidden;background:var(--panel)}
+.hero img.splash{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:var(--pos,70% 20%);opacity:0;transition:opacity .8s}
+.hero img.splash.in{opacity:1}
+.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(8,13,24,.95) 0%,rgba(8,13,24,.72) 36%,rgba(8,13,24,0) 70%),linear-gradient(0deg,var(--ink) 0%,rgba(8,13,24,0) 40%)}
+.hero .cap{position:relative;z-index:1;max-width:1240px;width:100%;margin:0 auto;padding:40px max(16px,env(safe-area-inset-left,0px)) 42px}
+.hero h1{font-family:var(--f-display);font-weight:400;font-size:clamp(52px,9vw,120px);line-height:.88;margin:10px 0 6px;letter-spacing:.01em}
+.hero .ttl{font-size:clamp(20px,2.4vw,28px);font-style:italic;color:#d9dbe2;margin-bottom:18px}
+.hero .meta{display:flex;flex-wrap:wrap;gap:8px 18px;font-family:var(--f-mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);align-items:center}
+.hero .meta b{font-family:var(--f-num);font-weight:500;font-size:20px;letter-spacing:.03em;color:var(--text);text-transform:none}
+.hero .meta img{width:22px;height:22px;vertical-align:-5px;margin-right:6px}
+.hero .change{margin-top:20px;display:flex;gap:8px;flex-wrap:wrap}
+
+.tour{display:grid;grid-template-columns:200px minmax(0,1fr);gap:40px;padding-top:28px}
+.rail{position:sticky;top:20px;align-self:start;display:grid;gap:2px;border-left:1px solid var(--rule)}
+.rail a{display:flex;gap:10px;align-items:baseline;padding:7px 12px;text-decoration:none;color:var(--muted);font-size:15.5px;line-height:1.25;border-left:2px solid transparent;margin-left:-1px}
+.rail a b{font-family:var(--f-num);font-weight:500;font-size:17px;color:var(--faint);min-width:18px}
+.rail a:hover{color:var(--text)}
+.rail a.on{color:var(--text);border-left-color:var(--rc)}
+.rail a.on b{color:var(--rc)}
+.chapters{min-width:0}
+.chap{padding-block:12px 46px;border-bottom:1px solid var(--rule);min-width:0}
+.chap:last-child{border-bottom:0}
+.chap header{display:flex;align-items:baseline;gap:16px;margin-bottom:16px}
+.chap header .n{font-family:var(--f-num);font-weight:400;font-size:64px;line-height:.8;color:var(--rc);opacity:.85}
+.chap h2{font-family:var(--f-display);font-weight:400;font-size:clamp(28px,3.4vw,40px);line-height:1;margin:0}
+.chap h2 small{display:block;font-family:var(--f-mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-top:8px}
+.lead{font-size:21px;line-height:1.6;max-width:62ch;margin:0 0 14px}
+.lead::first-letter{font-family:var(--f-display);font-size:3.1em;float:left;line-height:.85;margin:6px 10px 0 0;color:var(--rc)}
+.aside{border-left:2px solid var(--rc);padding:4px 0 4px 16px;margin:18px 0 0;max-width:62ch;color:#c4c8d3;font-size:16.5px}
+.aside b{color:var(--text);font-weight:500}
+.more-link{font-family:var(--f-mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none}
+
+/* read */
+.firstread{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:0;border:1px solid color-mix(in srgb,var(--rc) 40%,transparent);background:var(--panel);text-decoration:none;color:inherit;margin-bottom:14px}
+.firstread .pic{min-height:220px;background:var(--panel-2) center/cover no-repeat}
+.firstread .body{padding:22px}
+.firstread h3{font-family:var(--f-display);font-weight:400;font-size:28px;line-height:1.05;margin:6px 0 6px}
+.firstread p{margin:0 0 12px;font-style:italic;color:#c4c8d3;font-size:16px}
+.firstread:hover{border-color:var(--rc)}
+.tag{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.tag b{font-family:var(--f-num);font-weight:500;font-size:15px;color:var(--text);letter-spacing:.02em}
+.list{display:grid;gap:8px;margin:0;padding:0;list-style:none;max-width:760px}
+.list a{display:flex;justify-content:space-between;gap:14px;padding:10px 14px;border:1px solid var(--rule);text-decoration:none;color:var(--text);align-items:baseline}
+.list a:hover{border-color:var(--rc)}
+.list a span{min-width:0}
+.list a small{font-family:var(--f-num);font-size:16px;color:var(--muted);white-space:nowrap}
+.comics{display:flex;gap:10px;overflow-x:auto;padding:4px 2px 12px;margin-top:14px;min-width:0}
+.comics a{flex:none;height:180px;width:calc(180px * var(--ar));display:block}
+.comics img{width:100%;height:100%;object-fit:cover;border:1px solid var(--rule);display:block}
+
+/* watch */
+.screen{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+.vid{background:none;border:0;padding:0;text-align:left;cursor:pointer;color:inherit;min-width:0}
+.vid .th{position:relative;aspect-ratio:16/9;background:var(--panel-2);overflow:hidden;border:1px solid var(--rule)}
+.vid .th img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s}
+.vid:hover .th img{transform:scale(1.04)}
+.vid .th::after{content:"";position:absolute;left:50%;top:50%;width:54px;height:54px;margin:-27px 0 0 -27px;border-radius:50%;background:rgba(8,13,24,.75) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M8 5v14l11-7z' fill='%23c8aa6e'/%3E%3C/svg%3E") center/26px no-repeat;border:1px solid var(--gold-dim)}
+.vid .th iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.vid .th.playing::after{display:none}
+.vid b{display:block;font-family:var(--f-display);font-weight:400;font-size:19px;line-height:1.15;margin-top:9px}
+.vid small{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+
+/* listen */
+.tracks{display:grid;gap:8px;max-width:760px}
+.track{display:grid;grid-template-columns:64px minmax(0,1fr) auto;gap:14px;align-items:center;padding:8px;border:1px solid var(--rule);text-decoration:none;color:var(--text)}
+.track:hover{border-color:var(--rc)}
+.track img{width:64px;height:36px;object-fit:cover;display:block}
+.track b{display:block;font-weight:500;font-size:16.5px;line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.track small{font-size:13.5px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block}
+.track .go{font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold)}
+
+/* people */
+.people{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
+.bond{display:grid;grid-template-columns:62px minmax(0,1fr);gap:14px;padding:12px;border:1px solid var(--rule);border-left:3px solid var(--tc);text-decoration:none;color:var(--text);background:linear-gradient(90deg,color-mix(in srgb,var(--tc) 8%,transparent),transparent 60%)}
+.bond:hover{border-color:var(--tc)}
+.bond img{width:62px;height:62px;object-fit:cover}
+.bond b{font-family:var(--f-display);font-weight:400;font-size:20px;line-height:1.1}
+.bond .ty{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--tc);margin-left:8px}
+.bond p{margin:4px 0 0;font-size:15px;line-height:1.4;color:#c4c8d3}
+.bond p.u{color:var(--faint);font-style:italic}
+
+/* wardrobe */
+.wardrobe{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px}
+.skin{text-decoration:none;color:var(--text);min-width:0}
+.skin .p{aspect-ratio:308/560;overflow:hidden;border:1px solid color-mix(in srgb,var(--rar) 60%,transparent);background:var(--panel-2)}
+.skin img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s}
+.skin:hover img{transform:scale(1.04)}
+.skin span{display:block;font-size:14px;line-height:1.25;margin-top:7px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.skin small{font-family:var(--f-mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+
+/* cards */
+.cards{display:flex;gap:12px;flex-wrap:wrap}
+.cards a{width:150px;display:block;transition:transform .2s}
+.cards a:hover{transform:translateY(-4px)}
+.cards img{width:100%;display:block;filter:drop-shadow(0 10px 18px rgba(0,0,0,.5))}
+.cards small{display:block;text-align:center;font-family:var(--f-mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-top:6px}
+
+/* arrival */
+.arrival{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;max-width:900px}
+.stat{border:1px solid var(--rule);padding:14px 16px;background:var(--panel)}
+.stat span{display:block;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.stat b{display:block;font-family:var(--f-num);font-weight:500;font-size:34px;line-height:1;color:var(--text);margin-top:6px;font-variant-numeric:tabular-nums}
+.stat small{color:var(--muted);font-size:14px}
+
+/* next */
+.next{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+.nx{position:relative;display:block;aspect-ratio:16/10;overflow:hidden;text-decoration:none;color:var(--text);border:1px solid var(--rule);background:var(--panel-2)}
+.nx img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:70% 20%;transition:transform .5s}
+.nx:hover img{transform:scale(1.05)}
+.nx::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(8,13,24,.92),rgba(8,13,24,0) 60%)}
+.nx div{position:absolute;z-index:1;left:12px;right:12px;bottom:10px}
+.nx b{display:block;font-family:var(--f-display);font-weight:400;font-size:22px;line-height:1}
+.nx small{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+
+footer{border-top:1px solid var(--rule);margin-top:48px;padding-block:24px 40px;color:var(--muted);font-size:14px;display:grid;gap:8px}
+footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width:80ch}
+
+@media (max-width:980px){.wardrobe{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:860px){
+  .tour{grid-template-columns:1fr;gap:0}
+  .rail{position:sticky;top:0;z-index:5;display:flex;overflow-x:auto;border-left:0;border-bottom:1px solid var(--rule);background:color-mix(in srgb,var(--ink) 94%,transparent);backdrop-filter:blur(8px);scrollbar-width:none;margin-inline:-16px;padding-inline:8px}
+  .rail::-webkit-scrollbar{display:none}
+  .rail a{flex:none;border-left:0;border-bottom:2px solid transparent;margin:0;white-space:nowrap;padding:12px 10px}
+  .rail a.on{border-bottom-color:var(--rc)}
+  .firstread{grid-template-columns:1fr}.firstread .pic{min-height:0;aspect-ratio:16/8}
+  .pick-intro{grid-template-columns:1fr;gap:20px}
+}
+@media (max-width:560px){
+  .hero{min-height:560px}
+  .hero::after{background:linear-gradient(0deg,var(--ink) 8%,rgba(8,13,24,.75) 50%,rgba(8,13,24,.1) 100%)}
+  .chap header .n{font-size:48px}
+  .lead{font-size:19px}
+  .people{grid-template-columns:minmax(0,1fr)}
+  .screen{grid-template-columns:minmax(0,1fr)}
+  .wardrobe{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .cards a{width:calc(50% - 6px)}
+  .faces{grid-template-columns:repeat(auto-fill,minmax(76px,1fr))}.face img{width:64px;height:64px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="bar">
+    <a class="brand" href="./">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><polygon points="16,2 29,9.5 29,22.5 16,30 3,22.5 3,9.5" fill="none" stroke="#c8aa6e" stroke-width="1.5"/><circle cx="16" cy="16" r="5" fill="none" stroke="#c8aa6e" stroke-width="1.5"/><path d="M16 2v9M16 21v9M3 9.5l8 4.5M21 18l8 4.5M29 9.5l-8 4.5M11 18l-8 4.5" stroke="#c8aa6e" stroke-width="1"/></svg>
+      Runeterra Atlas
+    </a>
+    <nav class="nav" aria-label="Site"><a href="./">Atlas</a><a href="journey.html" aria-current="page">Journeys</a><a href="worlds.html">Worlds</a><a href="players.html">Players</a><a href="music.html">Music</a><a href="skins.html">Skins</a><a href="reading.html">Reading</a><a href="timeline.html">Timeline</a><a href="library.html">Library</a><a href="riftbound.html">Riftbound</a><a href="theater.html">Theater</a></nav>
+  </header>
+
+  <!-- picker -->
+  <section id="picker" hidden>
+    <div class="pick-intro">
+      <div>
+        <div class="eyebrow">Runeterra · journeys</div>
+        <h1>Pick a champion. <em>We'll show you around.</em></h1>
+        <p>Each journey walks you through one champion: who they are, the story to read first, what to watch and listen to, the people in their life, their best skins and when they arrived.</p>
+      </div>
+      <div class="pick-tools">
+        <label style="flex:1 1 220px;min-width:0"><span hidden>Find a champion</span><input id="pq" type="search" placeholder="Find a champion…" autocomplete="off" style="width:100%"></label>
+        <button class="btn" type="button" id="surprise">Surprise me</button>
+      </div>
+    </div>
+    <div id="regions"></div>
+  </section>
+
+  <!-- journey -->
+  <article id="journey" hidden>
+    <section class="hero" id="hero">
+      <img class="splash" id="splash" alt="">
+      <div class="cap">
+        <div class="eyebrow" id="hEye" style="color:var(--rc)"></div>
+        <h1 id="hName"></h1>
+        <div class="ttl" id="hTitle"></div>
+        <div class="meta" id="hMeta"></div>
+        <div class="change"><a class="btn ghost" href="journey.html">Pick another champion</a><button class="btn ghost" type="button" id="hRandom">Surprise me</button></div>
+      </div>
+    </section>
+    <div class="tour">
+      <nav class="rail" id="rail" aria-label="Chapters"></nav>
+      <div class="chapters" id="chapters"></div>
+    </div>
+  </article>
+
+  <footer>
+    <div>Everything here comes from the rest of the Atlas: Riot's champion bios and Universe stories, Riot's official videos and music, Data Dragon art, and the League Wiki and Leaguepedia for relationships and release dates. Stories open on Riot's Universe site.</div>
+    <div class="legal">Runeterra Atlas was created under Riot Games' "Legal Jibber Jabber" policy using assets owned by Riot Games. Riot Games does not endorse or sponsor this project.</div>
+  </footer>
+</div>
+
+<script src="data/champions.js"></script>
+<script src="data/regions.js"></script>
+<script src="data/bonds.js"></script>
+<script src="data/releases.js"></script>
+<script src="data/stories.js"></script>
+<script src="data/videos.js"></script>
+<script src="data/music.js"></script>
+<script src="data/champcards.js"></script>
+<script src="data/champrb.js"></script>
+<script>
+const CHAMPS=(window.ATLAS_CHAMPS||[]).slice().sort((a,b)=>a.name.localeCompare(b.name));
+const CH=Object.fromEntries(CHAMPS.map(c=>[c.id,c]));
+const REGIONS=window.ATLAS_REGIONS||[], RG=Object.fromEntries(REGIONS.map(r=>[r.id,r]));
+const BONDS=window.ATLAS_BONDS||[], REL=window.ATLAS_RELEASES||{};
+const EMB=new Set(["demacia","noxus","piltover","zaun","freljord","ionia","shurima","targon","bilgewater","shadowisles","bandle","wanderers"]);
+const TYPE_LABEL={family:"Family",ally:"Ally",mentor:"Mentor",enemy:"Enemy",complicated:"Complicated",linked:"Linked"};
+const RAR=[["Standard","#7d8597"],["Rare","#5aa9e6"],["Epic","#3ccfe0"],["Legendary","#e8513f"],["Mythic","#b25fe8"],["Ultimate","#f0a03c"],["Exalted","#f7d774"],["Transcendent","#f4f0ff"]];
+const DD="https://ddragon.leagueoflegends.com/cdn/img/champion/";
+const CD="https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/";
+const UIMG="https://cmsassets.rgpub.io/sanity/images/dsfx7636/universe/";
+const UNI="https://universe.leagueoflegends.com/en_US/";
+const esc=s=>String(s??"").replace(/[&<>"]/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch]));
+const MON=["January","February","March","April","May","June","July","August","September","October","November","December"];
+const full=d=>{const [y,m,dd]=d.split("-");return `${+dd} ${MON[+m-1]} ${y}`;};
+const days=(a,b)=>Math.round((Date.parse(b)-Date.parse(a))/864e5);
+const TODAY=new Date().toISOString().slice(0,10);
+const uniId=c=>({renata:"renataglasc",jarvan:"jarvaniv",wukong:"monkeyking"})[c.id]||(c.dd||c.id).toLowerCase();
+const regName=id=>(RG[id]||{}).name||id;
+const regColor=id=>(RG[id]||{}).color||"#c8aa6e";
+const emb=id=>EMB.has(id)?`<img src="img/emblem/${id}.webp" alt="">`:"";
+const loadScript=src=>new Promise(res=>{const s=document.createElement("script");s.src=src;s.onload=res;s.onerror=res;document.head.appendChild(s);});
+
+// ---------- picker ----------
+function picker(){
+  document.title="Runeterra Journeys";
+  document.getElementById("picker").hidden=false;document.getElementById("journey").hidden=true;
+  const draw=q=>{
+    q=(q||"").trim().toLowerCase();
+    document.getElementById("regions").innerHTML=REGIONS.map(r=>{
+      const L=CHAMPS.filter(c=>c.region===r.id&&(!q||c.name.toLowerCase().includes(q)));
+      if(!L.length)return "";
+      return `<section class="region-block" style="--rc:${r.color}"><h2>${emb(r.id)}${esc(r.name)}</h2>${q?"":`<p>${esc(r.tag)}</p>`}
+        <div class="faces">${L.map(c=>`<a class="face" href="journey.html?c=${c.id}"><img src="img/${c.id}-tile.webp" alt="" loading="lazy" decoding="async"><span>${esc(c.name)}</span></a>`).join("")}</div></section>`;}).join("")||`<p style="color:var(--muted);font-style:italic;padding:40px 0">No champion by that name.</p>`;
+  };
+  draw("");
+  let t;document.getElementById("pq").addEventListener("input",e=>{clearTimeout(t);t=setTimeout(()=>draw(e.target.value),120);});
+  document.getElementById("pq").addEventListener("keydown",e=>{if(e.key==="Enter"){const a=document.querySelector("#regions .face");if(a)location.href=a.href;}});
+}
+const surprise=(not)=>{const L=CHAMPS.filter(c=>c.id!==not);location.href="journey.html?c="+L[Math.floor(Math.random()*L.length)].id;};
+document.getElementById("surprise").onclick=()=>surprise();
+
+// ---------- journey ----------
+async function journey(c){
+  const rg=RG[c.region]||{name:c.region,color:"#c8aa6e"};
+  document.documentElement.style.setProperty("--rc",rg.color);
+  document.title=`${c.name} · Runeterra Journeys`;
+  document.getElementById("picker").hidden=true;document.getElementById("journey").hidden=false;
+  const sp=document.getElementById("splash");sp.onload=()=>sp.classList.add("in");sp.src=`${DD}splash/${c.dd}_0.jpg`;sp.alt=`${c.name} splash art`;
+  const R=REL[c.id];
+  document.getElementById("hEye").textContent=`A journey through ${rg.name}`;
+  document.getElementById("hName").textContent=c.name;
+  document.getElementById("hTitle").textContent=c.title.charAt(0).toUpperCase()+c.title.slice(1);
+  document.getElementById("hMeta").innerHTML=`<span>${emb(c.region)}${esc(rg.name)}</span><span>${esc((c.tags||[]).join(" · "))}</span>${R?`<span>Arrived <b>${full(R[0])}</b></span>`:""}`;
+  document.getElementById("hRandom").onclick=()=>surprise(c.id);
+
+  // the heavier data files load now, in parallel
+  await Promise.all([loadScript("data/reading.js"),loadScript("data/skins.js")]);
+
+  const chapters=[];
+  const add=(id,title,sub,html)=>{if(html)chapters.push({id,title,sub,html});};
+
+  // 1 · who they are
+  add("who","Who they are",`From Riot's official biography`,`
+    <p class="lead">${esc(c.bio)}</p>
+    <div class="aside"><b>${esc(rg.name)}.</b> ${esc(rg.desc||rg.tag||"")}</div>
+    <p style="margin-top:18px"><a class="more-link" href="${UNI}champion/${esc(uniId(c))}/" target="_blank" rel="noopener">Read the full biography on Universe ↗</a></p>`);
+
+  // 2 · read first
+  const ST=(window.ATLAS_READ_STORIES||[]).filter(s=>s.ch.includes(c.id));
+  const CM=(window.ATLAS_READ_COMICS||[]).filter(x=>x.ch.includes(c.id)).sort((a,b)=>a.date.localeCompare(b.date)||a.n-b.n);
+  if(ST.length||CM.length){
+    // their own story first (Riot names it "<champion>-color-story"), otherwise the shortest one about them
+    const key=uniId(c);
+    const own=ST.find(s=>s.s===`${key}-color-story`||s.s===`${c.id}-color-story`||s.s.startsWith(key+"-color"));
+    const first=own||ST.slice().sort((a,b)=>a.min-b.min)[0];
+    const rest=ST.filter(s=>s!==first).sort((a,b)=>a.date.localeCompare(b.date));
+    add("read","Read this first",`${ST.length} ${ST.length===1?"story":"stories"}${CM.length?` · ${CM.length} comic ${CM.length===1?"issue":"issues"}`:""}`,`
+      ${first?`<a class="firstread" href="${UNI}story/${esc(first.s)}/" target="_blank" rel="noopener">
+        <div class="pic" style="background-image:url('${UIMG}${first.img}?w=700&fm=webp')"></div>
+        <div class="body"><div class="tag">${own?`${esc(c.name)}'s own story`:"Shortest way in"} · <b>${first.min}</b> min read · ${first.date.slice(0,4)}</div>
+        <h3>${esc(first.t)}</h3>${first.by?`<div class="tag" style="margin-bottom:10px">by ${esc(first.by)}</div>`:""}<p>${esc(first.d)}</p>
+        <span class="more-link">Read on Universe ↗</span></div></a>`:""}
+      ${rest.length?`<h3 class="tag" style="margin:18px 0 8px">Then, in the order Riot published them</h3><ul class="list">${rest.map(s=>`<li><a href="${UNI}story/${esc(s.s)}/" target="_blank" rel="noopener"><span>${esc(s.t)} <span class="tag">· ${s.date.slice(0,4)}</span></span><small>${s.min} min</small></a></li>`).join("")}</ul>`:""}
+      ${CM.length?`<h3 class="tag" style="margin:22px 0 0">Comics</h3><div class="comics">${CM.map(x=>`<a href="reading.html#comic-${x.u.replace("/","--")}" title="${esc(x.t)}" style="--ar:${x.ar}"><img src="${UIMG}${x.img}?w=${x.ar>1?480:260}&fm=webp" alt="${esc(x.t)}" loading="lazy"></a>`).join("")}</div>`:""}
+      <p style="margin-top:14px"><a class="more-link" href="reading.html?champion=${c.id}">Everything about ${esc(c.name)} in the Reading Room →</a></p>`);
+  }
+
+  // 3 · watch
+  const shelves=window.ATLAS_VIDEOS||[];
+  const V=[];shelves.forEach(sh=>{if(["login","making","music"].includes(sh.id))return;sh.v.forEach(v=>{if(v.ch.includes(c.id))V.push({...v,shelf:sh.t});});});
+  V.sort((a,b)=>a.ch.length-b.ch.length||(b.yr||"").localeCompare(a.yr||""));// their own cinematics first
+  add("watch","Watch",`${V.length} official ${V.length===1?"video":"videos"}`,V.length?`<div class="screen">${V.slice(0,6).map(v=>`<button class="vid" type="button" data-y="${v.y}">
+      <div class="th"><img src="https://i.ytimg.com/vi/${v.y}/hqdefault.jpg" alt="" loading="lazy"></div>
+      <b>${esc(v.t)}</b><small>${esc(v.shelf)}${v.yr?` · ${v.yr}`:""}${v.ch.length>1?` · with ${v.ch.length-1} other${v.ch.length>2?"s":""}`:""}</small></button>`).join("")}</div>
+      ${V.length>6?`<p style="margin-top:14px"><a class="more-link" href="theater.html">${V.length-6} more in the Theater →</a></p>`:""}`:"");
+
+  // 4 · listen: login theme + music videos (videos.js) + songs named for them (music.js)
+  const T=[];
+  shelves.forEach(sh=>{if(sh.id==="login"||sh.id==="music")sh.v.forEach(v=>{if(v.ch.includes(c.id))T.push({y:v.y,t:v.t,by:sh.id==="login"?"Login screen theme":(v.by||"Music video"),href:sh.id==="login"?`music.html#s-login`:`theater.html#v-${v.y}`});});});
+  const M=window.ATLAS_MUSIC;if(M){const re=new RegExp(`(?<![\\w'])${c.name.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")}(?![\\w'])`);
+    M.shelves.forEach(sh=>sh.k.forEach((k,i)=>{if(re.test(k[1]+" | "+k[2])&&!T.some(t=>t.y===k[0]))T.push({y:k[0],t:k[1],by:k[2],href:`music.html#t-${sh.id}-${i+1}`});}));}
+  add("listen","Listen",`${T.length} ${T.length===1?"track":"tracks"}`,T.length?`<div class="tracks">${T.map(t=>`<a class="track" href="${t.href}"><img src="https://i.ytimg.com/vi/${t.y}/mqdefault.jpg" alt="" loading="lazy"><span style="min-width:0"><b>${esc(t.t)}</b><small>${esc(t.by)}</small></span><span class="go">Play →</span></a>`).join("")}</div>`:"");
+
+  // 5 · people
+  const B=BONDS.filter(b=>b[0]===c.id||b[1]===c.id).map(b=>({o:CH[b[0]===c.id?b[1]:b[0]],type:b[2],note:b[3],src:b[4]})).filter(x=>x.o);
+  const order={family:0,mentor:1,ally:2,complicated:3,enemy:4,linked:5};
+  B.sort((a,b)=>(a.src==="u")-(b.src==="u")||order[a.type]-order[b.type]);
+  add("people","The people in their life",`${B.length} ${B.length===1?"bond":"bonds"}`,B.length?`<div class="people">${B.map(x=>`<a class="bond" href="journey.html?c=${x.o.id}" style="--tc:var(--${x.type})">
+      <img src="img/${x.o.id}-tile.webp" alt="" loading="lazy"><div style="min-width:0"><b>${esc(x.o.name)}</b><span class="ty">${TYPE_LABEL[x.type]||x.type}</span>
+      <p class="${x.src==="u"?"u":""}">${esc(x.note)}</p></div></a>`).join("")}</div>
+      <p style="margin-top:14px"><a class="more-link" href="./#c-${c.id}">See ${esc(c.name)}'s web of bonds on the Atlas →</a></p>`:"");
+
+  // 6 · wardrobe: rarest first, then newest
+  const K=((window.ATLAS_SKINS||{})[c.id]||[]).map(k=>({num:k[0],name:k[1],rar:k[2],path:k[7]}));
+  const top=K.slice().sort((a,b)=>b.rar-a.rar||(typeof b.num==="number"?b.num:0)-(typeof a.num==="number"?a.num:0)).slice(0,6);
+  add("skins","Their best looks",`${K.length} ${K.length===1?"skin":"skins"} · rarest first`,K.length?`<div class="wardrobe">${top.map(k=>`<a class="skin" href="skins.html#s-${c.id}-${k.num}" style="--rar:${RAR[k.rar][1]}">
+      <div class="p"><img src="${k.path?CD+k.path:`${DD}loading/${c.dd}_${k.num}.jpg`}" alt="${esc(k.name)}" loading="lazy" referrerpolicy="no-referrer"></div><span>${esc(k.name)}</span><small>${RAR[k.rar][0]}</small></a>`).join("")}</div>
+      <p style="margin-top:14px"><a class="more-link" href="skins.html?champion=${c.id}">All ${K.length} skins →</a></p>`:"");
+
+  // 7 · cards
+  const LR=(window.ATLAS_LOR||{})[c.id]||[], RB=(window.ATLAS_RB||{})[c.id]||[];
+  add("cards","In the card games",`Legends of Runeterra${RB.length?" & Riftbound":""}`,(LR.length||RB.length)?`<div class="cards">
+      ${LR.map(([code,n])=>`<a href="library.html#card-${code}" title="${esc(n)}"><img src="img/cards/${code}.webp" alt="${esc(n)}" loading="lazy"><small>Runeterra</small></a>`).join("")}
+      ${RB.map(([id,n,img])=>`<a href="riftbound.html#card-${id}" title="${esc(n)}"><img src="https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/${img}?w=300&fm=webp" alt="${esc(n)}" loading="lazy"><small>Riftbound</small></a>`).join("")}</div>`:"");
+
+  // 8 · arrival
+  if(R){
+    const all=Object.entries(REL).sort((a,b)=>a[1][0].localeCompare(b[1][0])||CH[a[0]].name.localeCompare(CH[b[0]].name));
+    const n=all.findIndex(e=>e[0]===c.id)+1;
+    const same=all.filter(e=>e[1][0]===R[0]&&e[0]!==c.id).map(e=>CH[e[0]]);
+    add("arrival","When they arrived",`Champion #${n} of ${all.length}`,`<div class="arrival">
+      <div class="stat"><span>Released</span><b>${full(R[0])}</b>${R[1]?`<small>${esc(R[1].replace(/^V/,"Patch "))}</small>`:""}</div>
+      ${R[2]?`<div class="stat"><span>Revealed</span><b>${full(R[2])}</b><small>${days(R[2],R[0])} days before release</small></div>`:""}
+      <div class="stat"><span>Release order</span><b>#${n}</b><small>of ${all.length} champions</small></div>
+      <div class="stat"><span>On the Rift for</span><b>${(days(R[0],TODAY)/365.25).toFixed(1)} years</b></div></div>
+      ${same.length?`<p class="aside" style="margin-top:16px">Released the same day as ${same.slice(0,6).map(o=>`<a href="journey.html?c=${o.id}">${esc(o.name)}</a>`).join(", ")}${same.length>6?` and ${same.length-6} others`:""}.</p>`:""}
+      <p style="margin-top:14px"><a class="more-link" href="timeline.html#t-${c.id}">See ${esc(c.name)} on the timeline →</a></p>`);
+  }
+
+  // 9 · where next: their closest bonds (official ones first), then someone else from the same region
+  const nextIds=[...new Set(B.filter(x=>x.src!=="u").map(x=>x.o.id))];
+  CHAMPS.filter(o=>o.region===c.region&&o.id!==c.id&&!nextIds.includes(o.id)).sort(()=>Math.random()-.5).slice(0,2).forEach(o=>nextIds.push(o.id));
+  const NX=nextIds.slice(0,6).map(id=>CH[id]);
+  add("next","Where to go next","Continue the journey",`<div class="next">${NX.map(o=>{const b=B.find(x=>x.o.id===o.id);return `<a class="nx" href="journey.html?c=${o.id}">
+      <img src="${DD}splash/${o.dd}_0.jpg" alt="" loading="lazy"><div><small>${b&&b.src!=="u"?esc(TYPE_LABEL[b.type]):`Also from ${esc(regName(o.region))}`}</small><b>${esc(o.name)}</b></div></a>`;}).join("")}</div>`);
+
+  document.getElementById("chapters").innerHTML=chapters.map((ch,i)=>`<section class="chap" id="${ch.id}"><header><span class="n">${i+1}</span><h2>${ch.title}<small>${ch.sub}</small></h2></header>${ch.html}</section>`).join("");
+  document.getElementById("rail").innerHTML=chapters.map((ch,i)=>`<a href="#${ch.id}" data-id="${ch.id}"><b>${i+1}</b>${ch.title}</a>`).join("");
+
+  // videos play in place (youtube-nocookie)
+  document.getElementById("chapters").addEventListener("click",e=>{const b=e.target.closest(".vid");if(!b)return;const th=b.querySelector(".th");if(th.classList.contains("playing"))return;
+    th.classList.add("playing");th.innerHTML=`<iframe src="https://www.youtube-nocookie.com/embed/${b.dataset.y}?autoplay=1&rel=0" title="Video" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>`;});
+
+  // chapter rail follows the reader
+  if("IntersectionObserver" in window){
+    const links=[...document.querySelectorAll("#rail a")];
+    const io=new IntersectionObserver(es=>{es.forEach(en=>{if(en.isIntersecting){links.forEach(a=>a.classList.toggle("on",a.dataset.id===en.target.id));const on=links.find(a=>a.dataset.id===en.target.id);if(on&&innerWidth<=860)on.scrollIntoView({inline:"center",block:"nearest"});}});},{rootMargin:"-30% 0px -60% 0px"});
+    document.querySelectorAll(".chap").forEach(s=>io.observe(s));
+  }
+  if(location.hash&&document.querySelector(location.hash))document.querySelector(location.hash).scrollIntoView();
+}
+
+// route: journey.html?c=<id>
+const id=new URLSearchParams(location.search).get("c");
+if(id&&CH[id])journey(CH[id]);else picker();
+</script>
+</body>
+</html>

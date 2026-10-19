@@ -12,6 +12,7 @@ Custom domain is possible later via Pages settings + CNAME file (not set up).
 | File | What it is |
 |---|---|
 | index.html | The Atlas: painted terrain map (canvas → SVG `<image>`), region themes (THEMES), WebGL depth-parallax banners (Scene class, Depth Anything V2 depth maps in assets/), "web of bonds" relationship graph (renderWeb: all champions of the region + outside partners of the selected champion), champion detail panel (bio, official Universe stories, LoR cards, Riftbound cards, videos). Deep link `#c-<id>`. |
+| journey.html | Champion Journeys: `?c=<id>` = guided tour in up to 9 chapters (who they are + region; read first = their "-color" story else shortest, other stories, comics; watch = videos.js minus login/making/music, own cinematics first, play in place; listen = login theme + music videos + music.js tracks naming them; bonds; 6 rarest skins; LoR + Riftbound cards; arrival stats; where next = official bonds + same-region picks). No `?c` = picker by region with search + Surprise me. Empty chapters are skipped. Linked from Atlas panel, Timeline and Skins plates. |
 | worlds.html | Live Worlds 2026: hero scoreboard + countdown, schedule tabs in viewer's time zone, 19 teams + rosters, anthem, champions history 2011–2025. Refreshes every 60 s; falls back to WORLDS_SNAPSHOT. |
 | library.html | 1,647 Legends of Runeterra cards, filters, card dialog, deep links. |
 | riftbound.html | 1,407 Riftbound TCG cards, domain chips; images hotlinked from Riot CDN. |
@@ -22,13 +23,13 @@ Custom domain is possible later via Pages settings + CNAME file (not set up).
 | timeline.html | Release timeline: 173 champions in release order. Pulse bar chart (releases per year, drawn at real width, hover tooltip, click jumps), 6 computed milestones, year bands with release-day rows (date + patch, #order), filters (search, class = tags[0], region, oldest/newest). Plate: released/revealed dates, same-day & before/after champs, links to Atlas/Skins/Reading. `?region=`, `#y<year>`, `#t-<id>`. Atlas panel shows "Released <date> · patch" linking here. |
 | music.html | Music hub: 13 shelves (anthems, virtual bands, Arcane S1/S2/score, Pentakill, Star Guardian, login themes from videos.js, champion songs, Warsongs, DJ Sona, LoR, long listens). One docked YouTube IFrame-API player (youtube-nocookie; kept ≥200px tall per YouTube's rules) plays a shelf in order, shuffle, Media Session controls. Deep links `#s-<shelf>`, `#t-<shelf>-<n>`. |
 
-Nav on every page: Atlas(./) · Worlds · Players · Music · Skins · Reading · Timeline · Library · Riftbound · Theater. Every footer carries Riot's
+Nav on every page: Atlas(./) · Journeys · Worlds · Players · Music · Skins · Reading · Timeline · Library · Riftbound · Theater. Every footer carries Riot's
 "Legal Jibber Jabber" fan-content notice — keep it on any new page.
 
 ## Data (data/*.js, plain globals)
-champions.js (173 champs: id, dd, name, title, region, role, tags, bio, hand) · cards.js · stories.js ·
+champions.js (173 champs: id, dd, name, title, region, role, tags, bio, hand) · regions.js (ATLAS_REGIONS) · bonds.js (ATLAS_BONDS; index.html reads both) · cards.js · stories.js ·
 champcards.js · riftbound.js (RB_SETS, RB_CARDS) · champrb.js · videos.js (ATLAS_VIDEOS shelves) ·
-worlds.js (WORLDS_TEAMS, WORLDS_SNAPSHOT) · players.js (ATLAS_PLAYERS, saved 2026-10-19) · music.js (ATLAS_MUSIC shelves, saved 2026-10-19) · skins.js (ATLAS_SKINS by champion + ATLAS_SKIN_LINES, saved 2026-10-19, patch 16.20) · reading.js (ATLAS_READ_STORIES, ATLAS_READ_COMICS, ATLAS_READ_SERIES, saved 2026-10-19) · releases.js (ATLAS_RELEASES id → [released, patch, revealed]). Bonds live in index.html as [a,b,type,note,source,necritVideo]; source r = Riot Universe text, w = League Wiki Relations,
+worlds.js (WORLDS_TEAMS, WORLDS_SNAPSHOT) · players.js (ATLAS_PLAYERS, saved 2026-10-19) · music.js (ATLAS_MUSIC shelves, saved 2026-10-19) · skins.js (ATLAS_SKINS by champion + ATLAS_SKIN_LINES, saved 2026-10-19, patch 16.20) · reading.js (ATLAS_READ_STORIES, ATLAS_READ_COMICS, ATLAS_READ_SERIES, saved 2026-10-19) · releases.js (ATLAS_RELEASES id → [released, patch, revealed]). Bonds (data/bonds.js) are [a,b,type,note,source,necritVideo]; source r = Riot Universe text, w = League Wiki Relations,
 u = only listed as related by Riot (note says no official story explains it). Reviewed 2026-10-19: 77 re-typed, 34 verified as Linked, 129 'u'.
 
 ## Sources (all free)
@@ -77,4 +78,6 @@ Must work at phone width with no horizontal scroll (watch grid children: `min-wi
 4. Custom domain (costs money yearly — conflicts with the zero-cost rule; only if Devdeep insists).
 6. ~~Skins gallery~~ (done 2026-10-19). 
 7. ~~Comics & short stories (Reading Room)~~ (done 2026-10-19).
-8. ~~Champion release timeline~~ (done 2026-10-19). Ask Devdeep what next.
+8. ~~Champion release timeline~~ (done 2026-10-19).
+9. ~~Champion journeys~~ (done 2026-10-20). Agreed next, in order: tidier menu (group the 11 links) + "My champions" (favourites & read stories in
+   localStorage) → daily guessing game (study LoLdle-style games Caedrel plays on stream first) → abilities ("how they play") → LoL streamers.
