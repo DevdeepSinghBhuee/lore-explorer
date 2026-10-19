@@ -100,6 +100,21 @@ button,input{font:inherit;color:inherit}
 .aside b{color:var(--text);font-weight:500}
 .more-link{font-family:var(--f-mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none}
 
+/* how they play */
+.abilities{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.ab{position:relative;width:64px;height:64px;padding:0;border:1px solid var(--rule);background:var(--panel-2);cursor:pointer;transition:transform .15s}
+.ab img{width:100%;height:100%;display:block;filter:saturate(.75) brightness(.85)}
+.ab span{position:absolute;right:-1px;bottom:-1px;background:rgba(8,13,24,.9);border:1px solid var(--rule);font-family:var(--f-num);font-size:15px;line-height:1;padding:2px 5px;color:var(--text)}
+.ab:hover{transform:translateY(-2px)}
+.ab[aria-selected="true"]{border-color:var(--rc);box-shadow:0 0 0 1px var(--rc),0 8px 18px rgba(0,0,0,.45)}
+.ab[aria-selected="true"] img{filter:none}
+.abpanel{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:20px;align-items:start;border:1px solid var(--rule);background:var(--panel);padding:18px}
+.abtext h3{font-family:var(--f-display);font-weight:400;font-size:28px;line-height:1.05;margin:6px 0 10px}
+.abtext p{margin:0 0 12px;font-size:16.5px;color:#d0d3dc}
+.abstats{display:flex;gap:8px 14px;flex-wrap:wrap}
+.abvid{width:100%;aspect-ratio:16/9;background:#000;border:1px solid var(--rule);display:block}
+.abvid.none{display:grid;place-items:center;color:var(--faint);font-style:italic;font-size:15px;padding:20px;text-align:center}
+@media (max-width:760px){.abpanel{grid-template-columns:1fr}.ab{width:56px;height:56px}}
 /* read */
 .firstread{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:0;border:1px solid color-mix(in srgb,var(--rc) 40%,transparent);background:var(--panel);text-decoration:none;color:inherit;margin-bottom:14px}
 .firstread .pic{min-height:220px;background:var(--panel-2) center/cover no-repeat}
@@ -268,6 +283,7 @@ footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width
 <script src="data/music.js"></script>
 <script src="data/champcards.js"></script>
 <script src="data/champrb.js"></script>
+<script src="data/abilityvideos.js"></script>
 <script>
 const CHAMPS=(window.ATLAS_CHAMPS||[]).slice().sort((a,b)=>a.name.localeCompare(b.name));
 const CH=Object.fromEntries(CHAMPS.map(c=>[c.id,c]));
@@ -279,6 +295,8 @@ const RAR=[["Standard","#7d8597"],["Rare","#5aa9e6"],["Epic","#3ccfe0"],["Legend
 const DD="https://ddragon.leagueoflegends.com/cdn/img/champion/";
 const CD="https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/";
 const UIMG="https://cmsassets.rgpub.io/sanity/images/dsfx7636/universe/";
+const ABI="https://ddragon.leagueoflegends.com/cdn/16.20.1/img/";
+const ABV="https://lol.dyn.riotcdn.net/x/videos/champion-abilities/";
 const UNI="https://universe.leagueoflegends.com/en_US/";
 const esc=s=>String(s??"").replace(/[&<>"]/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch]));
 const MON=["January","February","March","April","May","June","July","August","September","October","November","December"];
@@ -326,7 +344,7 @@ async function journey(c){
   document.getElementById("hFav").setAttribute("data-fav",c.id);
 
   // the heavier data files load now, in parallel
-  await Promise.all([loadScript("data/reading.js"),loadScript("data/skins.js")]);
+  await Promise.all([loadScript("data/reading.js"),loadScript("data/skins.js"),loadScript("data/abilities.js"),loadScript("data/game.js")]);
 
   const chapters=[];
   const add=(id,title,sub,html)=>{if(html)chapters.push({id,title,sub,html});};
@@ -336,6 +354,18 @@ async function journey(c){
     <p class="lead">${esc(c.bio)}</p>
     <div class="aside"><b>${esc(rg.name)}.</b> ${esc(rg.desc||rg.tag||"")}</div>
     <p style="margin-top:18px"><a class="more-link" href="${UNI}champion/${esc(uniId(c))}/" target="_blank" rel="noopener">Read the full biography on Universe ↗</a></p>`);
+
+  // 2 · how they play: passive + Q W E R, Riot's icons, descriptions and (where Riot has one) the official preview clip
+  const AB=(window.ATLAS_ABILITIES||{})[c.id], GM=(window.ATLAS_GAME||{})[c.id];
+  if(AB){
+    const [key,list]=AB, K4=String(key).padStart(4,"0"), VID=(window.ATLAS_ABILITY_VIDEOS||{})[key]||"";
+    const slots=["Passive","Q","W","E","R"], letters=["P","Q","W","E","R"];
+    add("play","How they play",`${esc(GM?`${GM[1]} · ${GM[0]==="None"?"No resource":GM[0]} · `:"")}${esc((c.tags||[]).join(", "))}`,`
+      <div class="abilities" role="tablist" aria-label="Abilities">${list.map((a,i)=>`<button type="button" role="tab" class="ab" data-i="${i}" aria-selected="${i===0}" title="${esc(a[0])}">
+        <img src="${ABI}${i?"spell":"passive"}/${esc(a[2])}" alt="" loading="lazy"><span>${slots[i]==="Passive"?"P":slots[i]}</span></button>`).join("")}</div>
+      <div class="abpanel" id="abpanel"></div>`);
+    window._ab={c,list,K4,VID,slots,letters};
+  }
 
   // 2 · read first
   const ST=(window.ATLAS_READ_STORIES||[]).filter(s=>s.ch.includes(c.id));
@@ -418,6 +448,19 @@ async function journey(c){
 
   document.getElementById("chapters").innerHTML=chapters.map((ch,i)=>`<section class="chap" id="${ch.id}"><header><span class="n">${i+1}</span><h2>${ch.title}<small>${ch.sub}</small></h2></header>${ch.html}</section>`).join("");
   document.getElementById("rail").innerHTML=chapters.map((ch,i)=>`<a href="#${ch.id}" data-id="${ch.id}"><b>${i+1}</b>${ch.title}</a>`).join("");
+
+  // ability panel
+  const abp=document.getElementById("abpanel");
+  if(abp&&window._ab){const {list,K4,VID,slots,letters}=window._ab;
+    const show=i=>{const a=list[i];document.querySelectorAll(".ab").forEach(b=>b.setAttribute("aria-selected",String(+b.dataset.i===i)));
+      const has=VID.includes(letters[i]), src=`${ABV}${K4}/ability_${K4}_${letters[i]}1`;
+      const stats=i?[a[3]&&`<span class="tag">Cooldown <b>${esc(a[3])}</b> s</span>`,a[4]&&`<span class="tag">Cost <b>${esc(a[4])}</b></span>`,a[5]&&`<span class="tag">Range <b>${esc(a[5])}</b></span>`].filter(Boolean).join(""):"";
+      abp.innerHTML=`<div class="abtext"><div class="tag">${slots[i]==="Passive"?"Passive":`${slots[i]} ability`}</div><h3>${esc(a[0])}</h3>
+        <p>${esc(a[1]).replace(/\n/g,"<br>")}</p>${stats?`<div class="abstats">${stats}</div>`:""}</div>
+        ${has?`<video class="abvid" muted loop playsinline autoplay preload="metadata" controls><source src="${src}.webm" type="video/webm"><source src="${src}.mp4" type="video/mp4"></video>`:`<div class="abvid none">Riot hasn't published a preview clip for this one.</div>`}`;};
+    document.querySelector(".abilities").addEventListener("click",e=>{const b=e.target.closest(".ab");if(b)show(+b.dataset.i);});
+    document.querySelector(".abilities").addEventListener("keydown",e=>{if(!/Arrow(Left|Right)/.test(e.key))return;const cur=+document.querySelector('.ab[aria-selected="true"]').dataset.i;const n=(cur+(e.key==="ArrowRight"?1:4))%5;show(n);document.querySelector(`.ab[data-i="${n}"]`).focus();});
+    show(0);}
 
   // videos play in place (youtube-nocookie)
   document.getElementById("chapters").addEventListener("click",e=>{const b=e.target.closest(".vid");if(!b)return;const th=b.querySelector(".th");if(th.classList.contains("playing"))return;

@@ -262,6 +262,12 @@ section.region{--scene-h:clamp(380px,46vw,600px);padding-top:calc(var(--scene-h)
 .stories a{display:inline-block;font-size:15px;color:var(--text);text-decoration:none;border:1px solid color-mix(in srgb,var(--c,var(--r)) 40%,transparent);padding:4px 10px}
 .stories a:hover{border-color:var(--c,var(--r));color:var(--c,var(--r))}
 .lor{display:flex;gap:8px;flex-wrap:wrap}
+.extra.abilities h5 a{margin-left:8px;color:var(--gold);text-decoration:none;letter-spacing:.1em}
+.abrow{display:flex;gap:8px;flex-wrap:wrap}
+.abrow a{position:relative;width:48px;height:48px;display:block;border:1px solid var(--rule);transition:transform .2s}
+.abrow a:hover{transform:translateY(-3px);border-color:var(--gold)}
+.abrow img{width:100%;height:100%;display:block}
+.abrow span{position:absolute;right:-1px;bottom:-1px;background:rgba(8,13,24,.9);font-family:var(--f-num);font-size:13px;line-height:1;padding:1px 4px;color:var(--text)}
 .extra.skins h5 a{margin-left:8px;color:var(--gold);text-decoration:none;letter-spacing:.1em}
 .skrow{display:flex;gap:8px;overflow-x:auto;min-width:0;padding-bottom:8px;scrollbar-width:thin;scrollbar-color:var(--gold-dim,#7d6a45) transparent}
 .skrow a{flex:none;width:68px;transition:transform .2s}
@@ -1433,6 +1439,17 @@ function fillReading(c){
     (st.length?`<ul class="stories">${st.map(s=>`<li><a href="${U}story/${esc(s.s)}/" target="_blank" rel="noopener">${esc(s.t)}<span class="rm">${s.min} min</span><span class="read-badge" data-read="${esc(s.s)}">✓ Read</span><span aria-hidden="true"> ↗</span></a></li>`).join("")}</ul>`:"")+
     (cm.length?`<div class="comicrow">${cm.map(x=>`<a href="reading.html#comic-${x.u.replace("/","--")}" title="${esc(x.t)}" style="--ar:${x.ar}"><img src="https://cmsassets.rgpub.io/sanity/images/dsfx7636/universe/${x.img}?w=${x.ar>1?360:200}&fm=webp" alt="${esc(x.t)}" loading="lazy" decoding="async"></a>`).join("")}</div>`:"");
 }
+// Ability icons: data/abilities.js loads on first use, then shows passive + Q W E R linking to the journey's "How they play"
+let abLoading=null;
+function fillAbilities(c){
+  const box=document.getElementById("abBox");if(!box)return;
+  if(!window.ATLAS_ABILITIES){
+    if(!abLoading)abLoading=new Promise(res=>{const s=document.createElement("script");s.src="data/abilities.js";s.onload=res;s.onerror=res;document.head.appendChild(s);});
+    abLoading.then(()=>{const b=document.getElementById("abBox");if(b&&b.dataset.c===c.id&&window.ATLAS_ABILITIES)fillAbilities(c);});return;}
+  const A=window.ATLAS_ABILITIES[c.id];if(!A){box.remove();return;}
+  const L=["P","Q","W","E","R"],I="https://ddragon.leagueoflegends.com/cdn/16.20.1/img/";
+  box.innerHTML=`<h5>How they play <a href="journey.html?c=${c.id}#play">Abilities &amp; clips →</a></h5><div class="abrow">${A[1].map((a,i)=>`<a href="journey.html?c=${c.id}#play" title="${L[i]} · ${esc(a[0])}"><img src="${I}${i?"spell":"passive"}/${esc(a[2])}" alt="${esc(a[0])}" loading="lazy"><span>${L[i]}</span></a>`).join("")}</div>`;
+}
 // Skins strip: data/skins.js is large, so it loads only when a champion panel first opens
 let skinsLoading=null;
 function fillSkins(c){
@@ -1474,9 +1491,11 @@ function renderDetail(){
     ${(()=>{const st=(window.ATLAS_STORIES||{})[c.id]||[];return `<div class="extra" id="readBox" data-c="${c.id}"${st.length?"":" hidden"}><h5>Official stories</h5><ul class="stories">${st.map(([t,u])=>`<li><a href="https://universe.leagueoflegends.com/en_US/story/${esc(u)}/" target="_blank" rel="noopener">${esc(t)}<span aria-hidden="true"> ↗</span></a></li>`).join("")}</ul></div>`;})()}
     ${(()=>{const L=(window.ATLAS_LOR||{})[c.id]||[];return L.length?`<div class="extra"><h5>In Legends of Runeterra</h5><div class="lor">${L.map(([code,n])=>`<a href="library.html#card-${code}" title="${esc(n)}"><img src="img/cards/${code}.webp" alt="${esc(n)}" loading="lazy"></a>`).join("")}</div></div>`:"";})()}
     ${(()=>{const R=(window.ATLAS_RB||{})[c.id]||[];return R.length?`<div class="extra"><h5>In Riftbound</h5><div class="lor">${R.map(([id,n,img])=>`<a href="riftbound.html#card-${id}" title="${esc(n)}"><img src="https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/${img}?w=200&fm=webp" alt="${esc(n)}" loading="lazy"></a>`).join("")}</div></div>`:"";})()}
+    <div class="extra abilities" id="abBox" data-c="${c.id}"></div>
     <div class="extra skins" id="skinsBox" data-c="${c.id}"></div>
     ${(()=>{const V=[];(window.ATLAS_VIDEOS||[]).forEach(sh=>sh.v.forEach(v=>{if(v.ch.includes(c.id)&&sh.id!=="login"&&sh.id!=="making")V.push(v);}));const L2=(window.ATLAS_VIDEOS||[]).find(sh=>sh.id==="login");const lg=L2?L2.v.find(v=>v.ch.includes(c.id)):null;if(lg)V.push(lg);return V.length?`<div class="extra"><h5>Watch</h5><div class="vids">${V.slice(0,6).map(v=>`<a href="theater.html#v-${v.y}"><img src="https://i.ytimg.com/vi/${v.y}/mqdefault.jpg" alt="" loading="lazy"><span>${esc(v.t)}</span></a>`).join("")}</div></div>`:"";})()}`;
   fillSkins(c);
+  fillAbilities(c);
   fillReading(c);
   document.querySelectorAll("#detail .tie").forEach(t=>t.addEventListener("click",()=>{
     const id=t.dataset.id; const crossing = byId[id].region!==current;

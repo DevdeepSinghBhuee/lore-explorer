@@ -9,7 +9,7 @@
   var GROUPS=[
     {t:"Champions",items:[["journey.html","Journeys","A guided tour of any champion"],["skins.html","Skins","Every skin and its splash art"],["timeline.html","Timeline","Every champion in release order"]]},
     {t:"Lore",items:[["atlas.html","Atlas","The map of Runeterra and its web of bonds"],["reading.html","Reading Room","Every official story and comic"]]},
-    {t:"Play",items:[["./","Runeterra Daily","Guess today's champions: clues, splash, lore"]]},
+    {t:"Play",items:[["./","Runeterra Daily","Guess today's champions: clues, splash, ability, lore"]]},
     {t:"Esports",items:[["worlds.html","Worlds 2026","Live scores, schedule and teams"],["players.html","Players","The pros at Worlds 2026"]]},
     {t:"Watch & Listen",items:[["theater.html","Theater","Official cinematics and trailers"],["music.html","Music","Anthems, bands and champion themes"]]},
     {t:"Card games",items:[["library.html","Runeterra cards","Every Legends of Runeterra card"],["riftbound.html","Riftbound","The Riftbound trading card game"]]}
@@ -162,9 +162,9 @@
   function resumeChip(){
     if(file==="index.html")return;
     var d=new Date(),key=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
-    var names={clues:"Clues",splash:"Splash",lore:"Lore"},open=null;
+    var names={clues:"Clues",splash:"Splash",ability:"Ability",lore:"Lore"},open=null;
     var v=load("atlas.daily.view")||{};
-    var order=[v.mode].concat(["clues","splash","lore"]).filter(function(m,i,a){return m&&names[m]&&a.indexOf(m)===i;});
+    var order=[v.mode].concat(["clues","splash","ability","lore"]).filter(function(m,i,a){return m&&names[m]&&a.indexOf(m)===i;});
     for(var i=0;i<order.length;i++){var st=load("atlas.daily."+order[i]+"."+key);if(st&&st.g&&st.g.length&&!st.won&&!st.lost){open={m:order[i],n:st.g.length};break;}}
     if(!open)return;
     var st2=document.createElement("style");st2.textContent=`

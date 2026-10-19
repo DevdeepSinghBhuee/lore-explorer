@@ -55,7 +55,10 @@ h1 em{font-style:normal;color:var(--gold)}
 .clock b{display:block;font-family:var(--f-num);font-weight:500;font-size:38px;line-height:.9;color:var(--gold);font-variant-numeric:tabular-nums}
 .clock span{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
 
-.modes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:22px}
+.modes{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:22px}
+@media (max-width:1100px){.modes{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.abil{display:grid;place-items:center;padding:18px 0 6px}
+.abil img{width:min(180px,46vw);height:auto;aspect-ratio:1;border:2px solid var(--gold-dim);box-shadow:0 14px 30px rgba(0,0,0,.5);transition:transform .7s cubic-bezier(.2,.8,.2,1),filter .7s;image-rendering:auto}
 .mode{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--panel);border:1px solid var(--rule);cursor:pointer;text-align:left;min-width:0}
 .mode i{font-style:normal;width:36px;height:36px;flex:none;display:grid;place-items:center;border:1px solid var(--gold-dim);font-family:var(--f-display);font-size:18px;color:var(--gold)}
 .mode b{display:block;font-family:var(--f-display);font-weight:400;font-size:20px;line-height:1.1}
@@ -162,7 +165,7 @@ h1 em{font-style:normal;color:var(--gold)}
 @media (max-width:480px){.exgrid{grid-template-columns:minmax(0,1fr)}.ex.big{grid-column:auto}.ex{min-height:140px}}
 footer{border-top:1px solid var(--rule);margin-top:48px;padding-block:24px 40px;color:var(--muted);font-size:14px;display:grid;gap:8px}
 footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width:80ch}
-@media (max-width:760px){.modes{grid-template-columns:1fr}.mode .st{display:none}.result{grid-template-columns:1fr}.result .pic{min-height:0;aspect-ratio:16/8}.clock{text-align:left}}
+@media (max-width:760px){.modes{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.mode{padding:10px}.mode small{display:none}.mode i{width:30px;height:30px;font-size:15px}.mode b{font-size:18px}.mode .st{display:none}.result{grid-template-columns:1fr}.result .pic{min-height:0;aspect-ratio:16/8}.clock{text-align:left}}
 @media (max-width:480px){.bonus .opts{grid-template-columns:1fr}.lore{font-size:18px}.stage{padding:14px}}
 </style>
 <script src="site.js" defer></script>
@@ -181,7 +184,7 @@ footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width
     <div>
       <div class="eyebrow" id="eye"></div>
       <h1>Runeterra <em>Daily</em></h1>
-      <p>Three League of Legends champions to find every day: one from clues, one from a zoomed-in splash, one from their lore. Same puzzles for everyone, free, no sign-up.</p>
+      <p>Four League of Legends champions to find every day: from clues, a zoomed-in splash, an ability icon and their lore. Same puzzles for everyone, free, no sign-up.</p>
     </div>
     <div class="clock"><b id="clock">--:--:--</b><span>until tomorrow's puzzles</span></div>
   </section>
@@ -189,6 +192,7 @@ footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width
   <div class="modes" role="tablist" aria-label="Game mode">
     <button class="mode" role="tab" data-m="clues" aria-selected="true"><i>?</i><span><b>Clues</b><small>Region, class, range and more</small></span><span class="st" data-st="clues"></span></button>
     <button class="mode" role="tab" data-m="splash" aria-selected="false"><i>◩</i><span><b>Splash</b><small>Zoomed-in art, then name the skin</small></span><span class="st" data-st="splash"></span></button>
+    <button class="mode" role="tab" data-m="ability" aria-selected="false"><i>◈</i><span><b>Ability</b><small>A spell icon, turned and greyed</small></span><span class="st" data-st="ability"></span></button>
     <button class="mode" role="tab" data-m="lore" aria-selected="false"><i>¶</i><span><b>Lore</b><small>Their biography, name hidden</small></span><span class="st" data-st="lore"></span></button>
   </div>
 
@@ -221,6 +225,7 @@ footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width
 <script src="data/releases.js"></script>
 <script src="data/skins.js"></script>
 <script src="data/game.js"></script>
+<script src="data/abilities.js"></script>
 <script>
 const CHAMPS=(window.ATLAS_CHAMPS||[]).slice().sort((a,b)=>a.id.localeCompare(b.id));
 const CH=Object.fromEntries(CHAMPS.map(c=>[c.id,c]));
@@ -228,7 +233,7 @@ const RG=Object.fromEntries((window.ATLAS_REGIONS||[]).map(r=>[r.id,r]));
 const REL=window.ATLAS_RELEASES||{}, SK=window.ATLAS_SKINS||{}, GM=window.ATLAS_GAME||{};
 const DD="https://ddragon.leagueoflegends.com/cdn/img/champion/";
 const esc=s=>String(s??"").replace(/[&<>"]/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch]));
-const MODES={clues:"Clues",splash:"Splash",lore:"Lore"};
+const MODES={clues:"Clues",splash:"Splash",ability:"Ability",lore:"Lore"};
 
 /* ---------- the day's puzzle: same for everyone, by the visitor's calendar date ---------- */
 const EPOCH=Date.UTC(2026,9,20); // puzzle #1 = 20 Oct 2026
@@ -238,7 +243,8 @@ function rng(seed){let a=seed>>>0;return()=>{a=(a+0x6D2B79F5)>>>0;let t=a;t=Math
 const hash=s=>{let h=2166136261;for(const ch of s){h^=ch.codePointAt(0);h=Math.imul(h,16777619);}return h>>>0;};
 // each mode walks its own fixed shuffle of all champions, so no champion repeats in a mode until all 173 have come up
 function shuffled(mode){const r=rng(hash("atlas-daily-"+mode));const a=CHAMPS.map(c=>c.id);for(let i=a.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
-const ORDER={clues:shuffled("clues"),splash:shuffled("splash"),lore:shuffled("lore")};
+const ORDER={clues:shuffled("clues"),splash:shuffled("splash"),ability:shuffled("ability"),lore:shuffled("lore")};
+const ABI="https://ddragon.leagueoflegends.com/cdn/16.20.1/img/", SLOT=["Passive","Q","W","E","R"];
 function puzzle(mode,key,practiceSeed){
   const n=practiceSeed!=null?practiceSeed:dayNo(key);
   const L=ORDER[mode], id=L[((n-1)%L.length+L.length)%L.length];
@@ -252,6 +258,11 @@ function puzzle(mode,key,practiceSeed){
     // bonus options: the right skin + up to three others of the same champion
     const others=sk.filter(x=>x[0]!==s[0]);for(let i=others.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[others[i],others[j]]=[others[j],others[i]];}
     p.opts=[s].concat(others.slice(0,3));for(let i=p.opts.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[p.opts[i],p.opts[j]]=[p.opts[j],p.opts[i]];}
+  }
+  if(mode==="ability"){
+    const L=((window.ATLAS_ABILITIES||{})[id]||[0,[]])[1];
+    p.ai=Math.floor(r()*L.length);p.rot=[90,180,270][Math.floor(r()*3)];p.abl=L;
+    p.aopts=L.map((a,i)=>i);for(let i=p.aopts.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[p.aopts[i],p.aopts[j]]=[p.aopts[j],p.aopts[i]];}
   }
   return p;
 }
@@ -321,6 +332,12 @@ function render(){
     stage=`<div class="stage"><h2><span>Whose splash art is this?</span><span class="zoomtag">${done?"Full view":`${z.toFixed(1)}× zoom`}</span></h2>
       <div class="crop" style="--fx:${p.fx};--fy:${p.fy};--z:${z};${done?"":"--flt:saturate(1.05)"}"><img src="${DD}splash/${ans.dd}_${p.skin[0]}.jpg" alt="${done?esc(p.skin[1]==="Original"?ans.name:p.skin[1]):"Mystery splash art"}"></div>
       ${state.won?bonusHTML(p,state):""}</div>`;
+  }else if(mode==="ability"){
+    const wrong=state.g.filter(x=>x!==p.id).length, a=p.abl[p.ai];
+    const grey=!done&&wrong<3, turned=!done&&wrong<5;
+    stage=`<div class="stage"><h2><span>Whose ability is this?</span><span>${done?"":grey?"colour after 3 misses":turned?"turns upright after 5 misses":"no more hints"}</span></h2>
+      <div class="abil"><img src="${ABI}${p.ai?"spell":"passive"}/${a[2]}" alt="${done?esc(a[0]):"Mystery ability icon"}" style="filter:${grey?"grayscale(1) contrast(1.1)":"none"};transform:rotate(${turned?p.rot:0}deg)"></div>
+      ${state.won?abilityBonusHTML(p,state):""}</div>`;
   }else{
     const ch=bioChunks(ans), wrong=state.g.filter(x=>x!==p.id).length, show=done?ch.length:Math.min(ch.length,1+wrong);
     const hints=[];if(done||wrong>=3)hints.push(`From <b>${esc(regName(ans.region))}</b>`);if(done||wrong>=5)hints.push(`Class: <b>${esc((ans.tags||[]).join(", "))}</b>`);
@@ -356,6 +373,11 @@ function bioChunks(c){
   for(let i=0;i<words.length;i+=size)out.push(words.slice(i,i+size));
   return out;
 }
+function abilityBonusHTML(p,state){
+  const b=state.bonusA;
+  return `<div class="bonus"><h2 style="margin:0;font-family:var(--f-mono);font-weight:400;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)">Bonus · which ability is it?</h2>
+    <div class="opts">${p.aopts.map(i=>{const cls=b==null?"":i===p.ai?"right":i===b?"wrong":"";return `<button type="button" data-abil="${i}" class="${cls}" ${b!=null?"disabled":""}>${b!=null?`<b style="font-family:var(--f-num);font-weight:500;color:var(--gold);margin-right:6px">${SLOT[i]==="Passive"?"P":SLOT[i]}</b>`:""}${esc(p.abl[i][0])}</button>`;}).join("")}</div></div>`;
+}
 function bonusHTML(p,state){
   const b=state.bonus;
   return `<div class="bonus"><h2 style="margin:0;font-family:var(--f-mono);font-weight:400;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)">Bonus · which skin is it?</h2>
@@ -368,7 +390,7 @@ function resultHTML(p,state,key){
   const art=p.mode==="splash"?`${DD}splash/${ans.dd}_${p.skin[0]}.jpg`:`${DD}splash/${ans.dd}_0.jpg`;
   return `<div class="result"><div class="pic" style="background-image:url('${art}')"></div><div class="body">
     <div class="eyebrow">${state.won?(n===1?"First try!":"Found it"):"Better luck tomorrow"}</div>
-    <h3>${esc(ans.name)}</h3><p>${state.won?`in ${n} ${n===1?"guess":"guesses"}`:"The answer was revealed."}${p.mode==="splash"&&state.bonus!=null?` · skin: ${state.bonus===p.skin[0]?"✓ ":"✗ "}${esc(p.skin[1]==="Original"?"Original":p.skin[1])}`:""}</p>
+    <h3>${esc(ans.name)}</h3><p>${state.won?`in ${n} ${n===1?"guess":"guesses"}`:"The answer was revealed."}${p.mode==="splash"&&state.bonus!=null?` · skin: ${state.bonus===p.skin[0]?"✓ ":"✗ "}${esc(p.skin[1]==="Original"?"Original":p.skin[1])}`:""}${p.mode==="ability"&&state.bonusA!=null?` · ability: ${state.bonusA===p.ai?"✓ ":"✗ "}${esc(p.abl[p.ai][0])} (${SLOT[p.ai]})`:""}</p>
     <div class="acts"><button class="btn" type="button" id="share">Share result</button><a class="btn ghost" href="journey.html?c=${ans.id}">${esc(ans.name)}'s journey</a><button class="btn ghost" type="button" id="practice">Practice round</button></div>
     ${p.practice?`<p style="font-size:14px;color:var(--muted)">Practice rounds don't count towards your streak.</p>`:`<div class="stats"><div><b>${s.played}</b><span>Played</span></div><div><b>${s.played?Math.round(s.won/s.played*100):0}%</b><span>Won</span></div><div><b>${s.streak}</b><span>Streak</span></div><div><b>${s.best}</b><span>Best</span></div></div>
     <div class="dist">${[1,2,3,4,5,6,7].map(i=>{const v=(s.dist||{})[i]||0;return `<div><span>${i===7?"7+":i}</span><i class="${state.won&&i===me?"me":""}" style="width:${Math.max(6,v/maxD*100)}%">${v}</i></div>`;}).join("")}</div>`}
@@ -379,7 +401,7 @@ function shareText(p,state){
   const head=`Runeterra Daily${p.practice?" (practice)":` #${p.n}`} · ${MODES[p.mode]} · ${state.won?`${state.g.length} ${state.g.length===1?"guess":"guesses"}`:"X"}`;
   let body="";
   if(p.mode==="clues")body=state.g.map(g=>compare(g,p.id).map(x=>EMO[x.r]).join("")).join("\n");
-  else body=state.g.map(g=>g===p.id?"🟩":"🟥").join("")+(p.mode==="splash"&&state.bonus!=null?`\nSkin bonus ${state.bonus===p.skin[0]?"✅":"❌"}`:"");
+  else body=state.g.map(g=>g===p.id?"🟩":"🟥").join("")+(p.mode==="splash"&&state.bonus!=null?`\nSkin bonus ${state.bonus===p.skin[0]?"✅":"❌"}`:"")+(p.mode==="ability"&&state.bonusA!=null?`\nAbility bonus ${state.bonusA===p.ai?"✅":"❌"}`:"");
   return `${head}\n${body}\n${location.origin}${location.pathname}`;
 }
 
@@ -409,6 +431,7 @@ function wire(p,state,save,key){
   }
   const gu=document.getElementById("giveup");if(gu)gu.onclick=()=>{state.lost=true;record(p,key,state);save();render();};
   play.querySelectorAll("[data-skin]").forEach(b=>b.onclick=()=>{state.bonus=+b.dataset.skin;save();render();});
+  play.querySelectorAll("[data-abil]").forEach(b=>b.onclick=()=>{state.bonusA=+b.dataset.abil;save();render();});
   const sh=document.getElementById("share");if(sh)sh.onclick=async()=>{const t=shareText(p,state);
     try{if(navigator.share&&matchMedia("(hover:none)").matches){await navigator.share({text:t});return;}await navigator.clipboard.writeText(t);toast("Copied — paste it anywhere");}catch(e){toast("Couldn't copy on this browser");}};
   const pr=document.getElementById("practice");if(pr){const cur=PR[mode],open=cur&&cur.state&&cur.state.g&&cur.state.g.length&&!cur.state.won&&!cur.state.lost&&!p.practice;
@@ -429,6 +452,7 @@ document.querySelectorAll(".mode").forEach(b=>b.onclick=()=>{mode=b.dataset.m;in
 document.getElementById("how").innerHTML=`<h3>How to play</h3><ul>
   <li><b>Clues:</b> guess any champion. Each column compares your guess with the answer: region, class, melee or ranged, resource (mana, energy…), release year and number of skins. Green is a match, orange is close, red is a miss; arrows say whether the answer's year or skin count is higher or lower.</li>
   <li><b>Splash:</b> a piece of one of the champion's splash arts. Every wrong guess zooms out. Once you have the champion, a bonus asks which skin it is.</li>
+  <li><b>Ability:</b> one of the champion's ability icons, turned and drained of colour. After 3 misses it gets its colour back, after 5 it turns the right way up. Once you have the champion, a bonus asks which ability it is.</li>
   <li><b>Lore:</b> the champion's biography with their name hidden, shown a part at a time. Each wrong guess reveals more; after 3 misses you get their region, after 5 their class.</li>
   <li>New puzzles at midnight your time. Share your result without spoilers. Practice rounds are unlimited and don't affect your streak.</li></ul>`;
 
