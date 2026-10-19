@@ -105,6 +105,10 @@ h2{font-family:var(--f-display);font-weight:400;font-size:clamp(28px,3.4vw,40px)
 .team .sd{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.08em;color:var(--muted)}
 .team .sd.pi{color:var(--gold)}
 .roster{grid-column:1/-1;border:1px solid var(--gold);background:linear-gradient(135deg,color-mix(in srgb,var(--gold) 10%,var(--panel)),var(--panel));padding:18px;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
+.pl{text-decoration:none;color:var(--text);transition:transform .2s}
+.pl:hover{transform:translateY(-2px)}
+.pl:hover b{color:var(--gold-hi)}
+.allp{grid-column:1/-1;justify-self:end;font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;margin-top:-4px}
 .pl{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;min-width:0}
 .pl .ph{width:100%;max-width:150px;aspect-ratio:1;background:radial-gradient(circle at 50% 30%,var(--panel-2),transparent 70%);border-bottom:1px solid var(--rule);overflow:hidden}
 .pl img{width:100%;height:100%;object-fit:cover;object-position:top}
@@ -143,7 +147,7 @@ footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width
       <svg viewBox="0 0 32 32" aria-hidden="true"><polygon points="16,2 29,9.5 29,22.5 16,30 3,22.5 3,9.5" fill="none" stroke="#c8aa6e" stroke-width="1.5"/><circle cx="16" cy="16" r="5" fill="none" stroke="#c8aa6e" stroke-width="1.5"/><path d="M16 2v9M16 21v9M3 9.5l8 4.5M21 18l8 4.5M29 9.5l-8 4.5M11 18l-8 4.5" stroke="#c8aa6e" stroke-width="1"/></svg>
       Runeterra Atlas
     </a>
-    <nav class="nav" aria-label="Site"><a href="./">Atlas</a><a href="worlds.html" aria-current="page">Worlds</a><a href="library.html">Library</a><a href="riftbound.html">Riftbound</a><a href="theater.html">Theater</a></nav>
+    <nav class="nav" aria-label="Site"><a href="./">Atlas</a><a href="worlds.html" aria-current="page">Worlds</a><a href="players.html">Players</a><a href="library.html">Library</a><a href="riftbound.html">Riftbound</a><a href="theater.html">Theater</a></nav>
   </header>
 
   <section class="hero">
@@ -266,7 +270,8 @@ function renderTeams(){
   document.getElementById("teams").innerHTML=LEAGUES.map(L=>{const ts=TEAMS.filter(t=>t.league===L);return `<div class="lg"><h3>${L}</h3><div class="teams">${ts.map(t=>`<button class="team" type="button" data-s="${t.slug}" aria-expanded="${openTeam===t.slug}"><img src="${esc(t.img)}" alt="" loading="lazy"><span class="nm">${esc(t.name)}</span><span class="sd${t.start==="Play-Ins"?" pi":""}">${esc(t.seed)} · ${t.start==="Play-Ins"?"Play-Ins":"Swiss"}</span></button>`).join("")}${ts.some(t=>t.slug===openTeam)?roster(TEAMS.find(t=>t.slug===openTeam)):""}</div></div>`;}).join("");
 }
 const ROLE={top:"Top",jungle:"Jungle",mid:"Mid",bottom:"Bot",support:"Support"};
-function roster(t){return `<div class="roster">${t.roster.map(([n,r,img])=>`<div class="pl"><div class="ph">${img?`<img src="${esc(img)}" alt="${esc(n)}" loading="lazy">`:""}</div><b>${esc(n)}</b><span>${ROLE[r]||r}</span></div>`).join("")}</div>`;}
+const pslug=n=>String(n).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
+function roster(t){return `<div class="roster">${t.roster.map(([n,r,img])=>`<a class="pl" href="players.html#p-${pslug(n)}" title="${esc(n)}: signature champions and Worlds history"><div class="ph">${img?`<img src="${esc(img)}" alt="${esc(n)}" loading="lazy">`:""}</div><b>${esc(n)}</b><span>${ROLE[r]||r}</span></a>`).join("")}</div><a class="allp" href="players.html?team=${t.code}">All ${esc(t.name)} player files →</a>`;}
 document.getElementById("teams").addEventListener("click",e=>{const b=e.target.closest(".team");if(!b)return;openTeam=openTeam===b.dataset.s?null:b.dataset.s;renderTeams();});
 renderTeams();
 

@@ -16,14 +16,15 @@ Custom domain is possible later via Pages settings + CNAME file (not set up).
 | library.html | 1,647 Legends of Runeterra cards, filters, card dialog, deep links. |
 | riftbound.html | 1,407 Riftbound TCG cards, domain chips; images hotlinked from Riot CDN. |
 | theater.html | 147 official videos in 8 shelves, youtube-nocookie embeds, `#v-<id>`. |
+| players.html | 97 Worlds 2026 players: search/role/team filters (`?team=CODE`), dossier dialog with 6 signature champions (link to Atlas `#c-<id>`) and a Worlds timeline. Deep link `#p-<slug>`. Worlds rosters link here. |
 
-Nav on every page: Atlas(./) · Worlds · Library · Riftbound · Theater. Every footer carries Riot's
+Nav on every page: Atlas(./) · Worlds · Players · Library · Riftbound · Theater. Every footer carries Riot's
 "Legal Jibber Jabber" fan-content notice — keep it on any new page.
 
 ## Data (data/*.js, plain globals)
 champions.js (173 champs: id, dd, name, title, region, role, tags, bio, hand) · cards.js · stories.js ·
 champcards.js · riftbound.js (RB_SETS, RB_CARDS) · champrb.js · videos.js (ATLAS_VIDEOS shelves) ·
-worlds.js (WORLDS_TEAMS, WORLDS_SNAPSHOT). Bonds live in index.html; 236 are generic "Linked" bonds that
+worlds.js (WORLDS_TEAMS, WORLDS_SNAPSHOT) · players.js (ATLAS_PLAYERS, saved 2026-10-19). Bonds live in index.html; 236 are generic "Linked" bonds that
 could be enriched from official stories.
 
 ## Sources (all free)
@@ -32,6 +33,10 @@ could be enriched from official stories.
 - Lore: universe-meeps.leagueoflegends.com/v1/en_us/champions|factions/{id}/index.json
   (site id ≠ Universe id for jarvan→jarvaniv, wukong→monkeyking, renata→renataglasc). Link out to full stories; don't copy them.
 - Riftbound: __NEXT_DATA__ on playriftbound.com card gallery; images cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/<file>?w=400&fm=webp
+- Players: Leaguepedia Cargo via lol.fandom.com/wiki/Special:CargoExport (the api.php cargoquery is rate-limited; CargoExport works), read in the
+  browser pane since the workspace can't reach it. Tables: TournamentPlayers (rosters), ScoreboardPlayers (champion counts; incomplete for wins, so
+  only games are shown), MatchSchedule (reliable series/game records), TournamentResults (placings), PlayerRedirects (old names, e.g. Thanatos kyu/gyu).
+  Credit Leaguepedia (CC BY-SA 3.0) in the footer. Refresh after Worlds ends to fill 2026 placings.
 - Esports: esports-api.lolesports.com/persisted/gw/ (getSchedule, getTeams, getStandings), header
   `x-api-key: 0TvQnueqKa5mxJntVWt0w4LpLfEkrV1Ta8rQBb9Z` (public key the official site uses). Worlds leagueId 98767975604431411,
   worlds_2026 tournament 115660540725177488. CORS works from github.io.
@@ -48,7 +53,7 @@ Must work at phone width with no horizontal scroll (watch grid children: `min-wi
 - Commit messages end with the session's attribution lines.
 
 ## Ideas not started yet (ask Devdeep which next)
-1. Player pages — signature champions, Worlds history.
+1. ~~Player pages~~ (done 2026-10-19; refresh players.js after the 2026 final).
 2. Music hub — League music, anthems, Arcane soundtrack (embeds only).
 3. Enrich the 236 generic "Linked" bonds using official stories.
 4. Custom domain.
