@@ -193,7 +193,7 @@ function render(){
     const h=p.cm*k, c=p.human?null:byId[p.id];
     let w, inner;
     if(p.img){const [u,iw,ih,t,b]=p.img;const imgH=h/(b-t);w=Math.max(18,imgH*iw/ih*0.62);
-      inner=`<img src="${esc(u)}" referrerpolicy="no-referrer" alt="" loading="lazy" style="height:${imgH}px;bottom:${-(1-b)*imgH}px">`;}
+      inner=`<img src="${esc(u)}" referrerpolicy="no-referrer" alt="" decoding="async" style="height:${imgH}px;bottom:${-(1-b)*imgH}px">`;}
     else{w=Math.max(10,h*0.4);inner=PERSON;}
     const name=p.human?"Average adult":c.name;
     const over=h>H-ground-top-8?`<span class="over" style="left:50%">↑ ${fmtH(p.cm)}</span>`:"";
