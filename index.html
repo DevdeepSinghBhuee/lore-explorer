@@ -291,19 +291,24 @@ const SYM={hit:"✓",near:"≈",miss:"✗"};
 const EMO={hit:"🟩",near:"🟧",miss:"🟥"};
 
 /* ---------- game ---------- */
-let mode=(location.hash.slice(1) in MODES)?location.hash.slice(1):"clues";
-let practice=null; // {mode:seed}
+// Where the player was is remembered, so leaving for the Atlas (or anywhere) and coming back lands on the same puzzle.
+const VIEW="atlas.daily.view", PRAC="atlas.daily.practice";
+const view0=LS.get(VIEW,{});
+let mode=(location.hash.slice(1) in MODES)?location.hash.slice(1):(view0.mode in MODES?view0.mode:"clues");
+let inPractice=!(location.hash.slice(1) in MODES)&&view0.practice===true&&view0.mode===mode;
+const PR=LS.get(PRAC,{}); // {mode:{seed,state}} — practice rounds survive page changes too
+const saveView=()=>LS.set(VIEW,{mode,practice:inPractice});
 const play=document.getElementById("play");
 
 function render(){
   document.querySelectorAll(".mode").forEach(b=>b.setAttribute("aria-selected",String(b.dataset.m===mode)));
-  const key=todayKey();const pseed=practice&&practice.mode===mode?practice.seed:null;
+  const key=todayKey();if(inPractice&&!PR[mode])inPractice=false;const pseed=inPractice?PR[mode].seed:null;
   const p=puzzle(mode,key,pseed);
   const k=sKey(p,key);
   const state=(k&&LS.get(k,null))||p._state||{g:[],won:false,lost:false,bonus:null};
   p._state=state;
-  const save=()=>{if(k)LS.set(k,state);else practice.state=state;};
-  if(pseed!=null&&practice.state)Object.assign(state,practice.state);
+  const save=()=>{if(k)LS.set(k,state);else{PR[mode].state=state;LS.set(PRAC,PR);}};
+  if(pseed!=null&&PR[mode].state)Object.assign(state,PR[mode].state);
   const done=state.won||state.lost, ans=CH[p.id];
   document.getElementById("eye").textContent=p.practice?`Practice round · ${MODES[mode]}`:`Puzzle #${p.n} · ${new Date().toLocaleDateString(undefined,{day:"numeric",month:"long",year:"numeric"})}`;
 
@@ -335,7 +340,8 @@ function render(){
     guesses=`<div class="glist">${state.g.map(g=>`<span class="${g===p.id?"ok":""}"><img src="img/${g}-tile.webp" alt="">${esc(CH[g].name)}</span>`).join("")}</div>`;
   }
 
-  play.innerHTML=(done?resultHTML(p,state,key):"")+stage+input+guesses;
+  const back=p.practice?`<div class="meta-line" style="margin:0 0 10px"><span>Practice round · doesn't count towards your streak</span><button type="button" id="today">← Back to today's puzzle</button></div>`:"";
+  play.innerHTML=back+(done?resultHTML(p,state,key):"")+stage+input+guesses;
   state._seen=true;
   wire(p,state,save,key);
   statusChips();
@@ -379,15 +385,18 @@ function shareText(p,state){
 
 function wire(p,state,save,key){
   const gi=document.getElementById("gi"),sugg=document.getElementById("sugg");
+  const DRAFT=`atlas.daily.draft.${p.mode}.${p.practice?"p"+p.n:key}`;
   if(gi){
     let sel=0,list=[];
     const draw=()=>{const q=gi.value.trim().toLowerCase().replace(/[^a-z]/g,"");
       list=q?CHAMPS.filter(c=>!state.g.includes(c.id)&&c.name.toLowerCase().replace(/[^a-z]/g,"").startsWith(q)).concat(CHAMPS.filter(c=>!state.g.includes(c.id)&&!c.name.toLowerCase().replace(/[^a-z]/g,"").startsWith(q)&&c.name.toLowerCase().replace(/[^a-z]/g,"").includes(q))).slice(0,8):[];
       sel=0;sugg.hidden=!list.length;
       sugg.innerHTML=list.map((c,i)=>`<button type="button" role="option" data-id="${c.id}" aria-selected="${i===sel}"><img src="img/${c.id}-tile.webp" alt="">${esc(c.name)}<small>${esc(regName(c.region))}</small></button>`).join("");};
-    const choose=id=>{if(!id||state.g.includes(id))return;state.g.push(id);state._seen=false;if(id===p.id){state.won=true;record(p,key,state);}save();render();
+    const choose=id=>{if(!id||state.g.includes(id))return;try{sessionStorage.removeItem(DRAFT)}catch(e){}state.g.push(id);state._seen=false;if(id===p.id){state.won=true;record(p,key,state);}save();render();
       const g2=document.getElementById("gi");if(g2)g2.focus();};
-    gi.addEventListener("input",draw);
+    // a half-typed guess survives a trip to another page
+    try{const d=sessionStorage.getItem(DRAFT);if(d){gi.value=d;draw();}}catch(e){}
+    gi.addEventListener("input",()=>{try{sessionStorage.setItem(DRAFT,gi.value)}catch(e){}draw();});
     gi.addEventListener("keydown",e=>{
       if(e.key==="ArrowDown"&&list.length){e.preventDefault();sel=(sel+1)%list.length;}
       else if(e.key==="ArrowUp"&&list.length){e.preventDefault();sel=(sel-1+list.length)%list.length;}
@@ -402,7 +411,10 @@ function wire(p,state,save,key){
   play.querySelectorAll("[data-skin]").forEach(b=>b.onclick=()=>{state.bonus=+b.dataset.skin;save();render();});
   const sh=document.getElementById("share");if(sh)sh.onclick=async()=>{const t=shareText(p,state);
     try{if(navigator.share&&matchMedia("(hover:none)").matches){await navigator.share({text:t});return;}await navigator.clipboard.writeText(t);toast("Copied — paste it anywhere");}catch(e){toast("Couldn't copy on this browser");}};
-  const pr=document.getElementById("practice");if(pr)pr.onclick=()=>{practice={mode,seed:1000+Math.floor(Math.random()*100000),state:null};render();window.scrollTo({top:0,behavior:"smooth"});};
+  const pr=document.getElementById("practice");if(pr){const cur=PR[mode],open=cur&&cur.state&&cur.state.g&&cur.state.g.length&&!cur.state.won&&!cur.state.lost&&!p.practice;
+    pr.textContent=open?"Resume practice":"Practice round";
+    pr.onclick=()=>{if(!open)PR[mode]={seed:1000+Math.floor(Math.random()*100000),state:null};LS.set(PRAC,PR);inPractice=true;saveView();render();window.scrollTo({top:0,behavior:"smooth"});};}
+  const td=document.getElementById("today");if(td)td.onclick=()=>{inPractice=false;saveView();render();};
 }
 
 function statusChips(){
@@ -411,7 +423,7 @@ function statusChips(){
     el.textContent=s&&s.won?`✓ ${s.g.length}`:s&&s.lost?"✗":s&&s.g.length?`${s.g.length} tried`:"New";el.classList.toggle("done",!!(s&&s.won));});
 }
 
-document.querySelectorAll(".mode").forEach(b=>b.onclick=()=>{mode=b.dataset.m;practice=null;try{history.replaceState(null,"","#"+mode);}catch(e){}render();});
+document.querySelectorAll(".mode").forEach(b=>b.onclick=()=>{mode=b.dataset.m;inPractice=false;saveView();try{history.replaceState(null,"","#"+mode);}catch(e){}render();});
 
 // how to play
 document.getElementById("how").innerHTML=`<h3>How to play</h3><ul>
@@ -424,7 +436,7 @@ document.getElementById("how").innerHTML=`<h3>How to play</h3><ul>
 let lastKey=todayKey();
 function tick(){const n=new Date(),m=new Date(n);m.setHours(24,0,0,0);const s=Math.max(0,Math.floor((m-n)/1000));
   document.getElementById("clock").textContent=[Math.floor(s/3600),Math.floor(s/60)%60,s%60].map(x=>String(x).padStart(2,"0")).join(":");
-  if(todayKey()!==lastKey){lastKey=todayKey();practice=null;render();}}
+  if(todayKey()!==lastKey){lastKey=todayKey();inPractice=false;saveView();render();}}
 setInterval(tick,1000);tick();
 render();
 </script>

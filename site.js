@@ -158,6 +158,27 @@
     mo=new MutationObserver(function(){if(pend)return;pend=true;requestAnimationFrame(function(){pend=false;sync();});});
     mo.observe(document.body,{childList:true,subtree:true});
   }
-  function start(){buildNav();sync();watch();}
+  /* ---------- "back to your puzzle": on every other page while today's Runeterra Daily is unfinished ---------- */
+  function resumeChip(){
+    if(file==="index.html")return;
+    var d=new Date(),key=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+    var names={clues:"Clues",splash:"Splash",lore:"Lore"},open=null;
+    var v=load("atlas.daily.view")||{};
+    var order=[v.mode].concat(["clues","splash","lore"]).filter(function(m,i,a){return m&&names[m]&&a.indexOf(m)===i;});
+    for(var i=0;i<order.length;i++){var st=load("atlas.daily."+order[i]+"."+key);if(st&&st.g&&st.g.length&&!st.won&&!st.lost){open={m:order[i],n:st.g.length};break;}}
+    if(!open)return;
+    var st2=document.createElement("style");st2.textContent=`
+.resume{position:fixed;left:16px;bottom:max(16px,env(safe-area-inset-bottom));z-index:60;display:flex;align-items:center;gap:10px;background:#0b1120;border:1px solid var(--gold,#c8aa6e);color:var(--text,#ebe4d3);text-decoration:none;padding:9px 12px 9px 10px;box-shadow:0 10px 26px rgba(0,0,0,.55);font-family:var(--f-mono,monospace);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;max-width:calc(100vw - 32px)}
+.resume b{display:grid;place-items:center;width:26px;height:26px;background:var(--gold,#c8aa6e);color:#080d18;font-size:12px;flex:none}
+.resume small{display:block;font-family:var(--f-body,serif);text-transform:none;letter-spacing:0;font-size:13px;color:var(--muted,#939bb0)}
+.resume:hover{background:#111a2c}
+.resume .x{background:none;border:0;color:var(--muted,#939bb0);font-size:16px;cursor:pointer;padding:0 0 0 4px}
+@media print{.resume{display:none}}`;document.head.appendChild(st2);
+    var a=document.createElement("a");a.className="resume";a.href="./#"+open.m;
+    a.innerHTML='<b>▶</b><span>Back to your puzzle<small>Today\'s '+names[open.m]+' · '+open.n+' '+(open.n===1?"guess":"guesses")+' so far</small></span><button class="x" type="button" aria-label="Hide">×</button>';
+    a.querySelector(".x").addEventListener("click",function(e){e.preventDefault();e.stopPropagation();a.remove();});
+    document.body.appendChild(a);
+  }
+  function start(){buildNav();sync();watch();resumeChip();}
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start);else start();
 })();
