@@ -464,7 +464,7 @@ footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width
           <span><i style="background:var(--enemy)"></i>Enemy</span>
           <span><i style="background:var(--complicated)"></i>Complicated</span>
           <span><i style="background:var(--linked)"></i>Linked</span>
-          <span class="ext"><i></i>From another region</span>
+          <span class="ext" id="lgExt"><i></i>From another region</span>
         </div>
       </div>
       <div class="detail">
@@ -505,7 +505,10 @@ const regById = Object.fromEntries(REGIONS.map(r=>[r.id,r]));
 
 const BONDS = window.ATLAS_BONDS;
 const TYPE_COLOR = {family:"var(--family)",ally:"var(--ally)",mentor:"var(--mentor)",enemy:"var(--enemy)",complicated:"var(--complicated)",linked:"var(--linked)"};
-const TYPE_LABEL = {family:"Family",ally:"Ally",mentor:"Mentor",enemy:"Enemy",complicated:"Complicated",linked:"Linked"};
+// languages: the champion panel, roster and web of bonds use Riot's text in the visitor's language (the rest of this page is still English)
+const AI=window.AtlasI18n, ALANG=AI?AI.lang:"en", tr=(k,v)=>AI?AI.t(k,v):k;
+const cn=c=>AI?AI.name(c):c.name, ctitle=c=>AI?AI.title(c):c.title;
+const TYPE_LABEL = ALANG==="en"?{family:"Family",ally:"Ally",mentor:"Mentor",enemy:"Enemy",complicated:"Complicated",linked:"Linked"}:new Proxy({},{get:(o,k)=>tr("bt_"+String(k))});
 
 const initials = n => n.replace(/[^A-Za-z' ]/g,"").split(/\s+/).filter(Boolean).slice(0,2).map(w=>w[0]).join("").toUpperCase();
 const regionChamps = rid => CHAMPS.filter(c=>c.region===rid);
@@ -1386,7 +1389,7 @@ function renderWeb(){
   let h = `<defs><clipPath id="clipc" clipPathUnits="objectBoundingBox"><circle cx=".5" cy=".5" r=".5"/></clipPath></defs>
            <circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="var(--r)" stroke-opacity=".18" stroke-dasharray="2 6"/>
            <circle cx="${cx}" cy="${cy}" r="${R2}" fill="none" stroke="#5b6580" stroke-opacity=".18" stroke-dasharray="1 8"/>
-           <text x="${cx}" y="${cy-4}" text-anchor="middle" font-family="Marcellus SC, serif" font-size="22" fill="var(--r)" opacity=".55">${esc(regById[current].name)}</text>
+           <text x="${cx}" y="${cy-4}" text-anchor="middle" font-family="Marcellus SC, serif" font-size="22" fill="var(--r)" opacity=".55">${esc(AI?AI.region(current,regById[current].name):regById[current].name)}</text>
            <text x="${cx}" y="${cy+18}" text-anchor="middle" font-family="Spline Sans Mono, monospace" font-size="10" letter-spacing="2" fill="#939bb0">${edges.length} BONDS</text>
            <text x="${cx}" y="${cy+34}" text-anchor="middle" font-family="Spline Sans Mono, monospace" font-size="9" letter-spacing="1.5" fill="#6d7690">${all.length} CHAMPIONS</text>`;
   for(const b of edges){
@@ -1406,13 +1409,13 @@ function renderWeb(){
     const ca=Math.cos(p.a), sa=Math.sin(p.a), lr=r+7;
     const anchor = big||p.ext ? (ca>.35?"start":ca<-.35?"end":"middle") : "middle";
     const lx = anchor==="middle"?0:ca*lr, ly = anchor==="middle"?(sa>0?r+16:-(r+8)):sa*lr+4;
-    h += `<g class="node ${p.ext?'ext':''} ${dim}" data-id="${id}" tabindex="0" role="button" aria-label="${esc(c.name)}" transform="translate(${p.x.toFixed(1)} ${p.y.toFixed(1)})">
+    h += `<g class="node ${p.ext?'ext':''} ${dim}" data-id="${id}" tabindex="0" role="button" aria-label="${esc(cn(c))}" transform="translate(${p.x.toFixed(1)} ${p.y.toFixed(1)})">
       ${isSel?`<circle r="${r+8}" fill="none" stroke="${col}" stroke-width="1.5" opacity=".7"/>`:''}
       <circle r="${r}" fill="${p.ext?'#0f1a2e':col}"/>
       <text class="ini" y="5">${initials(c.name)}</text>
       <image href="${esc(c.img)}" x="${-r}" y="${-r}" width="${2*r}" height="${2*r}" clip-path="url(#clipc)" preserveAspectRatio="xMidYMid slice" ${p.ext?'opacity=".75"':''}/>
       <circle r="${r}" fill="none" stroke="${col}" stroke-width="${p.ext?1.5:2.5}" ${p.ext?'stroke-dasharray="3 3"':''}/>
-      <text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" style="text-anchor:${anchor};font-size:${big?11.5:13}px">${esc(c.name)}</text>
+      <text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" style="text-anchor:${anchor};font-size:${big?11.5:13}px">${esc(cn(c))}</text>
     </g>`;
   }
   svg.innerHTML = h;
@@ -1434,10 +1437,10 @@ function fillReading(c){
   const st=window.ATLAS_READ_STORIES.filter(s=>s.ch.includes(c.id)).sort((a,b)=>b.date.localeCompare(a.date));
   const cm=window.ATLAS_READ_COMICS.filter(x=>x.ch.includes(c.id)).sort((a,b)=>a.date.localeCompare(b.date));
   if(!st.length&&!cm.length){box.hidden=true;return;}
-  const U="https://universe.leagueoflegends.com/en_US/";
+  const U="https://universe.leagueoflegends.com/en_US/", sUrl=x=>AI?AI.storyUrl(x):`${U}story/${x}/`, sT=x=>AI?AI.storyTitle(x.s,x.t):x.t;
   box.hidden=false;
-  box.innerHTML=`<h5>Read about ${esc(c.name)} <a class="rr" href="reading.html?champion=${c.id}">Reading Room →</a></h5>`+
-    (st.length?`<ul class="stories">${st.map(s=>`<li><a href="${U}story/${esc(s.s)}/" target="_blank" rel="noopener">${esc(s.t)}<span class="rm">${s.min} min</span><span class="read-badge" data-read="${esc(s.s)}">✓ Read</span><span aria-hidden="true"> ↗</span></a></li>`).join("")}</ul>`:"")+
+  box.innerHTML=`<h5>${esc(tr("a_read_about",{name:cn(c)}))} <a class="rr" href="reading.html?champion=${c.id}">${tr("a_rr")}</a></h5>`+
+    (st.length?`<ul class="stories">${st.map(s=>`<li><a href="${esc(sUrl(s.s))}" target="_blank" rel="noopener">${esc(sT(s))}<span class="rm">${tr("j_min",{n:s.min})}</span><span class="read-badge" data-read="${esc(s.s)}">${tr("read_badge")}</span><span aria-hidden="true"> ↗</span></a></li>`).join("")}</ul>`:"")+
     (cm.length?`<div class="comicrow">${cm.map(x=>`<a href="reading.html#comic-${x.u.replace("/","--")}" title="${esc(x.t)}" style="--ar:${x.ar}"><img src="https://cmsassets.rgpub.io/sanity/images/dsfx7636/universe/${x.img}?w=${x.ar>1?360:200}&fm=webp" alt="${esc(x.t)}" loading="lazy" decoding="async"></a>`).join("")}</div>`:"");
 }
 // Ability icons: data/abilities.js loads on first use, then shows passive + Q W E R linking to the journey's "How they play"
@@ -1449,7 +1452,8 @@ function fillAbilities(c){
     abLoading.then(()=>{const b=document.getElementById("abBox");if(b&&b.dataset.c===c.id&&window.ATLAS_ABILITIES)fillAbilities(c);});return;}
   const A=window.ATLAS_ABILITIES[c.id];if(!A){box.remove();return;}
   const L=["P","Q","W","E","R"],I="https://ddragon.leagueoflegends.com/cdn/16.20.1/img/";
-  box.innerHTML=`<h5>How they play <a href="journey.html?c=${c.id}#play">Abilities &amp; clips →</a></h5><div class="abrow">${A[1].map((a,i)=>`<a href="journey.html?c=${c.id}#play" title="${L[i]} · ${esc(a[0])}"><img src="${I}${i?"spell":"passive"}/${esc(a[2])}" alt="${esc(a[0])}" loading="lazy"><span>${L[i]}</span></a>`).join("")}</div>`;
+  const pk=AI&&AI.pack&&AI.pack.champs[c.id], an=i=>(pk&&pk[4]&&pk[4][i])||A[1][i][0];
+  box.innerHTML=`<h5>${esc(tr("j_play"))} <a href="journey.html?c=${c.id}#play">${esc(tr("a_clips"))}</a></h5><div class="abrow">${A[1].map((a,i)=>`<a href="journey.html?c=${c.id}#play" title="${L[i]} · ${esc(an(i))}"><img src="${I}${i?"spell":"passive"}/${esc(a[2])}" alt="${esc(an(i))}" loading="lazy"><span>${L[i]}</span></a>`).join("")}</div>`;
 }
 // Skins strip: data/skins.js is large, so it loads only when a champion panel first opens
 let skinsLoading=null;
@@ -1462,39 +1466,41 @@ function fillSkins(c){
   }
   const K=window.ATLAS_SKINS[c.id]||[]; if(!K.length){box.remove();return;}
   const src=k=>k[7]?"https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/"+k[7]:`https://ddragon.leagueoflegends.com/cdn/img/champion/loading/${c.dd}_${k[0]}.jpg`;
-  box.innerHTML=`<h5>Skins · ${K.length} <a href="skins.html?champion=${c.id}">Browse all →</a></h5><div class="skrow">${K.map(k=>`<a href="skins.html#s-${c.id}-${k[0]}" title="${esc(k[1])}"><img src="${src(k)}" alt="${esc(k[1])}" loading="lazy" decoding="async" referrerpolicy="no-referrer"></a>`).join("")}</div>`;
+  const skn=k=>AI?AI.skin(c,k[0],k[1]):k[1];
+  box.innerHTML=`<h5>${esc(tr("a_skins",{n:K.length}))} <a href="skins.html?champion=${c.id}">${esc(tr("a_browse"))}</a></h5><div class="skrow">${K.map(k=>`<a href="skins.html#s-${c.id}-${k[0]}" title="${esc(skn(k))}"><img src="${src(k)}" alt="${esc(skn(k))}" loading="lazy" decoding="async" referrerpolicy="no-referrer"></a>`).join("")}</div>`;
 }
 function renderDetail(){
   const c = byId[selected], col = regById[c.region].color;
   const ties = bondsOf(c.id).map(b=>{
     const other = byId[b[0]===c.id?b[1]:b[0]];
     const oreg = regById[other.region];
-    const src = {r:"Riot story",w:"League Wiki",u:"Riot lists them as related"}[b[4]]||"";
+    const src = {r:tr("a_src_r"),w:tr("a_src_w"),u:""}[b[4]]||"";
     return `<div class="tiew"><button class="tie" type="button" data-id="${other.id}">
       <span class="kind" style="color:${TYPE_COLOR[b[2]]}">${TYPE_LABEL[b[2]]}</span>
-      <span class="who">${esc(other.name)}${other.region!==c.region?`<small style="color:${oreg.color}">${esc(oreg.name)}</small>`:''}</span>
-      <span class="note">${b[4]==="u"?"No official story explains this link yet.":esc(b[3])}${src&&b[4]!=="u"?` <span class="src">${src}</span>`:""}</span>
-    </button>${b[5]?`<a class="necrit" href="https://www.youtube.com/watch?v=${esc(b[5])}" target="_blank" rel="noopener">▶ Necrit explains this</a>`:""}</div>`;
+      <span class="who">${esc(cn(other))}${other.region!==c.region?`<small style="color:${oreg.color}">${esc(AI?AI.region(other.region,oreg.name):oreg.name)}</small>`:''}</span>
+      <span class="note">${b[4]==="u"?esc(tr("a_no_story")):esc(b[3])}${src&&b[4]!=="u"?` <span class="src">${src}</span>`:""}</span>
+    </button>${b[5]?`<a class="necrit" href="https://www.youtube.com/watch?v=${esc(b[5])}" target="_blank" rel="noopener">${esc(tr("a_necrit"))}</a>`:""}</div>`;
   }).join("");
   document.getElementById("detail").innerHTML = `
     <div class="dhero" style="--c:${col}">
-      <figure class="portrait"><img src="${esc(c.full)}" alt="${esc(c.name)} loading screen art"></figure>
+      <figure class="portrait"><img src="${esc(c.full)}" alt="${esc(cn(c))}"></figure>
       <div class="dinfo">
-        <h4>${esc(c.name)}</h4><div class="ttl">${esc(c.title)}</div>
-        <a class="journey-cta" href="journey.html?c=${c.id}">Take the ${esc(c.name)} journey →</a><button type="button" class="fav-btn" data-fav="${c.id}" data-fav-label style="margin:6px 0 10px">Add to my champions</button><br>
-        ${(()=>{const R=(window.ATLAS_RELEASES||{})[c.id];if(!R)return "";const [y,m,d]=R[0].split("-");const M=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];return `<a class="released" href="timeline.html#t-${c.id}" title="See ${esc(c.name)} on the release timeline">Released <b>${+d} ${M[+m-1]} ${y}</b>${R[1]?` · ${esc(R[1].replace(/^V/,"patch "))}`:""} →</a>`;})()}
-        ${c.hand?`<div class="role">${esc(c.role)}</div>`:""}
-        <p class="bio">${esc(c.bio)}</p>
-        <div class="chips">${(c.tags||[]).map(t=>`<span class="chip-t">${esc(t)}</span>`).join("")}<a class="story" href="https://universe.leagueoflegends.com/en_US/champion/${esc(({renata:"renataglasc"})[c.id]||(c.dd||c.id).toLowerCase())}/" target="_blank" rel="noopener">Full story on Universe ↗</a></div>
+        <h4>${esc(cn(c))}</h4><div class="ttl">${esc(ctitle(c))}</div>
+        <a class="journey-cta" href="journey.html?c=${c.id}">${esc(tr("a_take",{name:cn(c)}))}</a><button type="button" class="fav-btn" data-fav="${c.id}" data-fav-label style="margin:6px 0 10px">${esc(tr("fav_add"))}</button><br>
+        ${(()=>{const R=(window.ATLAS_RELEASES||{})[c.id];if(!R)return "";const [y,m,d]=R[0].split("-");const M=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];if(ALANG!=="en")return `<a class="released" href="timeline.html#t-${c.id}" title="${esc(tr("a_rel_title",{name:cn(c)}))}">${esc(tr("j_released"))} <b>${esc(AI.date(R[0]))}</b>${R[1]?` · ${esc(tr("j_patch",{p:R[1].replace(/^V/,"")}))}`:""} →</a>`;
+return `<a class="released" href="timeline.html#t-${c.id}" title="See ${esc(c.name)} on the release timeline">Released <b>${+d} ${M[+m-1]} ${y}</b>${R[1]?` · ${esc(R[1].replace(/^V/,"patch "))}`:""} →</a>`;})()}
+        ${c.hand&&ALANG==="en"?`<div class="role">${esc(c.role)}</div>`:""}
+        <p class="bio">${esc(AI&&ALANG!=="en"?AI.bio(c):c.bio)}</p>
+        <div class="chips">${(c.tags||[]).map(t=>`<span class="chip-t">${esc(AI?AI.tag(t):t)}</span>`).join("")}<a class="story" href="https://universe.leagueoflegends.com/${AI?AI.uni:"en_US"}/champion/${esc(({renata:"renataglasc",jarvan:"jarvaniv",wukong:"monkeyking"})[c.id]||(c.dd||c.id).toLowerCase())}/" target="_blank" rel="noopener">${esc(tr("a_full_story"))}</a></div>
       </div>
     </div>
-    <div class="ties"><h5>Ties</h5>${ties || `<p class="none">A loner, as far as the records go.</p>`}</div>
-    ${(()=>{const st=(window.ATLAS_STORIES||{})[c.id]||[];return `<div class="extra" id="readBox" data-c="${c.id}"${st.length?"":" hidden"}><h5>Official stories</h5><ul class="stories">${st.map(([t,u])=>`<li><a href="https://universe.leagueoflegends.com/en_US/story/${esc(u)}/" target="_blank" rel="noopener">${esc(t)}<span aria-hidden="true"> ↗</span></a></li>`).join("")}</ul></div>`;})()}
-    ${(()=>{const L=(window.ATLAS_LOR||{})[c.id]||[];return L.length?`<div class="extra"><h5>In Legends of Runeterra</h5><div class="lor">${L.map(([code,n])=>`<a href="library.html#card-${code}" title="${esc(n)}"><img src="img/cards/${code}.webp" alt="${esc(n)}" loading="lazy"></a>`).join("")}</div></div>`:"";})()}
-    ${(()=>{const R=(window.ATLAS_RB||{})[c.id]||[];return R.length?`<div class="extra"><h5>In Riftbound</h5><div class="lor">${R.map(([id,n,img])=>`<a href="riftbound.html#card-${id}" title="${esc(n)}"><img src="https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/${img}?w=200&fm=webp" alt="${esc(n)}" loading="lazy"></a>`).join("")}</div></div>`:"";})()}
+    <div class="ties"><h5>${esc(tr("a_ties"))}</h5>${ties || `<p class="none">${esc(tr("a_loner"))}</p>`}</div>
+    ${(()=>{const st=(window.ATLAS_STORIES||{})[c.id]||[];return `<div class="extra" id="readBox" data-c="${c.id}"${st.length?"":" hidden"}><h5>${esc(tr("a_stories"))}</h5><ul class="stories">${st.map(([t,u])=>`<li><a href="${esc(AI?AI.storyUrl(u):`https://universe.leagueoflegends.com/en_US/story/${u}/`)}" target="_blank" rel="noopener">${esc(AI?AI.storyTitle(u,t):t)}<span aria-hidden="true"> ↗</span></a></li>`).join("")}</ul></div>`;})()}
+    ${(()=>{const L=(window.ATLAS_LOR||{})[c.id]||[];return L.length?`<div class="extra"><h5>${esc(tr("a_in_lor"))}</h5><div class="lor">${L.map(([code,n])=>`<a href="library.html#card-${code}" title="${esc(n)}"><img src="img/cards/${code}.webp" alt="${esc(n)}" loading="lazy"></a>`).join("")}</div></div>`:"";})()}
+    ${(()=>{const R=(window.ATLAS_RB||{})[c.id]||[];return R.length?`<div class="extra"><h5>${esc(tr("a_in_rb"))}</h5><div class="lor">${R.map(([id,n,img])=>`<a href="riftbound.html#card-${id}" title="${esc(n)}"><img src="https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/${img}?w=200&fm=webp" alt="${esc(n)}" loading="lazy"></a>`).join("")}</div></div>`:"";})()}
     <div class="extra abilities" id="abBox" data-c="${c.id}"></div>
     <div class="extra skins" id="skinsBox" data-c="${c.id}"></div>
-    ${(()=>{const V=[];(window.ATLAS_VIDEOS||[]).forEach(sh=>sh.v.forEach(v=>{if(v.ch.includes(c.id)&&sh.id!=="login"&&sh.id!=="making")V.push(v);}));const L2=(window.ATLAS_VIDEOS||[]).find(sh=>sh.id==="login");const lg=L2?L2.v.find(v=>v.ch.includes(c.id)):null;if(lg)V.push(lg);return V.length?`<div class="extra"><h5>Watch</h5><div class="vids">${V.slice(0,6).map(v=>`<a href="theater.html#v-${v.y}"><img src="https://i.ytimg.com/vi/${v.y}/mqdefault.jpg" alt="" loading="lazy"><span>${esc(v.t)}</span></a>`).join("")}</div></div>`:"";})()}`;
+    ${(()=>{const V=[];(window.ATLAS_VIDEOS||[]).forEach(sh=>sh.v.forEach(v=>{if(v.ch.includes(c.id)&&sh.id!=="login"&&sh.id!=="making")V.push(v);}));const L2=(window.ATLAS_VIDEOS||[]).find(sh=>sh.id==="login");const lg=L2?L2.v.find(v=>v.ch.includes(c.id)):null;if(lg)V.push(lg);return V.length?`<div class="extra"><h5>${esc(tr("j_watch"))}</h5><div class="vids">${V.slice(0,6).map(v=>`<a href="theater.html#v-${v.y}"><img src="https://i.ytimg.com/vi/${v.y}/mqdefault.jpg" alt="" loading="lazy"><span>${esc(v.t)}</span></a>`).join("")}</div></div>`:"";})()}`;
   fillSkins(c);
   fillAbilities(c);
   fillReading(c);
@@ -1508,14 +1514,14 @@ function renderDetail(){
 function renderRoster(){
   document.getElementById("grid").innerHTML = regionChamps(current).map(c=>`
     <button class="card" type="button" data-id="${c.id}" aria-pressed="${c.id===selected}">
-      ${crest(c)}<span class="nm">${esc(c.name)}</span><span class="tt">${esc(c.title)}</span>
+      ${crest(c)}<span class="nm">${esc(cn(c))}</span><span class="tt">${esc(ctitle(c))}</span>
     </button>`).join("");
   document.querySelectorAll("#grid .card").forEach(b=>b.addEventListener("click",()=>selectChamp(b.dataset.id)));
 }
 
 renderMap();
-document.getElementById("allChamps").innerHTML = CHAMPS.slice().sort((a,b)=>a.name.localeCompare(b.name)).map(c=>`<option value="${esc(c.name)}">${esc(regById[c.region].name)}</option>`).join("");
-(function(){const f=document.getElementById("find");const go=()=>{const v=f.value.trim().toLowerCase();if(!v)return;const c=CHAMPS.find(x=>x.name.toLowerCase()===v)||CHAMPS.find(x=>x.name.toLowerCase().startsWith(v));if(c){selectChamp(c.id);f.value="";f.blur();document.getElementById("region").scrollIntoView({behavior:"smooth"});}};
+const fillFind=()=>{document.getElementById("allChamps").innerHTML = CHAMPS.slice().sort((a,b)=>cn(a).localeCompare(cn(b),ALANG)).map(c=>`<option value="${esc(cn(c))}">${esc(AI?AI.region(c.region,regById[c.region].name):regById[c.region].name)}</option>`).join("");};fillFind();
+(function(){const f=document.getElementById("find");const go=()=>{const v=f.value.trim().toLowerCase();if(!v)return;const ns=x=>[x.name.toLowerCase(),cn(x).toLowerCase()];const c=CHAMPS.find(x=>ns(x).includes(v))||CHAMPS.find(x=>ns(x).some(n=>n.startsWith(v)));if(c){selectChamp(c.id);f.value="";f.blur();document.getElementById("region").scrollIntoView({behavior:"smooth"});}};
 f.addEventListener("change",go);f.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();go();}});})();
 const start0 = (location.hash||"").slice(1);
 const startChamp = start0.startsWith("c-") && byId[start0.slice(2)] ? start0.slice(2) : null;
@@ -1523,6 +1529,7 @@ const start = startChamp ? byId[startChamp].region : start0;
 openRegion(regById[start] ? start : "zaun", startChamp, false);
 if(startChamp) setTimeout(()=>document.getElementById("region").scrollIntoView(),300);
 buildTerrain();
+if(AI&&ALANG!=="en")Promise.all([AI.ready,AI.loadPack(),AI.loadFull(),AI.loadStories()]).catch(()=>{}).then(()=>{if(/^(ko|ja|zh|th)/.test(ALANG))document.documentElement.classList.add("cjk");fillFind();document.querySelectorAll(".legend span").forEach(sp=>{const m=(sp.querySelector("i")||{}).getAttribute?.("style")?.match(/--(\w+)\)/);if(m)sp.lastChild.textContent=tr("bt_"+m[1]);});const lx=document.getElementById("lgExt");if(lx)lx.lastChild.textContent=tr("a_other_region");if(current){renderRoster();renderWeb();}if(selected)renderDetail();});
 </script>
 </body>
 </html>

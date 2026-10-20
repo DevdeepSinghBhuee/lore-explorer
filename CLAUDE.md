@@ -34,7 +34,15 @@ source script in the session scratchpad ui_tr.py — add a key to EN AND all 16 
 names; vi/id have no region names → English). zh-CN pack has name/title SWAPPED vs Riot's file on purpose (Riot puts 阿狸 in "title").
 Translated so far: the menu + language picker (site.js, every page; untranslated pages show "this page is in English for now" in the picker) and the
 whole front page/Daily (names, regions, classes, resources, skins, abilities, Lore = Riot's localized blurb with name + case-ending stems hidden;
-zh/ja/th chunked by characters; guesses accept local or English names). Next phases: Journeys/Atlas panel, other pages, Arabic (RTL, no Riot data).
+zh/ja/th chunked by characters; guesses accept local or English names).
+Phase 2 (2026-10-20): journey.html fully translated; atlas.html champion panel + roster + web of bonds translated (rest of Atlas English → picker
+says "parts of this page are still in English"; site.js TRANSLATED map: 1 = full, 2 = partly). Extra data, loaded only when needed:
+data/i18n/full-<code>.js (ATLAS_I18N_FULL id → [full lore, [5 ability descriptions]], DDragon) and data/i18n/stories-<code>.js
+(ATLAS_I18N_STORIES slug → [title, summary], Universe explore2 per locale; 14 languages — vi/id have no Universe → English).
+AtlasI18n helpers: uni (Universe locale), loadFull/loadStories, bio(c), storyUrl/storyTitle/storyDesc, champUrl, skin(c,num,en), date(iso).
+Story links open Universe in the visitor's language when Riot has that story there; site.js marks stories read for any locale.
+UI translations source: scratchpad ui_tr.py + ui_tr2.py, merged by merge_ui.py (also syncs EN into i18n.js). Still English: bond notes, video/comic titles.
+Next: other pages (Skins, Reading Room, Timeline, My champions…), Arabic (RTL, no Riot data).
 Menu: site.js (loaded with `defer` on every page) replaces each page's <nav class="nav"> with grouped dropdowns — Champions (Journeys, Skins, Timeline) ·
 Lore (Atlas = atlas.html, Reading Room) · Play (Runeterra Daily = ./) · Esports (Worlds, Players) · Watch & Listen (Theater, Music) · Card games (Runeterra cards, Riftbound) · ★ My champions;
 phone = star + "Menu" sheet. Edit GROUPS in site.js to change it (the plain links left in each page are only a no-JS fallback).

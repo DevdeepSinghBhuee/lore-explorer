@@ -9,7 +9,7 @@
   var I=window.AtlasI18n||null;
   if(I&&/^(ko|ja|zh|th)/.test(I.lang))document.documentElement.classList.add("cjk");
   function T(k,v){return I?I.t(k,v):k;}
-  var TRANSLATED={"index.html":1};   // pages whose own text is translated so far (the menu is translated everywhere)
+  var TRANSLATED={"index.html":1,"journey.html":1,"atlas.html":2};   // 2 = partly   // pages whose own text is translated so far (the menu is translated everywhere)
   var GROUPS;
   function makeGroups(){GROUPS=[
     {t:T("g_champions"),items:[["journey.html",T("it_journeys"),T("it_journeys_d")],["skins.html",T("it_skins"),T("it_skins_d")],["timeline.html",T("it_timeline"),T("it_timeline_d")]]},
@@ -136,7 +136,7 @@
     });
     var LANGS=I?I.LANGS:[["en","English"]],cur=I?I.lang:"en",curName="English";
     LANGS.forEach(function(l){if(l[0]===cur)curName=l[1];});
-    var note=(cur!=="en"&&!TRANSLATED[file])?'<p>'+esc(T("en_only"))+'</p>':'';
+    var note=(cur!=="en"&&TRANSLATED[file]!==1)?'<p>'+esc(T(TRANSLATED[file]?"en_partial":"en_only"))+'</p>':'';
     var langLinks=function(cls){return LANGS.map(function(l){return '<a href="#" data-lang="'+l[0]+'" lang="'+l[0]+'"'+(l[0]===cur?' aria-current="true"':'')+(cls?'':' role="menuitem"')+'>'+(cls?esc(l[1]):'<b>'+esc(l[1])+'</b>')+'</a>';}).join("");};
     h+='<a class="mine'+(file==="mine.html"?" here":"")+'" href="mine.html"'+(file==="mine.html"?' aria-current="page"':'')+' title="'+esc(T("mine"))+'"><i>★</i><span class="lbl">'+esc(T("mine"))+'</span> <em class="mine-n"></em></a>';
     h+='<div class="sg lang"><button type="button" aria-expanded="false" title="'+esc(T("language"))+'" aria-label="'+esc(T("language"))+': '+esc(curName)+'"><i>🌐</i><span class="ln">'+esc(curName)+'</span><span class="lc">'+esc(cur.split("-")[0].toUpperCase())+'</span></button><div class="dd" role="menu">'+note+langLinks(false)+'</div></div>';
@@ -171,7 +171,7 @@
     var els=document.querySelectorAll("[data-fav]");
     for(var i=0;i<els.length;i++){var id=els[i].getAttribute("data-fav"),on=favs.indexOf(id)>=0;
       if(els[i].getAttribute("aria-pressed")!==String(on))els[i].setAttribute("aria-pressed",String(on));
-      var lbl=els[i].getAttribute("data-fav-label");if(lbl!==null){var want=on?"In my champions":"Add to my champions";if(els[i].textContent!==want)els[i].textContent=want;}}
+      var lbl=els[i].getAttribute("data-fav-label");if(lbl!==null){var want=on?T("fav_in"):T("fav_add");if(els[i].textContent!==want)els[i].textContent=want;}}
     var rb=document.querySelectorAll("[data-read]");
     for(var j=0;j<rb.length;j++){var on2=!!read[rb[j].getAttribute("data-read")];if(rb[j].classList.contains("on")!==on2)rb[j].classList.toggle("on",on2);}
     syncing=false;
@@ -179,11 +179,11 @@
   document.addEventListener("click",function(e){
     var f=e.target.closest&&e.target.closest("[data-fav]");
     if(f){e.preventDefault();e.stopPropagation();Mine.toggleFav(f.getAttribute("data-fav"));return;}
-    var a=e.target.closest&&e.target.closest("a[href*='universe.leagueoflegends.com/en_US/story/']");
+    var a=e.target.closest&&e.target.closest("a[href*='universe.leagueoflegends.com/'][href*='/story/']");
     if(a){var m=a.getAttribute("href").match(/\/story\/([^\/?#]+)/);if(m)Mine.markRead(decodeURIComponent(m[1]));}
   },true);
   // middle-click / ctrl-click on a story link also counts as opening it
-  document.addEventListener("auxclick",function(e){var a=e.target.closest&&e.target.closest("a[href*='universe.leagueoflegends.com/en_US/story/']");if(a){var m=a.getAttribute("href").match(/\/story\/([^\/?#]+)/);if(m)Mine.markRead(decodeURIComponent(m[1]));}},true);
+  document.addEventListener("auxclick",function(e){var a=e.target.closest&&e.target.closest("a[href*='universe.leagueoflegends.com/'][href*='/story/']");if(a){var m=a.getAttribute("href").match(/\/story\/([^\/?#]+)/);if(m)Mine.markRead(decodeURIComponent(m[1]));}},true);
   var mo,pend=false;
   function watch(){
     if(!("MutationObserver" in window))return;

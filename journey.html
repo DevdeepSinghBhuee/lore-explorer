@@ -113,6 +113,7 @@ button,input{font:inherit;color:inherit}
 .abtext h3{font-family:var(--f-display);font-weight:400;font-size:28px;line-height:1.05;margin:6px 0 10px}
 .abtext p{margin:0 0 12px;font-size:16.5px;color:#d0d3dc}
 .abstats{display:flex;gap:8px 14px;flex-wrap:wrap}
+.abstats .tag b{text-transform:none}
 .abvid{width:100%;aspect-ratio:16/9;background:#000;border:1px solid var(--rule);display:block}
 .abvid.none{display:grid;place-items:center;color:var(--faint);font-style:italic;font-size:15px;padding:20px;text-align:center}
 @media (max-width:760px){.abpanel{grid-template-columns:1fr}.ab{width:56px;height:56px}}
@@ -239,9 +240,9 @@ footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width
   <section id="picker" hidden>
     <div class="pick-intro">
       <div>
-        <div class="eyebrow">Runeterra · journeys</div>
-        <h1>Pick a champion. <em>We'll show you around.</em></h1>
-        <p>Each journey walks you through one champion: who they are, the story to read first, what to watch and listen to, the people in their life, their best skins and when they arrived.</p>
+        <div class="eyebrow" id="pEye">Runeterra · journeys</div>
+        <h1 id="pH1">Pick a champion. <em>We'll show you around.</em></h1>
+        <p id="pIntro">Each journey walks you through one champion: who they are, the story to read first, what to watch and listen to, the people in their life, their best skins and when they arrived.</p>
       </div>
       <div class="pick-tools">
         <label style="flex:1 1 220px;min-width:0"><span hidden>Find a champion</span><input id="pq" type="search" placeholder="Find a champion…" autocomplete="off" style="width:100%"></label>
@@ -260,7 +261,7 @@ footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width
         <h1 id="hName"></h1>
         <div class="ttl" id="hTitle"></div>
         <div class="meta" id="hMeta"></div>
-        <div class="change"><button type="button" class="fav-btn" id="hFav" data-fav-label>Add to my champions</button><a class="btn ghost" href="journey.html">Pick another champion</a><button class="btn ghost" type="button" id="hRandom">Surprise me</button></div>
+        <div class="change"><button type="button" class="fav-btn" id="hFav" data-fav-label>Add to my champions</button><a class="btn ghost" href="journey.html" id="hAnother">Pick another champion</a><button class="btn ghost" type="button" id="hRandom">Surprise me</button></div>
       </div>
     </section>
     <div class="tour">
@@ -270,7 +271,7 @@ footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width
   </article>
 
   <footer>
-    <div>Everything here comes from the rest of the Atlas: Riot's champion bios and Universe stories, Riot's official videos and music, Data Dragon art, and the League Wiki and Leaguepedia for relationships and release dates. Stories open on Riot's Universe site.</div>
+    <div id="credit">Everything here comes from the rest of the Atlas: Riot's champion bios and Universe stories, Riot's official videos and music, Data Dragon art, and the League Wiki and Leaguepedia for relationships and release dates. Stories open on Riot's Universe site.</div>
     <div class="legal">Runeterra Atlas was created under Riot Games' "Legal Jibber Jabber" policy using assets owned by Riot Games. Riot Games does not endorse or sponsor this project.</div>
   </footer>
 </div>
@@ -286,12 +287,14 @@ footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width
 <script src="data/champrb.js"></script>
 <script src="data/abilityvideos.js"></script>
 <script>
-const CHAMPS=(window.ATLAS_CHAMPS||[]).slice().sort((a,b)=>a.name.localeCompare(b.name));
+const I=window.AtlasI18n, LANG=I?I.lang:"en", t=(k,v)=>I?I.t(k,v):k;
+const nm=c=>I?I.name(c):c.name;
+let CHAMPS=(window.ATLAS_CHAMPS||[]).slice().sort((a,b)=>a.name.localeCompare(b.name));
 const CH=Object.fromEntries(CHAMPS.map(c=>[c.id,c]));
 const REGIONS=window.ATLAS_REGIONS||[], RG=Object.fromEntries(REGIONS.map(r=>[r.id,r]));
 const BONDS=window.ATLAS_BONDS||[], REL=window.ATLAS_RELEASES||{};
 const EMB=new Set(["demacia","noxus","piltover","zaun","freljord","ionia","shurima","targon","bilgewater","shadowisles","bandle","wanderers"]);
-const TYPE_LABEL={family:"Family",ally:"Ally",mentor:"Mentor",enemy:"Enemy",complicated:"Complicated",linked:"Linked"};
+const TYPE_LABEL=new Proxy({},{get:(o,k)=>t("bt_"+String(k))});
 const RAR=[["Standard","#7d8597"],["Rare","#5aa9e6"],["Epic","#3ccfe0"],["Legendary","#e8513f"],["Mythic","#b25fe8"],["Ultimate","#f0a03c"],["Exalted","#f7d774"],["Transcendent","#f4f0ff"]];
 const DD="https://ddragon.leagueoflegends.com/cdn/img/champion/";
 const CD="https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/";
@@ -301,29 +304,33 @@ const ABV="https://lol.dyn.riotcdn.net/x/videos/champion-abilities/";
 const UNI="https://universe.leagueoflegends.com/en_US/";
 const esc=s=>String(s??"").replace(/[&<>"]/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch]));
 const MON=["January","February","March","April","May","June","July","August","September","October","November","December"];
-const full=d=>{const [y,m,dd]=d.split("-");return `${+dd} ${MON[+m-1]} ${y}`;};
+const full=d=>I?I.date(d):(([y,m,dd])=>`${+dd} ${MON[+m-1]} ${y}`)(d.split("-"));
 const days=(a,b)=>Math.round((Date.parse(b)-Date.parse(a))/864e5);
 const TODAY=new Date().toISOString().slice(0,10);
 const uniId=c=>({renata:"renataglasc",jarvan:"jarvaniv",wukong:"monkeyking"})[c.id]||(c.dd||c.id).toLowerCase();
-const regName=id=>(RG[id]||{}).name||id;
+const regName=id=>I?I.region(id,(RG[id]||{}).name):((RG[id]||{}).name||id);
+const norm=s=>String(s).normalize("NFD").replace(/\p{M}/gu,"").toLowerCase().replace(/[^\p{L}\p{N}]/gu,"");
+const tagsOf=(c,sep)=>(c.tags||[]).map(x=>I?I.tag(x):x).join(sep);
+const storyUrl=slug=>I?I.storyUrl(slug):`${UNI}story/${slug}/`;
+const sTitle=s=>I?I.storyTitle(s.s,s.t):s.t, sDesc=s=>I?I.storyDesc(s.s,s.d):s.d;
 const regColor=id=>(RG[id]||{}).color||"#c8aa6e";
 const emb=id=>EMB.has(id)?`<img src="img/emblem/${id}.webp" alt="">`:"";
 const loadScript=src=>new Promise(res=>{const s=document.createElement("script");s.src=src;s.onload=res;s.onerror=res;document.head.appendChild(s);});
 
 // ---------- picker ----------
 function picker(){
-  document.title="Runeterra Journeys";
+  document.title=t("j_doc");
   document.getElementById("picker").hidden=false;document.getElementById("journey").hidden=true;
   const draw=q=>{
     q=(q||"").trim().toLowerCase();
     document.getElementById("regions").innerHTML=REGIONS.map(r=>{
-      const L=CHAMPS.filter(c=>c.region===r.id&&(!q||c.name.toLowerCase().includes(q)));
+      const L=CHAMPS.filter(c=>c.region===r.id&&(!q||norm(nm(c)).includes(norm(q))||norm(c.name).includes(norm(q))));
       if(!L.length)return "";
-      return `<section class="region-block" style="--rc:${r.color}"><h2>${emb(r.id)}${esc(r.name)}</h2>${q?"":`<p>${esc(r.tag)}</p>`}
-        <div class="faces">${L.map(c=>`<a class="face" href="journey.html?c=${c.id}"><img src="img/${c.id}-tile.webp" alt="" loading="lazy" decoding="async"><span>${esc(c.name)}</span></a>`).join("")}</div></section>`;}).join("")||`<p style="color:var(--muted);font-style:italic;padding:40px 0">No champion by that name.</p>`;
+      return `<section class="region-block" style="--rc:${r.color}"><h2>${emb(r.id)}${esc(regName(r.id))}</h2>${q||LANG!=="en"?"":`<p>${esc(r.tag)}</p>`}
+        <div class="faces">${L.map(c=>`<a class="face" href="journey.html?c=${c.id}"><img src="img/${c.id}-tile.webp" alt="" loading="lazy" decoding="async"><span>${esc(nm(c))}</span></a>`).join("")}</div></section>`;}).join("")||`<p style="color:var(--muted);font-style:italic;padding:40px 0">${esc(t("j_none"))}</p>`;
   };
   draw("");
-  let t;document.getElementById("pq").addEventListener("input",e=>{clearTimeout(t);t=setTimeout(()=>draw(e.target.value),120);});
+  let tm;document.getElementById("pq").addEventListener("input",e=>{clearTimeout(tm);tm=setTimeout(()=>draw(e.target.value),120);});
   document.getElementById("pq").addEventListener("keydown",e=>{if(e.key==="Enter"){const a=document.querySelector("#regions .face");if(a)location.href=a.href;}});
 }
 const surprise=(not)=>{const L=CHAMPS.filter(c=>c.id!==not);location.href="journey.html?c="+L[Math.floor(Math.random()*L.length)].id;};
@@ -333,14 +340,15 @@ document.getElementById("surprise").onclick=()=>surprise();
 async function journey(c){
   const rg=RG[c.region]||{name:c.region,color:"#c8aa6e"};
   document.documentElement.style.setProperty("--rc",rg.color);
-  document.title=`${c.name} · Runeterra Journeys`;
+  document.title=`${nm(c)} · ${t("j_doc")}`;
   document.getElementById("picker").hidden=true;document.getElementById("journey").hidden=false;
-  const sp=document.getElementById("splash");sp.onload=()=>sp.classList.add("in");sp.src=`${DD}splash/${c.dd}_0.jpg`;sp.alt=`${c.name} splash art`;
+  const sp=document.getElementById("splash");sp.onload=()=>sp.classList.add("in");sp.src=`${DD}splash/${c.dd}_0.jpg`;sp.alt=nm(c);
   const R=REL[c.id];
-  document.getElementById("hEye").textContent=`A journey through ${rg.name}`;
-  document.getElementById("hName").textContent=c.name;
-  document.getElementById("hTitle").textContent=c.title.charAt(0).toUpperCase()+c.title.slice(1);
-  document.getElementById("hMeta").innerHTML=`<span>${emb(c.region)}${esc(rg.name)}</span><span>${esc((c.tags||[]).join(" · "))}</span>${R?`<span>Arrived <b>${full(R[0])}</b></span>`:""}`;
+  const rgN=regName(c.region);
+  document.getElementById("hEye").textContent=t("j_through",{r:rgN});
+  document.getElementById("hName").textContent=nm(c);
+  const ttl=I?I.title(c):c.title;document.getElementById("hTitle").textContent=ttl.charAt(0).toUpperCase()+ttl.slice(1);
+  document.getElementById("hMeta").innerHTML=`<span>${emb(c.region)}${esc(rgN)}</span><span>${esc(tagsOf(c," · "))}</span>${R?`<span>${t("j_arrived",{d:`<b>${full(R[0])}</b>`})}</span>`:""}`;
   document.getElementById("hRandom").onclick=()=>surprise(c.id);
   document.getElementById("hFav").setAttribute("data-fav",c.id);
 
@@ -351,18 +359,21 @@ async function journey(c){
   const add=(id,title,sub,html)=>{if(html)chapters.push({id,title,sub,html});};
 
   // 1 · who they are
-  add("who","Who they are",`From Riot's official biography`,`
-    <p class="lead">${esc(c.bio)}</p>
-    <div class="aside"><b>${esc(rg.name)}.</b> ${esc(rg.desc||rg.tag||"")}</div>
-    <p style="margin-top:18px"><a class="more-link" href="${UNI}champion/${esc(uniId(c))}/" target="_blank" rel="noopener">Read the full biography on Universe ↗</a></p>`);
+  add("who",t("j_who"),t("j_who_sub"),`
+    <p class="lead">${esc(I?I.bio(c):c.bio)}</p>
+    ${LANG==="en"?`<div class="aside"><b>${esc(rg.name)}.</b> ${esc(rg.desc||rg.tag||"")}</div>`:""}
+    <p style="margin-top:18px"><a class="more-link" href="${I?I.champUrl(esc(uniId(c))):`${UNI}champion/${esc(uniId(c))}/`}" target="_blank" rel="noopener">${t("j_full_bio")}</a></p>`);
 
   // 2 · how they play: passive + Q W E R, Riot's icons, descriptions and (where Riot has one) the official preview clip
   const AB=(window.ATLAS_ABILITIES||{})[c.id], GM=(window.ATLAS_GAME||{})[c.id];
   if(AB){
     const [key,list]=AB, K4=String(key).padStart(4,"0"), VID=(window.ATLAS_ABILITY_VIDEOS||{})[key]||"";
     const slots=["Passive","Q","W","E","R"], letters=["P","Q","W","E","R"];
-    add("play","How they play",`${esc(GM?`${GM[1]} · ${GM[0]==="None"?"No resource":GM[0]} · `:"")}${esc((c.tags||[]).join(", "))}`,`
-      <div class="abilities" role="tablist" aria-label="Abilities">${list.map((a,i)=>`<button type="button" role="tab" class="ab" data-i="${i}" aria-selected="${i===0}" title="${esc(a[0])}">
+    const PKc=I&&I.pack&&I.pack.champs[c.id], FUc=I&&I.full&&I.full[c.id];
+    const resN=GM?(PKc&&PKc[3])||(GM[0]==="None"?t("no_resource"):GM[0]):"", rngN=GM?(GM[1]==="Melee"?t("melee"):GM[1]==="Ranged"?t("ranged"):GM[1]):"";
+    window._abL=list.map((a,i)=>[(PKc&&PKc[4]&&PKc[4][i])||a[0],(FUc&&FUc[1]&&FUc[1][i])||a[1]]);
+    add("play",t("j_play"),`${esc(GM?`${rngN} · ${resN} · `:"")}${esc(tagsOf(c,", "))}`,`
+      <div class="abilities" role="tablist" aria-label="Abilities">${list.map((a,i)=>`<button type="button" role="tab" class="ab" data-i="${i}" aria-selected="${i===0}" title="${esc(window._abL[i][0])}">
         <img src="${ABI}${i?"spell":"passive"}/${esc(a[2])}" alt="" loading="lazy"><span>${slots[i]==="Passive"?"P":slots[i]}</span></button>`).join("")}</div>
       <div class="abpanel" id="abpanel"></div>`);
     window._ab={c,list,K4,VID,slots,letters};
@@ -377,52 +388,53 @@ async function journey(c){
     const own=ST.find(s=>s.s===`${key}-color-story`||s.s===`${c.id}-color-story`||s.s.startsWith(key+"-color"));
     const first=own||ST.slice().sort((a,b)=>a.min-b.min)[0];
     const rest=ST.filter(s=>s!==first).sort((a,b)=>a.date.localeCompare(b.date));
-    add("read","Read this first",`${ST.length} ${ST.length===1?"story":"stories"}${CM.length?` · ${CM.length} comic ${CM.length===1?"issue":"issues"}`:""}`,`
-      ${first?`<a class="firstread" href="${UNI}story/${esc(first.s)}/" target="_blank" rel="noopener">
+    add("read",t("j_read"),`${t("j_stories",{n:ST.length})}${CM.length?` · ${t("j_comics",{n:CM.length})}`:""}`,`
+      ${first?`<a class="firstread" href="${esc(storyUrl(first.s))}" target="_blank" rel="noopener">
         <div class="pic" style="background-image:url('${UIMG}${first.img}?w=700&fm=webp')"></div>
-        <div class="body"><div class="tag">${own?`${esc(c.name)}'s own story`:"Shortest way in"} · <b>${first.min}</b> min read · ${first.date.slice(0,4)}</div>
-        <h3>${esc(first.t)}<span class="read-badge" data-read="${esc(first.s)}">✓ Read</span></h3>${first.by?`<div class="tag" style="margin-bottom:10px">by ${esc(first.by)}</div>`:""}<p>${esc(first.d)}</p>
-        <span class="more-link">Read on Universe ↗</span></div></a>`:""}
-      ${rest.length?`<h3 class="tag" style="margin:18px 0 8px">Then, in the order Riot published them</h3><ul class="list">${rest.map(s=>`<li><a href="${UNI}story/${esc(s.s)}/" target="_blank" rel="noopener"><span>${esc(s.t)} <span class="tag">· ${s.date.slice(0,4)}</span><span class="read-badge" data-read="${esc(s.s)}">✓ Read</span></span><small>${s.min} min</small></a></li>`).join("")}</ul>`:""}
-      ${CM.length?`<h3 class="tag" style="margin:22px 0 0">Comics</h3><div class="comics">${CM.map(x=>`<a href="reading.html#comic-${x.u.replace("/","--")}" title="${esc(x.t)}" style="--ar:${x.ar}"><img src="${UIMG}${x.img}?w=${x.ar>1?480:260}&fm=webp" alt="${esc(x.t)}" loading="lazy"></a>`).join("")}</div>`:""}
-      <p style="margin-top:14px"><a class="more-link" href="reading.html?champion=${c.id}">Everything about ${esc(c.name)} in the Reading Room →</a></p>`);
+        <div class="body"><div class="tag">${own?esc(t("j_own",{name:nm(c)})):t("j_shortest")} · ${t("j_min_read",{n:`<b>${first.min}</b>`})} · ${first.date.slice(0,4)}</div>
+        <h3>${esc(sTitle(first))}<span class="read-badge" data-read="${esc(first.s)}">${t("read_badge")}</span></h3>${first.by?`<div class="tag" style="margin-bottom:10px">${esc(t("j_by",{a:first.by}))}</div>`:""}<p>${esc(sDesc(first))}</p>
+        <span class="more-link">${t("j_read_uni")}</span></div></a>`:""}
+      ${rest.length?`<h3 class="tag" style="margin:18px 0 8px">${t("j_then")}</h3><ul class="list">${rest.map(s=>`<li><a href="${esc(storyUrl(s.s))}" target="_blank" rel="noopener"><span>${esc(sTitle(s))} <span class="tag">· ${s.date.slice(0,4)}</span><span class="read-badge" data-read="${esc(s.s)}">${t("read_badge")}</span></span><small>${t("j_min",{n:s.min})}</small></a></li>`).join("")}</ul>`:""}
+      ${CM.length?`<h3 class="tag" style="margin:22px 0 0">${t("j_comics_h")}</h3><div class="comics">${CM.map(x=>`<a href="reading.html#comic-${x.u.replace("/","--")}" title="${esc(x.t)}" style="--ar:${x.ar}"><img src="${UIMG}${x.img}?w=${x.ar>1?480:260}&fm=webp" alt="${esc(x.t)}" loading="lazy"></a>`).join("")}</div>`:""}
+      <p style="margin-top:14px"><a class="more-link" href="reading.html?champion=${c.id}">${esc(t("j_reading_all",{name:nm(c)}))}</a></p>`);
   }
 
   // 3 · watch
   const shelves=window.ATLAS_VIDEOS||[];
   const V=[];shelves.forEach(sh=>{if(["login","making","music"].includes(sh.id))return;sh.v.forEach(v=>{if(v.ch.includes(c.id))V.push({...v,shelf:sh.t});});});
   V.sort((a,b)=>a.ch.length-b.ch.length||(b.yr||"").localeCompare(a.yr||""));// their own cinematics first
-  add("watch","Watch",`${V.length} official ${V.length===1?"video":"videos"}`,V.length?`<div class="screen">${V.slice(0,6).map(v=>`<button class="vid" type="button" data-y="${v.y}">
+  add("watch",t("j_watch"),t("j_videos",{n:V.length}),V.length?`<div class="screen">${V.slice(0,6).map(v=>`<button class="vid" type="button" data-y="${v.y}">
       <div class="th"><img src="https://i.ytimg.com/vi/${v.y}/hqdefault.jpg" alt="" loading="lazy"></div>
-      <b>${esc(v.t)}</b><small>${esc(v.shelf)}${v.yr?` · ${v.yr}`:""}${v.ch.length>1?` · with ${v.ch.length-1} other${v.ch.length>2?"s":""}`:""}</small></button>`).join("")}</div>
-      ${V.length>6?`<p style="margin-top:14px"><a class="more-link" href="theater.html">${V.length-6} more in the Theater →</a></p>`:""}`:"");
+      <b>${esc(v.t)}</b><small>${esc(v.shelf)}${v.yr?` · ${v.yr}`:""}${v.ch.length>1?` · ${t("j_with",{n:v.ch.length-1})}`:""}</small></button>`).join("")}</div>
+      ${V.length>6?`<p style="margin-top:14px"><a class="more-link" href="theater.html">${t("j_more_theater",{n:V.length-6})}</a></p>`:""}`:"");
 
   // 4 · listen: login theme + music videos (videos.js) + songs named for them (music.js)
   const T=[];
-  shelves.forEach(sh=>{if(sh.id==="login"||sh.id==="music")sh.v.forEach(v=>{if(v.ch.includes(c.id))T.push({y:v.y,t:v.t,by:sh.id==="login"?"Login screen theme":(v.by||"Music video"),href:sh.id==="login"?`music.html#s-login`:`theater.html#v-${v.y}`});});});
+  shelves.forEach(sh=>{if(sh.id==="login"||sh.id==="music")sh.v.forEach(v=>{if(v.ch.includes(c.id))T.push({y:v.y,t:v.t,by:sh.id==="login"?t("j_login"):(v.by||t("j_mv")),href:sh.id==="login"?`music.html#s-login`:`theater.html#v-${v.y}`});});});
   const M=window.ATLAS_MUSIC;if(M){const re=new RegExp(`(?<![\\w'])${c.name.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")}(?![\\w'])`);
     M.shelves.forEach(sh=>sh.k.forEach((k,i)=>{if(re.test(k[1]+" | "+k[2])&&!T.some(t=>t.y===k[0]))T.push({y:k[0],t:k[1],by:k[2],href:`music.html#t-${sh.id}-${i+1}`});}));}
-  add("listen","Listen",`${T.length} ${T.length===1?"track":"tracks"}`,T.length?`<div class="tracks">${T.map(t=>`<a class="track" href="${t.href}"><img src="https://i.ytimg.com/vi/${t.y}/mqdefault.jpg" alt="" loading="lazy"><span style="min-width:0"><b>${esc(t.t)}</b><small>${esc(t.by)}</small></span><span class="go">Play →</span></a>`).join("")}</div>`:"");
+  add("listen",t("j_listen"),t("j_tracks",{n:T.length}),T.length?`<div class="tracks">${T.map(k=>`<a class="track" href="${k.href}"><img src="https://i.ytimg.com/vi/${k.y}/mqdefault.jpg" alt="" loading="lazy"><span style="min-width:0"><b>${esc(k.t)}</b><small>${esc(k.by)}</small></span><span class="go">${t("j_play_btn")}</span></a>`).join("")}</div>`:"");
 
   // 5 · people
   const B=BONDS.filter(b=>b[0]===c.id||b[1]===c.id).map(b=>({o:CH[b[0]===c.id?b[1]:b[0]],type:b[2],note:b[3],src:b[4]})).filter(x=>x.o);
   const order={family:0,mentor:1,ally:2,complicated:3,enemy:4,linked:5};
   B.sort((a,b)=>(a.src==="u")-(b.src==="u")||order[a.type]-order[b.type]);
-  add("people","The people in their life",`${B.length} ${B.length===1?"bond":"bonds"}`,B.length?`<div class="people">${B.map(x=>`<a class="bond" href="journey.html?c=${x.o.id}" style="--tc:var(--${x.type})">
-      <img src="img/${x.o.id}-tile.webp" alt="" loading="lazy"><div style="min-width:0"><b>${esc(x.o.name)}</b><span class="ty">${TYPE_LABEL[x.type]||x.type}</span>
+  add("people",t("j_people"),t("j_bonds",{n:B.length}),B.length?`<div class="people">${B.map(x=>`<a class="bond" href="journey.html?c=${x.o.id}" style="--tc:var(--${x.type})">
+      <img src="img/${x.o.id}-tile.webp" alt="" loading="lazy"><div style="min-width:0"><b>${esc(nm(x.o))}</b><span class="ty">${TYPE_LABEL[x.type]||x.type}</span>
       <p class="${x.src==="u"?"u":""}">${esc(x.note)}</p></div></a>`).join("")}</div>
-      <p style="margin-top:14px"><a class="more-link" href="atlas.html#c-${c.id}">See ${esc(c.name)}'s web of bonds on the Atlas →</a></p>`:"");
+      <p style="margin-top:14px"><a class="more-link" href="atlas.html#c-${c.id}">${esc(t("j_web",{name:nm(c)}))}</a></p>`:"");
 
   // 6 · wardrobe: rarest first, then newest
   const K=((window.ATLAS_SKINS||{})[c.id]||[]).map(k=>({num:k[0],name:k[1],rar:k[2],path:k[7]}));
+  const skN=k=>I?I.skin(c,k.num,k.name):k.name;
   const top=K.slice().sort((a,b)=>b.rar-a.rar||(typeof b.num==="number"?b.num:0)-(typeof a.num==="number"?a.num:0)).slice(0,6);
-  add("skins","Their best looks",`${K.length} ${K.length===1?"skin":"skins"} · rarest first`,K.length?`<div class="wardrobe">${top.map(k=>`<a class="skin" href="skins.html#s-${c.id}-${k.num}" style="--rar:${RAR[k.rar][1]}">
-      <div class="p"><img src="${k.path?CD+k.path:`${DD}loading/${c.dd}_${k.num}.jpg`}" alt="${esc(k.name)}" loading="lazy" referrerpolicy="no-referrer"></div><span>${esc(k.name)}</span><small>${RAR[k.rar][0]}</small></a>`).join("")}</div>
-      <p style="margin-top:14px"><a class="more-link" href="skins.html?champion=${c.id}">All ${K.length} skins →</a></p>`:"");
+  add("skins",t("j_skins"),`${t("j_skin_n",{n:K.length})} · ${t("j_rarest")}`,K.length?`<div class="wardrobe">${top.map(k=>`<a class="skin" href="skins.html#s-${c.id}-${k.num}" style="--rar:${RAR[k.rar][1]}">
+      <div class="p"><img src="${k.path?CD+k.path:`${DD}loading/${c.dd}_${k.num}.jpg`}" alt="${esc(skN(k))}" loading="lazy" referrerpolicy="no-referrer"></div><span>${esc(skN(k))}</span><small>${t("rar_"+k.rar)}</small></a>`).join("")}</div>
+      <p style="margin-top:14px"><a class="more-link" href="skins.html?champion=${c.id}">${t("j_all_skins",{n:K.length})}</a></p>`:"");
 
   // 7 · cards
   const LR=(window.ATLAS_LOR||{})[c.id]||[], RB=(window.ATLAS_RB||{})[c.id]||[];
-  add("cards","In the card games",`Legends of Runeterra${RB.length?" & Riftbound":""}`,(LR.length||RB.length)?`<div class="cards">
+  add("cards",t("j_cards"),`Legends of Runeterra${RB.length?" & Riftbound":""}`,(LR.length||RB.length)?`<div class="cards">
       ${LR.map(([code,n])=>`<a href="library.html#card-${code}" title="${esc(n)}"><img src="img/cards/${code}.webp" alt="${esc(n)}" loading="lazy"><small>Runeterra</small></a>`).join("")}
       ${RB.map(([id,n,img])=>`<a href="riftbound.html#card-${id}" title="${esc(n)}"><img src="https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/${img}?w=300&fm=webp" alt="${esc(n)}" loading="lazy"><small>Riftbound</small></a>`).join("")}</div>`:"");
 
@@ -431,21 +443,21 @@ async function journey(c){
     const all=Object.entries(REL).sort((a,b)=>a[1][0].localeCompare(b[1][0])||CH[a[0]].name.localeCompare(CH[b[0]].name));
     const n=all.findIndex(e=>e[0]===c.id)+1;
     const same=all.filter(e=>e[1][0]===R[0]&&e[0]!==c.id).map(e=>CH[e[0]]);
-    add("arrival","When they arrived",`Champion #${n} of ${all.length}`,`<div class="arrival">
-      <div class="stat"><span>Released</span><b>${full(R[0])}</b>${R[1]?`<small>${esc(R[1].replace(/^V/,"Patch "))}</small>`:""}</div>
-      ${R[2]?`<div class="stat"><span>Revealed</span><b>${full(R[2])}</b><small>${days(R[2],R[0])} days before release</small></div>`:""}
-      <div class="stat"><span>Release order</span><b>#${n}</b><small>of ${all.length} champions</small></div>
-      <div class="stat"><span>On the Rift for</span><b>${(days(R[0],TODAY)/365.25).toFixed(1)} years</b></div></div>
-      ${same.length?`<p class="aside" style="margin-top:16px">Released the same day as ${same.slice(0,6).map(o=>`<a href="journey.html?c=${o.id}">${esc(o.name)}</a>`).join(", ")}${same.length>6?` and ${same.length-6} others`:""}.</p>`:""}
-      <p style="margin-top:14px"><a class="more-link" href="timeline.html#t-${c.id}">See ${esc(c.name)} on the timeline →</a></p>`);
+    add("arrival",t("j_arrival"),t("j_nth",{n,t:all.length}),`<div class="arrival">
+      <div class="stat"><span>${t("j_released")}</span><b>${full(R[0])}</b>${R[1]?`<small>${esc(t("j_patch",{p:R[1].replace(/^V/,"")}))}</small>`:""}</div>
+      ${R[2]?`<div class="stat"><span>${t("j_revealed")}</span><b>${full(R[2])}</b><small>${t("j_days_before",{n:days(R[2],R[0])})}</small></div>`:""}
+      <div class="stat"><span>${t("j_order")}</span><b>#${n}</b><small>${t("j_of_champs",{t:all.length})}</small></div>
+      <div class="stat"><span>${t("j_on_rift")}</span><b>${t("j_years",{y:(days(R[0],TODAY)/365.25).toLocaleString(LANG,{minimumFractionDigits:1,maximumFractionDigits:1})})}</b></div></div>
+      ${same.length?`<p class="aside" style="margin-top:16px">${t("j_same_day",{list:same.slice(0,6).map(o=>`<a href="journey.html?c=${o.id}">${esc(nm(o))}</a>`).join(", ")+(same.length>6?" "+t("j_and_others",{n:same.length-6}):"")})}</p>`:""}
+      <p style="margin-top:14px"><a class="more-link" href="timeline.html#t-${c.id}">${esc(t("j_timeline",{name:nm(c)}))}</a></p>`);
   }
 
   // 9 · where next: their closest bonds (official ones first), then someone else from the same region
   const nextIds=[...new Set(B.filter(x=>x.src!=="u").map(x=>x.o.id))];
   CHAMPS.filter(o=>o.region===c.region&&o.id!==c.id&&!nextIds.includes(o.id)).sort(()=>Math.random()-.5).slice(0,2).forEach(o=>nextIds.push(o.id));
   const NX=nextIds.slice(0,6).map(id=>CH[id]);
-  add("next","Where to go next","Continue the journey",`<div class="next">${NX.map(o=>{const b=B.find(x=>x.o.id===o.id);return `<a class="nx" href="journey.html?c=${o.id}">
-      <img src="${DD}splash/${o.dd}_0.jpg" alt="" loading="lazy"><div><small>${b&&b.src!=="u"?esc(TYPE_LABEL[b.type]):`Also from ${esc(regName(o.region))}`}</small><b>${esc(o.name)}</b></div></a>`;}).join("")}</div>`);
+  add("next",t("j_next"),t("j_continue"),`<div class="next">${NX.map(o=>{const b=B.find(x=>x.o.id===o.id);return `<a class="nx" href="journey.html?c=${o.id}">
+      <img src="${DD}splash/${o.dd}_0.jpg" alt="" loading="lazy"><div><small>${b&&b.src!=="u"?esc(TYPE_LABEL[b.type]):esc(t("j_also_from",{r:regName(o.region)}))}</small><b>${esc(nm(o))}</b></div></a>`;}).join("")}</div>`);
 
   document.getElementById("chapters").innerHTML=chapters.map((ch,i)=>`<section class="chap" id="${ch.id}"><header><span class="n">${i+1}</span><h2>${ch.title}<small>${ch.sub}</small></h2></header>${ch.html}</section>`).join("");
   document.getElementById("rail").innerHTML=chapters.map((ch,i)=>`<a href="#${ch.id}" data-id="${ch.id}"><b>${i+1}</b>${ch.title}</a>`).join("");
@@ -453,12 +465,12 @@ async function journey(c){
   // ability panel
   const abp=document.getElementById("abpanel");
   if(abp&&window._ab){const {list,K4,VID,slots,letters}=window._ab;
-    const show=i=>{const a=list[i];document.querySelectorAll(".ab").forEach(b=>b.setAttribute("aria-selected",String(+b.dataset.i===i)));
+    const show=i=>{const a=list[i],L2=window._abL[i];document.querySelectorAll(".ab").forEach(b=>b.setAttribute("aria-selected",String(+b.dataset.i===i)));
       const has=VID.includes(letters[i]), src=`${ABV}${K4}/ability_${K4}_${letters[i]}1`;
-      const stats=i?[a[3]&&`<span class="tag">Cooldown <b>${esc(a[3])}</b> s</span>`,a[4]&&`<span class="tag">Cost <b>${esc(a[4])}</b></span>`,a[5]&&`<span class="tag">Range <b>${esc(a[5])}</b></span>`].filter(Boolean).join(""):"";
-      abp.innerHTML=`<div class="abtext"><div class="tag">${slots[i]==="Passive"?"Passive":`${slots[i]} ability`}</div><h3>${esc(a[0])}</h3>
-        <p>${esc(a[1]).replace(/\n/g,"<br>")}</p>${stats?`<div class="abstats">${stats}</div>`:""}</div>
-        ${has?`<video class="abvid" muted loop playsinline autoplay preload="metadata" controls><source src="${src}.webm" type="video/webm"><source src="${src}.mp4" type="video/mp4"></video>`:`<div class="abvid none">Riot hasn't published a preview clip for this one.</div>`}`;};
+      const stats=i?[a[3]&&`<span class="tag">${t("j_cd")} <b>${esc(t("j_cd_val",{v:a[3]}))}</b></span>`,a[4]&&`<span class="tag">${t("j_cost")} <b>${esc(a[4])}</b></span>`,a[5]&&`<span class="tag">${t("j_range")} <b>${esc(a[5]==="Global"?t("j_global"):a[5])}</b></span>`].filter(Boolean).join(""):"";
+      abp.innerHTML=`<div class="abtext"><div class="tag">${slots[i]==="Passive"?t("passive"):t("j_slot",{k:slots[i]})}</div><h3>${esc(L2[0])}</h3>
+        <p>${esc(L2[1]).replace(/\n/g,"<br>")}</p>${stats?`<div class="abstats">${stats}</div>`:""}</div>
+        ${has?`<video class="abvid" muted loop playsinline autoplay preload="metadata" controls><source src="${src}.webm" type="video/webm"><source src="${src}.mp4" type="video/mp4"></video>`:`<div class="abvid none">${esc(t("j_noclip"))}</div>`}`;};
     document.querySelector(".abilities").addEventListener("click",e=>{const b=e.target.closest(".ab");if(b)show(+b.dataset.i);});
     document.querySelector(".abilities").addEventListener("keydown",e=>{if(!/Arrow(Left|Right)/.test(e.key))return;const cur=+document.querySelector('.ab[aria-selected="true"]').dataset.i;const n=(cur+(e.key==="ArrowRight"?1:4))%5;show(n);document.querySelector(`.ab[data-i="${n}"]`).focus();});
     show(0);}
@@ -478,7 +490,21 @@ async function journey(c){
 
 // route: journey.html?c=<id>
 const id=new URLSearchParams(location.search).get("c");
-if(id&&CH[id])journey(CH[id]);else picker();
+function staticText(){
+  if(LANG==="en")return;
+  document.documentElement.lang=LANG;if(/^(ko|ja|zh|th)/.test(LANG))document.documentElement.classList.add("cjk");
+  document.getElementById("pEye").textContent=t("j_eye");
+  document.getElementById("pH1").innerHTML=`${esc(t("j_h1a"))} <em>${esc(t("j_h1b"))}</em>`;
+  document.getElementById("pIntro").textContent=t("j_intro");
+  document.getElementById("pq").placeholder=t("j_find");
+  document.getElementById("surprise").textContent=t("surprise");document.getElementById("hRandom").textContent=t("surprise");
+  document.getElementById("hAnother").textContent=t("j_another");
+  const cr=document.getElementById("credit");cr.textContent=t("j_credit");
+  const n=document.createElement("div");n.textContent=t("tr_note")+" "+t("j_en_bits");cr.after(n);
+  CHAMPS.sort((a,b)=>nm(a).localeCompare(nm(b),LANG));
+}
+const need=I?[I.ready,I.loadPack()].concat(id&&CH[id]?[I.loadFull(),I.loadStories()]:[]):[];
+Promise.all(need).catch(()=>{}).then(()=>{staticText();if(id&&CH[id])journey(CH[id]);else picker();});
 </script>
 </body>
 </html>
