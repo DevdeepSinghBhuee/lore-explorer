@@ -6,14 +6,19 @@
    4. keeps [data-read="<story slug>"] badges and [data-fav] stars in sync across the page. */
 (function(){
   "use strict";
-  var GROUPS=[
-    {t:"Champions",items:[["journey.html","Journeys","A guided tour of any champion"],["skins.html","Skins","Every skin and its splash art"],["timeline.html","Timeline","Every champion in release order"]]},
-    {t:"Lore",items:[["atlas.html","Atlas","The map of Runeterra and its web of bonds"],["reading.html","Reading Room","Every official story and comic"]]},
-    {t:"Play",items:[["./","Runeterra Daily","Guess today's champions: clues, splash, ability, lore"]]},
-    {t:"Esports",items:[["worlds.html","Worlds 2026","Live scores, schedule and teams"],["players.html","Players","The pros at Worlds 2026"]]},
-    {t:"Watch & Listen",items:[["theater.html","Theater","Official cinematics and trailers"],["music.html","Music","Anthems, bands and champion themes"]]},
-    {t:"Card games",items:[["library.html","Runeterra cards","Every Legends of Runeterra card"],["riftbound.html","Riftbound","The Riftbound trading card game"]]}
-  ];
+  var I=window.AtlasI18n||null;
+  if(I&&/^(ko|ja|zh|th)/.test(I.lang))document.documentElement.classList.add("cjk");
+  function T(k,v){return I?I.t(k,v):k;}
+  var TRANSLATED={"index.html":1};   // pages whose own text is translated so far (the menu is translated everywhere)
+  var GROUPS;
+  function makeGroups(){GROUPS=[
+    {t:T("g_champions"),items:[["journey.html",T("it_journeys"),T("it_journeys_d")],["skins.html",T("it_skins"),T("it_skins_d")],["timeline.html",T("it_timeline"),T("it_timeline_d")]]},
+    {t:T("g_lore"),items:[["atlas.html",T("it_atlas"),T("it_atlas_d")],["reading.html",T("it_reading"),T("it_reading_d")]]},
+    {t:T("g_play"),items:[["./",T("it_daily"),T("it_daily_d")]]},
+    {t:T("g_esports"),items:[["worlds.html",T("it_worlds"),T("it_worlds_d")],["players.html",T("it_players"),T("it_players_d")]]},
+    {t:T("g_watch"),items:[["theater.html",T("it_theater"),T("it_theater_d")],["music.html",T("it_music"),T("it_music_d")]]},
+    {t:T("g_cards"),items:[["library.html",T("it_lor"),T("it_lor_d")],["riftbound.html",T("it_rb"),T("it_rb_d")]]}
+  ];}
   var KEY_F="atlas.mine.favs", KEY_R="atlas.mine.read";
 
   /* ---------- storage (wrapped: private windows and blocked storage must not break pages) ---------- */
@@ -61,19 +66,39 @@
 .snav .mine i{font-style:normal;color:var(--gold,#c8aa6e)}
 .snav .mine em{font-style:normal;font-family:var(--f-num,sans-serif);font-size:15px;letter-spacing:.02em;min-width:10px}
 .snav .menu{display:none}
+.snav .lang>button{border:1px solid rgba(200,170,110,.35)!important;margin-left:6px}
+.snav .lang .lc{display:none}
+.snav .lang>button i{font-style:normal;font-size:14px;letter-spacing:0}
+.snav .lang .dd{left:auto;right:0;min-width:230px;max-height:70vh;overflow:auto}
+.snav .lang .dd a{padding:7px 12px}
+.snav .lang .dd a b{font-size:16px}
+.snav .lang .dd a[aria-current="true"]{border-left-color:var(--gold,#c8aa6e)}
+.snav .lang .dd a[aria-current="true"] b{color:var(--gold,#c8aa6e)}
+.snav .lang .dd p{margin:4px 12px 8px;font-family:var(--f-body,serif);font-size:13px;color:var(--muted,#939bb0)}
+.snav .sheet .langs{display:flex;flex-wrap:wrap;gap:6px}
+.snav .sheet .langs a{border:1px solid rgba(200,170,110,.25);padding:6px 10px;font-size:15px}
+.snav .sheet .langs a[aria-current="true"]{border-color:var(--gold,#c8aa6e);color:var(--gold,#c8aa6e)}
 .snav .mine-n:empty{display:none}
 @media (max-width:820px){
   .snav{gap:6px}
   .snav .sg{display:none}
+  .snav .sg.lang{display:block}
+  .snav .lang>button::after{display:none}
+  .snav .lang>button .ln{display:none}
+  .snav .lang>button .lc{display:inline}
   .snav .menu{display:inline-flex}
-  header .snav,.snav{flex-wrap:nowrap}
+  header .snav,.snav{flex-wrap:nowrap!important}
   .snav .mine{margin-left:0}
 }
 @media (max-width:560px){
   .snav .mine .lbl{display:none}
+  .snav .lang .lc{display:none!important}
+  .snav .lang>button,.snav>a.mine,.snav .menu{padding:8px 10px!important;margin-left:0!important}
   .snav.sheet-open .sheet{display:block}
 }
 .snav.sheet-open{z-index:1000}
+/* scripts without capital letters: wide letter-spacing pulls their characters apart */
+.cjk .snav *,.cjk .resume,.cjk .resume *{letter-spacing:.02em!important}
 .snav .sheet{display:none;position:fixed;inset:0;z-index:1000;background:#080d18;overflow:auto;padding:max(18px,env(safe-area-inset-top)) 20px 40px}
 .snav .sheet .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
 .snav .sheet .top b{font-family:var(--f-display,serif);font-weight:400;color:var(--gold,#c8aa6e);font-size:22px;letter-spacing:.06em}
@@ -109,13 +134,20 @@
       h+='<div class="sg" data-g="'+gi+'"><button type="button" aria-expanded="false" class="'+(on?"here":"")+'">'+esc(g.t)+'</button><div class="dd" role="menu">'+
         g.items.map(function(it){return '<a role="menuitem" href="'+it[0]+'"'+(isHere(it[0])?' aria-current="page"':'')+'><b>'+esc(it[1])+'</b><span>'+esc(it[2])+'</span></a>';}).join("")+'</div></div>';
     });
-    h+='<a class="mine'+(file==="mine.html"?" here":"")+'" href="mine.html"'+(file==="mine.html"?' aria-current="page"':'')+' title="My champions"><i>★</i><span class="lbl">My champions</span> <em class="mine-n"></em></a>';
-    h+='<button type="button" class="menu" aria-expanded="false" style="font-family:var(--f-mono,monospace);font-size:12px;letter-spacing:.14em;text-transform:uppercase;background:none;border:1px solid rgba(200,170,110,.35);color:var(--text,#ebe4d3);padding:8px 12px;cursor:pointer">Menu</button>';
-    h+='<div class="sheet" role="dialog" aria-label="Site menu"><div class="top"><b>Runeterra Atlas</b><button type="button" class="x" aria-label="Close menu">×</button></div>'+
+    var LANGS=I?I.LANGS:[["en","English"]],cur=I?I.lang:"en",curName="English";
+    LANGS.forEach(function(l){if(l[0]===cur)curName=l[1];});
+    var note=(cur!=="en"&&!TRANSLATED[file])?'<p>'+esc(T("en_only"))+'</p>':'';
+    var langLinks=function(cls){return LANGS.map(function(l){return '<a href="#" data-lang="'+l[0]+'" lang="'+l[0]+'"'+(l[0]===cur?' aria-current="true"':'')+(cls?'':' role="menuitem"')+'>'+(cls?esc(l[1]):'<b>'+esc(l[1])+'</b>')+'</a>';}).join("");};
+    h+='<a class="mine'+(file==="mine.html"?" here":"")+'" href="mine.html"'+(file==="mine.html"?' aria-current="page"':'')+' title="'+esc(T("mine"))+'"><i>★</i><span class="lbl">'+esc(T("mine"))+'</span> <em class="mine-n"></em></a>';
+    h+='<div class="sg lang"><button type="button" aria-expanded="false" title="'+esc(T("language"))+'" aria-label="'+esc(T("language"))+': '+esc(curName)+'"><i>🌐</i><span class="ln">'+esc(curName)+'</span><span class="lc">'+esc(cur.split("-")[0].toUpperCase())+'</span></button><div class="dd" role="menu">'+note+langLinks(false)+'</div></div>';
+    h+='<button type="button" class="menu" aria-expanded="false" style="font-family:var(--f-mono,monospace);font-size:12px;letter-spacing:.14em;text-transform:uppercase;background:none;border:1px solid rgba(200,170,110,.35);color:var(--text,#ebe4d3);padding:8px 12px;cursor:pointer">'+esc(T("menu"))+'</button>';
+    h+='<div class="sheet" role="dialog" aria-label="'+esc(T("menu"))+'"><div class="top"><b>Runeterra Atlas</b><button type="button" class="x" aria-label="'+esc(T("close_menu"))+'">×</button></div>'+
       GROUPS.map(function(g){return '<h3>'+esc(g.t)+'</h3>'+g.items.map(function(it){return '<a href="'+it[0]+'"'+(isHere(it[0])?' aria-current="page"':'')+'><b>'+esc(it[1])+'</b><span>'+esc(it[2])+'</span></a>';}).join("");}).join("")+
-      '<h3>Yours</h3><a href="mine.html"><b>★ My champions</b><span>Your favourites and the stories you have read</span></a></div>';
+      '<h3>'+esc(T("yours"))+'</h3><a href="mine.html"><b>★ '+esc(T("mine"))+'</b><span>'+esc(T("mine_d"))+'</span></a>'+
+      '<h3>🌐 '+esc(T("language"))+'</h3>'+(note?note.replace('<p>','<p style="color:var(--muted,#939bb0);margin:0 0 8px">'):'')+'<div class="langs">'+langLinks(true)+'</div></div>';
     nav.innerHTML=h;
     countEl=nav.querySelector(".mine-n");updateCount();
+    nav.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("[data-lang]");if(!a)return;e.preventDefault();var l=a.getAttribute("data-lang");if(I&&l!==I.lang)I.set(l);});
     var groups=[].slice.call(nav.querySelectorAll(".sg"));
     function closeAll(except){groups.forEach(function(g){if(g!==except){g.classList.remove("open");g.querySelector("button").setAttribute("aria-expanded","false");}});}
     groups.forEach(function(g){
@@ -162,7 +194,7 @@
   function resumeChip(){
     if(file==="index.html")return;
     var d=new Date(),key=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
-    var names={clues:"Clues",splash:"Splash",ability:"Ability",lore:"Lore"},open=null;
+    var names={clues:T("m_clues"),splash:T("m_splash"),ability:T("m_ability"),lore:T("m_lore")},open=null;
     var v=load("atlas.daily.view")||{};
     var order=[v.mode].concat(["clues","splash","ability","lore"]).filter(function(m,i,a){return m&&names[m]&&a.indexOf(m)===i;});
     for(var i=0;i<order.length;i++){var st=load("atlas.daily."+order[i]+"."+key);if(st&&st.g&&st.g.length&&!st.won&&!st.lost){open={m:order[i],n:st.g.length};break;}}
@@ -175,10 +207,11 @@
 .resume .x{background:none;border:0;color:var(--muted,#939bb0);font-size:16px;cursor:pointer;padding:0 0 0 4px}
 @media print{.resume{display:none}}`;document.head.appendChild(st2);
     var a=document.createElement("a");a.className="resume";a.href="./#"+open.m;
-    a.innerHTML='<b>▶</b><span>Back to your puzzle<small>Today\'s '+names[open.m]+' · '+open.n+' '+(open.n===1?"guess":"guesses")+' so far</small></span><button class="x" type="button" aria-label="Hide">×</button>';
+    a.innerHTML='<b>▶</b><span>'+esc(T("resume_title"))+'<small>'+esc(T("resume_sub",{mode:names[open.m],guesses:T("guesses",{n:open.n})}))+'</small></span><button class="x" type="button" aria-label="×">×</button>';
     a.querySelector(".x").addEventListener("click",function(e){e.preventDefault();e.stopPropagation();a.remove();});
     document.body.appendChild(a);
   }
-  function start(){buildNav();sync();watch();resumeChip();}
-  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start);else start();
+  function start(){makeGroups();buildNav();sync();watch();resumeChip();}
+  function go(){if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start);else start();}
+  if(I&&I.ready)I.ready.then(go,go);else go();
 })();

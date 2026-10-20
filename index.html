@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<script src="i18n.js"></script>
 <script>
 /* The map used to live at this address. Old shared links (…/#c-ahri, …/#zaun) still go to it. */
 (function(){var h=location.hash;if(/^#c-[a-z]+$/.test(h)||/^#(demacia|noxus|piltover|zaun|freljord|ionia|shurima|targon|bilgewater|shadowisles|bandle|ixtal|void|wanderers)$/.test(h))location.replace("atlas.html"+h);})();
@@ -166,6 +167,7 @@ h1 em{font-style:normal;color:var(--gold)}
 footer{border-top:1px solid var(--rule);margin-top:48px;padding-block:24px 40px;color:var(--muted);font-size:14px;display:grid;gap:8px}
 footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width:80ch}
 @media (max-width:760px){.modes{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.mode{padding:10px}.mode small{display:none}.mode i{width:30px;height:30px;font-size:15px}.mode b{font-size:18px}.mode .st{display:none}.result{grid-template-columns:1fr}.result .pic{min-height:0;aspect-ratio:16/8}.clock{text-align:left}}
+html.cjk body *{letter-spacing:.02em!important}
 @media (max-width:480px){.bonus .opts{grid-template-columns:1fr}.lore{font-size:18px}.stage{padding:14px}}
 </style>
 <script src="site.js" defer></script>
@@ -184,9 +186,9 @@ footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width
     <div>
       <div class="eyebrow" id="eye"></div>
       <h1>Runeterra <em>Daily</em></h1>
-      <p>Four League of Legends champions to find every day: from clues, a zoomed-in splash, an ability icon and their lore. Same puzzles for everyone, free, no sign-up.</p>
+      <p id="intro">Four League of Legends champions to find every day: from clues, a zoomed-in splash, an ability icon and their lore. Same puzzles for everyone, free, no sign-up.</p>
     </div>
-    <div class="clock"><b id="clock">--:--:--</b><span>until tomorrow's puzzles</span></div>
+    <div class="clock"><b id="clock">--:--:--</b><span id="untilT">until tomorrow's puzzles</span></div>
   </section>
 
   <div class="modes" role="tablist" aria-label="Game mode">
@@ -201,7 +203,7 @@ footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width
   <section class="how" id="how"></section>
 
   <section class="explore" aria-labelledby="exT">
-    <div class="eyebrow">After your puzzles</div>
+    <div class="eyebrow" id="exE">After your puzzles</div>
     <h2 id="exT">Explore Runeterra</h2>
     <div class="exgrid">
       <a class="ex big" href="atlas.html" style="--img:url('img/scene/piltover.webp')"><b>The Atlas</b><span>The map of Runeterra: every region, all 173 champions and the bonds between them.</span></a>
@@ -215,7 +217,7 @@ footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width
   </section>
 
   <footer>
-    <div>Inspired by fan games like LoLdle. Champion facts from Riot's Data Dragon, the League Wiki and Leaguepedia; biographies are Riot's (or, where marked on the Atlas, written for this site). Results and streaks are kept in your browser only.</div>
+    <div id="credit">Inspired by fan games like LoLdle. Champion facts from Riot's Data Dragon, the League Wiki and Leaguepedia; biographies are Riot's (or, where marked on the Atlas, written for this site). Results and streaks are kept in your browser only.</div>
     <div class="legal">Runeterra Atlas was created under Riot Games' "Legal Jibber Jabber" policy using assets owned by Riot Games. Riot Games does not endorse or sponsor this project.</div>
   </footer>
 </div>
@@ -233,7 +235,20 @@ const RG=Object.fromEntries((window.ATLAS_REGIONS||[]).map(r=>[r.id,r]));
 const REL=window.ATLAS_RELEASES||{}, SK=window.ATLAS_SKINS||{}, GM=window.ATLAS_GAME||{};
 const DD="https://ddragon.leagueoflegends.com/cdn/img/champion/";
 const esc=s=>String(s??"").replace(/[&<>"]/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch]));
-const MODES={clues:"Clues",splash:"Splash",ability:"Ability",lore:"Lore"};
+const I=window.AtlasI18n, LANG=I?I.lang:"en", t=(k,v)=>I?I.t(k,v):k;
+const MODES={clues:1,splash:1,ability:1,lore:1};
+const MN=m=>t("m_"+m);
+let PK=null; // Riot's official text in the visitor's language (null = English)
+const pc=id=>PK&&PK.champs[id]||null;
+const cName=id=>pc(id)&&pc(id)[0]||CH[id].name;
+const tagName=tg=>I?I.tag(tg):tg;
+const cls=c=>(c.tags||[]).map(tagName).join(", ");
+const resName=id=>{const r=GM[id][0];if(LANG==="en")return r;const v=pc(id)&&pc(id)[3];return v||(r==="None"?t("no_resource"):r);};
+const rangeName=v=>v==="Melee"?t("melee"):v==="Ranged"?t("ranged"):v;
+const skinName=(id,s)=>{if(s[0]===0)return t("original",{name:cName(id)});const v=pc(id)&&pc(id)[5]&&pc(id)[5][s[0]];return v||s[1];};
+const ablName=(p,i)=>{const v=pc(p.id)&&pc(p.id)[4];return (v&&v[i])||p.abl[i][0];};
+const slotName=i=>SLOT[i]==="Passive"?t("passive"):SLOT[i];
+const norm=s=>String(s).normalize("NFD").replace(/\p{M}/gu,"").toLowerCase().replace(/[^\p{L}\p{N}]/gu,"");
 
 /* ---------- the day's puzzle: same for everyone, by the visitor's calendar date ---------- */
 const EPOCH=Date.UTC(2026,9,20); // puzzle #1 = 20 Oct 2026
@@ -283,7 +298,7 @@ function record(p,key,state){
 /* ---------- helpers ---------- */
 const year=id=>REL[id]?+REL[id][0].slice(0,4):null;
 const skins=id=>(SK[id]||[]).length;
-const regName=id=>(RG[id]||{}).name||id;
+const regName=id=>I?I.region(id,(RG[id]||{}).name):((RG[id]||{}).name||id);
 let toastT;function toast(t){let el=document.querySelector(".toast");if(!el){el=document.createElement("div");el.className="toast";document.body.appendChild(el);}el.textContent=t;el.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>el.hidden=true,1800);}
 
 /* ---------- clue comparison ---------- */
@@ -291,12 +306,12 @@ function compare(g,a){
   const G=CH[g],A=CH[a];
   const reg={v:regName(G.region),r:G.region===A.region?"hit":"miss"};
   const gt=G.tags||[],at=A.tags||[];const same=gt.filter(t=>at.includes(t)).length;
-  const cls={v:gt.join(", "),r:same===gt.length&&same===at.length?"hit":same?"near":"miss"};
-  const rng_={v:GM[g][1],r:GM[g][1]===GM[a][1]?"hit":"miss"};
-  const res={v:GM[g][0],r:GM[g][0]===GM[a][0]?"hit":"miss"};
+  const cls_={v:gt.map(tagName).join(", "),r:same===gt.length&&same===at.length?"hit":same?"near":"miss"};
+  const rng_={v:rangeName(GM[g][1]),r:GM[g][1]===GM[a][1]?"hit":"miss"};
+  const res={v:resName(g),r:GM[g][0]===GM[a][0]?"hit":"miss"};
   const yg=year(g),ya=year(a);const yr={v:yg,r:yg===ya?"hit":Math.abs(yg-ya)<=2?"near":"miss",dir:yg<ya?"↑":yg>ya?"↓":""};
   const sg=skins(g),sa=skins(a);const sk={v:sg,r:sg===sa?"hit":Math.abs(sg-sa)<=2?"near":"miss",dir:sg<sa?"↑":sg>sa?"↓":""};
-  return [reg,cls,rng_,res,yr,sk];
+  return [reg,cls_,rng_,res,yr,sk];
 }
 const SYM={hit:"✓",near:"≈",miss:"✗"};
 const EMO={hit:"🟩",near:"🟧",miss:"🟥"};
@@ -321,43 +336,43 @@ function render(){
   const save=()=>{if(k)LS.set(k,state);else{PR[mode].state=state;LS.set(PRAC,PR);}};
   if(pseed!=null&&PR[mode].state)Object.assign(state,PR[mode].state);
   const done=state.won||state.lost, ans=CH[p.id];
-  document.getElementById("eye").textContent=p.practice?`Practice round · ${MODES[mode]}`:`Puzzle #${p.n} · ${new Date().toLocaleDateString(undefined,{day:"numeric",month:"long",year:"numeric"})}`;
+  document.getElementById("eye").textContent=p.practice?t("practice_eye",{mode:MN(mode)}):t("puzzle_n",{n:p.n,date:new Date().toLocaleDateString(LANG,{day:"numeric",month:"long",year:"numeric"})});
 
   let stage="";
   if(mode==="clues"){
-    stage=`<div class="stage"><h2><span>Guess the champion</span><span>${state.g.length} ${state.g.length===1?"guess":"guesses"}</span></h2>
-      <div class="legend"><span><i style="background:var(--hit)"></i>✓ match</span><span><i style="background:var(--near)"></i>≈ close (shares a class · within 2 years · within 2 skins)</span><span><i style="background:var(--miss)"></i>✗ no match</span><span>↑ ↓ the answer is higher / lower</span></div></div>`;
+    stage=`<div class="stage"><h2><span>${t("guess_champ")}</span><span>${t("guesses",{n:state.g.length})}</span></h2>
+      <div class="legend"><span><i style="background:var(--hit)"></i>✓ ${t("legend_match")}</span><span><i style="background:var(--near)"></i>≈ ${t("legend_close")}</span><span><i style="background:var(--miss)"></i>✗ ${t("legend_miss")}</span><span>↑ ↓ ${t("legend_arrows")}</span></div></div>`;
   }else if(mode==="splash"){
     const wrong=state.g.filter(x=>x!==p.id).length;const z=done?1:Math.max(1,6-wrong*0.85);
-    stage=`<div class="stage"><h2><span>Whose splash art is this?</span><span class="zoomtag">${done?"Full view":`${z.toFixed(1)}× zoom`}</span></h2>
-      <div class="crop" style="--fx:${p.fx};--fy:${p.fy};--z:${z};${done?"":"--flt:saturate(1.05)"}"><img src="${DD}splash/${ans.dd}_${p.skin[0]}.jpg" alt="${done?esc(p.skin[1]==="Original"?ans.name:p.skin[1]):"Mystery splash art"}"></div>
+    stage=`<div class="stage"><h2><span>${t("whose_splash")}</span><span class="zoomtag">${done?t("full_view"):t("zoom",{z:z.toFixed(1)})}</span></h2>
+      <div class="crop" style="--fx:${p.fx};--fy:${p.fy};--z:${z};${done?"":"--flt:saturate(1.05)"}"><img src="${DD}splash/${ans.dd}_${p.skin[0]}.jpg" alt="${done?esc(p.skin[0]===0?cName(p.id):skinName(p.id,p.skin)):"?"}"></div>
       ${state.won?bonusHTML(p,state):""}</div>`;
   }else if(mode==="ability"){
     const wrong=state.g.filter(x=>x!==p.id).length, a=p.abl[p.ai];
     const grey=!done&&wrong<3, turned=!done&&wrong<5;
-    stage=`<div class="stage"><h2><span>Whose ability is this?</span><span>${done?"":grey?"colour after 3 misses":turned?"turns upright after 5 misses":"no more hints"}</span></h2>
-      <div class="abil"><img src="${ABI}${p.ai?"spell":"passive"}/${a[2]}" alt="${done?esc(a[0]):"Mystery ability icon"}" style="filter:${grey?"grayscale(1) contrast(1.1)":"none"};transform:rotate(${turned?p.rot:0}deg)"></div>
+    stage=`<div class="stage"><h2><span>${t("whose_ability")}</span><span>${done?"":grey?t("hint_colour"):turned?t("hint_upright"):t("no_more_hints")}</span></h2>
+      <div class="abil"><img src="${ABI}${p.ai?"spell":"passive"}/${a[2]}" alt="${done?esc(ablName(p,p.ai)):"?"}" style="filter:${grey?"grayscale(1) contrast(1.1)":"none"};transform:rotate(${turned?p.rot:0}deg)"></div>
       ${state.won?abilityBonusHTML(p,state):""}</div>`;
   }else{
-    const ch=bioChunks(ans), wrong=state.g.filter(x=>x!==p.id).length, show=done?ch.length:Math.min(ch.length,1+wrong);
-    const hints=[];if(done||wrong>=3)hints.push(`From <b>${esc(regName(ans.region))}</b>`);if(done||wrong>=5)hints.push(`Class: <b>${esc((ans.tags||[]).join(", "))}</b>`);
-    stage=`<div class="stage"><h2><span>Who is this?</span><span>${show} of ${ch.length} parts shown${done?"":wrong<3?" · region hint after 3 misses":wrong<5?" · class hint after 5 misses":""}</span></h2>
-      <p class="lore">${ch.map((ws,i)=>i<show?`<span class="s">${ws.join(" ")} </span>`:`<span class="hid">${ws.map(w=>"▒".repeat(Math.max(2,Math.min(9,w.replace(/<[^>]+>/g,"").length)))).join(" ")} </span>`).join("")}</p>
+    const B=bioChunks(ans), ch=B.c, wrong=state.g.filter(x=>x!==p.id).length, show=done?ch.length:Math.min(ch.length,1+wrong);
+    const hints=[];if(done||wrong>=3)hints.push(t("from_region",{r:`<b>${esc(regName(ans.region))}</b>`}));if(done||wrong>=5)hints.push(t("class_is",{c:`<b>${esc(cls(ans))}</b>`}));
+    stage=`<div class="stage"><h2><span>${t("who_is_this")}</span><span>${t("parts_shown",{a:show,b:ch.length})}${done?"":wrong<3?" · "+t("hint_region_after"):wrong<5?" · "+t("hint_class_after"):""}</span></h2>
+      <p class="lore">${ch.map((ws,i)=>i<show?`<span class="s">${ws.join(B.sep)}${B.sep}</span>`:`<span class="hid">${ws.map(w=>"▒".repeat(Math.max(2,Math.min(9,w.replace(/<[^>]+>/g,"").length)))).join(" ")} </span>`).join("")}</p>
       ${hints.length?`<p style="margin:12px 0 0;font-size:15px;color:var(--muted)">${hints.join(" · ")}</p>`:""}</div>`;
   }
 
-  const input=done?"":`<div class="guess"><input id="gi" type="text" placeholder="Type a champion…" autocomplete="off" aria-label="Your guess" aria-autocomplete="list" aria-controls="sugg"><button type="button" id="gb">Guess</button><div class="sugg" id="sugg" role="listbox" hidden></div></div>
-    <div class="meta-line"><span>${state.g.length?`${state.g.length} tried`:"Start typing to see champions"}</span>${state.g.length>=8?`<button type="button" id="giveup">Reveal the answer</button>`:""}</div>`;
+  const input=done?"":`<div class="guess"><input id="gi" type="text" placeholder="${esc(t("placeholder"))}" autocomplete="off" aria-label="${esc(t("guess_champ"))}" aria-autocomplete="list" aria-controls="sugg"><button type="button" id="gb">${t("guess_btn")}</button><div class="sugg" id="sugg" role="listbox" hidden></div></div>
+    <div class="meta-line"><span>${state.g.length?t("tried",{n:state.g.length}):t("start_typing")}</span>${state.g.length>=8?`<button type="button" id="giveup">${t("reveal")}</button>`:""}</div>`;
 
   let guesses="";
   if(mode==="clues"&&state.g.length){
-    guesses=`<div class="grid-wrap"><div class="cgrid"><div class="h">Champion</div><div class="h">Region</div><div class="h">Class</div><div class="h">Range</div><div class="h">Resource</div><div class="h">Released</div><div class="h">Skins</div>
-      ${state.g.slice().reverse().map((g,ri)=>{const c=compare(g,p.id);const fresh=ri===0&&!state._seen;return `<div class="cell p" style="--i:0" title="${esc(CH[g].name)}"><img src="img/${g}-tile.webp" alt="${esc(CH[g].name)}"></div>`+c.map((x,i)=>`<div class="cell ${x.r}" style="--i:${fresh?i+1:0};${fresh?"":"animation:none"}">${i>=4?`<b>${x.v}</b>`:esc(x.v)}<span class="ic">${SYM[x.r]}${x.dir?" "+x.dir:""}</span></div>`).join("");}).join("")}</div></div>`;
+    guesses=`<div class="grid-wrap"><div class="cgrid">${["champion","region","class","range","resource","released","skins"].map(k=>`<div class="h">${t("col_"+k)}</div>`).join("")}
+      ${state.g.slice().reverse().map((g,ri)=>{const c=compare(g,p.id);const fresh=ri===0&&!state._seen;return `<div class="cell p" style="--i:0" title="${esc(cName(g))}"><img src="img/${g}-tile.webp" alt="${esc(cName(g))}"></div>`+c.map((x,i)=>`<div class="cell ${x.r}" style="--i:${fresh?i+1:0};${fresh?"":"animation:none"}">${i>=4?`<b>${x.v}</b>`:esc(x.v)}<span class="ic">${SYM[x.r]}${x.dir?" "+x.dir:""}</span></div>`).join("");}).join("")}</div></div>`;
   }else if(state.g.length){
-    guesses=`<div class="glist">${state.g.map(g=>`<span class="${g===p.id?"ok":""}"><img src="img/${g}-tile.webp" alt="">${esc(CH[g].name)}</span>`).join("")}</div>`;
+    guesses=`<div class="glist">${state.g.map(g=>`<span class="${g===p.id?"ok":""}"><img src="img/${g}-tile.webp" alt="">${esc(cName(g))}</span>`).join("")}</div>`;
   }
 
-  const back=p.practice?`<div class="meta-line" style="margin:0 0 10px"><span>Practice round · doesn't count towards your streak</span><button type="button" id="today">← Back to today's puzzle</button></div>`:"";
+  const back=p.practice?`<div class="meta-line" style="margin:0 0 10px"><span>${t("practice_note")}</span><button type="button" id="today">${t("back_today")}</button></div>`:"";
   play.innerHTML=back+(done?resultHTML(p,state,key):"")+stage+input+guesses;
   state._seen=true;
   wire(p,state,save,key);
@@ -365,23 +380,45 @@ function render(){
 }
 
 function bioChunks(c){
-  // Riot's biography, split into 5 roughly even chunks of words, with the champion's name (and each part of it) hidden
-  const parts=new Set([c.name,...c.name.split(/[\s&.]+/)].map(w=>w.toLowerCase().replace(/[^a-z']/g,"")).filter(w=>w.length>2));
-  const words=c.bio.split(/\s+/).map(w=>{const core=w.toLowerCase().replace(/[^a-z']/g,"").replace(/'s$/,"");
-    return parts.has(core)||[...parts].some(p=>p.includes(" ")?false:core===p)?`<mark>▇▇▇${/'s\W*$/.test(w)?"'s":""}</mark>${(w.match(/[.,;:!?]+$/)||[""])[0]}`:esc(w);});
-  const n=Math.min(5,words.length), size=Math.ceil(words.length/n), out=[];
-  for(let i=0;i<words.length;i+=size)out.push(words.slice(i,i+size));
-  return out;
+  // Riot's biography (in the visitor's language when Riot has one), split into 5 roughly even chunks, with the champion's name (and each part of it) hidden
+  const loc=pc(c.id);
+  if(!loc||!loc[2]){
+    const parts=new Set([c.name,...c.name.split(/[\s&.]+/)].map(w=>w.toLowerCase().replace(/[^a-z']/g,"")).filter(w=>w.length>2));
+    const words=c.bio.split(/\s+/).map(w=>{const core=w.toLowerCase().replace(/[^a-z']/g,"").replace(/'s$/,"");
+      return parts.has(core)||[...parts].some(p=>p.includes(" ")?false:core===p)?`<mark>▇▇▇${/'s\W*$/.test(w)?"'s":""}</mark>${(w.match(/[.,;:!?]+$/)||[""])[0]}`:esc(w);});
+    const n=Math.min(5,words.length), size=Math.ceil(words.length/n), out=[];
+    for(let i=0;i<words.length;i+=size)out.push(words.slice(i,i+size));
+    return {c:out,sep:" "};
+  }
+  return locChunks(loc[2],LANG==="zh-CN"?[loc[0],loc[1],c.name]:[loc[0],c.name]);
+}
+const NOSPACE=/^(zh|ja|th)/.test(LANG);
+function locChunks(text,names){
+  text=text.replace(/\s*(\.\.\.|…)\s*$/,"…");
+  const parts=[...new Set(names.flatMap(nm=>[nm,...nm.split(/[\s&·・.,']+/)]).map(x=>x.trim()).filter(x=>[...x].length>=2&&!/^(the|and|of|de|la|le|el|i|ii|iii|iv|v)$/i.test(x)))].sort((a,b)=>b.length-a.length);
+  const reEsc=x=>x.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
+  // in languages with spaces, a hidden name also swallows the case ending glued to it (Гарена, Garenem, 아리는)
+  // …and a name whose last vowel changes with the case (Аврора → Аврору) is matched by its stem
+  const alt=x=>{const v=`(?<![\\p{L}])${reEsc(x)}\\p{L}{0,3}`;const st=[...x].length>=5&&/[aeiouyаеёиоуыэюяąęó]$/i.test(x)?`|(?<![\\p{L}])${reEsc(x.slice(0,-1))}\\p{L}{1,3}`:"";return v+st;};
+  const re=new RegExp(parts.map(x=>NOSPACE?reEsc(x):alt(x)).join("|"),"giu");
+  const marked=text.replace(re,"\u0001");
+  const html=x=>esc(x).replace(/\u0001/g,"<mark>▇▇▇</mark>");
+  let units;
+  if(NOSPACE){const chars=[...marked];units=[];for(let i=0;i<chars.length;i+=5)units.push(chars.slice(i,i+5).join(""));}
+  else units=marked.split(/\s+/).filter(Boolean);
+  const n=Math.min(5,units.length), size=Math.ceil(units.length/n), out=[];
+  for(let i=0;i<units.length;i+=size)out.push(units.slice(i,i+size).map(html));
+  return {c:out,sep:NOSPACE?"":" "};
 }
 function abilityBonusHTML(p,state){
   const b=state.bonusA;
-  return `<div class="bonus"><h2 style="margin:0;font-family:var(--f-mono);font-weight:400;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)">Bonus · which ability is it?</h2>
-    <div class="opts">${p.aopts.map(i=>{const cls=b==null?"":i===p.ai?"right":i===b?"wrong":"";return `<button type="button" data-abil="${i}" class="${cls}" ${b!=null?"disabled":""}>${b!=null?`<b style="font-family:var(--f-num);font-weight:500;color:var(--gold);margin-right:6px">${SLOT[i]==="Passive"?"P":SLOT[i]}</b>`:""}${esc(p.abl[i][0])}</button>`;}).join("")}</div></div>`;
+  return `<div class="bonus"><h2 style="margin:0;font-family:var(--f-mono);font-weight:400;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)">${t("bonus_ability")}</h2>
+    <div class="opts">${p.aopts.map(i=>{const cls=b==null?"":i===p.ai?"right":i===b?"wrong":"";return `<button type="button" data-abil="${i}" class="${cls}" ${b!=null?"disabled":""}>${b!=null?`<b style="font-family:var(--f-num);font-weight:500;color:var(--gold);margin-right:6px">${SLOT[i]==="Passive"?"P":SLOT[i]}</b>`:""}${esc(ablName(p,i))}</button>`;}).join("")}</div></div>`;
 }
 function bonusHTML(p,state){
   const b=state.bonus;
-  return `<div class="bonus"><h2 style="margin:0;font-family:var(--f-mono);font-weight:400;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)">Bonus · which skin is it?</h2>
-    <div class="opts">${p.opts.map(o=>{const cls=b==null?"":o[0]===p.skin[0]?"right":o[0]===b?"wrong":"";return `<button type="button" data-skin="${o[0]}" class="${cls}" ${b!=null?"disabled":""}>${esc(o[1]==="Original"?`Original ${CH[p.id].name}`:o[1])}</button>`;}).join("")}</div></div>`;
+  return `<div class="bonus"><h2 style="margin:0;font-family:var(--f-mono);font-weight:400;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)">${t("bonus_skin")}</h2>
+    <div class="opts">${p.opts.map(o=>{const cls=b==null?"":o[0]===p.skin[0]?"right":o[0]===b?"wrong":"";return `<button type="button" data-skin="${o[0]}" class="${cls}" ${b!=null?"disabled":""}>${esc(skinName(p.id,o))}</button>`;}).join("")}</div></div>`;
 }
 
 function resultHTML(p,state,key){
@@ -389,19 +426,19 @@ function resultHTML(p,state,key){
   const s=stats(p.mode);const maxD=Math.max(1,...Object.values(s.dist||{}));const me=Math.min(n,7);
   const art=p.mode==="splash"?`${DD}splash/${ans.dd}_${p.skin[0]}.jpg`:`${DD}splash/${ans.dd}_0.jpg`;
   return `<div class="result"><div class="pic" style="background-image:url('${art}')"></div><div class="body">
-    <div class="eyebrow">${state.won?(n===1?"First try!":"Found it"):"Better luck tomorrow"}</div>
-    <h3>${esc(ans.name)}</h3><p>${state.won?`in ${n} ${n===1?"guess":"guesses"}`:"The answer was revealed."}${p.mode==="splash"&&state.bonus!=null?` · skin: ${state.bonus===p.skin[0]?"✓ ":"✗ "}${esc(p.skin[1]==="Original"?"Original":p.skin[1])}`:""}${p.mode==="ability"&&state.bonusA!=null?` · ability: ${state.bonusA===p.ai?"✓ ":"✗ "}${esc(p.abl[p.ai][0])} (${SLOT[p.ai]})`:""}</p>
-    <div class="acts"><button class="btn" type="button" id="share">Share result</button><a class="btn ghost" href="journey.html?c=${ans.id}">${esc(ans.name)}'s journey</a><button class="btn ghost" type="button" id="practice">Practice round</button></div>
-    ${p.practice?`<p style="font-size:14px;color:var(--muted)">Practice rounds don't count towards your streak.</p>`:`<div class="stats"><div><b>${s.played}</b><span>Played</span></div><div><b>${s.played?Math.round(s.won/s.played*100):0}%</b><span>Won</span></div><div><b>${s.streak}</b><span>Streak</span></div><div><b>${s.best}</b><span>Best</span></div></div>
+    <div class="eyebrow">${state.won?(n===1?t("first_try"):t("found_it")):t("better_luck")}</div>
+    <h3>${esc(cName(ans.id))}</h3><p>${state.won?t("in_n",{guesses:t("guesses",{n})}):t("revealed")}${p.mode==="splash"&&state.bonus!=null?` · ${t("skin_label")}: ${state.bonus===p.skin[0]?"✓ ":"✗ "}${esc(p.skin[0]===0?t("original_short"):skinName(p.id,p.skin))}`:""}${p.mode==="ability"&&state.bonusA!=null?` · ${t("ability_label")}: ${state.bonusA===p.ai?"✓ ":"✗ "}${esc(ablName(p,p.ai))} (${slotName(p.ai)})`:""}</p>
+    <div class="acts"><button class="btn" type="button" id="share">${t("share")}</button><a class="btn ghost" href="journey.html?c=${ans.id}">${esc(t("journey_btn",{name:cName(ans.id)}))}</a><button class="btn ghost" type="button" id="practice">${t("practice_btn")}</button></div>
+    ${p.practice?`<p style="font-size:14px;color:var(--muted)">${t("practice_no_streak")}</p>`:`<div class="stats"><div><b>${s.played}</b><span>${t("st_played")}</span></div><div><b>${s.played?Math.round(s.won/s.played*100):0}%</b><span>${t("st_won")}</span></div><div><b>${s.streak}</b><span>${t("st_streak")}</span></div><div><b>${s.best}</b><span>${t("st_best")}</span></div></div>
     <div class="dist">${[1,2,3,4,5,6,7].map(i=>{const v=(s.dist||{})[i]||0;return `<div><span>${i===7?"7+":i}</span><i class="${state.won&&i===me?"me":""}" style="width:${Math.max(6,v/maxD*100)}%">${v}</i></div>`;}).join("")}</div>`}
   </div></div>`;
 }
 
 function shareText(p,state){
-  const head=`Runeterra Daily${p.practice?" (practice)":` #${p.n}`} · ${MODES[p.mode]} · ${state.won?`${state.g.length} ${state.g.length===1?"guess":"guesses"}`:"X"}`;
+  const head=t(p.practice?"share_practice":"share_head",{n:p.n,mode:MN(p.mode),result:state.won?t("guesses",{n:state.g.length}):"X"});
   let body="";
   if(p.mode==="clues")body=state.g.map(g=>compare(g,p.id).map(x=>EMO[x.r]).join("")).join("\n");
-  else body=state.g.map(g=>g===p.id?"🟩":"🟥").join("")+(p.mode==="splash"&&state.bonus!=null?`\nSkin bonus ${state.bonus===p.skin[0]?"✅":"❌"}`:"")+(p.mode==="ability"&&state.bonusA!=null?`\nAbility bonus ${state.bonusA===p.ai?"✅":"❌"}`:"");
+  else body=state.g.map(g=>g===p.id?"🟩":"🟥").join("")+(p.mode==="splash"&&state.bonus!=null?`\n${t("skin_bonus")} ${state.bonus===p.skin[0]?"✅":"❌"}`:"")+(p.mode==="ability"&&state.bonusA!=null?`\n${t("ability_bonus")} ${state.bonusA===p.ai?"✅":"❌"}`:"");
   return `${head}\n${body}\n${location.origin}${location.pathname}`;
 }
 
@@ -410,10 +447,13 @@ function wire(p,state,save,key){
   const DRAFT=`atlas.daily.draft.${p.mode}.${p.practice?"p"+p.n:key}`;
   if(gi){
     let sel=0,list=[];
-    const draw=()=>{const q=gi.value.trim().toLowerCase().replace(/[^a-z]/g,"");
-      list=q?CHAMPS.filter(c=>!state.g.includes(c.id)&&c.name.toLowerCase().replace(/[^a-z]/g,"").startsWith(q)).concat(CHAMPS.filter(c=>!state.g.includes(c.id)&&!c.name.toLowerCase().replace(/[^a-z]/g,"").startsWith(q)&&c.name.toLowerCase().replace(/[^a-z]/g,"").includes(q))).slice(0,8):[];
+    // names in the visitor's language and in English both work
+    const keys=c=>{const a=[norm(cName(c.id)),norm(c.name)];if(LANG==="zh-CN"&&pc(c.id))a.push(norm(pc(c.id)[1]));return [...new Set(a)];};
+    const draw=()=>{const q=norm(gi.value.trim());
+      const pool=CHAMPS.filter(c=>!state.g.includes(c.id)), starts=q?pool.filter(c=>keys(c).some(k=>k.startsWith(q))):[];
+      list=q?starts.concat(pool.filter(c=>!starts.includes(c)&&keys(c).some(k=>k.includes(q)))).slice(0,8):[];
       sel=0;sugg.hidden=!list.length;
-      sugg.innerHTML=list.map((c,i)=>`<button type="button" role="option" data-id="${c.id}" aria-selected="${i===sel}"><img src="img/${c.id}-tile.webp" alt="">${esc(c.name)}<small>${esc(regName(c.region))}</small></button>`).join("");};
+      sugg.innerHTML=list.map((c,i)=>`<button type="button" role="option" data-id="${c.id}" aria-selected="${i===sel}"><img src="img/${c.id}-tile.webp" alt="">${esc(cName(c.id))}${LANG!=="en"&&cName(c.id)!==c.name?` <span style="color:var(--faint);font-size:13px">${esc(c.name)}</span>`:""}<small>${esc(regName(c.region))}</small></button>`).join("");};
     const choose=id=>{if(!id||state.g.includes(id))return;try{sessionStorage.removeItem(DRAFT)}catch(e){}state.g.push(id);state._seen=false;if(id===p.id){state.won=true;record(p,key,state);}save();render();
       const g2=document.getElementById("gi");if(g2)g2.focus();};
     // a half-typed guess survives a trip to another page
@@ -426,16 +466,16 @@ function wire(p,state,save,key){
       else if(e.key==="Escape"){sugg.hidden=true;return;}else return;
       sugg.querySelectorAll("button").forEach((b,i)=>b.setAttribute("aria-selected",String(i===sel)));});
     sugg.addEventListener("click",e=>{const b=e.target.closest("button");if(b)choose(b.dataset.id);});
-    document.getElementById("gb").onclick=()=>{if(list[sel])choose(list[sel].id);else{const exact=CHAMPS.find(c=>c.name.toLowerCase()===gi.value.trim().toLowerCase());if(exact)choose(exact.id);}};
+    document.getElementById("gb").onclick=()=>{if(list[sel])choose(list[sel].id);else{const q=norm(gi.value.trim()),exact=q&&CHAMPS.find(c=>keys(c).includes(q));if(exact)choose(exact.id);}};
     if(!matchMedia("(hover:none)").matches)gi.focus();
   }
   const gu=document.getElementById("giveup");if(gu)gu.onclick=()=>{state.lost=true;record(p,key,state);save();render();};
   play.querySelectorAll("[data-skin]").forEach(b=>b.onclick=()=>{state.bonus=+b.dataset.skin;save();render();});
   play.querySelectorAll("[data-abil]").forEach(b=>b.onclick=()=>{state.bonusA=+b.dataset.abil;save();render();});
-  const sh=document.getElementById("share");if(sh)sh.onclick=async()=>{const t=shareText(p,state);
-    try{if(navigator.share&&matchMedia("(hover:none)").matches){await navigator.share({text:t});return;}await navigator.clipboard.writeText(t);toast("Copied — paste it anywhere");}catch(e){toast("Couldn't copy on this browser");}};
+  const sh=document.getElementById("share");if(sh)sh.onclick=async()=>{const txt=shareText(p,state);
+    try{if(navigator.share&&matchMedia("(hover:none)").matches){await navigator.share({text:txt});return;}await navigator.clipboard.writeText(txt);toast(t("copied"));}catch(e){toast(t("copy_fail"));}};
   const pr=document.getElementById("practice");if(pr){const cur=PR[mode],open=cur&&cur.state&&cur.state.g&&cur.state.g.length&&!cur.state.won&&!cur.state.lost&&!p.practice;
-    pr.textContent=open?"Resume practice":"Practice round";
+    pr.textContent=open?t("resume_practice"):t("practice_btn");
     pr.onclick=()=>{if(!open)PR[mode]={seed:1000+Math.floor(Math.random()*100000),state:null};LS.set(PRAC,PR);inPractice=true;saveView();render();window.scrollTo({top:0,behavior:"smooth"});};}
   const td=document.getElementById("today");if(td)td.onclick=()=>{inPractice=false;saveView();render();};
 }
@@ -443,18 +483,25 @@ function wire(p,state,save,key){
 function statusChips(){
   const key=todayKey();
   document.querySelectorAll("[data-st]").forEach(el=>{const m=el.dataset.st;const s=LS.get(`atlas.daily.${m}.${key}`,null);
-    el.textContent=s&&s.won?`✓ ${s.g.length}`:s&&s.lost?"✗":s&&s.g.length?`${s.g.length} tried`:"New";el.classList.toggle("done",!!(s&&s.won));});
+    el.textContent=s&&s.won?`✓ ${s.g.length}`:s&&s.lost?"✗":s&&s.g.length?t("tried",{n:s.g.length}):t("status_new");el.classList.toggle("done",!!(s&&s.won));});
 }
 
 document.querySelectorAll(".mode").forEach(b=>b.onclick=()=>{mode=b.dataset.m;inPractice=false;saveView();try{history.replaceState(null,"","#"+mode);}catch(e){}render();});
 
-// how to play
-document.getElementById("how").innerHTML=`<h3>How to play</h3><ul>
-  <li><b>Clues:</b> guess any champion. Each column compares your guess with the answer: region, class, melee or ranged, resource (mana, energy…), release year and number of skins. Green is a match, orange is close, red is a miss; arrows say whether the answer's year or skin count is higher or lower.</li>
-  <li><b>Splash:</b> a piece of one of the champion's splash arts. Every wrong guess zooms out. Once you have the champion, a bonus asks which skin it is.</li>
-  <li><b>Ability:</b> one of the champion's ability icons, turned and drained of colour. After 3 misses it gets its colour back, after 5 it turns the right way up. Once you have the champion, a bonus asks which ability it is.</li>
-  <li><b>Lore:</b> the champion's biography with their name hidden, shown a part at a time. Each wrong guess reveals more; after 3 misses you get their region, after 5 their class.</li>
-  <li>New puzzles at midnight your time. Share your result without spoilers. Practice rounds are unlimited and don't affect your streak.</li></ul>`;
+// how to play + the page's fixed text, in the visitor's language
+function staticText(){
+  document.getElementById("how").innerHTML=`<h3>${t("how_title")}</h3><ul>${["clues","splash","ability","lore","more"].map(k=>`<li>${t("how_"+k)}</li>`).join("")}</ul>`;
+  if(LANG==="en")return;
+  document.documentElement.lang=LANG;
+  document.getElementById("intro").textContent=t("intro");
+  document.getElementById("untilT").textContent=t("until_tomorrow");
+  document.querySelectorAll(".mode").forEach(b=>{const m=b.dataset.m;b.querySelector("b").textContent=MN(m);b.querySelector("small").textContent=t("md_"+m);});
+  document.getElementById("exE").textContent=t("ex_eyebrow");document.getElementById("exT").textContent=t("ex_title");
+  const EX={"atlas.html":"atlas","journey.html":"journeys","reading.html":"reading","skins.html":"skins","timeline.html":"timeline","worlds.html":"worlds","music.html":"music"};
+  document.querySelectorAll(".ex").forEach(a=>{const k=EX[a.getAttribute("href")];if(!k)return;a.querySelector("b").textContent=t("ex_"+k);a.querySelector("span").textContent=t("ex_"+k+"_d");});
+  const cr=document.getElementById("credit");cr.textContent=t("daily_credit");
+  const tn=document.createElement("div");tn.textContent=t("tr_note");cr.after(tn);
+}
 
 // countdown to local midnight; roll over to the new day's puzzles automatically
 let lastKey=todayKey();
@@ -462,7 +509,7 @@ function tick(){const n=new Date(),m=new Date(n);m.setHours(24,0,0,0);const s=Ma
   document.getElementById("clock").textContent=[Math.floor(s/3600),Math.floor(s/60)%60,s%60].map(x=>String(x).padStart(2,"0")).join(":");
   if(todayKey()!==lastKey){lastKey=todayKey();inPractice=false;saveView();render();}}
 setInterval(tick,1000);tick();
-render();
+Promise.all([I?I.ready:null,I?I.loadPack():null]).catch(()=>{}).then(()=>{PK=I&&I.pack;staticText();render();});
 </script>
 </body>
 </html>

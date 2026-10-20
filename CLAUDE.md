@@ -26,6 +26,15 @@ Custom domain is possible later via Pages settings + CNAME file (not set up).
 | timeline.html | Release timeline: 173 champions in release order. Pulse bar chart (releases per year, drawn at real width, hover tooltip, click jumps), 6 computed milestones, year bands with release-day rows (date + patch, #order), filters (search, class = tags[0], region, oldest/newest). Plate: released/revealed dates, same-day & before/after champs, links to Atlas/Skins/Reading. `?region=`, `#y<year>`, `#t-<id>`. atlas.html panel shows "Released <date> · patch" linking here. |
 | music.html | Music hub: 13 shelves (anthems, virtual bands, Arcane S1/S2/score, Pentakill, Star Guardian, login themes from videos.js, champion songs, Warsongs, DJ Sona, LoR, long listens). One docked YouTube IFrame-API player (youtube-nocookie; kept ≥200px tall per YouTube's rules) plays a shelf in order, shuffle, Media Session controls. Deep links `#s-<shelf>`, `#t-<shelf>-<n>`. |
 
+Languages (2026-10-20, phase 1): i18n.js (plain <script> in <head> of every page, before site.js) = window.AtlasI18n: 17 languages
+(en, ko, zh-CN, zh-TW, ja, es-ES, es-MX, pt-BR, fr, de, it, pl, ru, tr, vi, th, id). Choice saved in localStorage atlas.lang, else browser language, else en.
+English UI text lives in i18n.js (EN); others in data/i18n/ui-<code>.js (window.ATLAS_UI, same keys; plurals as {one,few,many,other}; written by Claude,
+source script in the session scratchpad ui_tr.py — add a key to EN AND all 16 files). Riot's official champion text per language in data/i18n/<code>.js
+(ATLAS_I18N_PACK: champs id → [name, title, blurb, resource, [5 ability names], {skinNum: skin name}], tags, regions; DDragon 16.20.1 + Universe faction
+names; vi/id have no region names → English). zh-CN pack has name/title SWAPPED vs Riot's file on purpose (Riot puts 阿狸 in "title").
+Translated so far: the menu + language picker (site.js, every page; untranslated pages show "this page is in English for now" in the picker) and the
+whole front page/Daily (names, regions, classes, resources, skins, abilities, Lore = Riot's localized blurb with name + case-ending stems hidden;
+zh/ja/th chunked by characters; guesses accept local or English names). Next phases: Journeys/Atlas panel, other pages, Arabic (RTL, no Riot data).
 Menu: site.js (loaded with `defer` on every page) replaces each page's <nav class="nav"> with grouped dropdowns — Champions (Journeys, Skins, Timeline) ·
 Lore (Atlas = atlas.html, Reading Room) · Play (Runeterra Daily = ./) · Esports (Worlds, Players) · Watch & Listen (Theater, Music) · Card games (Runeterra cards, Riftbound) · ★ My champions;
 phone = star + "Menu" sheet. Edit GROUPS in site.js to change it (the plain links left in each page are only a no-JS fallback).
