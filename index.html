@@ -199,6 +199,27 @@ footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width
 .vscore{font-family:var(--f-num);font-weight:600;font-size:64px;line-height:.9;color:var(--gold)}
 @media (max-width:480px){.vbtn{width:76px;height:76px}.vplay{gap:14px}.vplay .vt b{font-size:20px}.vreveal{grid-template-columns:60px minmax(0,1fr);gap:12px}.vreveal img{width:60px;height:60px}}
 html.cjk body *{letter-spacing:.02em!important}
+/* stream mode: fresh rounds in a clean layout for streaming (no menu, countdown, explore cards or personal stats) */
+.streamtog{margin-top:12px;display:inline-flex;align-items:center;gap:8px;background:transparent;border:1px solid var(--rule);color:var(--text);font-family:var(--f-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;padding:8px 12px;cursor:pointer}
+.streamtog:hover{border-color:var(--gold)}
+.streamtog i{font-style:normal;width:8px;height:8px;border-radius:50%;background:#e0485a;box-shadow:0 0 0 3px rgba(224,72,90,.18)}
+.sbar{display:flex;flex-wrap:wrap;align-items:center;gap:8px 18px;margin:0 0 16px;padding:12px 14px;border:1px solid rgba(224,72,90,.45);background:linear-gradient(90deg,rgba(224,72,90,.12),rgba(15,26,46,.6) 60%);font-family:var(--f-mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.sbar .live{display:inline-flex;align-items:center;gap:8px;color:#ff8f9b}
+.sbar .live::before{content:"";width:8px;height:8px;border-radius:50%;background:#e0485a;animation:slive 1.6s ease-in-out infinite}
+@keyframes slive{50%{opacity:.35}}
+.sbar b{font-family:var(--f-num);font-size:22px;font-weight:500;letter-spacing:.04em;color:var(--text);vertical-align:-2px}
+.sbar .code b{color:var(--gold);letter-spacing:.14em}
+.sbar .sp{flex:1}
+.sbar button{background:none;border:1px solid var(--rule);color:var(--text);font:inherit;letter-spacing:inherit;text-transform:inherit;padding:7px 10px;cursor:pointer}
+.sbar button:hover{border-color:var(--gold)}
+.sbar .along{flex-basis:100%;text-transform:none;letter-spacing:.04em;font-size:13px;color:var(--muted)}
+.sbar .along b{font-family:var(--f-mono);font-size:13px;color:var(--gold);letter-spacing:.02em}
+html.stream .bar nav,html.stream .head p,html.stream .clock,html.stream .how,html.stream .explore,html.stream footer>div:not(.legal),html.stream .mode .st{display:none!important}
+html.stream .head{padding-block:16px 12px}
+html.stream h1{font-size:clamp(30px,4vw,46px)}
+html.stream footer{margin-top:28px;padding-block:14px 24px;font-size:12px}
+@media (min-width:1100px){html.stream .play{zoom:1.12}}
+@media (max-width:760px){.sbar{gap:8px 12px;padding:10px 12px}.sbar .sp{display:none}}
 @media (max-width:480px){.bonus .opts{grid-template-columns:1fr}.lore{font-size:18px}.stage{padding:14px}}
 </style>
 <script src="site.js" defer></script>
@@ -219,9 +240,10 @@ html.cjk body *{letter-spacing:.02em!important}
       <h1>Runeterra <em>Daily</em></h1>
       <p id="intro">Nine League of Legends champions to find every day: from clues, a zoomed-in splash, an ability icon, their lore and five voice lines. Same puzzles for everyone, free, no sign-up.</p>
     </div>
-    <div class="clock"><b id="clock">--:--:--</b><span id="untilT">until tomorrow's puzzles</span></div>
+    <div class="clock"><b id="clock">--:--:--</b><span id="untilT">until tomorrow's puzzles</span><br><button type="button" class="streamtog" id="streamOn" title="Fresh rounds for streaming: today's puzzles stay unspoiled and your streak isn't touched"><i aria-hidden="true"></i><span>Stream mode</span></button></div>
   </section>
 
+  <div class="sbar" id="sbar" hidden></div>
   <div class="modes" role="tablist" aria-label="Game mode">
     <button class="mode" role="tab" data-m="clues" aria-selected="true"><i>?</i><span><b>Clues</b><small>Region, class, range and more</small></span><span class="st" data-st="clues"></span></button>
     <button class="mode" role="tab" data-m="splash" aria-selected="false"><i>◩</i><span><b>Splash</b><small>Zoomed-in art, then name the skin</small></span><span class="st" data-st="splash"></span></button>
@@ -408,20 +430,53 @@ const PR=LS.get(PRAC,{}); // {mode:{seed,state}} — practice rounds survive pag
 const saveView=()=>LS.set(VIEW,{mode,practice:inPractice});
 const play=document.getElementById("play");
 
+/* ---------- stream mode (?stream, or ?stream=CODE for one exact round): fresh rounds for streaming.
+   Today's puzzles stay unspoiled for chat and the streamer's streak is never touched. Each mode keeps its current round code;
+   anyone who opens ?stream=<code>#<mode> plays that same round. The stream's running score lives in atlas.daily.stream. ---------- */
+const SKEY="atlas.daily.stream", QS=new URLSearchParams(location.search);
+const SST=Object.assign({m:{},tally:{played:0,found:0,seen:[]}},LS.get(SKEY,{}));
+let STREAM=QS.has("stream");
+const CODEA="ABCDEFGHJKMNPQRSTUVWXYZ23456789";
+const newCode=()=>Array.from({length:4},()=>CODEA[Math.floor(Math.random()*CODEA.length)]).join("");
+const cleanCode=c=>String(c||"").toUpperCase().replace(/[^A-Z0-9]/g,"").slice(0,6);
+const codeSeed=c=>1000+hash("stream|"+c)%100000;
+function streamRound(m){if(!SST.m[m]){SST.m[m]={code:newCode(),state:null};LS.set(SKEY,SST);}return SST.m[m];}
+{const c=cleanCode(QS.get("stream"));if(STREAM&&c.length>=4&&(!SST.m[mode]||SST.m[mode].code!==c)){SST.m[mode]={code:c,state:null};LS.set(SKEY,SST);}}
+if(STREAM)inPractice=false;
+document.documentElement.classList.toggle("stream",STREAM);
+function syncURL(){try{history.replaceState(null,"",location.pathname+(STREAM?`?stream=${streamRound(mode).code}`:"")+"#"+mode);}catch(e){}}
+if(STREAM)syncURL();
+function setStream(on){STREAM=on;inPractice=false;saveView();document.documentElement.classList.toggle("stream",on);vStop();syncURL();render();window.scrollTo({top:0});}
+function streamNew(){SST.m[mode]={code:newCode(),state:null};LS.set(SKEY,SST);vStop();syncURL();render();window.scrollTo({top:0,behavior:"smooth"});}
+function streamTally(p,state){const tag=p.mode+":"+SST.m[p.mode].code,T=SST.tally;if(T.seen.includes(tag))return;T.seen.push(tag);if(T.seen.length>300)T.seen=T.seen.slice(-300);T.played++;if(state.won)T.found++;LS.set(SKEY,SST);}
+const siteAddr=()=>location.host+location.pathname.replace(/index\.html$/,"");
+function streamBar(){
+  const sb=document.getElementById("sbar");if(!STREAM){sb.hidden=true;return;}
+  const r=streamRound(mode),T=SST.tally;sb.hidden=false;
+  sb.innerHTML=`<span class="live">${t("s_live")}</span><span class="code">${t("s_code",{code:`<b>${esc(r.code)}</b>`})}</span><span>${t("s_score",{a:`<b>${T.found}</b>`,b:`<b>${T.played}</b>`})}</span><span class="sp"></span>
+    <button type="button" id="sNew">${t("s_new")}</button>${T.played?`<button type="button" id="sReset">${t("s_reset")}</button>`:""}<button type="button" id="sExit">${t("s_exit")}</button>
+    <span class="along">${t("s_along",{site:`<b>${esc(siteAddr())}</b>`})}</span>`;
+  document.getElementById("sNew").onclick=streamNew;document.getElementById("sExit").onclick=()=>setStream(false);
+  const rs=document.getElementById("sReset");if(rs)rs.onclick=()=>{SST.tally={played:0,found:0,seen:[]};LS.set(SKEY,SST);streamBar();};
+}
+// the buttons a finished round shows in stream mode
+const streamActs=ans=>`<div class="acts"><button class="btn" type="button" id="snext">${t("s_next")}</button><button class="btn ghost" type="button" id="sshare">${t("s_share")}</button>${ans?`<a class="btn ghost" href="journey.html?c=${ans.id}">${esc(t("journey_btn",{name:cName(ans.id)}))}</a>`:""}</div><p style="font-size:14px;color:var(--muted)">${t("s_no_streak")}</p>`;
+
 function render(){
   document.querySelectorAll(".mode").forEach(b=>b.setAttribute("aria-selected",String(b.dataset.m===mode)));
-  const key=todayKey();if(inPractice&&!PR[mode])inPractice=false;const pseed=inPractice?PR[mode].seed:null;
+  const key=todayKey();if(inPractice&&!PR[mode])inPractice=false;const SR=STREAM?streamRound(mode):null;const pseed=SR?codeSeed(SR.code):inPractice?PR[mode].seed:null;
+  streamBar();
   if(mode!=="voice")vStop();
   if(mode==="voice"&&!window.ATLAS_VOICE){play.innerHTML=`<div class="stage"><h2><span>${t("v_who")}</span></h2><p style="margin:0;color:var(--muted)">…</p></div>`;loadVoice().then(()=>{if(mode==="voice")render();});statusChips();return;}
   const p=puzzle(mode,key,pseed);
   const k=sKey(p,key);
   const state=(k&&LS.get(k,null))||p._state||{g:[],won:false,lost:false,bonus:null};
   p._state=state;
-  const save=()=>{if(k)LS.set(k,state);else{PR[mode].state=state;LS.set(PRAC,PR);}};
-  if(pseed!=null&&PR[mode].state)Object.assign(state,PR[mode].state);
+  const save=()=>{if(SR){SR.state=state;LS.set(SKEY,SST);if(state.won||state.lost)streamTally(p,state);}else if(k)LS.set(k,state);else{PR[mode].state=state;LS.set(PRAC,PR);}};
+  if(SR){if(SR.state)Object.assign(state,SR.state);}else if(pseed!=null&&PR[mode].state)Object.assign(state,PR[mode].state);
   if(mode==="voice"&&!state.rounds){state.rounds=p.rounds.map(()=>({g:[],done:false,ok:false}));state.cur=0;}
   const done=state.won||state.lost, ans=CH[p.id];
-  document.getElementById("eye").textContent=p.practice?t("practice_eye",{mode:MN(mode)}):t("puzzle_n",{n:p.n,date:I&&LANG!=="en"?I.date(key):new Date().toLocaleDateString(LANG,{day:"numeric",month:"long",year:"numeric"})});
+  document.getElementById("eye").textContent=SR?t("s_eye",{mode:MN(mode)}):p.practice?t("practice_eye",{mode:MN(mode)}):t("puzzle_n",{n:p.n,date:I&&LANG!=="en"?I.date(key):new Date().toLocaleDateString(LANG,{day:"numeric",month:"long",year:"numeric"})});
 
   if(mode==="voice"){renderVoice(p,state,save,key);return;}
   let stage="";
@@ -458,11 +513,12 @@ function render(){
     guesses=`<div class="glist">${state.g.map(g=>`<span class="${g===p.id?"ok":""}"><img src="img/${g}-tile.webp" alt="">${esc(cName(g))}</span>`).join("")}</div>`;
   }
 
-  const back=p.practice?`<div class="meta-line" style="margin:0 0 10px"><span>${t("practice_note")}</span><button type="button" id="today">${t("back_today")}</button></div>`:"";
+  const back=p.practice&&!STREAM?`<div class="meta-line" style="margin:0 0 10px"><span>${t("practice_note")}</span><button type="button" id="today">${t("back_today")}</button></div>`:"";
   play.innerHTML=back+(done?resultHTML(p,state,key):"")+stage+input+guesses;
   state._seen=true;
   wire(p,state,save,key);
   statusChips();
+  if(STREAM&&done){const sn=document.getElementById("snext");if(sn)sn.focus({preventScroll:true});}
 }
 
 function voiceKind(k){return t(k==="laugh"?"v_laugh":"v_k_"+k);}
@@ -470,21 +526,22 @@ function renderVoice(p,state,save,key){
   const R=state.rounds, done=state.won||state.lost, cur=Math.min(state.cur||0,VOICE_N-1), rd=p.rounds[cur], st=R[cur], ans=CH[rd.id];
   const score=R.filter(x=>x.ok).length;
   const pips=`<div class="vpips" aria-hidden="true">${R.map((x,i)=>`<i class="${x.done?(x.ok?"ok":"no"):i===cur&&!done?"now":""}"></i>`).join("")}</div>`;
-  const back=p.practice?`<div class="meta-line" style="margin:0 0 10px"><span>${t("practice_note")}</span><button type="button" id="today">${t("back_today")}</button></div>`:"";
+  const back=p.practice&&!STREAM?`<div class="meta-line" style="margin:0 0 10px"><span>${t("practice_note")}</span><button type="button" id="today">${t("back_today")}</button></div>`:"";
   const rowsHTML=(upto)=>`<div class="vlist">${p.rounds.slice(0,upto).map((x,i)=>{const r=R[i],c=CH[x.id];return `<div class="vrow ${r.ok?"ok":""}"><img src="img/${x.id}-tile.webp" alt=""><div style="min-width:0"><b><a href="journey.html?c=${x.id}">${esc(cName(x.id))}</a> <span style="color:${r.ok?"#7fd1a0":"#e58a95"}">${r.ok?"✓":"✗"}</span></b><small>${esc(voiceKind(x.line.k))}${x.line.txt?` · ${esc(x.line.txt)}`:""}</small></div><button type="button" class="vre" data-r="${i}" aria-label="${esc(t("v_again"))}" title="${esc(t("v_again"))}">${SPK}</button></div>`;}).join("")}</div>`;
   let html=back;
   if(done){
     const s=stats("voice"),dist=s.dist||{},maxD=Math.max(1,...Object.values(dist));
     html+=`<div class="result"><div class="pic" style="background-image:url('${DD}splash/${CH[p.rounds[0].id].dd}_0.jpg')"></div><div class="body">
-      <div class="eyebrow">${score===VOICE_N?t("v_perfect"):state.won?t("found_it"):t("better_luck")}</div>
+      <div class="eyebrow">${score===VOICE_N?t("v_perfect"):state.won?t("found_it"):p.practice?esc(MN("voice")):t("better_luck")}</div>
       <div class="vscore">${score}<span style="font-size:32px;color:var(--muted)"> / ${VOICE_N}</span></div>
       <p style="margin-top:8px">${t("v_scored",{a:score,b:VOICE_N})}</p>
       ${rowsHTML(VOICE_N)}
-      <div class="acts"><button class="btn" type="button" id="share">${t("share")}</button><button class="btn ghost" type="button" id="practice">${t("practice_btn")}</button></div>
-      ${p.practice?`<p style="font-size:14px;color:var(--muted)">${t("practice_no_streak")}</p>`:`<div class="stats"><div><b>${s.played}</b><span>${t("st_played")}</span></div><div><b>${s.played?Math.round(s.won/s.played*100):0}%</b><span>${t("st_won")}</span></div><div><b>${s.streak}</b><span>${t("st_streak")}</span></div><div><b>${s.best}</b><span>${t("st_best")}</span></div></div>
+      ${STREAM?streamActs(null):`<div class="acts"><button class="btn" type="button" id="share">${t("share")}</button><button class="btn ghost" type="button" id="practice">${t("practice_btn")}</button></div>`}
+      ${STREAM?"":p.practice?`<p style="font-size:14px;color:var(--muted)">${t("practice_no_streak")}</p>`:`<div class="stats"><div><b>${s.played}</b><span>${t("st_played")}</span></div><div><b>${s.played?Math.round(s.won/s.played*100):0}%</b><span>${t("st_won")}</span></div><div><b>${s.streak}</b><span>${t("st_streak")}</span></div><div><b>${s.best}</b><span>${t("st_best")}</span></div></div>
       <div class="dist">${[5,4,3,2,1,0].map(i=>{const v=dist[i]||0;return `<div><span>${i}</span><i class="${i===score?"me":""}" style="width:${Math.max(6,v/maxD*100)}%">${v}</i></div>`;}).join("")}</div>`}
       </div></div>`;
     play.innerHTML=html;
+    if(STREAM){const sn=document.getElementById("snext");if(sn)sn.focus({preventScroll:true});}
   }else{
     const wrong=st.g.filter(x=>x!==rd.id).length, left=VOICE_TRIES-st.g.length;
     const hints=[];if(st.done||wrong>=1)hints.push(t("from_region",{r:`<b>${esc(regName(ans.region))}</b>`}));if(st.done||wrong>=2)hints.push(t("class_is",{c:`<b>${esc(cls(ans))}</b>`}));
@@ -565,10 +622,10 @@ function resultHTML(p,state,key){
   const s=stats(p.mode);const maxD=Math.max(1,...Object.values(s.dist||{}));const me=Math.min(n,7);
   const art=p.mode==="splash"?`${DD}splash/${ans.dd}_${p.skin[0]}.jpg`:`${DD}splash/${ans.dd}_0.jpg`;
   return `<div class="result"><div class="pic" style="background-image:url('${art}')"></div><div class="body">
-    <div class="eyebrow">${state.won?(n===1?t("first_try"):t("found_it")):t("better_luck")}</div>
+    <div class="eyebrow">${state.won?(n===1?t("first_try"):t("found_it")):p.practice?t("v_out"):t("better_luck")}</div>
     <h3>${esc(cName(ans.id))}</h3><p>${state.won?t("in_n",{guesses:t("guesses",{n})}):t("revealed")}${p.mode==="splash"&&state.bonus!=null?` · ${t("skin_label")}: ${state.bonus===p.skin[0]?"✓ ":"✗ "}${esc(p.skin[0]===0?t("original_short"):skinName(p.id,p.skin))}`:""}${p.mode==="ability"&&state.bonusA!=null?` · ${t("ability_label")}: ${state.bonusA===p.ai?"✓ ":"✗ "}${esc(ablName(p,p.ai))} (${slotName(p.ai)})`:""}</p>
-    <div class="acts"><button class="btn" type="button" id="share">${t("share")}</button><a class="btn ghost" href="journey.html?c=${ans.id}">${esc(t("journey_btn",{name:cName(ans.id)}))}</a><button class="btn ghost" type="button" id="practice">${t("practice_btn")}</button></div>
-    ${p.practice?`<p style="font-size:14px;color:var(--muted)">${t("practice_no_streak")}</p>`:`<div class="stats"><div><b>${s.played}</b><span>${t("st_played")}</span></div><div><b>${s.played?Math.round(s.won/s.played*100):0}%</b><span>${t("st_won")}</span></div><div><b>${s.streak}</b><span>${t("st_streak")}</span></div><div><b>${s.best}</b><span>${t("st_best")}</span></div></div>
+    ${STREAM?streamActs(ans):`<div class="acts"><button class="btn" type="button" id="share">${t("share")}</button><a class="btn ghost" href="journey.html?c=${ans.id}">${esc(t("journey_btn",{name:cName(ans.id)}))}</a><button class="btn ghost" type="button" id="practice">${t("practice_btn")}</button></div>`}
+    ${STREAM?"":p.practice?`<p style="font-size:14px;color:var(--muted)">${t("practice_no_streak")}</p>`:`<div class="stats"><div><b>${s.played}</b><span>${t("st_played")}</span></div><div><b>${s.played?Math.round(s.won/s.played*100):0}%</b><span>${t("st_won")}</span></div><div><b>${s.streak}</b><span>${t("st_streak")}</span></div><div><b>${s.best}</b><span>${t("st_best")}</span></div></div>
     <div class="dist">${[1,2,3,4,5,6,7].map(i=>{const v=(s.dist||{})[i]||0;return `<div><span>${i===7?"7+":i}</span><i class="${state.won&&i===me?"me":""}" style="width:${Math.max(6,v/maxD*100)}%">${v}</i></div>`;}).join("")}</div>`}
   </div></div>`;
 }
@@ -625,6 +682,9 @@ function wire(p,state,save,key){
     pr.textContent=open?t("resume_practice"):t("practice_btn");
     pr.onclick=()=>{if(!open)PR[mode]={seed:1000+Math.floor(Math.random()*100000),state:null};LS.set(PRAC,PR);inPractice=true;saveView();render();window.scrollTo({top:0,behavior:"smooth"});};}
   const td=document.getElementById("today");if(td)td.onclick=()=>{inPractice=false;saveView();render();};
+  const sn=document.getElementById("snext");if(sn)sn.onclick=streamNew;
+  const ss=document.getElementById("sshare");if(ss)ss.onclick=async()=>{const c=SST.m[mode].code,txt=`${t("s_share_text",{code:c,mode:MN(mode)})}\n${location.origin}${location.pathname}?stream=${c}#${mode}`;
+    try{await navigator.clipboard.writeText(txt);toast(t("copied"));}catch(e){toast(t("copy_fail"));}};
 }
 
 function statusChips(){
@@ -635,15 +695,17 @@ function statusChips(){
     el.textContent=s&&s.won?`✓ ${s.g.length}`:s&&s.lost?"✗":s&&s.g.length?t("tried",{n:s.g.length}):t("status_new");el.classList.toggle("done",!!(s&&s.won));});
 }
 
-document.querySelectorAll(".mode").forEach(b=>b.onclick=()=>{mode=b.dataset.m;inPractice=false;saveView();try{history.replaceState(null,"","#"+mode);}catch(e){}render();});
+document.querySelectorAll(".mode").forEach(b=>b.onclick=()=>{mode=b.dataset.m;inPractice=false;saveView();syncURL();render();});
+document.getElementById("streamOn").onclick=()=>setStream(true);
 
 // how to play + the page's fixed text, in the visitor's language
 function staticText(){
-  document.getElementById("how").innerHTML=`<h3>${t("how_title")}</h3><ul>${["clues","splash","ability","lore","voice","more"].map(k=>`<li>${t("how_"+k)}</li>`).join("")}</ul>`;
+  document.getElementById("how").innerHTML=`<h3>${t("how_title")}</h3><ul>${["clues","splash","ability","lore","voice","more","stream"].map(k=>`<li>${t("how_"+k)}</li>`).join("")}</ul>`;
   if(LANG==="en")return;
   document.documentElement.lang=LANG;
   document.getElementById("intro").textContent=t("intro");
   document.getElementById("untilT").textContent=t("until_tomorrow");
+  const so=document.getElementById("streamOn");so.title=t("s_btn_tip");so.querySelector("span").textContent=t("s_btn");
   document.querySelectorAll(".mode").forEach(b=>{const m=b.dataset.m;b.querySelector("b").textContent=MN(m);b.querySelector("small").textContent=t("md_"+m);});
   document.getElementById("exE").textContent=t("ex_eyebrow");document.getElementById("exT").textContent=t("ex_title");
   const EX={"atlas.html":"atlas","journey.html":"journeys","reading.html":"reading","skins.html":"skins","timeline.html":"timeline","worlds.html":"worlds","music.html":"music"};

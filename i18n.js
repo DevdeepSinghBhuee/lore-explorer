@@ -373,7 +373,22 @@
     v_n_of:"{a} of {b}",
     v_cant:"This browser can't play this sound.",
     v_en_note:"Joke, taunt, dance and laugh lines are in English.",
-    v_credit:"Voice lines are Riot's own recordings: pick and ban lines from the game client (via CommunityDragon), emotes from the League of Legends Wiki."
+    v_credit:"Voice lines are Riot's own recordings: pick and ban lines from the game client (via CommunityDragon), emotes from the League of Legends Wiki.",
+    s_btn:"Stream mode",
+    s_btn_tip:"Fresh rounds for streaming: today's puzzles stay unspoiled and your streak isn't touched",
+    s_live:"Stream mode",
+    s_code:"Round {code}",
+    s_score:"{a} of {b} found",
+    s_new:"New round",
+    s_reset:"Reset score",
+    s_exit:"Exit stream mode",
+    s_eye:"Stream round · {mode}",
+    s_next:"Next round",
+    s_share:"Copy round link",
+    s_share_text:"Runeterra Daily · stream round {code} ({mode}). Play the same round:",
+    s_no_streak:"Stream rounds never touch your daily streak.",
+    s_along:"Play along at {site}",
+    how_stream:"<b>Streaming?</b> Stream mode gives you fresh rounds in a clean layout for your stream. Today's puzzles stay unspoiled for chat and your streak isn't touched. Every round has a code: anyone who opens its link plays the same one."
   };
   var UI=null;
   function pick(key){var v=UI&&UI[key];return v==null?EN[key]:v;}
