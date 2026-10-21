@@ -121,6 +121,8 @@ Must work at phone width with no horizontal scroll (watch grid children: `min-wi
 ## Working notes
 - Test locally over http (`python3 -m http.server`), not file:// (WebGL/fetch break). Playwright works for screenshots.
 - After pushing, check the live page (append `?v=N` to dodge cache).
+- Pages can silently skip a deploy (happened 2026-10-21 for the Voice game): `gh run list -R DevdeepSinghBhuee/runeterra-atlas -L 3` shows
+  each deployment; if the latest push has none, push an empty commit to re-trigger it.
 - Commit messages end with the session's attribution lines.
 
 ## Ideas not started yet (ask Devdeep which next)
