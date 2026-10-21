@@ -47,8 +47,17 @@ awaits AtlasI18n data first; champion objects are copied with name/title localiz
 data/i18n/skins-<code>.js (ATLAS_I18N_SKINS {s: "<champ>-<num>" → [name, description], l: lineId → skin-line name}; game client via CommunityDragon
 latest/plugins/rcp-be-lol-game-data/global/<ko_kr…>/v1/skins.json + skinlines.json, pulled through the browser pane as gzip+base64 chunks of 105,000
 chars — the device bridge cuts results at ~117 KB). Only "Classic Miss Fortune" has no match (stays English). Thai dates use the Gregorian calendar.
-UI source files: scratchpad ui_tr.py, ui_tr2.py, ui_tr3.py/3b/3c → merge_ui.py. Still English: Atlas map/regions, Worlds, Players, Theater, Music,
-card libraries, bond notes, video and comic titles. Next: those pages; Arabic (RTL, no Riot data).
+UI source files (phases 1–3) were in a session scratchpad; copies now live on branch phase4-translations in tools/i18n/ (see its README).
+Still English on main: Atlas map/regions, Worlds, Players, Theater, Music, card libraries, bond notes, video and comic titles.
+Phase 4 = PAUSED 2026-10-21 at Devdeep's request ("limit language change to the pages already done"). Do NOT merge unless he asks.
+Everything is on branch **phase4-translations** (pushed, not deployed): rest of atlas.html (hero, map labels, region tag/desc, design notes),
+worlds.html, players.html (countries via Intl.DisplayNames), theater.html, music.html, library.html (Riot's LoR text from data/i18n/lor-<lang>.js,
+13 langs, no zh-CN/vi/id; localized card PNGs from InFinity54 LoR_DDragon_Set<N|6cde|7b>/img/cards/<loc>/ — cards.js got "sr" for 6cde/7b),
+riftbound.html (data/i18n/rb-<lang>.js: ko/zh-CN/zh-TW cards + set names; game terms = Riot's own labels, English where Riot shows English),
+all 16 UI files + site.js TRANSLATED=1 for every page. Tested ko/ru/de/th/zh-CN/en desktop+phone: no errors, no horizontal scroll.
+Not yet re-tested: ja, pl, es-MX, tr, it, fr, pt-BR, vi, id. Thai region/champion names follow Riot's Thai data (English names).
+To ship it later: checkout the branch, run tools/i18n/t_p4.py for the untested languages, merge into main, update this file.
+Arabic (RTL, no Riot data) not started.
 Menu: site.js (loaded with `defer` on every page) replaces each page's <nav class="nav"> with grouped dropdowns — Champions (Journeys, Skins, Timeline) ·
 Lore (Atlas = atlas.html, Reading Room) · Play (Runeterra Daily = ./) · Esports (Worlds, Players) · Watch & Listen (Theater, Music) · Card games (Runeterra cards, Riftbound) · ★ My champions;
 phone = star + "Menu" sheet. Edit GROUPS in site.js to change it (the plain links left in each page are only a no-JS fallback).
@@ -113,4 +122,4 @@ Must work at phone width with no horizontal scroll (watch grid children: `min-wi
 7. ~~Comics & short stories (Reading Room)~~ (done 2026-10-19).
 8. ~~Champion release timeline~~ (done 2026-10-19).
 9. ~~Champion journeys~~ (done 2026-10-20). 10. ~~Grouped menu + My champions~~ (done 2026-10-20). Agreed next, in order:
-   11. ~~Daily guessing game~~ (done 2026-10-20; LoLdle modes studied: Classic, Quote, Ability, Emoji, Splash). 12. ~~Abilities + Daily Ability mode~~ (done 2026-10-20; also icon row in atlas.html panel). Next: LoL streamers.
+   11. ~~Daily guessing game~~ (done 2026-10-20; LoLdle modes studied: Classic, Quote, Ability, Emoji, Splash). 12. ~~Abilities + Daily Ability mode~~ (done 2026-10-20; also icon row in atlas.html panel). Next: LoL streamers. Devdeep also said he has "one more cool thing to add" — ask him what it is. Earlier agreed: link previews + SEO, streamer-friendly Daily, launch plan.
