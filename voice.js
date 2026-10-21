@@ -6,7 +6,9 @@
 (function(){
   "use strict";
   var AI=window.AtlasI18n, LANG=AI?AI.lang:"en";
-  var t=function(k,v){return AI?AI.t(k,v):k;};
+  // English fallbacks, in case a cached older i18n.js doesn't know these keys yet
+  var EN={v_title:"Voice lines",v_pick:"Pick",v_ban:"Ban",v_joke:"Joke",v_taunt:"Taunt",v_dance:"Dance",v_laugh:"Laugh",v_play_tip:"Play: {what}",v_n_of:"{a} of {b}",v_cant:"This browser can't play this sound.",v_en_note:"Joke, taunt, dance and laugh lines are in English."};
+  var t=function(k,v){var r=AI?AI.t(k,v):k;if(r===k&&EN[k])r=EN[k].replace(/\{(\w+)\}/g,function(m,x){return v&&v[x]!=null?v[x]:m;});return r;};
   // Riot recorded champion-select lines in these client languages; the rest hear English
   var LOC={"ko":"ko_kr","zh-CN":"zh_cn","ja":"ja_jp","es-ES":"es_es","es-MX":"es_mx","pt-BR":"pt_br","fr":"fr_fr","de":"de_de","it":"it_it","pl":"pl_pl","ru":"ru_ru","tr":"tr_tr"}[LANG]||"default";
   var CD="https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/"+LOC+"/v1/";
