@@ -58,6 +58,14 @@ all 16 UI files + site.js TRANSLATED=1 for every page. Tested ko/ru/de/th/zh-CN/
 Not yet re-tested: ja, pl, es-MX, tr, it, fr, pt-BR, vi, id. Thai region/champion names follow Riot's Thai data (English names).
 To ship it later: checkout the branch, run tools/i18n/t_p4.py for the untested languages, merge into main, update this file.
 Arabic (RTL, no Riot data) not started.
+Voice lines (2026-10-21): voice.js (window.AtlasVoice.mount(el, champ), lazy-loads data/voice.js) shows a "Voice lines" row of speaker buttons —
+Pick, Ban, Joke (Ctrl 1), Taunt (Ctrl 2), Dance (Ctrl 3), Laugh (Ctrl 4); one sound at a time, clicking again plays the next line, caption = Wiki transcript.
+Used in the atlas.html champion panel (#voxBox, right under the hero) and the journey.html "Listen" chapter (always shown now). Pick/ban audio = Riot's game
+client via CommunityDragon global/<locale>/v1/champion-{choose,ban}-vo/<key>.ogg, in the visitor's language for ko, zh-CN, ja, es-ES, es-MX, pt-BR, fr, de,
+it, pl, ru, tr (Riot has no zh_tw/vi/th/id there → English); all 173 × 13 checked 2026-10-21. Emotes = base-skin files on static.wikia.nocookie.net from the
+League Wiki <Champion>/LoL/Audio pages (api.php action=parse; first occurrence of each section; skins other than Original dropped); English only.
+Devdeep also asked for stories read aloud in the champion's own voice — DECLINED (would mean AI-cloning real voice actors and reproducing Riot's story
+text); don't build it. Files are Ogg Vorbis: older iPhones/Safari may not play them (the row then says "This browser can't play this sound").
 Menu: site.js (loaded with `defer` on every page) replaces each page's <nav class="nav"> with grouped dropdowns — Champions (Journeys, Skins, Timeline) ·
 Lore (Atlas = atlas.html, Reading Room) · Play (Runeterra Daily = ./) · Esports (Worlds, Players) · Watch & Listen (Theater, Music) · Card games (Runeterra cards, Riftbound) · ★ My champions;
 phone = star + "Menu" sheet. Edit GROUPS in site.js to change it (the plain links left in each page are only a no-JS fallback).
@@ -69,7 +77,7 @@ Every footer carries Riot's
 ## Data (data/*.js, plain globals)
 champions.js (173 champs: id, dd, name, title, region, role, tags, bio, hand) · regions.js (ATLAS_REGIONS) · bonds.js (ATLAS_BONDS; atlas.html reads both) · cards.js · stories.js ·
 champcards.js · riftbound.js (RB_SETS, RB_CARDS) · champrb.js · videos.js (ATLAS_VIDEOS shelves) ·
-worlds.js (WORLDS_TEAMS, WORLDS_SNAPSHOT) · players.js (ATLAS_PLAYERS, saved 2026-10-19) · music.js (ATLAS_MUSIC shelves, saved 2026-10-19) · skins.js (ATLAS_SKINS by champion + ATLAS_SKIN_LINES, saved 2026-10-19, patch 16.20) · reading.js (ATLAS_READ_STORIES, ATLAS_READ_COMICS, ATLAS_READ_SERIES, saved 2026-10-19) · game.js (ATLAS_GAME id → [resource, Melee/Ranged]; DDragon 16.20.1, Gnar = Ranged per Wiki) · abilities.js (ATLAS_ABILITIES id → [key, [[passive name, desc, icon], [name, desc, icon, cd, cost, range]×4]]; DDragon 16.20.1) · abilityvideos.js (ATLAS_ABILITY_VIDEOS key → "PQWER" slots that have a clip; 856/865) · releases.js (ATLAS_RELEASES id → [released, patch, revealed]). Bonds (data/bonds.js) are [a,b,type,note,source,necritVideo]; source r = Riot Universe text, w = League Wiki Relations,
+worlds.js (WORLDS_TEAMS, WORLDS_SNAPSHOT) · players.js (ATLAS_PLAYERS, saved 2026-10-19) · music.js (ATLAS_MUSIC shelves, saved 2026-10-19) · skins.js (ATLAS_SKINS by champion + ATLAS_SKIN_LINES, saved 2026-10-19, patch 16.20) · reading.js (ATLAS_READ_STORIES, ATLAS_READ_COMICS, ATLAS_READ_SERIES, saved 2026-10-19) · game.js (ATLAS_GAME id → [resource, Melee/Ranged]; DDragon 16.20.1, Gnar = Ranged per Wiki) · abilities.js (ATLAS_ABILITIES id → [key, [[passive name, desc, icon], [name, desc, icon, cd, cost, range]×4]]; DDragon 16.20.1) · abilityvideos.js (ATLAS_ABILITY_VIDEOS key → "PQWER" slots that have a clip; 856/865) · releases.js (ATLAS_RELEASES id → [released, patch, revealed]) · voice.js (ATLAS_VOICE id → {k: champion key, p/b: pick/ban transcript, j/t/d/l: [[wiki image path, transcript]]}; saved 2026-10-21). Bonds (data/bonds.js) are [a,b,type,note,source,necritVideo]; source r = Riot Universe text, w = League Wiki Relations,
 u = only listed as related by Riot (note says no official story explains it). Reviewed 2026-10-19: 77 re-typed, 34 verified as Linked, 129 'u'.
 
 ## Sources (all free)
@@ -122,4 +130,4 @@ Must work at phone width with no horizontal scroll (watch grid children: `min-wi
 7. ~~Comics & short stories (Reading Room)~~ (done 2026-10-19).
 8. ~~Champion release timeline~~ (done 2026-10-19).
 9. ~~Champion journeys~~ (done 2026-10-20). 10. ~~Grouped menu + My champions~~ (done 2026-10-20). Agreed next, in order:
-   11. ~~Daily guessing game~~ (done 2026-10-20; LoLdle modes studied: Classic, Quote, Ability, Emoji, Splash). 12. ~~Abilities + Daily Ability mode~~ (done 2026-10-20; also icon row in atlas.html panel). Next: LoL streamers. Devdeep also said he has "one more cool thing to add" — ask him what it is. Earlier agreed: link previews + SEO, streamer-friendly Daily, launch plan.
+   11. ~~Daily guessing game~~ (done 2026-10-20; LoLdle modes studied: Classic, Quote, Ability, Emoji, Splash). 12. ~~Abilities + Daily Ability mode~~ (done 2026-10-20; also icon row in atlas.html panel). 13. ~~Champion voice lines~~ (done 2026-10-21; Devdeep's "one more cool thing"). Next: LoL streamers. Earlier agreed: link previews + SEO, streamer-friendly Daily, launch plan.

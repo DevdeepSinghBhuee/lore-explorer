@@ -482,7 +482,7 @@ footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width
   </section>
 
   <footer>
-    <div>Runeterra Atlas is an unofficial fan guide. Character summaries are written for this site. Champion art comes from Riot's Data Dragon. Connections between champions follow Riot's Universe biographies and stories, and the <a href="https://leagueoflegends.fandom.com/" rel="noopener">League of Legends Wiki</a> (CC BY-SA 3.0); each one says which. Lore videos linked from connections are by <a href="https://www.youtube.com/@Necrit" rel="noopener">Necrit</a>.</div>
+    <div>Runeterra Atlas is an unofficial fan guide. Character summaries are written for this site. Champion art comes from Riot's Data Dragon. Connections between champions follow Riot's Universe biographies and stories, and the <a href="https://leagueoflegends.fandom.com/" rel="noopener">League of Legends Wiki</a> (CC BY-SA 3.0); each one says which. Lore videos linked from connections are by <a href="https://www.youtube.com/@Necrit" rel="noopener">Necrit</a>. Voice lines are Riot's own recordings: pick and ban lines from the game client (via <a href="https://www.communitydragon.org/" rel="noopener">CommunityDragon</a>), emotes from the League of Legends Wiki.</div>
     <div class="legal">Runeterra Atlas was created under Riot Games' "Legal Jibber Jabber" policy using assets owned by Riot Games. Riot Games does not endorse or sponsor this project.</div>
   </footer>
 </div>
@@ -1443,6 +1443,14 @@ function fillReading(c){
     (st.length?`<ul class="stories">${st.map(s=>`<li><a href="${esc(sUrl(s.s))}" target="_blank" rel="noopener">${esc(sT(s))}<span class="rm">${tr("j_min",{n:s.min})}</span><span class="read-badge" data-read="${esc(s.s)}">${tr("read_badge")}</span><span aria-hidden="true"> ↗</span></a></li>`).join("")}</ul>`:"")+
     (cm.length?`<div class="comicrow">${cm.map(x=>`<a href="reading.html#comic-${x.u.replace("/","--")}" title="${esc(x.t)}" style="--ar:${x.ar}"><img src="https://cmsassets.rgpub.io/sanity/images/dsfx7636/universe/${x.img}?w=${x.ar>1?360:200}&fm=webp" alt="${esc(x.t)}" loading="lazy" decoding="async"></a>`).join("")}</div>`:"");
 }
+// Voice lines: voice.js (+ data/voice.js) load on first use; plays pick/ban and Ctrl+1-4 emote lines in place
+let voxLoading=null;
+function fillVoice(c){
+  const box=document.getElementById("voxBox");if(!box)return;
+  if(window.AtlasVoice){window.AtlasVoice.stop();window.AtlasVoice.mount(box,c);return;}
+  if(!voxLoading)voxLoading=new Promise(res=>{const s=document.createElement("script");s.src="voice.js";s.onload=res;s.onerror=res;document.head.appendChild(s);});
+  voxLoading.then(()=>{const b=document.getElementById("voxBox");if(b&&b.dataset.c===c.id&&window.AtlasVoice)window.AtlasVoice.mount(b,c);else if(b&&!window.AtlasVoice)b.remove();});
+}
 // Ability icons: data/abilities.js loads on first use, then shows passive + Q W E R linking to the journey's "How they play"
 let abLoading=null;
 function fillAbilities(c){
@@ -1494,6 +1502,7 @@ return `<a class="released" href="timeline.html#t-${c.id}" title="See ${esc(c.na
         <div class="chips">${(c.tags||[]).map(t=>`<span class="chip-t">${esc(AI?AI.tag(t):t)}</span>`).join("")}<a class="story" href="https://universe.leagueoflegends.com/${AI?AI.uni:"en_US"}/champion/${esc(({renata:"renataglasc",jarvan:"jarvaniv",wukong:"monkeyking"})[c.id]||(c.dd||c.id).toLowerCase())}/" target="_blank" rel="noopener">${esc(tr("a_full_story"))}</a></div>
       </div>
     </div>
+    <div class="extra vox" id="voxBox" data-c="${c.id}"></div>
     <div class="ties"><h5>${esc(tr("a_ties"))}</h5>${ties || `<p class="none">${esc(tr("a_loner"))}</p>`}</div>
     ${(()=>{const st=(window.ATLAS_STORIES||{})[c.id]||[];return `<div class="extra" id="readBox" data-c="${c.id}"${st.length?"":" hidden"}><h5>${esc(tr("a_stories"))}</h5><ul class="stories">${st.map(([t,u])=>`<li><a href="${esc(AI?AI.storyUrl(u):`https://universe.leagueoflegends.com/en_US/story/${u}/`)}" target="_blank" rel="noopener">${esc(AI?AI.storyTitle(u,t):t)}<span aria-hidden="true"> ↗</span></a></li>`).join("")}</ul></div>`;})()}
     ${(()=>{const L=(window.ATLAS_LOR||{})[c.id]||[];return L.length?`<div class="extra"><h5>${esc(tr("a_in_lor"))}</h5><div class="lor">${L.map(([code,n])=>`<a href="library.html#card-${code}" title="${esc(n)}"><img src="img/cards/${code}.webp" alt="${esc(n)}" loading="lazy"></a>`).join("")}</div></div>`:"";})()}
@@ -1501,6 +1510,7 @@ return `<a class="released" href="timeline.html#t-${c.id}" title="See ${esc(c.na
     <div class="extra abilities" id="abBox" data-c="${c.id}"></div>
     <div class="extra skins" id="skinsBox" data-c="${c.id}"></div>
     ${(()=>{const V=[];(window.ATLAS_VIDEOS||[]).forEach(sh=>sh.v.forEach(v=>{if(v.ch.includes(c.id)&&sh.id!=="login"&&sh.id!=="making")V.push(v);}));const L2=(window.ATLAS_VIDEOS||[]).find(sh=>sh.id==="login");const lg=L2?L2.v.find(v=>v.ch.includes(c.id)):null;if(lg)V.push(lg);return V.length?`<div class="extra"><h5>${esc(tr("j_watch"))}</h5><div class="vids">${V.slice(0,6).map(v=>`<a href="theater.html#v-${v.y}"><img src="https://i.ytimg.com/vi/${v.y}/mqdefault.jpg" alt="" loading="lazy"><span>${esc(v.t)}</span></a>`).join("")}</div></div>`:"";})()}`;
+  fillVoice(c);
   fillSkins(c);
   fillAbilities(c);
   fillReading(c);

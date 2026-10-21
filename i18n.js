@@ -342,7 +342,19 @@
     m_again:"Click again to clear",
     m_credit:"Stories and comics belong to Riot Games and open on Riot's Universe site.",
     m_min:"{n} min",
-    m_h:"{n} h"
+    m_h:"{n} h",
+    v_title:"Voice lines",
+    v_pick:"Pick",
+    v_ban:"Ban",
+    v_joke:"Joke",
+    v_taunt:"Taunt",
+    v_dance:"Dance",
+    v_laugh:"Laugh",
+    v_play_tip:"Play: {what}",
+    v_n_of:"{a} of {b}",
+    v_cant:"This browser can't play this sound.",
+    v_en_note:"Joke, taunt, dance and laugh lines are in English.",
+    v_credit:"Voice lines are Riot's own recordings: pick and ban lines from the game client (via CommunityDragon), emotes from the League of Legends Wiki."
   };
   var UI=null;
   function pick(key){var v=UI&&UI[key];return v==null?EN[key]:v;}

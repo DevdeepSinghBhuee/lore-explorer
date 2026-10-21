@@ -272,6 +272,7 @@ footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width
 
   <footer>
     <div id="credit">Everything here comes from the rest of the Atlas: Riot's champion bios and Universe stories, Riot's official videos and music, Data Dragon art, and the League Wiki and Leaguepedia for relationships and release dates. Stories open on Riot's Universe site.</div>
+    <div id="vcredit">Voice lines are Riot's own recordings: pick and ban lines from the game client (via CommunityDragon), emotes from the League of Legends Wiki.</div>
     <div class="legal">Runeterra Atlas was created under Riot Games' "Legal Jibber Jabber" policy using assets owned by Riot Games. Riot Games does not endorse or sponsor this project.</div>
   </footer>
 </div>
@@ -413,7 +414,7 @@ async function journey(c){
   shelves.forEach(sh=>{if(sh.id==="login"||sh.id==="music")sh.v.forEach(v=>{if(v.ch.includes(c.id))T.push({y:v.y,t:v.t,by:sh.id==="login"?t("j_login"):(v.by||t("j_mv")),href:sh.id==="login"?`music.html#s-login`:`theater.html#v-${v.y}`});});});
   const M=window.ATLAS_MUSIC;if(M){const re=new RegExp(`(?<![\\w'])${c.name.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")}(?![\\w'])`);
     M.shelves.forEach(sh=>sh.k.forEach((k,i)=>{if(re.test(k[1]+" | "+k[2])&&!T.some(t=>t.y===k[0]))T.push({y:k[0],t:k[1],by:k[2],href:`music.html#t-${sh.id}-${i+1}`});}));}
-  add("listen",t("j_listen"),t("j_tracks",{n:T.length}),T.length?`<div class="tracks">${T.map(k=>`<a class="track" href="${k.href}"><img src="https://i.ytimg.com/vi/${k.y}/mqdefault.jpg" alt="" loading="lazy"><span style="min-width:0"><b>${esc(k.t)}</b><small>${esc(k.by)}</small></span><span class="go">${t("j_play_btn")}</span></a>`).join("")}</div>`:"");
+  add("listen",t("j_listen"),T.length?t("j_tracks",{n:T.length}):"",`<div class="vox" id="voxBox" data-c="${c.id}" style="margin-bottom:${T.length?22:0}px"></div>`+(T.length?`<div class="tracks">${T.map(k=>`<a class="track" href="${k.href}"><img src="https://i.ytimg.com/vi/${k.y}/mqdefault.jpg" alt="" loading="lazy"><span style="min-width:0"><b>${esc(k.t)}</b><small>${esc(k.by)}</small></span><span class="go">${t("j_play_btn")}</span></a>`).join("")}</div>`:""));
 
   // 5 · people
   const B=BONDS.filter(b=>b[0]===c.id||b[1]===c.id).map(b=>({o:CH[b[0]===c.id?b[1]:b[0]],type:b[2],note:b[3],src:b[4]})).filter(x=>x.o);
@@ -475,6 +476,9 @@ async function journey(c){
     document.querySelector(".abilities").addEventListener("keydown",e=>{if(!/Arrow(Left|Right)/.test(e.key))return;const cur=+document.querySelector('.ab[aria-selected="true"]').dataset.i;const n=(cur+(e.key==="ArrowRight"?1:4))%5;show(n);document.querySelector(`.ab[data-i="${n}"]`).focus();});
     show(0);}
 
+  // voice lines (voice.js + data/voice.js, loaded now)
+  loadScript("voice.js").then(()=>{const vb=document.getElementById("voxBox");if(window.AtlasVoice&&vb)window.AtlasVoice.mount(vb,c);else if(vb)vb.remove();});
+
   // videos play in place (youtube-nocookie)
   document.getElementById("chapters").addEventListener("click",e=>{const b=e.target.closest(".vid");if(!b)return;const th=b.querySelector(".th");if(th.classList.contains("playing"))return;
     th.classList.add("playing");th.innerHTML=`<iframe src="https://www.youtube-nocookie.com/embed/${b.dataset.y}?autoplay=1&rel=0" title="Video" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>`;});
@@ -499,7 +503,7 @@ function staticText(){
   document.getElementById("pq").placeholder=t("j_find");
   document.getElementById("surprise").textContent=t("surprise");document.getElementById("hRandom").textContent=t("surprise");
   document.getElementById("hAnother").textContent=t("j_another");
-  const cr=document.getElementById("credit");cr.textContent=t("j_credit");
+  const cr=document.getElementById("credit");cr.textContent=t("j_credit");document.getElementById("vcredit").textContent=t("v_credit");
   const n=document.createElement("div");n.textContent=t("tr_note")+" "+t("j_en_bits");cr.after(n);
   CHAMPS.sort((a,b)=>nm(a).localeCompare(nm(b),LANG));
 }
