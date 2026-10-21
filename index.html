@@ -56,8 +56,8 @@ h1 em{font-style:normal;color:var(--gold)}
 .clock b{display:block;font-family:var(--f-num);font-weight:500;font-size:38px;line-height:.9;color:var(--gold);font-variant-numeric:tabular-nums}
 .clock span{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
 
-.modes{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:22px}
-@media (max-width:1100px){.modes{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.modes{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin-bottom:22px}
+@media (max-width:1100px){.modes{grid-template-columns:repeat(2,minmax(0,1fr))}.mode[data-m="voice"]{grid-column:span 2}}
 .abil{display:grid;place-items:center;padding:18px 0 6px}
 .abil img{width:min(180px,46vw);height:auto;aspect-ratio:1;border:2px solid var(--gold-dim);box-shadow:0 14px 30px rgba(0,0,0,.5);transition:transform .7s cubic-bezier(.2,.8,.2,1),filter .7s;image-rendering:auto}
 .mode{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--panel);border:1px solid var(--rule);cursor:pointer;text-align:left;min-width:0}
@@ -167,6 +167,37 @@ h1 em{font-style:normal;color:var(--gold)}
 footer{border-top:1px solid var(--rule);margin-top:48px;padding-block:24px 40px;color:var(--muted);font-size:14px;display:grid;gap:8px}
 footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width:80ch}
 @media (max-width:760px){.modes{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.mode{padding:10px}.mode small{display:none}.mode i{width:30px;height:30px;font-size:15px}.mode b{font-size:18px}.mode .st{display:none}.result{grid-template-columns:1fr}.result .pic{min-height:0;aspect-ratio:16/8}.clock{text-align:left}}
+/* voice mode */
+.vpips{display:flex;gap:6px;margin:0 0 14px}
+.vpips i{flex:1;height:6px;background:var(--panel-2);border:1px solid var(--rule)}
+.vpips i.ok{background:var(--hit);border-color:var(--hit)}.vpips i.no{background:var(--miss);border-color:var(--miss)}.vpips i.now{border-color:var(--gold);background:rgba(200,170,110,.35)}
+.vplay{display:flex;align-items:center;gap:18px;padding:8px 0 4px}
+.vbtn{flex:none;width:92px;height:92px;border-radius:50%;border:1px solid var(--gold);background:radial-gradient(circle at 50% 40%,rgba(200,170,110,.25),rgba(200,170,110,.06) 70%);color:var(--gold);cursor:pointer;display:grid;place-items:center;transition:transform .15s,background .15s}
+.vbtn:hover,.vbtn:focus-visible{transform:scale(1.04);outline:none;background:radial-gradient(circle at 50% 40%,rgba(200,170,110,.4),rgba(200,170,110,.1) 70%)}
+.vbtn svg{width:38px;height:38px}
+.vbtn .bars{display:none;gap:4px;align-items:center;height:36px}.vbtn .bars i{display:block;width:5px;height:10px;background:var(--gold);animation:vbar 1s ease-in-out infinite}
+.vbtn .bars i:nth-child(2){animation-delay:-.25s}.vbtn .bars i:nth-child(3){animation-delay:-.5s}.vbtn .bars i:nth-child(4){animation-delay:-.75s}
+.vbtn.on svg{display:none}.vbtn.on .bars{display:flex}
+@keyframes vbar{0%,100%{height:8px}50%{height:34px}}@media (prefers-reduced-motion:reduce){.vbtn .bars i{animation:none;height:20px}}
+.vplay .vt b{display:block;font-family:var(--f-display);font-weight:400;font-size:24px;line-height:1.15}
+.vplay .vt span{display:block;color:var(--muted);font-size:15px;margin-top:4px}
+.vhints{margin:12px 0 0;font-size:15px;color:var(--muted)}
+.vreveal{display:grid;grid-template-columns:84px minmax(0,1fr);gap:16px;align-items:center;border:1px solid var(--rule);padding:12px;margin-top:14px;background:var(--panel-2)}
+.vreveal img{width:84px;height:84px;object-fit:cover;display:block}
+.vreveal .k{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.vreveal h3{font-family:var(--f-display);font-weight:400;font-size:24px;margin:2px 0 4px}
+.vreveal q{display:block;font-style:italic;color:#c4c8d3}
+.vnext{margin-top:12px}
+.vlist{display:grid;gap:8px;margin:12px 0 14px}
+.vrow{display:grid;grid-template-columns:40px minmax(0,1fr) auto;gap:10px;align-items:center;padding:6px;border:1px solid var(--rule);border-left:3px solid var(--miss)}
+.vrow.ok{border-left-color:var(--hit)}
+.vrow img{width:40px;height:40px;object-fit:cover;display:block}
+.vrow b{display:block;font-weight:500;font-size:16px;line-height:1.2}.vrow b a{color:inherit;text-decoration:none}.vrow b a:hover{color:var(--gold)}
+.vrow small{display:block;color:var(--muted);font-size:13.5px;line-height:1.3;overflow-wrap:anywhere}
+.vrow button{width:36px;height:36px;border:1px solid var(--rule);background:none;color:var(--gold);cursor:pointer;display:grid;place-items:center}.vrow button:hover{border-color:var(--gold)}.vrow button svg{width:16px;height:16px}
+.vrow button.on{background:rgba(200,170,110,.18);border-color:var(--gold)}
+.vscore{font-family:var(--f-num);font-weight:600;font-size:64px;line-height:.9;color:var(--gold)}
+@media (max-width:480px){.vbtn{width:76px;height:76px}.vplay{gap:14px}.vplay .vt b{font-size:20px}.vreveal{grid-template-columns:60px minmax(0,1fr);gap:12px}.vreveal img{width:60px;height:60px}}
 html.cjk body *{letter-spacing:.02em!important}
 @media (max-width:480px){.bonus .opts{grid-template-columns:1fr}.lore{font-size:18px}.stage{padding:14px}}
 </style>
@@ -186,7 +217,7 @@ html.cjk body *{letter-spacing:.02em!important}
     <div>
       <div class="eyebrow" id="eye"></div>
       <h1>Runeterra <em>Daily</em></h1>
-      <p id="intro">Four League of Legends champions to find every day: from clues, a zoomed-in splash, an ability icon and their lore. Same puzzles for everyone, free, no sign-up.</p>
+      <p id="intro">Nine League of Legends champions to find every day: from clues, a zoomed-in splash, an ability icon, their lore and five voice lines. Same puzzles for everyone, free, no sign-up.</p>
     </div>
     <div class="clock"><b id="clock">--:--:--</b><span id="untilT">until tomorrow's puzzles</span></div>
   </section>
@@ -196,6 +227,7 @@ html.cjk body *{letter-spacing:.02em!important}
     <button class="mode" role="tab" data-m="splash" aria-selected="false"><i>◩</i><span><b>Splash</b><small>Zoomed-in art, then name the skin</small></span><span class="st" data-st="splash"></span></button>
     <button class="mode" role="tab" data-m="ability" aria-selected="false"><i>◈</i><span><b>Ability</b><small>A spell icon, turned and greyed</small></span><span class="st" data-st="ability"></span></button>
     <button class="mode" role="tab" data-m="lore" aria-selected="false"><i>¶</i><span><b>Lore</b><small>Their biography, name hidden</small></span><span class="st" data-st="lore"></span></button>
+    <button class="mode" role="tab" data-m="voice" aria-selected="false"><i>♪</i><span><b>Voice</b><small>Five voices: who's speaking?</small></span><span class="st" data-st="voice"></span></button>
   </div>
 
   <div class="play" id="play"></div>
@@ -218,6 +250,7 @@ html.cjk body *{letter-spacing:.02em!important}
 
   <footer>
     <div id="credit">Inspired by fan games like LoLdle. Champion facts from Riot's Data Dragon, the League Wiki and Leaguepedia; biographies are Riot's (or, where marked on the Atlas, written for this site). Results and streaks are kept in your browser only.</div>
+    <div id="vcredit">Voice lines are Riot's own recordings: pick and ban lines from the game client (via CommunityDragon), emotes from the League of Legends Wiki.</div>
     <div class="legal">Runeterra Atlas was created under Riot Games' "Legal Jibber Jabber" policy using assets owned by Riot Games. Riot Games does not endorse or sponsor this project.</div>
   </footer>
 </div>
@@ -236,7 +269,7 @@ const REL=window.ATLAS_RELEASES||{}, SK=window.ATLAS_SKINS||{}, GM=window.ATLAS_
 const DD="https://ddragon.leagueoflegends.com/cdn/img/champion/";
 const esc=s=>String(s??"").replace(/[&<>"]/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch]));
 const I=window.AtlasI18n, LANG=I?I.lang:"en", t=(k,v)=>I?I.t(k,v):k;
-const MODES={clues:1,splash:1,ability:1,lore:1};
+const MODES={clues:1,splash:1,ability:1,lore:1,voice:1};
 const MN=m=>t("m_"+m);
 let PK=null; // Riot's official text in the visitor's language (null = English)
 const pc=id=>PK&&PK.champs[id]||null;
@@ -258,7 +291,7 @@ function rng(seed){let a=seed>>>0;return()=>{a=(a+0x6D2B79F5)>>>0;let t=a;t=Math
 const hash=s=>{let h=2166136261;for(const ch of s){h^=ch.codePointAt(0);h=Math.imul(h,16777619);}return h>>>0;};
 // each mode walks its own fixed shuffle of all champions, so no champion repeats in a mode until all 173 have come up
 function shuffled(mode){const r=rng(hash("atlas-daily-"+mode));const a=CHAMPS.map(c=>c.id);for(let i=a.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
-const ORDER={clues:shuffled("clues"),splash:shuffled("splash"),ability:shuffled("ability"),lore:shuffled("lore")};
+const ORDER={clues:shuffled("clues"),splash:shuffled("splash"),ability:shuffled("ability"),lore:shuffled("lore"),voice:shuffled("voice")};
 const ABI="https://ddragon.leagueoflegends.com/cdn/16.20.1/img/", SLOT=["Passive","Q","W","E","R"];
 function puzzle(mode,key,practiceSeed){
   const n=practiceSeed!=null?practiceSeed:dayNo(key);
@@ -279,8 +312,57 @@ function puzzle(mode,key,practiceSeed){
     p.ai=Math.floor(r()*L.length);p.rot=[90,180,270][Math.floor(r()*3)];p.abl=L;
     p.aopts=L.map((a,i)=>i);for(let i=p.aopts.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[p.aopts[i],p.aopts[j]]=[p.aopts[j],p.aopts[i]];}
   }
+  if(mode==="voice"){
+    // five different champions a day: the next five places in the voice shuffle (a practice round picks five at random)
+    const V=window.ATLAS_VOICE||{},Lv=ORDER.voice;p.rounds=[];
+    for(let i=0;p.rounds.length<VOICE_N&&i<50;i++){
+      const vid=p.practice?Lv[Math.floor(r()*Lv.length)]:Lv[((((n-1)*VOICE_N+i)%Lv.length)+Lv.length)%Lv.length];
+      if(p.rounds.some(x=>x.id===vid))continue;
+      p.rounds.push({id:vid,line:voiceLine(V[vid],r,CH[vid])});
+    }
+    p.id=p.rounds[0].id;
+  }
   return p;
 }
+/* ---------- voice lines: Riot's pick/ban recordings (CommunityDragon, in the visitor's language where Riot recorded one) + spoken joke/taunt emotes (League Wiki) ---------- */
+const VOICE_N=5, VOICE_TRIES=3;
+const VLOC={"ko":"ko_kr","zh-CN":"zh_cn","ja":"ja_jp","es-ES":"es_es","es-MX":"es_mx","pt-BR":"pt_br","fr":"fr_fr","de":"de_de","it":"it_it","pl":"pl_pl","ru":"ru_ru","tr":"tr_tr"}[LANG]||"default";
+const VCD=`https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/${VLOC}/v1/`, VWIKI="https://static.wikia.nocookie.net/leagueoflegends/images/";
+function voiceLine(v,r,c){
+  if(!v)return null;
+  // a line that says the champion's own name would give the answer away (judged on the Wiki's English transcript)
+  const parts=c.name.toLowerCase().split(/[^a-z]+/).filter(w=>w.length>=3&&!["the","and"].includes(w));
+  // only the spoken words (inside quotes) count: "Bard chimes." describes a sound, it isn't said aloud
+  const says=txt=>{const w=(String(txt||"").match(/["“][^"”]*["”]?/g)||[]).join(" ").toLowerCase();return parts.some(x=>new RegExp(`(^|[^a-z])${x}([^a-z]|$)`).test(w));};
+  const L=[];
+  if(!says(v.p))L.push({k:"pick",url:`${VCD}champion-choose-vo/${v.k}.ogg`,txt:VLOC==="default"?v.p:"",wiki:false});
+  if(!says(v.b))L.push({k:"ban",url:`${VCD}champion-ban-vo/${v.k}.ogg`,txt:VLOC==="default"?v.b:"",wiki:false});
+  // only emotes with spoken words (a laugh or a grunt gives nothing away)
+  [["j","joke"],["t","taunt"]].forEach(([s,k])=>(v[s]||[]).forEach(x=>{if(/["“]/.test(x[1])&&!says(x[1]))L.push({k,url:VWIKI+x[0]+"/revision/latest",txt:x[1],wiki:true});}));
+  // someone who says their own name in every line (Neeko!) gets a laugh instead
+  if(!L.length)(v.l||[]).forEach(x=>L.push({k:"laugh",url:VWIKI+x[0]+"/revision/latest",txt:x[1],wiki:true}));
+  if(!L.length)L.push({k:"pick",url:`${VCD}champion-choose-vo/${v.k}.ogg`,txt:VLOC==="default"?v.p:"",wiki:false});
+  return L[Math.floor(r()*L.length)];
+}
+let vAudio=null,vBtn=null;const vBlobs={};
+function vStop(){if(vAudio){vAudio.pause();vAudio=null;}if(vBtn){vBtn.classList.remove("on");vBtn=null;}}
+function vSrc(line){
+  if(!line.wiki)return Promise.resolve(line.url);
+  // the Wiki's file host refuses audio requests that carry our address, so its files are fetched without one
+  if(!vBlobs[line.url])vBlobs[line.url]=fetch(line.url,{referrerPolicy:"no-referrer"}).then(r=>{if(!r.ok)throw new Error(r.status);return r.blob();}).then(b=>URL.createObjectURL(b)).catch(e=>{delete vBlobs[line.url];throw e;});
+  return vBlobs[line.url];
+}
+function vPlay(line,btn,onFail){
+  if(vBtn===btn&&vAudio){vStop();return;}
+  vStop();if(!line)return;
+  const a=new Audio();vAudio=a;vBtn=btn;if(btn)btn.classList.add("on");
+  const fail=e=>{if(vAudio===a&&!(e&&e.name==="AbortError")){vStop();if(onFail)onFail();}};
+  a.addEventListener("ended",()=>{if(vAudio===a)vStop();});a.addEventListener("error",()=>fail());
+  vSrc(line).then(u=>{if(vAudio!==a)return;a.src=u;const pr=a.play();if(pr&&pr.catch)pr.catch(fail);},fail);
+}
+const SPK='<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor" stroke="none"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/><path d="M19 6a8.5 8.5 0 0 1 0 12"/></svg>';
+let voiceLoading=null;
+function loadVoice(){if(window.ATLAS_VOICE)return Promise.resolve();if(!voiceLoading)voiceLoading=new Promise(res=>{const s=document.createElement("script");s.src="data/voice.js";s.onload=res;s.onerror=res;document.head.appendChild(s);});return voiceLoading;}
 
 /* ---------- storage (this browser only) ---------- */
 const LS={get(k,d){try{const v=JSON.parse(localStorage.getItem(k));return v??d;}catch(e){return d;}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}};
@@ -329,15 +411,19 @@ const play=document.getElementById("play");
 function render(){
   document.querySelectorAll(".mode").forEach(b=>b.setAttribute("aria-selected",String(b.dataset.m===mode)));
   const key=todayKey();if(inPractice&&!PR[mode])inPractice=false;const pseed=inPractice?PR[mode].seed:null;
+  if(mode!=="voice")vStop();
+  if(mode==="voice"&&!window.ATLAS_VOICE){play.innerHTML=`<div class="stage"><h2><span>${t("v_who")}</span></h2><p style="margin:0;color:var(--muted)">…</p></div>`;loadVoice().then(()=>{if(mode==="voice")render();});statusChips();return;}
   const p=puzzle(mode,key,pseed);
   const k=sKey(p,key);
   const state=(k&&LS.get(k,null))||p._state||{g:[],won:false,lost:false,bonus:null};
   p._state=state;
   const save=()=>{if(k)LS.set(k,state);else{PR[mode].state=state;LS.set(PRAC,PR);}};
   if(pseed!=null&&PR[mode].state)Object.assign(state,PR[mode].state);
+  if(mode==="voice"&&!state.rounds){state.rounds=p.rounds.map(()=>({g:[],done:false,ok:false}));state.cur=0;}
   const done=state.won||state.lost, ans=CH[p.id];
   document.getElementById("eye").textContent=p.practice?t("practice_eye",{mode:MN(mode)}):t("puzzle_n",{n:p.n,date:I&&LANG!=="en"?I.date(key):new Date().toLocaleDateString(LANG,{day:"numeric",month:"long",year:"numeric"})});
 
+  if(mode==="voice"){renderVoice(p,state,save,key);return;}
   let stage="";
   if(mode==="clues"){
     stage=`<div class="stage"><h2><span>${t("guess_champ")}</span><span>${t("guesses",{n:state.g.length})}</span></h2>
@@ -379,6 +465,59 @@ function render(){
   statusChips();
 }
 
+function voiceKind(k){return t(k==="laugh"?"v_laugh":"v_k_"+k);}
+function renderVoice(p,state,save,key){
+  const R=state.rounds, done=state.won||state.lost, cur=Math.min(state.cur||0,VOICE_N-1), rd=p.rounds[cur], st=R[cur], ans=CH[rd.id];
+  const score=R.filter(x=>x.ok).length;
+  const pips=`<div class="vpips" aria-hidden="true">${R.map((x,i)=>`<i class="${x.done?(x.ok?"ok":"no"):i===cur&&!done?"now":""}"></i>`).join("")}</div>`;
+  const back=p.practice?`<div class="meta-line" style="margin:0 0 10px"><span>${t("practice_note")}</span><button type="button" id="today">${t("back_today")}</button></div>`:"";
+  const rowsHTML=(upto)=>`<div class="vlist">${p.rounds.slice(0,upto).map((x,i)=>{const r=R[i],c=CH[x.id];return `<div class="vrow ${r.ok?"ok":""}"><img src="img/${x.id}-tile.webp" alt=""><div style="min-width:0"><b><a href="journey.html?c=${x.id}">${esc(cName(x.id))}</a> <span style="color:${r.ok?"#7fd1a0":"#e58a95"}">${r.ok?"✓":"✗"}</span></b><small>${esc(voiceKind(x.line.k))}${x.line.txt?` · ${esc(x.line.txt)}`:""}</small></div><button type="button" class="vre" data-r="${i}" aria-label="${esc(t("v_again"))}" title="${esc(t("v_again"))}">${SPK}</button></div>`;}).join("")}</div>`;
+  let html=back;
+  if(done){
+    const s=stats("voice"),dist=s.dist||{},maxD=Math.max(1,...Object.values(dist));
+    html+=`<div class="result"><div class="pic" style="background-image:url('${DD}splash/${CH[p.rounds[0].id].dd}_0.jpg')"></div><div class="body">
+      <div class="eyebrow">${score===VOICE_N?t("v_perfect"):state.won?t("found_it"):t("better_luck")}</div>
+      <div class="vscore">${score}<span style="font-size:32px;color:var(--muted)"> / ${VOICE_N}</span></div>
+      <p style="margin-top:8px">${t("v_scored",{a:score,b:VOICE_N})}</p>
+      ${rowsHTML(VOICE_N)}
+      <div class="acts"><button class="btn" type="button" id="share">${t("share")}</button><button class="btn ghost" type="button" id="practice">${t("practice_btn")}</button></div>
+      ${p.practice?`<p style="font-size:14px;color:var(--muted)">${t("practice_no_streak")}</p>`:`<div class="stats"><div><b>${s.played}</b><span>${t("st_played")}</span></div><div><b>${s.played?Math.round(s.won/s.played*100):0}%</b><span>${t("st_won")}</span></div><div><b>${s.streak}</b><span>${t("st_streak")}</span></div><div><b>${s.best}</b><span>${t("st_best")}</span></div></div>
+      <div class="dist">${[5,4,3,2,1,0].map(i=>{const v=dist[i]||0;return `<div><span>${i}</span><i class="${i===score?"me":""}" style="width:${Math.max(6,v/maxD*100)}%">${v}</i></div>`;}).join("")}</div>`}
+      </div></div>`;
+    play.innerHTML=html;
+  }else{
+    const wrong=st.g.filter(x=>x!==rd.id).length, left=VOICE_TRIES-st.g.length;
+    const hints=[];if(st.done||wrong>=1)hints.push(t("from_region",{r:`<b>${esc(regName(ans.region))}</b>`}));if(st.done||wrong>=2)hints.push(t("class_is",{c:`<b>${esc(cls(ans))}</b>`}));
+    html+=`<div class="stage"><h2><span>${t("v_round",{a:cur+1,b:VOICE_N})}</span><span>${st.done?"":t("v_left",{n:left})}</span></h2>${pips}
+      <div class="vplay"><button type="button" class="vbtn" id="vbtn" aria-label="${esc(t("v_play"))}">${SPK.replace('viewBox','style="margin-left:4px" viewBox')}<span class="bars" aria-hidden="true"><i></i><i></i><i></i><i></i></span></button>
+        <div class="vt"><b>${t("v_who")}</b><span id="vmsg">${st.g.length||st.done?t("v_again_hint"):t("v_tap")}</span></div></div>
+      ${hints.length?`<p class="vhints">${hints.join(" · ")}</p>`:""}
+      ${st.done?`<div class="vreveal"><img src="img/${rd.id}-tile.webp" alt=""><div style="min-width:0"><div class="k">${st.ok?(st.g.length===1?t("first_try"):t("found_it")):t("v_out")} · ${esc(voiceKind(rd.line.k))}</div><h3>${esc(cName(rd.id))}</h3>${rd.line.txt?`<q>${esc(rd.line.txt.replace(/^["“]|["”]$/g,""))}</q>`:""}</div></div>
+        <div class="vnext"><button class="btn" type="button" id="vnext">${cur+1<VOICE_N?t("v_next"):t("v_results")}</button></div>`:""}
+      </div>`;
+    if(!st.done)html+=`<div class="guess"><input id="gi" type="text" placeholder="${esc(t("placeholder"))}" autocomplete="off" aria-label="${esc(t("v_who"))}" aria-autocomplete="list" aria-controls="sugg"><button type="button" id="gb">${t("guess_btn")}</button><div class="sugg" id="sugg" role="listbox" hidden></div></div>`;
+    if(st.g.length)html+=`<div class="glist">${st.g.map(g=>`<span class="${g===rd.id?"ok":""}"><img src="img/${g}-tile.webp" alt="">${esc(cName(g))}</span>`).join("")}</div>`;
+    if(cur>0)html+=`<h2 style="margin:22px 0 0;font-family:var(--f-mono);font-weight:400;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)">${t("v_so_far",{a:R.slice(0,cur).filter(x=>x.ok).length,b:cur})}</h2>${rowsHTML(cur)}`;
+    play.innerHTML=html;
+    const vb=document.getElementById("vbtn"),msg=document.getElementById("vmsg");
+    vb.onclick=()=>vPlay(rd.line,vb,()=>{msg.textContent=t("v_cant");});
+    const nx=document.getElementById("vnext");
+    if(nx)nx.onclick=()=>{vStop();if(cur+1<VOICE_N){state.cur=cur+1;save();render();const b2=document.getElementById("vbtn");if(b2){b2.click();b2.focus({preventScroll:true});}}else{finishVoice(p,state,key);save();render();}};
+    if(st.done&&nx)nx.focus({preventScroll:true});
+  }
+  play.querySelectorAll(".vre").forEach(b=>b.onclick=()=>{const x=p.rounds[+b.dataset.r];vPlay(x.line,b,()=>toast(t("v_cant")));});
+  wire(p,state,save,key);
+  statusChips();
+}
+function finishVoice(p,state,key){
+  const score=state.rounds.filter(x=>x.ok).length;
+  state.won=score>=3;state.lost=!state.won;state.score=score;
+  if(p.practice)return;const s=stats("voice");if(s.lastKey===key)return;
+  s.played++;s.lastKey=key;s.dist[score]=(s.dist[score]||0)+1;
+  if(state.won){s.won++;const y=new Date(Date.parse(key)-864e5);const yk=`${y.getUTCFullYear()}-${String(y.getUTCMonth()+1).padStart(2,"0")}-${String(y.getUTCDate()).padStart(2,"0")}`;s.streak=(s.lastWin===yk)?s.streak+1:1;s.best=Math.max(s.best,s.streak);s.lastWin=key;}
+  else s.streak=0;
+  LS.set("atlas.daily.stats.voice",s);
+}
 function bioChunks(c){
   // Riot's biography (in the visitor's language when Riot has one), split into 5 roughly even chunks, with the champion's name (and each part of it) hidden
   const loc=pc(c.id);
@@ -435,6 +574,8 @@ function resultHTML(p,state,key){
 }
 
 function shareText(p,state){
+  if(p.mode==="voice"){const sc=state.rounds.filter(x=>x.ok).length;
+    return `${t(p.practice?"share_practice":"share_head",{n:p.n,mode:MN("voice"),result:`${sc}/${VOICE_N}`})}\n${state.rounds.map(x=>x.ok?(x.g.length===1?"🟩":"🟨"):"🟥").join("")}\n${location.origin}${location.pathname}`;}
   const head=t(p.practice?"share_practice":"share_head",{n:p.n,mode:MN(p.mode),result:state.won?t("guesses",{n:state.g.length}):"X"});
   let body="";
   if(p.mode==="clues")body=state.g.map(g=>compare(g,p.id).map(x=>EMO[x.r]).join("")).join("\n");
@@ -444,17 +585,23 @@ function shareText(p,state){
 
 function wire(p,state,save,key){
   const gi=document.getElementById("gi"),sugg=document.getElementById("sugg");
-  const DRAFT=`atlas.daily.draft.${p.mode}.${p.practice?"p"+p.n:key}`;
+  const DRAFT=`atlas.daily.draft.${p.mode}.${p.practice?"p"+p.n:key}${p.mode==="voice"?"."+(state.cur||0):""}`;
   if(gi){
     let sel=0,list=[];
     // names in the visitor's language and in English both work
     const keys=c=>{const a=[norm(cName(c.id)),norm(c.name)];if(LANG==="zh-CN"&&pc(c.id))a.push(norm(pc(c.id)[1]));return [...new Set(a)];};
     const draw=()=>{const q=norm(gi.value.trim());
-      const pool=CHAMPS.filter(c=>!state.g.includes(c.id)), starts=q?pool.filter(c=>keys(c).some(k=>k.startsWith(q))):[];
+      const used=p.mode==="voice"?state.rounds[state.cur||0].g:state.g;
+      const pool=CHAMPS.filter(c=>!used.includes(c.id)), starts=q?pool.filter(c=>keys(c).some(k=>k.startsWith(q))):[];
       list=q?starts.concat(pool.filter(c=>!starts.includes(c)&&keys(c).some(k=>k.includes(q)))).slice(0,8):[];
       sel=0;sugg.hidden=!list.length;
       sugg.innerHTML=list.map((c,i)=>`<button type="button" role="option" data-id="${c.id}" aria-selected="${i===sel}"><img src="img/${c.id}-tile.webp" alt="">${esc(cName(c.id))}${LANG!=="en"&&cName(c.id)!==c.name?` <span style="color:var(--faint);font-size:13px">${esc(c.name)}</span>`:""}<small>${esc(regName(c.region))}</small></button>`).join("");};
-    const choose=id=>{if(!id||state.g.includes(id))return;try{sessionStorage.removeItem(DRAFT)}catch(e){}state.g.push(id);state._seen=false;if(id===p.id){state.won=true;record(p,key,state);}save();render();
+    const choose=id=>{
+      if(p.mode==="voice"){const i=state.cur||0,R=state.rounds[i];if(!id||R.done||R.g.includes(id))return;try{sessionStorage.removeItem(DRAFT)}catch(e){}
+        R.g.push(id);state.g.push(id);if(id===p.rounds[i].id){R.done=R.ok=true;}else if(R.g.length>=VOICE_TRIES)R.done=true;
+        if(state.rounds.every(x=>x.done))finishVoice(p,state,key);
+        save();render();const g2=document.getElementById("gi");if(g2)g2.focus();return;}
+      if(!id||state.g.includes(id))return;try{sessionStorage.removeItem(DRAFT)}catch(e){}state.g.push(id);state._seen=false;if(id===p.id){state.won=true;record(p,key,state);}save();render();
       const g2=document.getElementById("gi");if(g2)g2.focus();};
     // a half-typed guess survives a trip to another page
     try{const d=sessionStorage.getItem(DRAFT);if(d){gi.value=d;draw();}}catch(e){}
@@ -483,6 +630,8 @@ function wire(p,state,save,key){
 function statusChips(){
   const key=todayKey();
   document.querySelectorAll("[data-st]").forEach(el=>{const m=el.dataset.st;const s=LS.get(`atlas.daily.${m}.${key}`,null);
+    if(m==="voice"){const sc=s&&s.rounds?s.rounds.filter(x=>x.ok).length:0,dn=s&&s.rounds?s.rounds.filter(x=>x.done).length:0;
+      el.textContent=s&&(s.won||s.lost)?`${s.won?"✓":"✗"} ${sc}/${VOICE_N}`:dn?`${dn}/${VOICE_N}`:t("status_new");el.classList.toggle("done",!!(s&&s.won));return;}
     el.textContent=s&&s.won?`✓ ${s.g.length}`:s&&s.lost?"✗":s&&s.g.length?t("tried",{n:s.g.length}):t("status_new");el.classList.toggle("done",!!(s&&s.won));});
 }
 
@@ -490,7 +639,7 @@ document.querySelectorAll(".mode").forEach(b=>b.onclick=()=>{mode=b.dataset.m;in
 
 // how to play + the page's fixed text, in the visitor's language
 function staticText(){
-  document.getElementById("how").innerHTML=`<h3>${t("how_title")}</h3><ul>${["clues","splash","ability","lore","more"].map(k=>`<li>${t("how_"+k)}</li>`).join("")}</ul>`;
+  document.getElementById("how").innerHTML=`<h3>${t("how_title")}</h3><ul>${["clues","splash","ability","lore","voice","more"].map(k=>`<li>${t("how_"+k)}</li>`).join("")}</ul>`;
   if(LANG==="en")return;
   document.documentElement.lang=LANG;
   document.getElementById("intro").textContent=t("intro");
@@ -500,6 +649,7 @@ function staticText(){
   const EX={"atlas.html":"atlas","journey.html":"journeys","reading.html":"reading","skins.html":"skins","timeline.html":"timeline","worlds.html":"worlds","music.html":"music"};
   document.querySelectorAll(".ex").forEach(a=>{const k=EX[a.getAttribute("href")];if(!k)return;a.querySelector("b").textContent=t("ex_"+k);a.querySelector("span").textContent=t("ex_"+k+"_d");});
   const cr=document.getElementById("credit");cr.textContent=t("daily_credit");
+document.getElementById("vcredit").textContent=t("v_credit");
   const tn=document.createElement("div");tn.textContent=t("tr_note");cr.after(tn);
 }
 
