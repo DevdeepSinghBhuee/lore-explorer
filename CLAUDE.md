@@ -64,6 +64,9 @@ Used in the atlas.html champion panel (#voxBox, right under the hero) and the jo
 client via CommunityDragon global/<locale>/v1/champion-{choose,ban}-vo/<key>.ogg, in the visitor's language for ko, zh-CN, ja, es-ES, es-MX, pt-BR, fr, de,
 it, pl, ru, tr (Riot has no zh_tw/vi/th/id there → English); all 173 × 13 checked 2026-10-21. Emotes = base-skin files on static.wikia.nocookie.net from the
 League Wiki <Champion>/LoL/Audio pages (api.php action=parse; first occurrence of each section; skins other than Original dropped); English only.
+static.wikia refuses audio requests with a github.io Referer (MediaError 4), so voice.js fetches Wiki files with referrerPolicy no-referrer
+(CORS is allowed) and plays a blob URL. Sound-effect-only rows ("SFX") are dropped; no Wiki audio page for Ambessa, Mel, Locke, Yunara, Zaahen
+(pick/ban only); Rammus's page didn't parse (pick/ban only).
 Devdeep also asked for stories read aloud in the champion's own voice — DECLINED (would mean AI-cloning real voice actors and reproducing Riot's story
 text); don't build it. Files are Ogg Vorbis: older iPhones/Safari may not play them (the row then says "This browser can't play this sound").
 Menu: site.js (loaded with `defer` on every page) replaces each page's <nav class="nav"> with grouped dropdowns — Champions (Journeys, Skins, Timeline) ·

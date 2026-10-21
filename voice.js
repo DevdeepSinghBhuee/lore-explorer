@@ -32,7 +32,12 @@
     "@media (hover:none){.vox-b kbd{display:none}}";
   var st=document.createElement("style");st.textContent=css;document.head.appendChild(st);
   var SPK='<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor" stroke="none"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/><path d="M19 6a8.5 8.5 0 0 1 0 12"/></svg>';
-  var audio=null, playingBtn=null;
+  var audio=null, playingBtn=null, blobs={};
+  function srcFor(url,wiki){
+    if(!wiki)return Promise.resolve(url);
+    if(!blobs[url])blobs[url]=fetch(url,{referrerPolicy:"no-referrer"}).then(function(r){if(!r.ok)throw new Error("http "+r.status);return r.blob();}).then(function(b){return URL.createObjectURL(b);}).catch(function(e){delete blobs[url];throw e;});
+    return blobs[url];
+  }
   function stop(){if(audio){audio.pause();audio=null;}if(playingBtn){playingBtn.setAttribute("aria-pressed","false");playingBtn=null;}}
   function mount(el,c){
     if(!el)return Promise.resolve();
@@ -53,13 +58,15 @@
         if(playingBtn===btn){stop();return;}
         stop();
         var n=next[i]||0, line=b[3][n%b[3].length]; next[i]=n+1;
-        var a=new Audio(line[0]);audio=a;playingBtn=btn;btn.setAttribute("aria-pressed","true");
+        var a=new Audio();audio=a;playingBtn=btn;btn.setAttribute("aria-pressed","true");
         // captions are the Wiki's English transcripts; a translated pick/ban line has no caption
         var txt=(LOC==="default"||line[2])?line[1]:"";
         cap.innerHTML=(txt?esc(txt):"")+(b[3].length>1?'<small>'+esc(t("v_n_of",{a:(n%b[3].length)+1,b:b[3].length}))+'</small>':"");
+        var fail=function(err){if(audio===a&&!(err&&err.name==="AbortError")){stop();cap.textContent=t("v_cant");}};
         a.addEventListener("ended",function(){if(audio===a)stop();});
-        a.addEventListener("error",function(){if(audio===a){stop();cap.textContent=t("v_cant");}});
-        var p=a.play();if(p&&p.catch)p.catch(function(err){if(audio===a&&err&&err.name!=="AbortError"){stop();cap.textContent=t("v_cant");}});
+        a.addEventListener("error",function(){fail();});
+        // the Wiki's file host refuses audio requests that carry our address, so those files are fetched without it
+        srcFor(line[0],line[2]).then(function(u){if(audio!==a)return;a.src=u;var p=a.play();if(p&&p.catch)p.catch(fail);},fail);
       });
     });
   }
