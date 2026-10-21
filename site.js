@@ -64,6 +64,7 @@
 .snav .dd a[aria-current="page"] b{color:var(--gold,#c8aa6e)}
 .snav .mine{margin-left:6px;border:1px solid rgba(200,170,110,.35)!important;color:var(--text,#ebe4d3)!important}
 .snav .mine i{font-style:normal;color:var(--gold,#c8aa6e)}
+.snav .mine.here i{color:var(--ink,#080d18)}
 .snav .mine em{font-style:normal;font-family:var(--f-num,sans-serif);font-size:15px;letter-spacing:.02em;min-width:10px}
 .snav .menu{display:none}
 .snav .lang>button{border:1px solid rgba(200,170,110,.35)!important;margin-left:6px}

@@ -1,5 +1,6 @@
 // Champion release dates, saved 2026-10-19.
 // [released (first playable on live servers), release patch, revealed]
+// 2009 patches that Riot named only by their date ("April 18, 2009 Patch") are left out: the release date already says the same thing.
 // released: League Wiki Module:ChampionData (Leaguepedia Champions table for Yunara, Zaahen, Locke, which the Wiki has no date for yet; the two agree within a day elsewhere).
 // patch: League Wiki (left empty for Ambessa, Mel, Yunara, Zaahen, Locke where the Wiki has no real value).
 // revealed: the date Riot published the champion on its Universe site, kept only when it falls 4-120 days before release.
@@ -10,8 +11,8 @@ window.ATLAS_RELEASES = {
 "akshan":["2021-07-22", "V11.15", "2021-07-08"],
 "alistar":["2009-02-21", "Alpha Week 2", null],
 "ambessa":["2024-11-06", null, "2024-10-28"],
-"amumu":["2009-06-26", "June 26, 2009 Patch", null],
-"anivia":["2009-07-10", "July 10, 2009 Patch", null],
+"amumu":["2009-06-26", null, null],
+"anivia":["2009-07-10", null, null],
 "annie":["2009-02-21", "Alpha Week 2", null],
 "aphelios":["2019-12-11", "V9.24", "2019-11-19"],
 "ashe":["2009-02-21", "Alpha Week 2", null],
@@ -27,7 +28,7 @@ window.ATLAS_RELEASES = {
 "caitlyn":["2011-01-04", "V1.0.0.108", null],
 "camille":["2016-12-07", "V6.24", "2016-11-28"],
 "cassiopeia":["2010-12-14", "V1.0.0.107", null],
-"chogath":["2009-06-26", "June 26, 2009 Patch", null],
+"chogath":["2009-06-26", null, null],
 "corki":["2009-09-19", "V0.9.25.21", null],
 "darius":["2012-05-23", "V1.0.0.140", null],
 "diana":["2012-08-07", "V1.0.0.144", null],
@@ -35,7 +36,7 @@ window.ATLAS_RELEASES = {
 "draven":["2012-06-06", "V1.0.0.140b", null],
 "ekko":["2015-05-29", "V5.10", null],
 "elise":["2012-10-26", "V1.0.0.150", null],
-"evelynn":["2009-05-01", "May 1, 2009 Patch", null],
+"evelynn":["2009-05-01", null, null],
 "ezreal":["2010-03-16", "V1.0.0.79", null],
 "fiddlesticks":["2009-02-21", "Alpha Week 2", null],
 "fiora":["2012-02-29", "V1.0.0.135", null],
@@ -63,7 +64,7 @@ window.ATLAS_RELEASES = {
 "kaisa":["2018-03-07", "V8.5", "2018-03-02"],
 "kalista":["2014-11-20", "V4.20", null],
 "karma":["2011-02-01", "V1.0.0.110", null],
-"karthus":["2009-06-12", "June 12, 2009 Patch", null],
+"karthus":["2009-06-12", null, null],
 "kassadin":["2009-08-07", "V0.9.22.7", null],
 "katarina":["2009-09-19", "V0.9.25.21", null],
 "kayle":["2009-02-21", "Alpha Week 2", null],
@@ -109,7 +110,7 @@ window.ATLAS_RELEASES = {
 "qiyana":["2019-06-28", "V9.13", "2019-06-07"],
 "quinn":["2013-03-01", "V3.03", null],
 "rakan":["2017-04-19", "V7.8", "2017-04-11"],
-"rammus":["2009-07-10", "July 10, 2009 Patch", null],
+"rammus":["2009-07-10", null, null],
 "reksai":["2014-12-11", "V4.21", null],
 "rell":["2020-12-10", "V10.25", "2020-11-23"],
 "renata":["2022-02-17", "V12.4", "2022-02-01"],
@@ -126,7 +127,7 @@ window.ATLAS_RELEASES = {
 "shaco":["2009-10-10", "V0.9.25.34", null],
 "shen":["2010-03-24", "V1.0.0.81", null],
 "shyvana":["2011-11-01", "V1.0.0.128", null],
-"singed":["2009-04-18", "April 18, 2009 Patch", null],
+"singed":["2009-04-18", null, null],
 "sion":["2009-02-21", "Alpha Week 2", null],
 "sivir":["2009-02-21", "Alpha Week 2", null],
 "skarner":["2011-08-09", "V1.0.0.123", null],
@@ -144,9 +145,9 @@ window.ATLAS_RELEASES = {
 "thresh":["2013-01-23", "V1.0.0.154", null],
 "tristana":["2009-02-21", "Alpha Week 2", null],
 "trundle":["2010-12-01", "V1.0.0.106", null],
-"tryndamere":["2009-05-01", "May 1, 2009 Patch", null],
+"tryndamere":["2009-05-01", null, null],
 "twistedfate":["2009-02-21", "Alpha Week 2", null],
-"twitch":["2009-05-01", "May 1, 2009 Patch", null],
+"twitch":["2009-05-01", null, null],
 "udyr":["2009-12-02", "V1.0.0.61", null],
 "urgot":["2010-08-24", "V1.0.0.99", null],
 "varus":["2012-05-08", "V1.0.0.139", null],
@@ -174,7 +175,7 @@ window.ATLAS_RELEASES = {
 "zed":["2012-11-13", "V1.0.0.151", null],
 "zeri":["2022-01-20", "V12.2", "2022-01-05"],
 "ziggs":["2012-02-01", "V1.0.0.133", null],
-"zilean":["2009-04-18", "April 18, 2009 Patch", null],
+"zilean":["2009-04-18", null, null],
 "zoe":["2017-11-21", "V7.23", "2017-11-09"],
 "zyra":["2012-07-24", "V1.0.0.143", null]
 };
