@@ -111,14 +111,14 @@ footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width
   </section>
 
   <div class="tools">
-    <input id="q" type="search" placeholder="Search cinematics, songs, champions…" aria-label="Search videos" autocomplete="off">
+    <input id="q" type="search" placeholder="Search cinematics, songs, champions…" data-tp="th_search" aria-label="Search videos" autocomplete="off">
     <div class="chips" id="regions" role="group" aria-label="Region"></div>
   </div>
 
   <div id="shelves"></div>
 
   <footer>
-    <div>Videos play from YouTube and belong to their channels: League of Legends, LoL Esports, Riot Games Music, Netflix and Imagine Dragons. Most were collected from Riot's Universe site.</div>
+    <div data-t="th_credit">Videos play from YouTube and belong to their channels: League of Legends, LoL Esports, Riot Games Music, Netflix and Imagine Dragons. Most were collected from Riot's Universe site.</div>
     <div class="legal">Runeterra Atlas was created under Riot Games' "Legal Jibber Jabber" policy using assets owned by Riot Games. Riot Games does not endorse or sponsor this project.</div>
   </footer>
 </div>
@@ -126,11 +126,20 @@ footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width
 <script src="data/champions.js"></script>
 <script src="data/videos.js"></script>
 <script>
-const SHELVES=window.ATLAS_VIDEOS||[];
-const CH=Object.fromEntries((window.ATLAS_CHAMPS||[]).map(c=>[c.id,c]));
+(async()=>{
+const I=window.AtlasI18n, LANG=I?I.lang:"en", t=(k,v)=>I?I.t(k,v):k, EN=LANG==="en";
+if(I&&!EN)await Promise.all([I.ready,I.loadPack()]).catch(()=>{});
+if(!EN){document.documentElement.lang=LANG;if(/^(ko|ja|zh|th)/.test(LANG))document.documentElement.classList.add("cjk");
+  document.title=t("th_doc");
+  document.querySelectorAll("[data-t]").forEach(e=>e.textContent=t(e.dataset.t));
+  document.querySelectorAll("[data-tp]").forEach(e=>e.placeholder=t(e.dataset.tp));
+  const n=document.createElement("div");n.textContent=t("tr_note")+" "+t("th_en_titles");document.querySelector("[data-t=th_credit]").after(n);}
+const SHELVES=(window.ATLAS_VIDEOS||[]).map(s=>EN?s:{...s,t:t("vs_"+s.id+"_t")===("vs_"+s.id+"_t")?s.t:t("vs_"+s.id+"_t"),d:t("vs_"+s.id+"_d")===("vs_"+s.id+"_d")?s.d:t("vs_"+s.id+"_d")});
+const CH=Object.fromEntries((window.ATLAS_CHAMPS||[]).map(c=>[c.id,I&&!EN?{...c,en:c.name,name:I.name(c)}:{...c,en:c.name}]));
 const ALL=[]; SHELVES.forEach(s=>s.v.forEach(v=>{v.shelf=s.id;v.shelfT=s.t;ALL.push(v);}));
 const REG={demacia:["Demacia","#e8d395"],noxus:["Noxus","#e0503f"],piltover:["Piltover","#e8ab4f"],zaun:["Zaun","#7ee06f"],freljord:["Freljord","#93d8f4"],ionia:["Ionia","#ef84b0"],shurima:["Shurima","#f2c443"],targon:["Targon","#a596ff"],bilgewater:["Bilgewater","#46a8e8"],shadowisles:["Shadow Isles","#7af0d2"],bandle:["Bandle City","#d9ea5e"],ixtal:["Ixtal","#36cfa6"],void:["The Void","#b764ea"],wanderers:["Wanderers","#e9c46a"]};
 const EMB={ixtal:null,void:null};
+if(I)for(const k in REG)REG[k][0]=I.region(k,REG[k][0]);
 const esc=s=>String(s??"").replace(/[&<>"]/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch]));
 const thumb=y=>`https://i.ytimg.com/vi/${y}/hqdefault.jpg`;
 const big=y=>`https://i.ytimg.com/vi/${y}/maxresdefault.jpg`;
@@ -145,21 +154,21 @@ function show(v,autoplay){
   if(autoplay){
     scr.innerHTML=`<iframe src="https://www.youtube-nocookie.com/embed/${v.y}?autoplay=1&rel=0&modestbranding=1" title="${esc(v.t)}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
   } else {
-    scr.innerHTML=`<button class="poster" type="button" aria-label="Play ${esc(v.t)}" style="background-image:url('${big(v.y)}'),url('${thumb(v.y)}')"><span class="play"></span></button>`;
+    scr.innerHTML=`<button class="poster" type="button" aria-label="${esc(EN?"Play "+v.t:t("th_play",{t:v.t}))}" style="background-image:url('${big(v.y)}'),url('${thumb(v.y)}')"><span class="play"></span></button>`;
     scr.querySelector(".poster").onclick=()=>show(v,true);
   }
   const champs=v.ch.filter(c=>CH[c]).slice(0,10);
   document.getElementById("now").innerHTML=`<div class="eyebrow">${esc(v.shelfT)} · ${esc(v.yr)}</div>
     <h1>${esc(v.t)}</h1>${v.d?`<p>${esc(v.d)}</p>`:""}<div class="who">${esc(v.by)}</div>
     ${champs.length?`<div class="champs">${champs.map(c=>`<a href="atlas.html#c-${c}"><img src="img/${c}-tile.webp" alt="">${esc(CH[c].name)}</a>`).join("")}</div>`:""}
-    <a class="yt" href="https://www.youtube.com/watch?v=${v.y}" target="_blank" rel="noopener">Watch on YouTube ↗</a>`;
+    <a class="yt" href="https://www.youtube.com/watch?v=${v.y}" target="_blank" rel="noopener">${esc(t("th_yt"))}</a>`;
   document.querySelectorAll(".tile").forEach(t=>t.setAttribute("aria-current",String(t.dataset.y===v.y)));
   try{history.replaceState(null,"","#v-"+v.y);}catch(e){}
 }
 function match(v){
   if(F.reg.size&&!v.rg.some(r=>F.reg.has(r)))return false;
   const q=F.q.trim().toLowerCase(); if(!q)return true;
-  return (v.t+" "+v.d+" "+v.by+" "+v.yr+" "+v.ch.map(c=>CH[c]?CH[c].name:c).join(" ")).toLowerCase().includes(q);
+  return (v.t+" "+v.d+" "+v.by+" "+v.yr+" "+v.ch.map(c=>CH[c]?CH[c].name+" "+CH[c].en:c).join(" ")).toLowerCase().includes(q);
 }
 function render(){
   const html=SHELVES.map(s=>{
@@ -170,7 +179,7 @@ function render(){
         <div class="th"><img src="${thumb(v.y)}" alt="" loading="lazy" decoding="async"><span class="yr">${esc(v.yr)}</span></div>
         <span class="tt">${esc(v.t)}</span><span class="tm">${esc(v.by)}${v.ch.length?" · "+esc(v.ch.slice(0,3).map(c=>CH[c]?CH[c].name:c).join(", ")):""}</span></button>`).join("")}</div></section>`;
   }).join("");
-  document.getElementById("shelves").innerHTML=html||`<p class="empty">Nothing matches. Try another search.</p>`;
+  document.getElementById("shelves").innerHTML=html||`<p class="empty">${esc(t("th_empty"))}</p>`;
 }
 document.getElementById("shelves").addEventListener("click",e=>{const t=e.target.closest(".tile");if(!t)return;const v=ALL.find(x=>x.y===t.dataset.y);if(v){show(v,true);window.scrollTo({top:0,behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"});}});
 let tm; document.getElementById("q").addEventListener("input",e=>{clearTimeout(tm);tm=setTimeout(()=>{F.q=e.target.value;render();},150);});
@@ -183,6 +192,7 @@ render();
 const h=(location.hash||"").match(/^#v-([\w-]{11})$/);
 const start=(h&&ALL.find(v=>v.y===h[1]))||SHELVES.find(s=>s.id==="worlds").v.slice(-1)[0];
 show(start,false);
+})();
 </script>
 </body>
 </html>

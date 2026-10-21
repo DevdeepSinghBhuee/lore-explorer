@@ -168,39 +168,39 @@ footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width
 
   <section class="hero">
     <div>
-      <div class="eyebrow">The sound of Runeterra</div>
-      <h1>Music<span>of the League</span></h1>
-      <p class="lede">Anthems, virtual bands, Arcane and hours of soundtrack, straight from Riot's official uploads. Pick a shelf and press play; it keeps going track after track.</p>
+      <div class="eyebrow" data-t="mu_eye">The sound of Runeterra</div>
+      <h1 id="muH1">Music<span>of the League</span></h1>
+      <p class="lede" data-t="mu_lede">Anthems, virtual bands, Arcane and hours of soundtrack, straight from Riot's official uploads. Pick a shelf and press play; it keeps going track after track.</p>
     </div>
     <div class="facts" id="facts"></div>
   </section>
 
   <div class="room">
-    <nav class="shelves" id="shelves" aria-label="Shelves"></nav>
+    <nav class="shelves" id="shelves" aria-label="Shelves" data-ta="mu_shelves"></nav>
     <main id="main" aria-live="polite"></main>
   </div>
 
   <footer>
-    <div>All music plays from official Riot Games uploads on YouTube (Riot Games Music, League of Legends, Legends of Runeterra and Teamfight Tactics channels), using YouTube's privacy-enhanced player. Track lists follow Riot Games Music's own playlists. <span id="upd"></span></div>
+    <div><span data-t="mu_credit">All music plays from official Riot Games uploads on YouTube (Riot Games Music, League of Legends, Legends of Runeterra and Teamfight Tactics channels), using YouTube's privacy-enhanced player. Track lists follow Riot Games Music's own playlists.</span> <span id="upd"></span></div>
     <div class="legal">Runeterra Atlas was created under Riot Games' "Legal Jibber Jabber" policy using assets owned by Riot Games. Riot Games does not endorse or sponsor this project.</div>
   </footer>
 </div>
 
-<div class="dock" id="dock" aria-label="Now playing">
+<div class="dock" id="dock" aria-label="Now playing" data-ta="mu_now">
   <div class="dock-in">
     <div class="vid"><div id="yt"></div></div>
     <div class="now">
       <div class="sh" id="nShelf"></div>
       <b id="nTitle">—</b>
       <div class="ar" id="nArtist"></div>
-      <div class="prog"><span id="tCur">0:00</span><input id="seek" type="range" min="0" max="1000" value="0" aria-label="Seek"><span id="tDur">0:00</span></div>
+      <div class="prog"><span id="tCur">0:00</span><input id="seek" type="range" min="0" max="1000" value="0" aria-label="Seek" data-ta="mu_seek"><span id="tDur">0:00</span></div>
     </div>
     <div class="ctl">
-      <button class="ic" id="bShuf" type="button" aria-label="Shuffle" aria-pressed="false" title="Shuffle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg></button>
-      <button class="ic" id="bPrev" type="button" aria-label="Previous track"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h2v14H6zM20 5v14L9 12z"/></svg></button>
-      <button class="ic big" id="bPlay" type="button" aria-label="Play"><svg viewBox="0 0 24 24" fill="currentColor" id="playIcon"><path d="M7 4v16l13-8z"/></svg></button>
-      <button class="ic" id="bNext" type="button" aria-label="Next track"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 5h2v14h-2zM4 5v14l11-7z"/></svg></button>
-      <a class="ic" id="bYT" href="#" target="_blank" rel="noopener" aria-label="Open on YouTube" title="Open on YouTube"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 4h6v6M20 4l-9 9M18 14v6H4V6h6"/></svg></a>
+      <button class="ic" id="bShuf" type="button" aria-label="Shuffle" aria-pressed="false" title="Shuffle" data-ta="mu_shuffle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg></button>
+      <button class="ic" id="bPrev" type="button" aria-label="Previous track" data-ta="mu_prev"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h2v14H6zM20 5v14L9 12z"/></svg></button>
+      <button class="ic big" id="bPlay" type="button" aria-label="Play" data-ta="mu_play"><svg viewBox="0 0 24 24" fill="currentColor" id="playIcon"><path d="M7 4v16l13-8z"/></svg></button>
+      <button class="ic" id="bNext" type="button" aria-label="Next track" data-ta="mu_next"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 5h2v14h-2zM4 5v14l11-7z"/></svg></button>
+      <a class="ic" id="bYT" href="#" target="_blank" rel="noopener" aria-label="Open on YouTube" title="Open on YouTube" data-ta="mu_open_yt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 4h6v6M20 4l-9 9M18 14v6H4V6h6"/></svg></a>
     </div>
   </div>
 </div>
@@ -208,25 +208,37 @@ footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width
 <script src="data/videos.js"></script>
 <script src="data/music.js"></script>
 <script>
+(async()=>{
+const I=window.AtlasI18n, LANG=I?I.lang:"en", tx=(k,v)=>I?I.t(k,v):k, EN=LANG==="en";
+if(I&&!EN)await I.ready.catch(()=>{});
+if(!EN){document.documentElement.lang=LANG;if(/^(ko|ja|zh|th)/.test(LANG))document.documentElement.classList.add("cjk");
+  document.title=tx("mu_doc");
+  document.getElementById("muH1").innerHTML=`${tx("mu_h1a")}<span>${tx("mu_h1b")}</span>`;
+  document.querySelectorAll("[data-t]").forEach(e=>e.textContent=tx(e.dataset.t));
+  document.querySelectorAll("[data-ta]").forEach(e=>{e.setAttribute("aria-label",tx(e.dataset.ta));if(e.title)e.title=tx(e.dataset.ta);});
+  const n=document.createElement("div");n.textContent=tx("tr_note")+" "+tx("th_en_titles");document.querySelector("[data-t=mu_credit]").parentNode.after(n);}
+const tl=(k,en)=>{if(EN)return en;const v=tx(k);return v===k?en:v;};
 const esc=s=>String(s??"").replace(/[&<>"]/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch]));
 const thumb=id=>`https://i.ytimg.com/vi/${id}/mqdefault.jpg`;
 const DATA=window.ATLAS_MUSIC||{shelves:[]};
-const SHELVES=DATA.shelves.map(s=>({id:s.id,t:s.t,d:s.d,src:s.src,k:s.k.map(([y,t,a,d])=>({y,t,a,d}))}));
+const SHELVES=DATA.shelves.map(s=>({id:s.id,t:tl("ms_"+s.id+"_t",s.t),d:tl("ms_"+s.id+"_d",s.d),src:s.src,k:s.k.map(([y,t,a,d])=>({y,t,a,d}))}));
 // Login themes come from the Theater's data, so both pages stay in step
 (function(){const L=(window.ATLAS_VIDEOS||[]).find(s=>s.id==="login");if(!L)return;
-  SHELVES.splice(5,0,{id:"login",t:"Login themes",d:L.d||"The music that played when each champion arrived.",k:L.v.map(v=>({y:v.y,t:v.t.replace(/:\s*Login Theme$/i,""),a:"Login theme · "+v.yr,d:""}))});})();
+  SHELVES.splice(5,0,{id:"login",t:tl("vs_login_t","Login themes"),d:tl("vs_login_d",L.d||"The music that played when each champion arrived."),k:L.v.map(v=>({y:v.y,t:v.t.replace(/:\s*Login Theme$/i,""),a:EN?"Login theme · "+v.yr:tx("mu_login",{y:v.yr}),d:""}))});})();
 const byShelf=Object.fromEntries(SHELVES.map(s=>[s.id,s]));
 const secs=d=>!d?0:d.split(":").reduce((a,x)=>a*60+ +x,0);
 const fmt=s=>{s=Math.max(0,Math.round(s));const h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=String(s%60).padStart(2,"0");return h?`${h}:${String(m).padStart(2,"0")}:${x}`:`${m}:${x}`;};
 const total=s=>s.k.reduce((a,t)=>a+secs(t.d),0);
-const hrs=x=>x>=3600?`${Math.floor(x/3600)} h ${Math.round(x%3600/60)} min`:`${Math.round(x/60)} min`;
+const hrs=x=>x>=3600?`${tx("m_h",{n:Math.floor(x/3600)})} ${tx("m_min",{n:Math.round(x%3600/60)})}`:tx("m_min",{n:Math.round(x/60)});
+const ntr=n=>EN?`${n} tracks`:tx("mu_tracks",{n});
+const posTxt=(s,a,b)=>EN?`${s} · ${a} of ${b}`:tx("mu_pos",{s,a,b});
 
 /* Facts */
 (function(){
   const ids=new Set(SHELVES.flatMap(s=>s.k.map(t=>t.y)));
   const timed=SHELVES.reduce((a,s)=>a+total(s),0);
-  document.getElementById("facts").innerHTML=`<div><b>${ids.size}</b><span>Tracks</span></div><div><b>${SHELVES.length}</b><span>Shelves</span></div><div><b>${Math.round(timed/3600)}+</b><span>Hours</span></div>`;
-  if(DATA.updated)document.getElementById("upd").textContent=`Track lists saved ${new Date(DATA.updated+"T12:00:00Z").toLocaleDateString(undefined,{day:"numeric",month:"long",year:"numeric"})}.`;
+  document.getElementById("facts").innerHTML=`<div><b>${ids.size}</b><span>${tl("mu_n_tracks","Tracks")}</span></div><div><b>${SHELVES.length}</b><span>${tl("mu_n_shelves","Shelves")}</span></div><div><b>${Math.round(timed/3600)}+</b><span>${tl("mu_n_hours","Hours")}</span></div>`;
+  if(DATA.updated)document.getElementById("upd").textContent=EN?`Track lists saved ${new Date(DATA.updated+"T12:00:00Z").toLocaleDateString(undefined,{day:"numeric",month:"long",year:"numeric"})}.`:tx("mu_saved",{d:I.date(DATA.updated)});
 })();
 
 /* State */
@@ -234,19 +246,19 @@ let view=SHELVES[0].id, queue=[], qShelf=null, pos=-1, shuffle=false, playing=fa
 
 function renderShelves(){
   document.getElementById("shelves").innerHTML=SHELVES.map(s=>`<button type="button" data-s="${s.id}" aria-current="${s.id===view}">
-    <img src="${thumb(s.k[0].y)}" alt="" loading="lazy"><span><b>${esc(s.t)}${qShelf===s.id&&playing?`<span class="eq" aria-label="playing">♪</span>`:""}</b><small>${s.k.length} tracks</small></span></button>`).join("");
+    <img src="${thumb(s.k[0].y)}" alt="" loading="lazy"><span><b>${esc(s.t)}${qShelf===s.id&&playing?`<span class="eq" aria-label="playing">♪</span>`:""}</b><small>${ntr(s.k.length)}</small></span></button>`).join("");
 }
 function renderMain(){
   const s=byShelf[view], t=total(s);
   const cur=qShelf===view&&pos>=0?queue[pos]:null;
   document.getElementById("main").innerHTML=`<section class="album">
-      <div class="cover">${s.k.slice(0,4).map(x=>`<img src="${thumb(x.y)}" alt="" loading="lazy">`).join("")}<span>${s.k.length} tracks</span></div>
-      <div style="min-width:0"><div class="eyebrow">Shelf</div><h2>${esc(s.t)}</h2><p>${esc(s.d)}</p>
-        <div class="acts"><button class="btn primary" type="button" data-play="0"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4v16l13-8z"/></svg>Play all</button>
-        <button class="btn" type="button" data-shuffle><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg>Shuffle</button>
-        <span class="meta">${t?hrs(t):""}${s.src?` · <a href="https://www.youtube.com/playlist?list=${s.src}" target="_blank" rel="noopener">Riot's playlist ↗</a>`:""}</span></div></div>
+      <div class="cover">${s.k.slice(0,4).map(x=>`<img src="${thumb(x.y)}" alt="" loading="lazy">`).join("")}<span>${ntr(s.k.length)}</span></div>
+      <div style="min-width:0"><div class="eyebrow">${tl("mu_shelf","Shelf")}</div><h2>${esc(s.t)}</h2><p>${esc(s.d)}</p>
+        <div class="acts"><button class="btn primary" type="button" data-play="0"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4v16l13-8z"/></svg>${tl("mu_play_all","Play all")}</button>
+        <button class="btn" type="button" data-shuffle><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg>${tl("mu_shuffle","Shuffle")}</button>
+        <span class="meta">${t?hrs(t):""}${s.src?` · <a href="https://www.youtube.com/playlist?list=${s.src}" target="_blank" rel="noopener">${tl("mu_playlist","Riot's playlist ↗")}</a>`:""}</span></div></div>
     </section>
-    <ol class="tracks ${playing?"":"paused"}">${s.k.map((x,i)=>{const on=cur&&cur.y===x.y&&cur.i===i;return `<li class="tr" data-play="${i}" aria-current="${!!on}" tabindex="0" role="button" aria-label="Play ${esc(x.t)}">
+    <ol class="tracks ${playing?"":"paused"}">${s.k.map((x,i)=>{const on=cur&&cur.y===x.y&&cur.i===i;return `<li class="tr" data-play="${i}" aria-current="${!!on}" tabindex="0" role="button" aria-label="${esc(EN?"Play "+x.t:tx("mu_play_t",{t:x.t}))}">
       <span class="n">${on?`<span class="bars" aria-hidden="true"><i></i><i></i><i></i></span>`:i+1}</span>
       <img src="${thumb(x.y)}" alt="" loading="lazy">
       <span class="tt"><b>${esc(x.t)}</b><span>${esc(x.a)}</span></span>
@@ -274,7 +286,7 @@ function startShelf(id,i,shuf){
 function load(autoplay){
   const t=queue[pos]; if(!t)return;
   const s=byShelf[qShelf];
-  document.getElementById("nShelf").textContent=`${s.t} · ${pos+1} of ${queue.length}`;
+  document.getElementById("nShelf").textContent=posTxt(s.t,pos+1,queue.length);
   document.getElementById("nTitle").textContent=t.t;
   document.getElementById("nArtist").textContent=t.a;
   document.getElementById("bYT").href=`https://www.youtube.com/watch?v=${t.y}`;
@@ -290,7 +302,7 @@ function next(){if(!queue.length)return;if(pos<queue.length-1){pos++;load(true);
 function prev(){if(!queue.length)return;if(ready&&player.getCurrentTime&&player.getCurrentTime()>4){player.seekTo(0,true);return;}pos=Math.max(0,pos-1);load(true);}
 function openDock(){const d=document.getElementById("dock");if(!d.classList.contains("on")){d.classList.add("on");requestAnimationFrame(()=>document.documentElement.style.setProperty("--dock",d.offsetHeight+"px"));}}
 addEventListener("resize",()=>{const d=document.getElementById("dock");if(d.classList.contains("on"))document.documentElement.style.setProperty("--dock",d.offsetHeight+"px");});
-function setPlaying(v){playing=v;document.getElementById("bPlay").setAttribute("aria-label",v?"Pause":"Play");
+function setPlaying(v){playing=v;document.getElementById("bPlay").setAttribute("aria-label",v?tl("mu_pause","Pause"):tl("mu_play","Play"));
   document.getElementById("playIcon").innerHTML=v?'<path d="M6 4h4v16H6zM14 4h4v16h-4z"/>':'<path d="M7 4v16l13-8z"/>';
   document.querySelector(".tracks")?.classList.toggle("paused",!v);renderShelves();}
 
@@ -303,7 +315,7 @@ document.getElementById("bShuf").addEventListener("click",()=>{if(!qShelf)return
   const all=byShelf[qShelf].k.map((t,j)=>({...t,i:j}));
   if(shuffle){const rest=all.filter(t=>!cur||t.i!==cur.i);for(let j=rest.length-1;j>0;j--){const r=Math.floor(Math.random()*(j+1));[rest[j],rest[r]]=[rest[r],rest[j]];}queue=cur?[cur,...rest]:rest;pos=0;}
   else{queue=all;pos=cur?cur.i:0;}
-  document.getElementById("nShelf").textContent=`${byShelf[qShelf].t} · ${pos+1} of ${queue.length}`;});
+  document.getElementById("nShelf").textContent=posTxt(byShelf[qShelf].t,pos+1,queue.length);});
 const seek=document.getElementById("seek");let seeking=false;
 seek.addEventListener("input",()=>{seeking=true;const d=ready&&player.getDuration?player.getDuration():0;document.getElementById("tCur").textContent=fmt(seek.value/1000*d);});
 seek.addEventListener("change",()=>{const d=ready&&player.getDuration?player.getDuration():0;if(d)player.seekTo(seek.value/1000*d,true);seeking=false;});
@@ -332,6 +344,7 @@ window.onYouTubeIframeAPIReady=function(){
   if((m=h.match(/^t-([a-z0-9]+)-(\d+)$/))&&byShelf[m[1]]){show(m[1],false);const i=Math.min(+m[2]-1,byShelf[m[1]].k.length-1);qShelf=m[1];queue=byShelf[m[1]].k.map((t,j)=>({...t,i:j}));pos=Math.max(0,i);load(false);}
   else if((m=h.match(/^s-([a-z0-9]+)$/))&&byShelf[m[1]])show(m[1],false);
   else show(view,false);})();
+})();
 </script>
 </body>
 </html>

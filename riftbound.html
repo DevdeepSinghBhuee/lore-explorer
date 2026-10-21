@@ -138,9 +138,9 @@ footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width
 
   <section class="hero">
     <div>
-      <div class="eyebrow">Riftbound · League's trading card game</div>
-      <h1>Six domains. <span class="dm">Every card.</span></h1>
-      <p class="lede">The complete Riftbound collection from Riot's official gallery, from Origins to Vendetta. Filter by domain, find your champion, and open any card to see it up close.</p>
+      <div class="eyebrow" data-t="rb_eye">Riftbound · League's trading card game</div>
+      <h1 id="rbH1">Six domains. <span class="dm">Every card.</span></h1>
+      <p class="lede" data-t="rb_lede">The complete Riftbound collection from Riot's official gallery, from Origins to Vendetta. Filter by domain, find your champion, and open any card to see it up close.</p>
       <div class="counts" id="counts"></div>
     </div>
     <div class="fan" id="fan" aria-hidden="true"></div>
@@ -148,22 +148,22 @@ footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width
 
   <section class="filters" aria-label="Filter cards">
     <div class="row">
-      <label class="search"><span hidden>Search cards</span><input id="q" type="search" placeholder="Search cards, champions, artists, rules text…" autocomplete="off"></label>
+      <label class="search"><span hidden>Search cards</span><input id="q" type="search" placeholder="Search cards, champions, artists, rules text…" data-tp="rb_search" autocomplete="off"></label>
       <div class="seg" id="types" role="group" aria-label="Card type"></div>
       <select id="set" aria-label="Set"></select>
       <select id="rar" aria-label="Rarity"></select>
-      <select id="sort" aria-label="Sort"><option value="set">Set order</option><option value="name">Name A–Z</option><option value="cost">Energy cost</option></select>
+      <select id="sort" aria-label="Sort"><option value="set" data-t="rb_set_order">Set order</option><option value="name" data-t="lb_name">Name A–Z</option><option value="cost" data-t="rb_energy">Energy cost</option></select>
     </div>
     <div class="chips" id="domains" role="group" aria-label="Domain"></div>
   </section>
 
   <div class="status" id="status" aria-live="polite"></div>
   <div class="grid" id="grid"></div>
-  <p class="empty" id="empty" hidden>No cards match. Try fewer filters.</p>
-  <button class="more" id="more" type="button" hidden>Show more cards</button>
+  <p class="empty" id="empty" hidden data-t="lb_none">No cards match. Try fewer filters.</p>
+  <button class="more" id="more" type="button" hidden data-t="lb_more">Show more cards</button>
 
   <footer>
-    <div>Card data and images from Riot's official Riftbound card gallery; images load directly from Riot's servers. Artists are credited on each card.</div>
+    <div data-t="rb_credit">Card data and images from Riot's official Riftbound card gallery; images load directly from Riot's servers. Artists are credited on each card.</div>
     <div class="legal">Runeterra Atlas was created under Riot Games' "Legal Jibber Jabber" policy using assets owned by Riot Games. Riot Games does not endorse or sponsor this project.</div>
   </footer>
 </div>
@@ -173,13 +173,30 @@ footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width
 <script src="data/champions.js"></script>
 <script src="data/riftbound.js"></script>
 <script>
+(async()=>{
+const I=window.AtlasI18n, LANG=I?I.lang:"en", tx=(k,v)=>I?I.t(k,v):k, EN=LANG==="en";
+const tl=(k,en,v)=>EN?en:tx(k,v);
+// Riot's own Riftbound gallery exists in these languages (data/i18n/rb-<lang>.js: set names + the cards Riot has translated)
+const RBL=["ko","zh-CN","zh-TW","de","fr"].includes(LANG);
+const loadJs=src=>new Promise(r=>{const e=document.createElement("script");e.src=src;e.onload=()=>r(true);e.onerror=()=>r(false);document.head.appendChild(e);});
+if(I&&!EN)await Promise.all([I.ready,I.loadPack(),RBL?loadJs("data/i18n/rb-"+LANG+".js"):null]).catch(()=>{});
+const RP=RBL&&window.ATLAS_I18N_RB||{sets:{},cards:{}};
+const LOC=EN?undefined:LANG==="th"?"th-TH-u-ca-gregory":LANG;
+const NCARDS=Object.keys(RP.cards).length;
+if(!EN){document.documentElement.lang=LANG;if(/^(ko|ja|zh|th)/.test(LANG))document.documentElement.classList.add("cjk");
+  document.title=tx("rb_doc");
+  const h=tx("rb_h1b");document.getElementById("rbH1").innerHTML=`${tx("rb_h1a")} <span class="dm">${h}</span>`;
+  document.querySelectorAll("[data-t]").forEach(e=>e.textContent=tx(e.dataset.t));
+  document.querySelectorAll("[data-tp]").forEach(e=>e.placeholder=tx(e.dataset.tp));
+  const n=document.createElement("div");n.textContent=NCARDS?tx("tr_note"):tx("rb_en_cards");document.querySelector("[data-t=rb_credit]").after(n);}
+const tType=x=>tl("rbt_"+x,x), tRar=x=>tl("rbr_"+x,x), tDom=x=>tl("dom_"+x,x);
 const CDN="https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/";
-const SETS=window.RB_SETS||{};
-const CARDS=(window.RB_CARDS||[]).map(r=>({i:r[0],n:r[1],sub:r[2],sc:r[3],s:SETS[r[3]]||r[3],no:r[4],t:r[5],ra:r[6],d:r[7]?r[7].split("/"):[],img:r[8],land:r[9]==="landscape",ar:r[10],tx:r[11],fx:r[12],e:r[13],m:r[14],p:r[15],tg:r[16],ch:r[17]}));
-const CH=Object.fromEntries((window.ATLAS_CHAMPS||[]).map(c=>[c.id,c]));
+const SETS=Object.fromEntries(Object.entries(window.RB_SETS||{}).map(([k,v])=>[k,RP.sets[k]||v]));
+const CARDS=(window.RB_CARDS||[]).map(r=>{const L=RP.cards[r[0]];return {i:r[0],n:L&&L[0]||r[1],en:r[1],sub:r[2],sc:r[3],s:SETS[r[3]]||r[3],no:r[4],t:r[5],ra:r[6],d:r[7]?r[7].split("/"):[],img:L&&L[2]||r[8],land:r[9]==="landscape",ar:r[10],tx:L?L[1]:r[11],etx:r[11],fx:L?"":r[12],e:r[13],m:r[14],p:r[15],tg:r[16],ch:r[17]};});
+const CH=Object.fromEntries((window.ATLAS_CHAMPS||[]).map(c=>[c.id,I&&!EN?{...c,name:I.name(c)}:c]));
 const DOM={Fury:"var(--fury)",Calm:"var(--calm)",Mind:"var(--mind)",Body:"var(--body)",Chaos:"var(--chaos)",Order:"var(--order)"};
 const DOMHEX={Fury:"#e5484d",Calm:"#3fb27f",Mind:"#4b8cff",Body:"#f28c28",Chaos:"#9b5de5",Order:"#e9c46a"};
-const TYPES=[["all","All"],["Legend","Legends"],["Unit","Units"],["Spell","Spells"],["Gear","Gear"],["Battlefield","Battlefields"],["Rune","Runes"]];
+const TYPES=[["all",tl("pl_all","All")],["Legend",tl("rb_t_legends","Legends")],["Unit",tl("rb_t_units","Units")],["Spell",tl("rb_t_spells","Spells")],["Gear",tl("rb_t_gear","Gear")],["Battlefield",tl("rb_t_battlefields","Battlefields")],["Rune",tl("rb_t_runes","Runes")]];
 const RAR=["Common","Uncommon","Rare","Epic","Showcase"];
 const PAGE=48;
 const esc=s=>String(s??"").replace(/[&<>"]/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch]));
@@ -189,12 +206,12 @@ const S={q:"",type:"all",dom:new Set(),set:"",rar:"",sort:"set",shown:PAGE};
 let list=[];
 const SETORDER=Object.keys(SETS);
 
-const cnt=t=>CARDS.filter(c=>c.t===t).length;
-document.getElementById("counts").innerHTML=[[CARDS.length,"Cards"],[cnt("Legend"),"Legends"],[Object.keys(SETS).length,"Sets"],[new Set(CARDS.map(c=>c.ar).filter(Boolean)).size,"Artists"]].map(([v,l])=>`<div><b>${v.toLocaleString()}</b><span>${l}</span></div>`).join("");
+const cnt=k=>CARDS.filter(c=>c.t===k).length;
+document.getElementById("counts").innerHTML=[[CARDS.length,tl("n_cards","Cards")],[cnt("Legend"),tl("rb_n_legends","Legends")],[Object.keys(SETS).length,tl("rb_n_sets","Sets")],[new Set(CARDS.map(c=>c.ar).filter(Boolean)).size,tl("n_artists","Artists")]].map(([v,l])=>`<div><b>${v.toLocaleString(LOC)}</b><span>${l}</span></div>`).join("");
 document.getElementById("types").innerHTML=TYPES.map(([v,l])=>`<button type="button" data-v="${v}" aria-pressed="${v==="all"}">${l}</button>`).join("");
-document.getElementById("set").innerHTML=`<option value="">All sets</option>`+SETORDER.map(k=>`<option value="${k}">${esc(SETS[k])}</option>`).join("");
-document.getElementById("rar").innerHTML=`<option value="">All rarities</option>`+RAR.map(r=>`<option>${r}</option>`).join("");
-document.getElementById("domains").innerHTML=Object.keys(DOM).map(d=>`<button class="chip" type="button" data-v="${d}" aria-pressed="false" style="--chip:${DOM[d]}"><i></i>${d}</button>`).join("");
+document.getElementById("set").innerHTML=`<option value="">${esc(tl("rb_all_sets","All sets"))}</option>`+SETORDER.map(k=>`<option value="${k}">${esc(SETS[k])}</option>`).join("");
+document.getElementById("rar").innerHTML=`<option value="">${esc(tl("rb_all_rar","All rarities"))}</option>`+RAR.map(r=>`<option value="${r}">${esc(tRar(r))}</option>`).join("");
+document.getElementById("domains").innerHTML=Object.keys(DOM).map(d=>`<button class="chip" type="button" data-v="${d}" aria-pressed="false" style="--chip:${DOM[d]}"><i></i>${esc(tDom(d))}</button>`).join("");
 
 // hero fan: five legends
 (function(){const L=CARDS.filter(c=>c.t==="Legend"&&!c.land); const pick=[];while(pick.length<5&&L.length){pick.push(L.splice(Math.floor(Math.random()*L.length),1)[0]);}
@@ -209,9 +226,9 @@ function apply(){
     if(S.set&&c.sc!==S.set)return false;
     if(S.rar&&c.ra!==S.rar)return false;
     if(S.dom.size&&!c.d.some(d=>S.dom.has(d)))return false;
-    if(q&&!(c.n.toLowerCase().includes(q)||c.sub.toLowerCase().includes(q)||c.tg.join(" ").toLowerCase().includes(q)||c.ar.toLowerCase().includes(q)||c.tx.toLowerCase().includes(q)))return false;
+    if(q&&!((c.n+" "+c.en).toLowerCase().includes(q)||(c.etx||"").toLowerCase().includes(q)||c.sub.toLowerCase().includes(q)||c.tg.join(" ").toLowerCase().includes(q)||c.ar.toLowerCase().includes(q)||c.tx.toLowerCase().includes(q)))return false;
     return true;});
-  if(S.sort==="name")list.sort((a,b)=>a.n.localeCompare(b.n));
+  if(S.sort==="name")list.sort((a,b)=>a.n.localeCompare(b.n,LOC));
   else if(S.sort==="cost")list.sort((a,b)=>(a.e??99)-(b.e??99)||a.n.localeCompare(b.n));
   else list.sort((a,b)=>SETORDER.indexOf(a.sc)-SETORDER.indexOf(b.sc)||a.no.localeCompare(b.no,undefined,{numeric:true}));
   render();
@@ -219,11 +236,11 @@ function apply(){
 function render(){
   grid.innerHTML=list.slice(0,S.shown).map((c,k)=>`<button class="card${c.land?" land":""}" type="button" data-k="${k}" style="--rc:${DOMHEX[c.d[0]]||"#c8aa6e"}">
     <div class="img"><img src="${thumb(c)}" alt="${esc(c.n)}" loading="lazy" decoding="async"></div>
-    <span class="nm">${esc(c.n)}</span><span class="mt"><span class="dots">${c.d.map(d=>`<i style="background:${DOM[d]||"#888"}"></i>`).join("")}</span>${esc(c.t)} · ${esc(c.ra)}</span></button>`).join("");
+    <span class="nm">${esc(c.n)}</span><span class="mt"><span class="dots">${c.d.map(d=>`<i style="background:${DOM[d]||"#888"}"></i>`).join("")}</span>${esc(tType(c.t))} · ${esc(tRar(c.ra))}</span></button>`).join("");
   document.getElementById("empty").hidden=list.length>0;
   document.getElementById("more").hidden=S.shown>=list.length;
   const f=S.q||S.type!=="all"||S.dom.size||S.set||S.rar;
-  document.getElementById("status").innerHTML=`Showing <b>${Math.min(S.shown,list.length).toLocaleString()}</b> of <b>${list.length.toLocaleString()}</b> cards${f?` · <button class="clear" type="button" id="clear">Clear filters</button>`:""}`;
+  document.getElementById("status").innerHTML=(EN?`Showing <b>${Math.min(S.shown,list.length).toLocaleString()}</b> of <b>${list.length.toLocaleString()}</b> cards`:esc(tx("lb_showing",{a:"\u0001",b:"\u0002"})).replace("\u0001",`<b>${Math.min(S.shown,list.length).toLocaleString(LOC)}</b>`).replace("\u0002",`<b>${list.length.toLocaleString(LOC)}</b>`))+(f?` · <button class="clear" type="button" id="clear">${esc(tl("c_clear","Clear filters"))}</button>`:"");
   const cl=document.getElementById("clear"); if(cl)cl.onclick=reset;
 }
 function reset(){S.q="";S.type="all";S.dom.clear();S.set="";S.rar="";S.shown=PAGE;
@@ -245,18 +262,18 @@ function open(k){
   cur=k; const c=list[k]; if(!c)return;
   plate.style.setProperty("--rc",DOMHEX[c.d[0]]||"#c8aa6e"); plate.classList.toggle("land",c.land);
   const champ=c.ch&&CH[c.ch];
-  const stat=[c.e!=null?`Energy ${c.e}`:"",c.p!=null?`Power ${c.p}`:"",c.m!=null?`Might ${c.m}`:""].filter(Boolean);
-  plate.innerHTML=`<button class="x" type="button" aria-label="Close" id="x">×</button>
-    <img class="big" src="${large(c)}" alt="${esc(c.n)} card">
+  const stat=[c.e!=null?tl("rb_energy_n",`Energy ${c.e}`,{n:c.e}):"",c.p!=null?tl("rb_power_n",`Power ${c.p}`,{n:c.p}):"",c.m!=null?tl("rb_might_n",`Might ${c.m}`,{n:c.m}):""].filter(Boolean);
+  plate.innerHTML=`<button class="x" type="button" aria-label="${esc(tl("c_close","Close"))}" id="x">×</button>
+    <img class="big" src="${large(c)}" alt="${esc(c.n)}">
     <div style="min-width:0">
       <div class="eyebrow" style="color:var(--rc)">${esc(c.s)} · ${esc(c.no)}</div>
       <h2>${esc(c.n)}</h2>${c.sub?`<p class="subt">${esc(c.sub)}</p>`:""}
-      <div class="meta">${c.d.map(d=>`<span class="tagm"><i style="background:${DOM[d]}"></i>${d}</span>`).join("")}<span class="tagm">${esc(c.t)}</span><span class="tagm">${esc(c.ra)}</span>${stat.map(s=>`<span class="tagm">${s}</span>`).join("")}${c.tg.map(t=>`<span class="tagm">${esc(t)}</span>`).join("")}</div>
-      ${c.tx?`<h3>Ability</h3><p>${esc(c.tx)}</p>`:""}
-      ${c.fx?`<h3>Effect</h3><p>${esc(c.fx)}</p>`:""}
-      ${champ?`<a class="goto" href="atlas.html#c-${champ.id}">Meet ${esc(champ.name)} in the Atlas →</a>`:""}
-      <div class="credit">${c.ar?`Art by ${esc(c.ar)} · `:""}Riftbound ${esc(c.s)}</div>
-      <div class="step"><button type="button" id="pv">← Previous</button><button type="button" id="nx">Next →</button></div>
+      <div class="meta">${c.d.map(d=>`<span class="tagm"><i style="background:${DOM[d]}"></i>${esc(tDom(d))}</span>`).join("")}<span class="tagm">${esc(tType(c.t))}</span><span class="tagm">${esc(tRar(c.ra))}</span>${stat.map(s=>`<span class="tagm">${esc(s)}</span>`).join("")}${c.tg.map(g=>`<span class="tagm">${esc(g)}</span>`).join("")}</div>
+      ${c.tx?`<h3>${tl("rb_ability","Ability")}</h3><p>${esc(c.tx)}</p>`:""}
+      ${c.fx?`<h3>${tl("rb_effect","Effect")}</h3><p>${esc(c.fx)}</p>`:""}
+      ${champ?`<a class="goto" href="atlas.html#c-${champ.id}">${esc(EN?"Meet "+champ.name+" in the Atlas →":tx("s_meet",{name:champ.name}))}</a>`:""}
+      <div class="credit">${c.ar?esc(tl("lb_art","Art by "+c.ar,{a:c.ar}))+" · ":""}${esc(tl("rb_set_line","Riftbound "+c.s,{s:c.s}))}</div>
+      <div class="step"><button type="button" id="pv">${tl("c_prev","← Previous")}</button><button type="button" id="nx">${tl("c_next","Next →")}</button></div>
     </div>`;
   document.getElementById("x").onclick=()=>dlg.close();
   document.getElementById("pv").onclick=()=>open((cur-1+list.length)%list.length);
@@ -273,6 +290,7 @@ if(P.get("q")){S.q=P.get("q");document.getElementById("q").value=S.q;}
 apply();
 const h=(location.hash||"").match(/^#card-([\w-]+)$/);
 if(h){let k=list.findIndex(c=>c.i===h[1]); if(k<0){reset();k=list.findIndex(c=>c.i===h[1]);} if(k>=0)open(k);}
+})();
 </script>
 </body>
 </html>

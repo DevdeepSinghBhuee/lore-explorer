@@ -9,7 +9,7 @@
   var I=window.AtlasI18n||null;
   if(I&&/^(ko|ja|zh|th)/.test(I.lang))document.documentElement.classList.add("cjk");
   function T(k,v){return I?I.t(k,v):k;}
-  var TRANSLATED={"index.html":1,"journey.html":1,"atlas.html":2,"skins.html":1,"timeline.html":1,"reading.html":1,"mine.html":1};   // 2 = partly   // pages whose own text is translated so far (the menu is translated everywhere)
+  var TRANSLATED={"index.html":1,"journey.html":1,"atlas.html":1,"skins.html":1,"timeline.html":1,"reading.html":1,"mine.html":1,"worlds.html":1,"players.html":1,"theater.html":1,"music.html":1,"library.html":1,"riftbound.html":1};   // 1 = page text translated, 2 = partly (the menu is translated everywhere)
   var GROUPS;
   function makeGroups(){GROUPS=[
     {t:T("g_champions"),items:[["journey.html",T("it_journeys"),T("it_journeys_d")],["skins.html",T("it_skins"),T("it_skins_d")],["timeline.html",T("it_timeline"),T("it_timeline_d")]]},

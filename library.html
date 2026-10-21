@@ -137,9 +137,9 @@ footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width
 
   <section class="hero">
     <div>
-      <div class="eyebrow">Legends of Runeterra · card archive</div>
-      <h1>Every card holds <em>a line of lore.</em></h1>
-      <p class="lede">The full Legends of Runeterra collection, with the story each card tells. Filter by region, search a name or a phrase, and open any card to read it.</p>
+      <div class="eyebrow" data-t="lb_eye">Legends of Runeterra · card archive</div>
+      <h1 id="lbH1">Every card holds <em>a line of lore.</em></h1>
+      <p class="lede" data-t="lb_lede">The full Legends of Runeterra collection, with the story each card tells. Filter by region, search a name or a phrase, and open any card to read it.</p>
       <div class="counts" id="counts"></div>
     </div>
     <figure class="oracle" id="oracle" style="margin:0">
@@ -148,19 +148,19 @@ footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width
         <blockquote id="oQuote"></blockquote>
         <div class="src" id="oSrc"></div>
       </div>
-      <button class="again" type="button" id="oAgain">Another</button>
+      <button class="again" type="button" id="oAgain" data-t="r_another">Another</button>
     </figure>
   </section>
 
   <section class="filters" aria-label="Filter cards">
     <div class="row">
-      <label class="search"><span hidden>Search cards</span><input id="q" type="search" placeholder="Search names, lore lines, artists…" autocomplete="off"></label>
+      <label class="search"><span hidden>Search cards</span><input id="q" type="search" placeholder="Search names, lore lines, artists…" data-tp="lb_search" autocomplete="off"></label>
       <div class="seg" id="types" role="group" aria-label="Card type"></div>
       <select id="set" aria-label="Expansion"></select>
       <select id="sort" aria-label="Sort">
-        <option value="set">Release order</option>
-        <option value="name">Name A–Z</option>
-        <option value="cost">Cost</option>
+        <option value="set" data-t="lb_release">Release order</option>
+        <option value="name" data-t="lb_name">Name A–Z</option>
+        <option value="cost" data-t="lb_cost">Cost</option>
       </select>
     </div>
     <div class="chips" id="regions" role="group" aria-label="Region"></div>
@@ -168,11 +168,11 @@ footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width
 
   <div class="status" id="status" aria-live="polite"></div>
   <div class="grid" id="grid"></div>
-  <p class="empty" id="empty" hidden>No cards match. Try fewer filters.</p>
-  <button class="more" id="more" type="button" hidden>Show more cards</button>
+  <p class="empty" id="empty" hidden data-t="lb_none">No cards match. Try fewer filters.</p>
+  <button class="more" id="more" type="button" hidden data-t="lb_more">Show more cards</button>
 
   <footer>
-    <div>Card art and text from Legends of Runeterra, via Riot's Data Dragon. Artists are credited on each card.</div>
+    <div data-t="lb_credit">Card art and text from Legends of Runeterra, via Riot's Data Dragon. Artists are credited on each card.</div>
     <div class="legal">Runeterra Atlas was created under Riot Games' "Legal Jibber Jabber" policy using assets owned by Riot Games. Riot Games does not endorse or sponsor this project.</div>
   </footer>
 </div>
@@ -184,8 +184,26 @@ footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width
 <script src="data/champions.js"></script>
 <script src="data/cards.js"></script>
 <script>
-const CARDS = window.LOR_CARDS || [];
-const CH = Object.fromEntries((window.ATLAS_CHAMPS||[]).map(c=>[c.id,c]));
+(async()=>{
+const I=window.AtlasI18n, LANG=I?I.lang:"en", tx=(k,v)=>I?I.t(k,v):k, EN=LANG==="en";
+const tl=(k,en,v)=>EN?en:tx(k,v);
+// Riot's own card text in this language (data/i18n/lor-<lang>.js); Riot never released LoR in zh-CN, Vietnamese or Indonesian
+const LOR_LANGS={"de":"de_de","es-ES":"es_es","es-MX":"es_mx","fr":"fr_fr","it":"it_it","ja":"ja_jp","ko":"ko_kr","pl":"pl_pl","pt-BR":"pt_br","ru":"ru_ru","th":"th_th","tr":"tr_tr","zh-TW":"zh_tw"};
+const LL=LOR_LANGS[LANG];
+const loadJs=src=>new Promise(r=>{const e=document.createElement("script");e.src=src;e.onload=()=>r(true);e.onerror=()=>r(false);document.head.appendChild(e);});
+if(I&&!EN)await Promise.all([I.ready,I.loadPack(),LL?loadJs("data/i18n/lor-"+LANG+".js"):null]).catch(()=>{});
+const LP=LL&&window.ATLAS_I18N_LOR||null, LG=LL&&window.ATLAS_I18N_LOR_G||null;
+const LOC=EN?undefined:LANG==="th"?"th-TH-u-ca-gregory":LANG;
+if(!EN){document.documentElement.lang=LANG;if(/^(ko|ja|zh|th)/.test(LANG))document.documentElement.classList.add("cjk");
+  document.title=tx("lb_doc");
+  document.getElementById("lbH1").innerHTML=`${tx("lb_h1a")} <em>${tx("lb_h1b")}</em>`;
+  document.querySelectorAll("[data-t]").forEach(e=>e.textContent=tx(e.dataset.t));
+  document.querySelectorAll("[data-tp]").forEach(e=>e.placeholder=tx(e.dataset.tp));
+  const n=document.createElement("div");n.textContent=LP?tx("tr_note"):tx("lb_no_lang");document.querySelector("[data-t=lb_credit]").after(n);}
+// English data, with Riot's localized name/text/flavor/type/subtypes/rarity laid over it; en* keep English for search
+const CARDS=(window.LOR_CARDS||[]).map(c=>{const L=LP&&LP[c.c];if(!L)return c;
+  return {...c,en:c.n,enF:c.f,n:L[0]||c.n,d:L[1],l:L[2],f:L[3],tl:L[4]||c.t,st:L[5]||c.st,ral:L[7]||c.ra};});
+const CH=Object.fromEntries((window.ATLAS_CHAMPS||[]).map(c=>[c.id,I&&!EN?{...c,name:I.name(c)}:c]));
 const REG = {
   Demacia:{name:"Demacia",color:"#e8d395",emb:"demacia"}, Noxus:{name:"Noxus",color:"#e0503f",emb:"noxus"},
   PiltoverZaun:{name:"Piltover & Zaun",color:"#e8ab4f",emb:"piltover"}, Freljord:{name:"Freljord",color:"#93d8f4",emb:"freljord"},
@@ -194,23 +212,27 @@ const REG = {
   ShadowIsles:{name:"Shadow Isles",color:"#7af0d2",emb:"shadowisles"}, BandleCity:{name:"Bandle City",color:"#d9ea5e",emb:"bandle"},
   Runeterra:{name:"Runeterra",color:"#e9c46a",emb:"wanderers"}
 };
-const TYPES=[["all","All"],["Champion","Champions"],["Unit","Units"],["Spell","Spells"],["Landmark","Landmarks"],["Equipment","Equipment"]];
+if(!EN)for(const k in REG){const r=REG[k];r.name=LG&&LG.regions[k]?LG.regions[k]:k==="PiltoverZaun"?I.region("piltover","Piltover")+" & "+I.region("zaun","Zaun"):k==="Runeterra"?r.name:I.region(r.emb,r.name);}
+const setName=x=>LG&&LG.sets[x]||x;
+const LIMG=c=>`https://raw.githubusercontent.com/InFinity54/LoR_DDragon_Set${c.sr||+c.c.slice(0,2)}/master/img/cards/${LL}/${c.c}.png`;
+const TYPES=[["all",tl("pl_all","All")],["Champion",tl("lb_t_champions","Champions")],["Unit",tl("lb_t_units","Units")],["Spell",tl("lb_t_spells","Spells")],["Landmark",tl("lb_t_landmarks","Landmarks")],["Equipment",tl("lb_t_equipment","Equipment")]];
 const SETS=[...new Set(CARDS.map(c=>c.s))];
 const PAGE=60;
 const esc=s=>String(s??"").replace(/[&<>"]/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch]));
 const img=c=>`img/cards/${c.c}.webp`;
 const kind=c=>c.ra==="Champion"?"Champion":c.t;
+const kindL=c=>c.ra==="Champion"?(LG?LG.rarities.CHAMPION:"Champion"):(c.tl||c.t);
 const S={q:"",type:"all",regions:new Set(),set:"",sort:"set",shown:PAGE};
 let list=[];
 
 // counts
-const n=t=>CARDS.filter(c=>kind(c)===t).length;
-document.getElementById("counts").innerHTML=[[CARDS.length,"Cards"],[n("Champion"),"Champions"],[SETS.length,"Expansions"],[new Set(CARDS.map(c=>c.ar).filter(Boolean)).size,"Artists"]]
-  .map(([v,l])=>`<div><b>${v.toLocaleString()}</b><span>${l}</span></div>`).join("");
+const n=k=>CARDS.filter(c=>kind(c)===k).length;
+document.getElementById("counts").innerHTML=[[CARDS.length,tl("n_cards","Cards")],[n("Champion"),tl("lb_t_champions","Champions")],[SETS.length,tl("lb_n_sets","Expansions")],[new Set(CARDS.map(c=>c.ar).filter(Boolean)).size,tl("n_artists","Artists")]]
+  .map(([v,l])=>`<div><b>${v.toLocaleString(LOC)}</b><span>${l}</span></div>`).join("");
 
 // controls
 document.getElementById("types").innerHTML=TYPES.map(([v,l])=>`<button type="button" data-v="${v}" aria-pressed="${v==="all"}">${l}</button>`).join("");
-document.getElementById("set").innerHTML=`<option value="">All expansions</option>`+SETS.map(s=>`<option>${esc(s)}</option>`).join("");
+document.getElementById("set").innerHTML=`<option value="">${esc(tl("lb_all_sets","All expansions"))}</option>`+SETS.map(s=>`<option value="${esc(s)}">${esc(setName(s))}</option>`).join("");
 document.getElementById("regions").innerHTML=Object.entries(REG).map(([k,r])=>`<button class="chip" type="button" data-v="${k}" aria-pressed="false" style="--chip:${r.color}"><img src="img/emblem/${r.emb}.webp" alt="">${r.name}</button>`).join("");
 
 const grid=document.getElementById("grid");
@@ -220,10 +242,10 @@ function apply(){
     if(S.type!=="all"&&kind(c)!==S.type)return false;
     if(S.set&&c.s!==S.set)return false;
     if(S.regions.size&&!c.r.some(r=>S.regions.has(r)))return false;
-    if(q&&!(c.n.toLowerCase().includes(q)||c.f.toLowerCase().includes(q)||c.ar.toLowerCase().includes(q)||c.st.join(" ").toLowerCase().includes(q)))return false;
+    if(q&&!((c.n+" "+(c.en||"")).toLowerCase().includes(q)||(c.f+" "+(c.enF||"")).toLowerCase().includes(q)||c.ar.toLowerCase().includes(q)||c.st.join(" ").toLowerCase().includes(q)))return false;
     return true;
   });
-  if(S.sort==="name")list.sort((a,b)=>a.n.localeCompare(b.n));
+  if(S.sort==="name")list.sort((a,b)=>a.n.localeCompare(b.n,LOC));
   else if(S.sort==="cost")list.sort((a,b)=>(a.k??0)-(b.k??0)||a.n.localeCompare(b.n));
   render();
 }
@@ -231,18 +253,18 @@ function render(){
   const slice=list.slice(0,S.shown);
   grid.innerHTML=slice.map((c,i)=>`<button class="card" type="button" data-i="${i}">
     <div class="img"><img src="${img(c)}" alt="${esc(c.n)}" loading="lazy" decoding="async"></div>
-    <span class="nm">${esc(c.n)}</span><span class="mt">${esc(kind(c))}${c.r.length?" · "+esc(c.r.map(r=>REG[r]?REG[r].name:r).join(" / ")):""}</span></button>`).join("");
+    <span class="nm">${esc(c.n)}</span><span class="mt">${esc(kindL(c))}${c.r.length?" · "+esc(c.r.map(r=>REG[r]?REG[r].name:r).join(" / ")):""}</span></button>`).join("");
   document.getElementById("empty").hidden=list.length>0;
   document.getElementById("more").hidden=S.shown>=list.length;
   const filtered=S.q||S.type!=="all"||S.regions.size||S.set;
-  document.getElementById("status").innerHTML=`Showing <b>${Math.min(S.shown,list.length).toLocaleString()}</b> of <b>${list.length.toLocaleString()}</b> cards${filtered?` · <button class="clear" type="button" id="clear">Clear filters</button>`:""}`;
+  document.getElementById("status").innerHTML=(EN?`Showing <b>${Math.min(S.shown,list.length).toLocaleString()}</b> of <b>${list.length.toLocaleString()}</b> cards`:esc(tx("lb_showing",{a:"\u0001",b:"\u0002"})).replace("\u0001",`<b>${Math.min(S.shown,list.length).toLocaleString(LOC)}</b>`).replace("\u0002",`<b>${list.length.toLocaleString(LOC)}</b>`))+(filtered?` · <button class="clear" type="button" id="clear">${esc(tl("c_clear","Clear filters"))}</button>`:"");
   const cl=document.getElementById("clear"); if(cl)cl.onclick=reset;
 }
 function reset(){S.q="";S.type="all";S.regions.clear();S.set="";S.shown=PAGE;
   document.getElementById("q").value="";document.getElementById("set").value="";
   document.querySelectorAll("#types button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.v==="all")));
   document.querySelectorAll("#regions .chip").forEach(b=>b.setAttribute("aria-pressed","false"));apply();}
-let t; document.getElementById("q").addEventListener("input",e=>{clearTimeout(t);t=setTimeout(()=>{S.q=e.target.value;S.shown=PAGE;apply();},160);});
+let tm; document.getElementById("q").addEventListener("input",e=>{clearTimeout(tm);tm=setTimeout(()=>{S.q=e.target.value;S.shown=PAGE;apply();},160);});
 document.getElementById("types").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;S.type=b.dataset.v;S.shown=PAGE;document.querySelectorAll("#types button").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));apply();});
 document.getElementById("regions").addEventListener("click",e=>{const b=e.target.closest(".chip");if(!b)return;const v=b.dataset.v;S.regions.has(v)?S.regions.delete(v):S.regions.add(v);b.setAttribute("aria-pressed",String(S.regions.has(v)));S.shown=PAGE;apply();});
 document.getElementById("set").addEventListener("change",e=>{S.set=e.target.value;S.shown=PAGE;apply();});
@@ -259,19 +281,19 @@ function open(i){
   const r0=REG[c.r[0]]||REG.Runeterra; plate.style.setProperty("--rc",r0.color);
   const champ=c.ch&&CH[c.ch];
   const stats=c.t==="Unit"?`<span class="tagm">${c.a} / ${c.h}</span>`:"";
-  plate.innerHTML=`<button class="x" type="button" aria-label="Close" id="x">×</button>
-    <img class="big" src="${img(c)}" alt="${esc(c.n)} card">
+  plate.innerHTML=`<button class="x" type="button" aria-label="${esc(tl("c_close","Close"))}" id="x">×</button>
+    <img class="big" src="${LL&&LP&&LP[c.c]?LIMG(c):img(c)}" alt="${esc(c.n)}" onerror="if(this.src.indexOf('raw.githubusercontent')>0)this.src='${img(c)}'">
     <div style="min-width:0">
-      <div class="eyebrow" style="color:var(--rc)">${esc(c.s)} · ${esc(c.ra||kind(c))}</div>
+      <div class="eyebrow" style="color:var(--rc)">${esc(setName(c.s))} · ${esc(c.ral||c.ra||kindL(c))}</div>
       <h2>${esc(c.n)}</h2>
       <div class="meta">${c.r.map(r=>REG[r]?`<span class="tagm reg"><img src="img/emblem/${REG[r].emb}.webp" alt="">${REG[r].name}</span>`:"").join("")}
-        <span class="tagm">${esc(c.t)}</span><span class="tagm">Cost ${c.k??"–"}</span>${stats}${c.st.map(s=>`<span class="tagm">${esc(s)}</span>`).join("")}</div>
+        <span class="tagm">${esc(c.tl||c.t)}</span><span class="tagm">${esc(tl("lb_cost_n","Cost "+(c.k??"–"),{n:c.k??"–"}))}</span>${stats}${c.st.map(s=>`<span class="tagm">${esc(s)}</span>`).join("")}</div>
       ${c.f?`<blockquote>${esc(c.f)}</blockquote>`:""}
-      ${c.d?`<h3>On the card</h3><p>${esc(c.d)}</p>`:""}
-      ${c.l?`<h3>Level up</h3><p>${esc(c.l)}</p>`:""}
-      ${champ?`<a class="goto" href="atlas.html#c-${champ.id}">Meet ${esc(champ.name)} in the Atlas →</a>`:""}
-      <div class="credit">${c.ar?`Art by ${esc(c.ar)} · `:""}Card ${esc(c.c)}</div>
-      <div class="step"><button type="button" id="pv">← Previous</button><button type="button" id="nx">Next →</button></div>
+      ${c.d?`<h3>${tl("lb_on_card","On the card")}</h3><p style="white-space:pre-line">${esc(c.d)}</p>`:""}
+      ${c.l?`<h3>${tl("lb_levelup","Level up")}</h3><p style="white-space:pre-line">${esc(c.l)}</p>`:""}
+      ${champ?`<a class="goto" href="atlas.html#c-${champ.id}">${esc(EN?"Meet "+champ.name+" in the Atlas →":tx("s_meet",{name:champ.name}))}</a>`:""}
+      <div class="credit">${c.ar?esc(tl("lb_art","Art by "+c.ar,{a:c.ar}))+" · ":""}${esc(tl("lb_card","Card "+c.c,{c:c.c}))}</div>
+      <div class="step"><button type="button" id="pv">${tl("c_prev","← Previous")}</button><button type="button" id="nx">${tl("c_next","Next →")}</button></div>
     </div>`;
   document.getElementById("x").onclick=()=>dlg.close();
   document.getElementById("pv").onclick=()=>open((cur-1+list.length)%list.length);
@@ -290,7 +312,7 @@ function oracle(){
   const o=document.getElementById("oracle"); o.style.setProperty("--rc",r0.color);
   document.getElementById("oImg").src=img(c); document.getElementById("oImg").alt=c.n;
   document.getElementById("oQuote").textContent=c.f;
-  document.getElementById("oSrc").innerHTML=`<b>${esc(c.n)}</b> · ${esc(r0.name)} · ${esc(c.s)}`;
+  document.getElementById("oSrc").innerHTML=`<b>${esc(c.n)}</b> · ${esc(r0.name)} · ${esc(setName(c.s))}`;
   document.getElementById("oImg").onclick=()=>{reset();const i=list.indexOf(c);open(i);};
 }
 document.getElementById("oAgain").onclick=oracle;
@@ -302,6 +324,7 @@ if(P.get("q")){S.q=P.get("q");document.getElementById("q").value=S.q;}
 oracle(); apply();
 const h=(location.hash||"").match(/^#card-(\w+)$/);
 if(h){const i=list.findIndex(c=>c.c===h[1]); if(i>=0)open(i); else {reset(); const j=list.findIndex(c=>c.c===h[1]); if(j>=0)open(j);}}
+})();
 </script>
 </body>
 </html>

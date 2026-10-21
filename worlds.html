@@ -154,14 +154,14 @@ footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width
 
   <section class="hero">
     <div>
-      <div class="eyebrow">League of Legends World Championship</div>
+      <div class="eyebrow" data-t="w_eye">League of Legends World Championship</div>
       <h1>Worlds 2026<span>This Is Our Moment</span></h1>
-      <p class="lede">Nineteen teams, one Summoner's Cup. Live scores, every match in your local time, and the players behind each team.</p>
+      <p class="lede" data-t="w_lede">Nineteen teams, one Summoner's Cup. Live scores, every match in your local time, and the players behind each team.</p>
       <div class="venues">
-        <div><b>Play-Ins</b> · Oct 15–18 · Riot Games Arena, Los Angeles</div>
-        <div><b>Swiss</b> · Oct 23–31 · Credit Union of Texas Event Center, Allen</div>
-        <div><b>Knockouts</b> · Nov 3–8 · Allen, Texas</div>
-        <div><b>Final</b> · Nov 14 · Barclays Center, Brooklyn</div>
+        <div data-v="w_st_playins|2026-10-15|2026-10-18"><b>Play-Ins</b> · <span>Oct 15–18</span> · Riot Games Arena, Los Angeles</div>
+        <div data-v="w_st_swiss|2026-10-23|2026-10-31"><b>Swiss</b> · <span>Oct 23–31</span> · Credit Union of Texas Event Center, Allen</div>
+        <div data-v="w_st_knockouts|2026-11-03|2026-11-08"><b>Knockouts</b> · <span>Nov 3–8</span> · Allen, Texas</div>
+        <div data-v="w_st_final|2026-11-14"><b>Final</b> · <span>Nov 14</span> · Barclays Center, Brooklyn</div>
       </div>
     </div>
     <div class="board" id="board" aria-live="polite"></div>
@@ -169,44 +169,58 @@ footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width
 
   <section class="sec" aria-labelledby="schH">
     <div class="sechead">
-      <div><h2 id="schH">Schedule &amp; results</h2><p id="tzNote"></p></div>
+      <div><h2 id="schH" data-t="w_sched">Schedule &amp; results</h2><p id="tzNote"></p></div>
       <div class="tabs" role="tablist" id="tabs"></div>
     </div>
     <div id="schedule"></div>
   </section>
 
   <section class="sec" aria-labelledby="tmH">
-    <div class="sechead"><div><h2 id="tmH">The 19 teams</h2><p>Tap a team to see its Worlds lineup.</p></div></div>
+    <div class="sechead"><div><h2 id="tmH" data-t="w_teams">The 19 teams</h2><p data-t="w_teams_sub">Tap a team to see its Worlds lineup.</p></div></div>
     <div id="teams"></div>
   </section>
 
   <section class="sec" aria-labelledby="anH">
-    <div class="sechead"><div><h2 id="anH">The anthem</h2></div><a class="allp" style="margin:0" href="music.html#s-anthems">Play every anthem, 2014–2026 →</a></div>
-    <a class="anthem" href="theater.html#v-mlFxxNsExJc"><img src="https://i.ytimg.com/vi/mlFxxNsExJc/mqdefault.jpg" alt=""><div><b>Know My Name</b><span>True Damage return for the Worlds 2026 anthem. Watch it in the Theater, with every anthem since 2014.</span></div></a>
+    <div class="sechead"><div><h2 id="anH" data-t="w_anthem">The anthem</h2></div><a class="allp" style="margin:0" href="music.html#s-anthems" data-t="w_all_anthems">Play every anthem, 2014–2026 →</a></div>
+    <a class="anthem" href="theater.html#v-mlFxxNsExJc"><img src="https://i.ytimg.com/vi/mlFxxNsExJc/mqdefault.jpg" alt=""><div><b>Know My Name</b><span data-t="w_anthem_d">True Damage return for the Worlds 2026 anthem. Watch it in the Theater, with every anthem since 2014.</span></div></a>
   </section>
 
   <section class="sec" aria-labelledby="hiH">
-    <div class="sechead"><div><h2 id="hiH">Every champion of the world</h2><p>Fifteen finals, from Jönköping to Chengdu.</p></div></div>
+    <div class="sechead"><div><h2 id="hiH" data-t="w_hist">Every champion of the world</h2><p data-t="w_hist_sub">Fifteen finals, from Jönköping to Chengdu.</p></div></div>
     <div class="trophy" id="trophy"></div>
   </section>
 
   <footer>
-    <div>Schedule, results, logos and player photos come live from LoL Esports. Lineups follow published Worlds 2026 rosters. If the live feed can't be reached, the page shows a saved copy.</div>
+    <div data-t="w_credit">Schedule, results, logos and player photos come live from LoL Esports. Lineups follow published Worlds 2026 rosters. If the live feed can't be reached, the page shows a saved copy.</div>
     <div class="legal">Runeterra Atlas was created under Riot Games' "Legal Jibber Jabber" policy using assets owned by Riot Games. Riot Games does not endorse or sponsor this project.</div>
   </footer>
 </div>
 
 <script src="data/worlds.js"></script>
 <script>
+(async()=>{
+const I=window.AtlasI18n, LANG=I?I.lang:"en", t=(k,v)=>I?I.t(k,v):k, EN=LANG==="en";
+if(I&&!EN)await I.ready.catch(()=>{});
+const LOC=EN?undefined:LANG==="th"?"th-TH-u-ca-gregory":LANG;
+const tl=(k,en,v)=>EN?en:t(k,v);
+if(!EN){document.documentElement.lang=LANG;if(/^(ko|ja|zh|th)/.test(LANG))document.documentElement.classList.add("cjk");
+  document.title=t("w_doc");
+  document.querySelectorAll("[data-t]").forEach(e=>e.textContent=t(e.dataset.t));
+  const md=x=>new Date(x+"T12:00:00Z");
+  document.querySelectorAll(".venues [data-v]").forEach(e=>{const [k,a,b]=e.dataset.v.split("|");e.querySelector("b").textContent=t(k);
+    const f=new Intl.DateTimeFormat(LOC,{month:"short",day:"numeric",timeZone:"UTC"});
+    e.querySelector("span").textContent=b&&f.formatRange?f.formatRange(md(a),md(b)):f.format(md(a));});}
+const STG={"Play-Ins":"w_st_playins","Swiss":"w_st_swiss","Knockouts":"w_st_knockouts","Quarterfinals":"w_st_qf","Semifinals":"w_st_sf","Finals":"w_st_finals","Final":"w_st_final"};
+const stg=b=>EN||!STG[b]?b:t(STG[b]);
 const API="https://esports-api.lolesports.com/persisted/gw/", KEY="0TvQnueqKa5mxJntVWt0w4LpLfEkrV1Ta8rQBb9Z", LEAGUE="98767975604431411";
 const TEAMS=window.WORLDS_TEAMS||[]; const byCode=Object.fromEntries(TEAMS.map(t=>[t.code,t]));
 const esc=s=>String(s??"").replace(/[&<>"]/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch]));
 const https=u=>(u||"").replace(/^http:\/\//,"https://");
 const TZ=Intl.DateTimeFormat().resolvedOptions().timeZone;
-const tzShort=(()=>{try{return new Intl.DateTimeFormat(undefined,{timeZoneName:"short"}).formatToParts(new Date()).find(p=>p.type==="timeZoneName").value;}catch(e){return "";}})();
-const fmtDay=d=>d.toLocaleDateString(undefined,{weekday:"long",month:"long",day:"numeric"});
-const fmtTime=d=>d.toLocaleTimeString(undefined,{hour:"numeric",minute:"2-digit"});
-document.getElementById("tzNote").textContent=`Times shown in your time zone (${tzShort||TZ}).`;
+const tzShort=(()=>{try{return new Intl.DateTimeFormat(LOC,{timeZoneName:"short"}).formatToParts(new Date()).find(p=>p.type==="timeZoneName").value;}catch(e){return "";}})();
+const fmtDay=d=>d.toLocaleDateString(LOC,{weekday:"long",month:"long",day:"numeric"});
+const fmtTime=d=>d.toLocaleTimeString(LOC,{hour:"numeric",minute:"2-digit"});
+document.getElementById("tzNote").textContent=EN?`Times shown in your time zone (${tzShort||TZ}).`:t("w_tz",{tz:tzShort||TZ});
 let EVENTS=[], source="live", stage=null, openTeam=null;
 
 function norm(raw){return raw.map(e=>Array.isArray(e.tm)?e:{t:e.startTime,s:e.state,b:e.blockName,id:e.match&&e.match.id,bo:e.match&&e.match.strategy.count,
@@ -221,7 +235,7 @@ async function load(){
   render();
 }
 const STAGES=["Play-Ins","Swiss","Quarterfinals","Semifinals","Finals"];
-const teamCell=(x,right)=>{ if(!x||x[0]==="TBD")return `<div class="t${right?" r":""}"><span class="tbd">To be decided</span></div>`;
+const teamCell=(x,right)=>{ if(!x||x[0]==="TBD")return `<div class="t${right?" r":""}"><span class="tbd">${tl("w_tbd","To be decided")}</span></div>`;
   const cls=x[4]==="win"?"win":x[4]==="loss"?"lose":""; const img=`<img src="${esc(https(x[2]))}" alt="" loading="lazy">`;
   const nm=`<span title="${esc(x[1])}">${esc(x[1])}</span>`;
   return `<div class="t ${cls}${right?" r":""}">${right?nm+img:img+nm}</div>`;};
@@ -234,17 +248,17 @@ function render(){
   const b=document.getElementById("board");
   if(focus){
     const [A,B]=focus.tm; const d=new Date(focus.t);
-    const centre=focus.s==="unstarted"?`<div class="cd" id="cd">–<small>${esc(fmtDay(d))} · ${esc(fmtTime(d))}</small></div>`:`<div class="score">${A&&A[3]!=null?A[3]:0} – ${B&&B[3]!=null?B[3]:0}<small>Best of ${focus.bo||1}</small></div>`;
-    const side=x=>x&&x[0]!=="TBD"?`<div class="side"><img src="${esc(https(x[2]))}" alt=""><div class="tn">${esc(x[1])}</div><div class="rec">${x[5]?esc(x[5])+" record":"&nbsp;"}</div></div>`:`<div class="side"><img src="https://static.lolesports.com/teams/team-tbd.png" alt=""><div class="tn tbd">To be decided</div><div class="rec">&nbsp;</div></div>`;
-    b.innerHTML=`<div class="tag"><span>${esc(focus.b)}${focus.s==="completed"?" · Final result":""}</span>${live?`<span class="pill live">Live now</span>`:focus.s==="unstarted"?`<span class="pill">Next match</span>`:`<span class="pill">Completed</span>`}</div>
+    const centre=focus.s==="unstarted"?`<div class="cd" id="cd">–<small>${esc(fmtDay(d))} · ${esc(fmtTime(d))}</small></div>`:`<div class="score">${A&&A[3]!=null?A[3]:0} – ${B&&B[3]!=null?B[3]:0}<small>${tl("w_bo","Best of "+(focus.bo||1),{n:focus.bo||1})}</small></div>`;
+    const side=x=>x&&x[0]!=="TBD"?`<div class="side"><img src="${esc(https(x[2]))}" alt=""><div class="tn">${esc(x[1])}</div><div class="rec">${x[5]?(EN?esc(x[5])+" record":esc(t("w_record",{r:x[5]}))):"&nbsp;"}</div></div>`:`<div class="side"><img src="https://static.lolesports.com/teams/team-tbd.png" alt=""><div class="tn tbd">${tl("w_tbd","To be decided")}</div><div class="rec">&nbsp;</div></div>`;
+    b.innerHTML=`<div class="tag"><span>${esc(stg(focus.b))}${focus.s==="completed"?" · "+tl("w_final_res","Final result"):""}</span>${live?`<span class="pill live">${tl("w_live","Live now")}</span>`:focus.s==="unstarted"?`<span class="pill">${tl("w_next","Next match")}</span>`:`<span class="pill">${tl("w_done","Completed")}</span>`}</div>
       <div class="vs">${side(A)}${centre}${side(B)}</div>
-      <div class="watch"><a class="${live?"primary":""}" href="https://lolesports.com/live/worlds" target="_blank" rel="noopener">${live?"Watch live":"LoL Esports"} ↗</a><a href="https://www.youtube.com/@lolesports/live" target="_blank" rel="noopener">YouTube ↗</a></div>
-      <div class="feed">${source==="live"?"Live data · refreshes automatically":"Saved copy · live feed unavailable"}</div>`;
+      <div class="watch"><a class="${live?"primary":""}" href="https://lolesports.com/live/worlds" target="_blank" rel="noopener">${live?tl("w_watch_live","Watch live"):"LoL Esports"} ↗</a><a href="https://www.youtube.com/@lolesports/live" target="_blank" rel="noopener">YouTube ↗</a></div>
+      <div class="feed">${source==="live"?tl("w_feed_live","Live data · refreshes automatically"):tl("w_feed_saved","Saved copy · live feed unavailable")}</div>`;
   }
   // tabs
   const present=STAGES.filter(s=>EVENTS.some(e=>e.b===s));
   if(!stage){ stage=(live||next||{}).b||present[0]; }
-  document.getElementById("tabs").innerHTML=present.map(s=>`<button role="tab" type="button" aria-selected="${s===stage}" data-s="${s}">${s}</button>`).join("");
+  document.getElementById("tabs").innerHTML=present.map(s=>`<button role="tab" type="button" aria-selected="${s===stage}" data-s="${s}">${esc(stg(s))}</button>`).join("");
   // schedule
   const list=EVENTS.filter(e=>e.b===stage); const days={};
   list.forEach(e=>{const k=new Date(e.t).toDateString();(days[k]||(days[k]=[])).push(e);});
@@ -252,7 +266,7 @@ function render(){
     const [A,B]=e.tm; const done=e.s!=="unstarted";
     return `<div class="match${e.s==="inProgress"?" live":""}"><div class="time">${esc(fmtTime(new Date(e.t)))}</div>${teamCell(A,false)}
       <div class="sc${done?"":" pre"}">${done?`${A&&A[3]!=null?A[3]:0}–${B&&B[3]!=null?B[3]:0}`:"VS"}</div>${teamCell(B,true)}
-      <div class="meta">${e.s==="inProgress"?"LIVE":"BO"+(e.bo||1)}</div></div>`;}).join("")}</div>`).join("")||`<p class="tbd">Matches for this stage haven't been announced yet.</p>`;
+      <div class="meta">${e.s==="inProgress"?tl("w_live_tag","LIVE"):"BO"+(e.bo||1)}</div></div>`;}).join("")}</div>`).join("")||`<p class="tbd">${tl("w_none","Matches for this stage haven't been announced yet.")}</p>`;
   tick();
 }
 document.getElementById("tabs").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;stage=b.dataset.s;render();});
@@ -261,7 +275,7 @@ function tick(){
   const next=EVENTS.find(e=>e.s==="unstarted"&&new Date(e.t).getTime()>Date.now()-3600e3); if(!next)return;
   let s=Math.max(0,Math.floor((new Date(next.t).getTime()-Date.now())/1000));
   const dd=Math.floor(s/86400); s%=86400; const hh=Math.floor(s/3600); s%=3600; const mm=Math.floor(s/60); const ss=s%60;
-  el.firstChild.nodeValue=(dd?dd+"d ":"")+String(hh).padStart(2,"0")+":"+String(mm).padStart(2,"0")+":"+String(ss).padStart(2,"0");
+  el.firstChild.nodeValue=(dd?tl("w_d",dd+"d",{n:dd})+" ":"")+String(hh).padStart(2,"0")+":"+String(mm).padStart(2,"0")+":"+String(ss).padStart(2,"0");
 }
 setInterval(tick,1000);
 setInterval(()=>{ if(document.visibilityState==="visible") load(); }, 60000);
@@ -269,19 +283,20 @@ setInterval(()=>{ if(document.visibilityState==="visible") load(); }, 60000);
 // teams
 const LEAGUES=["LCK","LPL","LEC","LCS","LCP","CBLOL"];
 function renderTeams(){
-  document.getElementById("teams").innerHTML=LEAGUES.map(L=>{const ts=TEAMS.filter(t=>t.league===L);return `<div class="lg"><h3>${L}</h3><div class="teams">${ts.map(t=>`<button class="team" type="button" data-s="${t.slug}" aria-expanded="${openTeam===t.slug}"><img src="${esc(t.img)}" alt="" loading="lazy"><span class="nm">${esc(t.name)}</span><span class="sd${t.start==="Play-Ins"?" pi":""}">${esc(t.seed)} · ${t.start==="Play-Ins"?"Play-Ins":"Swiss"}</span></button>`).join("")}${ts.some(t=>t.slug===openTeam)?roster(TEAMS.find(t=>t.slug===openTeam)):""}</div></div>`;}).join("");
+  document.getElementById("teams").innerHTML=LEAGUES.map(L=>{const ts=TEAMS.filter(t=>t.league===L);return `<div class="lg"><h3>${L}</h3><div class="teams">${ts.map(t=>`<button class="team" type="button" data-s="${t.slug}" aria-expanded="${openTeam===t.slug}"><img src="${esc(t.img)}" alt="" loading="lazy"><span class="nm">${esc(t.name)}</span><span class="sd${t.start==="Play-Ins"?" pi":""}">${esc(t.seed)} · ${esc(stg(t.start==="Play-Ins"?"Play-Ins":"Swiss"))}</span></button>`).join("")}${ts.some(t=>t.slug===openTeam)?roster(TEAMS.find(t=>t.slug===openTeam)):""}</div></div>`;}).join("");
 }
-const ROLE={top:"Top",jungle:"Jungle",mid:"Mid",bottom:"Bot",support:"Support"};
+const ROLE={top:tl("ro_top","Top"),jungle:tl("ro_jungle","Jungle"),mid:tl("ro_mid","Mid"),bottom:tl("ro_bot","Bot"),support:tl("ro_support","Support")};
 const pslug=n=>String(n).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
-function roster(t){return `<div class="roster">${t.roster.map(([n,r,img])=>`<a class="pl" href="players.html#p-${pslug(n)}" title="${esc(n)}: signature champions and Worlds history"><div class="ph">${img?`<img src="${esc(img)}" alt="${esc(n)}" loading="lazy">`:""}</div><b>${esc(n)}</b><span>${ROLE[r]||r}</span></a>`).join("")}</div><a class="allp" href="players.html?team=${t.code}">All ${esc(t.name)} player files →</a>`;}
+function roster(tm){return `<div class="roster">${tm.roster.map(([n,r,img])=>`<a class="pl" href="players.html#p-${pslug(n)}" title="${esc(EN?n+": signature champions and Worlds history":t("w_roster_tip",{n}))}"><div class="ph">${img?`<img src="${esc(img)}" alt="${esc(n)}" loading="lazy">`:""}</div><b>${esc(n)}</b><span>${ROLE[r]||r}</span></a>`).join("")}</div><a class="allp" href="players.html?team=${tm.code}">${esc(EN?"All "+tm.name+" player files →":t("w_all_files",{t:tm.name}))}</a>`;}
 document.getElementById("teams").addEventListener("click",e=>{const b=e.target.closest(".team");if(!b)return;openTeam=openTeam===b.dataset.s?null:b.dataset.s;renderTeams();});
 renderTeams();
 
 // history
 const HIST=[[2025,"T1","3–2","KT Rolster","Chengdu"],[2024,"T1","3–2","Bilibili Gaming","London"],[2023,"T1","3–0","Weibo Gaming","Seoul"],[2022,"DRX","3–2","T1","San Francisco"],[2021,"EDward Gaming","3–2","DWG KIA","Reykjavík"],[2020,"DAMWON Gaming","3–1","Suning","Shanghai"],[2019,"FunPlus Phoenix","3–0","G2 Esports","Paris"],[2018,"Invictus Gaming","3–0","Fnatic","Incheon"],[2017,"Samsung Galaxy","3–0","SK Telecom T1","Beijing"],[2016,"SK Telecom T1","3–2","Samsung Galaxy","Los Angeles"],[2015,"SK Telecom T1","3–1","KOO Tigers","Berlin"],[2014,"Samsung White","3–1","Royal Club","Seoul"],[2013,"SK Telecom T1","3–0","Royal Club","Los Angeles"],[2012,"Taipei Assassins","3–1","Azubu Frost","Los Angeles"],[2011,"Fnatic","2–1","against All authority","Jönköping"]];
-document.getElementById("trophy").innerHTML=HIST.map(([y,c,s,o,v])=>`<div class="yr${/T1/.test(c)?" t1":""}"><div class="y">${y} · ${esc(v)}</div><div class="c">${esc(c)}</div><div class="o">beat ${esc(o)} ${s}</div></div>`).join("");
+document.getElementById("trophy").innerHTML=HIST.map(([y,c,s,o,v])=>`<div class="yr${/T1/.test(c)?" t1":""}"><div class="y">${y} · ${esc(v)}</div><div class="c">${esc(c)}</div><div class="o">${esc(EN?"beat "+o+" "+s:t("w_beat",{o,s}))}</div></div>`).join("");
 
 EVENTS=norm(window.WORLDS_SNAPSHOT||[]); source="saved"; render(); load();
+})();
 </script>
 </body>
 </html>

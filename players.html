@@ -165,31 +165,31 @@ footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width
 
   <section class="hero">
     <div>
-      <div class="eyebrow">Worlds 2026 · Player files</div>
-      <h1>Players<span>of the Rift</span></h1>
-      <p class="lede">Everyone on a Worlds 2026 roster: the champions they're known for, and every World Championship they've played, year by year.</p>
+      <div class="eyebrow" data-t="pl_eye">Worlds 2026 · Player files</div>
+      <h1 id="plH1">Players<span>of the Rift</span></h1>
+      <p class="lede" data-t="pl_lede">Everyone on a Worlds 2026 roster: the champions they're known for, and every World Championship they've played, year by year.</p>
     </div>
     <div class="facts" id="facts"></div>
   </section>
 
   <div class="tools">
     <label class="search"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M11 11l4 4" stroke="currentColor" stroke-width="1.5"/></svg>
-      <input id="q" type="search" placeholder="Search a player, team or champion" aria-label="Search players" autocomplete="off"></label>
+      <input id="q" type="search" placeholder="Search a player, team or champion" data-tp="pl_search" aria-label="Search players" autocomplete="off"></label>
     <div class="chips" id="roles" role="group" aria-label="Role"></div>
     <select id="team" aria-label="Team"></select>
     <select id="sort" aria-label="Sort">
-      <option value="team">By team</option>
-      <option value="worlds">Most Worlds</option>
-      <option value="titles">Most titles</option>
-      <option value="games">Most pro games</option>
-      <option value="name">A–Z</option>
+      <option value="team" data-t="pl_by_team">By team</option>
+      <option value="worlds" data-t="pl_most_worlds">Most Worlds</option>
+      <option value="titles" data-t="pl_most_titles">Most titles</option>
+      <option value="games" data-t="pl_most_games">Most pro games</option>
+      <option value="name" data-t="pl_az">A–Z</option>
     </select>
   </div>
   <p class="count" id="count"></p>
   <div class="grid" id="grid"></div>
 
   <footer>
-    <div>Player names, champion statistics and Worlds results come from <a href="https://lol.fandom.com/" rel="noopener">Leaguepedia</a> (CC BY-SA 3.0); player photos from <a href="https://lolesports.com/" rel="noopener">LoL Esports</a>. Signature champions count every pro game Leaguepedia has recorded. Worlds records are the team's series and games that year. <span id="upd"></span></div>
+    <div><span id="plCredit">Player names, champion statistics and Worlds results come from <a href="https://lol.fandom.com/" rel="noopener">Leaguepedia</a> (CC BY-SA 3.0); player photos from <a href="https://lolesports.com/" rel="noopener">LoL Esports</a>. Signature champions count every pro game Leaguepedia has recorded. Worlds records are the team's series and games that year.</span> <span id="upd"></span></div>
     <div class="legal">Runeterra Atlas was created under Riot Games' "Legal Jibber Jabber" policy using assets owned by Riot Games. Riot Games does not endorse or sponsor this project.</div>
   </footer>
 </div>
@@ -200,12 +200,28 @@ footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width
 <script src="data/worlds.js"></script>
 <script src="data/players.js"></script>
 <script>
+(async()=>{
+const I=window.AtlasI18n, LANG=I?I.lang:"en", tx=(k,v)=>I?I.t(k,v):k, EN=LANG==="en";
+if(I&&!EN)await Promise.all([I.ready,I.loadPack()]).catch(()=>{});
+const tl=(k,en,v)=>EN?en:tx(k,v);
+const LOC=EN?undefined:LANG==="th"?"th-TH-u-ca-gregory":LANG;
+const nf=n=>Number(n).toLocaleString(LOC);
+if(!EN){document.documentElement.lang=LANG;if(/^(ko|ja|zh|th)/.test(LANG))document.documentElement.classList.add("cjk");
+  document.title=tx("pl_doc");
+  document.getElementById("plH1").innerHTML=`${tx("pl_h1a")}<span>${tx("pl_h1b")}</span>`;
+  document.querySelectorAll("[data-t]").forEach(e=>e.textContent=tx(e.dataset.t));
+  document.querySelectorAll("[data-tp]").forEach(e=>e.placeholder=tx(e.dataset.tp));
+  document.getElementById("plCredit").innerHTML=tx("pl_credit",{lp:'<a href="https://lol.fandom.com/" rel="noopener">Leaguepedia</a>',le:'<a href="https://lolesports.com/" rel="noopener">LoL Esports</a>'});}
+const CC={"China":"CN","South Korea":"KR","Taiwan":"TW","Italy":"IT","Germany":"DE","Denmark":"DK","France":"FR","Greece":"GR","United States":"US","Sweden":"SE","Argentina":"AR","Brazil":"BR","India":"IN","Poland":"PL","Australia":"AU","Spain":"ES","Canada":"CA","Vietnam":"VN"};
+let DN=null;try{if(!EN)DN=new Intl.DisplayNames([LANG],{type:"region"});}catch(e){}
+const country=c=>{if(!DN||!CC[c])return c;try{return DN.of(CC[c])||c;}catch(e){return c;}};
 const esc=s=>String(s??"").replace(/[&<>"]/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch]));
 const DATA=window.ATLAS_PLAYERS||{players:[]}, P=DATA.players;
 const TEAMS=window.WORLDS_TEAMS||[], byCode=Object.fromEntries(TEAMS.map(t=>[t.code,t]));
 const TEAM_ORDER=TEAMS.map(t=>t.code);
 const CH=window.ATLAS_CHAMPS||[], chByName=Object.fromEntries(CH.map(c=>[c.name.toLowerCase(),c]));
-const ROLES=[["all","All"],["top","Top"],["jungle","Jungle"],["mid","Mid"],["bot","Bot"],["support","Support"]];
+const cname=n=>{const c=chByName[String(n).toLowerCase()];return c&&I&&!EN?I.name(c):n;};
+const ROLES=[["all",tl("pl_all","All")],["top",tl("ro_top","Top")],["jungle",tl("ro_jungle","Jungle")],["mid",tl("ro_mid","Mid")],["bot",tl("ro_bot","Bot")],["support",tl("ro_support","Support")]];
 const ROLE_ORDER={top:0,jungle:1,mid:2,bot:3,support:4};
 const champ=n=>chByName[String(n).toLowerCase()];
 const tile=n=>{const c=champ(n);return c?`img/${c.id}-tile.webp`:"";};
@@ -215,12 +231,13 @@ const ini=n=>esc(String(n).slice(0,2).toUpperCase());
 
 function finish(w){
   const [y,,stage,pl]=w;
-  if(!pl) return y===2026?["Playing now","now"]:["—",""];
-  if(pl==="1") return ["World Champion","w"];
-  if(pl==="2") return ["Runner-up","f"];
-  if(pl==="3-4") return ["Semifinals",""];
-  if(pl==="5-8") return ["Quarterfinals",""];
+  if(!pl) return y===2026?[tl("fin_now","Playing now"),"now"]:["—",""];
+  if(pl==="1") return [tl("fin_champ","World Champion"),"w"];
+  if(pl==="2") return [tl("fin_runner","Runner-up"),"f"];
+  if(pl==="3-4") return [tl("w_st_sf","Semifinals"),""];
+  if(pl==="5-8") return [tl("w_st_qf","Quarterfinals"),""];
   const n=pl.split("-").map(x=>x.replace(/\D/g,""));
+  if(!EN)return [(stage==="P"?tx("fin_playin")+" · ":"")+(n.length>1?tx("pl_places",{a:n[0],b:n[1]}):tx("pl_place",{a:n[0]})),""];
   const ord=x=>{const v=+x,s=["th","st","nd","rd"],m=v%100;return v+(s[(m-20)%10]||s[m]||s[0]);};
   return [(stage==="P"?"Play-In · ":"")+(n.length>1?ord(n[0])+"–"+ord(n[1]):ord(n[0])),""];
 }
@@ -229,7 +246,7 @@ function finish(w){
 let role="all", team="all", sort="team", query="";
 document.getElementById("roles").innerHTML=ROLES.map(([k,v])=>`<button type="button" data-r="${k}" aria-pressed="${k==="all"}">${v}</button>`).join("");
 const leagues=[...new Set(TEAMS.map(t=>t.league))];
-document.getElementById("team").innerHTML=`<option value="all">All 19 teams</option>`+leagues.map(L=>`<optgroup label="${esc(L)}">${TEAMS.filter(t=>t.league===L).map(t=>`<option value="${t.code}">${esc(t.name)}</option>`).join("")}</optgroup>`).join("");
+document.getElementById("team").innerHTML=`<option value="all">${esc(tl("pl_all_teams","All 19 teams"))}</option>`+leagues.map(L=>`<optgroup label="${esc(L)}">${TEAMS.filter(t=>t.league===L).map(t=>`<option value="${t.code}">${esc(t.name)}</option>`).join("")}</optgroup>`).join("");
 document.getElementById("roles").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;role=b.dataset.r;document.querySelectorAll("#roles button").forEach(x=>x.setAttribute("aria-pressed",x===b));render();});
 document.getElementById("team").addEventListener("change",e=>{team=e.target.value;render();});
 document.getElementById("sort").addEventListener("change",e=>{sort=e.target.value;render();});
@@ -238,8 +255,8 @@ document.getElementById("q").addEventListener("input",e=>{query=e.target.value.t
 /* Facts */
 (function(){
   const vets=P.filter(p=>pastWorlds(p)>0).length, champs=P.filter(p=>titles(p)>0).length;
-  document.getElementById("facts").innerHTML=`<div><b>${P.length}</b><span>Players</span></div><div><b>${vets}</b><span>Worlds veterans</span></div><div><b>${champs}</b><span>World champions</span></div>`;
-  if(DATA.updated)document.getElementById("upd").textContent=`Data saved ${new Date(DATA.updated+"T12:00:00Z").toLocaleDateString(undefined,{day:"numeric",month:"long",year:"numeric"})}.`;
+  document.getElementById("facts").innerHTML=`<div><b>${P.length}</b><span>${tl("pl_n_players","Players")}</span></div><div><b>${vets}</b><span>${tl("pl_n_vets","Worlds veterans")}</span></div><div><b>${champs}</b><span>${tl("pl_n_champs","World champions")}</span></div>`;
+  if(DATA.updated)document.getElementById("upd").textContent=EN?`Data saved ${new Date(DATA.updated+"T12:00:00Z").toLocaleDateString(undefined,{day:"numeric",month:"long",year:"numeric"})}.`:tx("pl_saved",{d:I.date(DATA.updated)});
 })();
 
 function matches(p){
@@ -247,7 +264,7 @@ function matches(p){
   if(team!=="all"&&p.team!==team)return false;
   if(!query)return true;
   const t=byCode[p.team];
-  const hay=[p.name,p.real,p.native,p.country,p.team,t&&t.name,...p.champs.map(c=>c[0]),...p.worlds.map(w=>w[1])].join(" ").toLowerCase();
+  const hay=[p.name,p.real,p.native,p.country,country(p.country),p.team,t&&t.name,...p.champs.map(c=>c[0]+" "+cname(c[0])),...p.worlds.map(w=>w[1])].join(" ").toLowerCase();
   return hay.includes(query);
 }
 function sorted(list){
@@ -262,22 +279,22 @@ function card(p){
   const t=byCode[p.team], n=pastWorlds(p), c=titles(p);
   return `<button class="card" type="button" data-id="${p.id}">
     <div class="ph"><span class="ini">${ini(p.name)}</span>${p.photo?`<img src="${esc(p.photo)}" alt="" loading="lazy" onerror="this.remove()">`:""}
-      <span class="tm">${esc(p.team)}</span>${c?`<span class="cups" title="World titles">${c}×</span>`:""}</div>
+      <span class="tm">${esc(p.team)}</span>${c?`<span class="cups" title="${esc(tl("pl_titles_tip","World titles"))}">${c}×</span>`:""}</div>
     <div class="bd"><b>${esc(p.name)}</b>
-      <div class="rl"><span>${esc(ROLES.find(r=>r[0]===p.role)?.[1]||p.role)}</span><span class="wy">${n?`${n} past Worlds`:"Worlds debut"}</span></div>
-      <div class="mini">${p.champs.slice(0,3).map(c=>tile(c[0])?`<img src="${tile(c[0])}" alt="${esc(c[0])}" title="${esc(c[0])}" loading="lazy">`:"").join("")}</div>
+      <div class="rl"><span>${esc(ROLES.find(r=>r[0]===p.role)?.[1]||p.role)}</span><span class="wy">${n?(EN?`${n} past Worlds`:esc(tx("pl_past",{n}))):tl("pl_debut","Worlds debut")}</span></div>
+      <div class="mini">${p.champs.slice(0,3).map(c=>tile(c[0])?`<img src="${tile(c[0])}" alt="${esc(cname(c[0]))}" title="${esc(cname(c[0]))}" loading="lazy">`:"").join("")}</div>
     </div></button>`;
 }
 function render(){
   const list=sorted(P.filter(matches));
-  document.getElementById("count").textContent=`${list.length} of ${P.length} players`;
-  document.getElementById("grid").innerHTML=list.length?list.map(card).join(""):`<div class="empty">No player matches that search.</div>`;
+  document.getElementById("count").textContent=EN?`${list.length} of ${P.length} players`:tx("pl_count",{a:list.length,b:P.length});
+  document.getElementById("grid").innerHTML=list.length?list.map(card).join(""):`<div class="empty">${esc(tl("pl_none","No player matches that search."))}</div>`;
 }
 document.getElementById("grid").addEventListener("click",e=>{const b=e.target.closest(".card");if(b)open(b.dataset.id);});
 
 /* Dossier */
 const dz=document.getElementById("dz");
-function chLink(n,inner){const c=champ(n);return c?`<a href="atlas.html#c-${c.id}" title="${esc(n)} in the Atlas">${inner}</a>`:`<span title="${esc(n)}">${inner}</span>`;}
+function chLink(n,inner){const c=champ(n);return c?`<a href="atlas.html#c-${c.id}" title="${esc(EN?n+" in the Atlas":tx("pl_in_atlas",{n:cname(n)}))}">${inner}</a>`:`<span title="${esc(cname(n))}">${inner}</span>`;}
 function open(id,push=true){
   const p=P.find(x=>x.id===id); if(!p)return;
   const t=byCode[p.team], max=Math.max(1,...p.champs.map(c=>c[1]));
@@ -286,30 +303,30 @@ function open(id,push=true){
   const rows=p.worlds.slice().reverse().map(w=>{
     const [y,tn,,,gw,gl,sw,sl,chs]=w, [lab,cls]=finish(w), played=gw+gl>0;
     return `<div class="yrow"><div class="y">${y}</div>
-      <div class="team">${esc(tn.replace(/ \((.*)\)$/,""))}<span class="rec">${played?`Series <span class="num">${sw}–${sl}</span> · Games <span class="num">${gw}–${gl}</span>`:"Yet to play"}</span></div>
+      <div class="team">${esc(tn.replace(/ \((.*)\)$/,""))}<span class="rec">${played?`${tl("pl_series","Series")} <span class="num">${sw}–${sl}</span> · ${tl("pl_games","Games")} <span class="num">${gw}–${gl}</span>`:tl("pl_yet","Yet to play")}</span></div>
       <div><span class="fin ${cls}">${esc(lab)}</span></div>
-      <div class="chs">${chs.map(ch=>tile(ch)?chLink(ch,`<img src="${tile(ch)}" alt="${esc(ch)}" loading="lazy">`):"").join("")}</div></div>`;}).join("");
+      <div class="chs">${chs.map(ch=>tile(ch)?chLink(ch,`<img src="${tile(ch)}" alt="${esc(cname(ch))}" loading="lazy">`):"").join("")}</div></div>`;}).join("");
   dz.innerHTML=`<div class="dz-top">
-      <button class="close" type="button" aria-label="Close" data-close>×</button>
+      <button class="close" type="button" aria-label="${esc(tl("c_close","Close"))}" data-close>×</button>
       <div class="dz-ph"><span class="ini">${ini(p.name)}</span>${p.photo?`<img src="${esc(p.photo)}" alt="${esc(p.name)}" onerror="this.remove()">`:""}</div>
       <div style="min-width:0">
         <div class="eyebrow">${esc(ROLES.find(r=>r[0]===p.role)?.[1]||"")} · ${esc(t?t.league:"")}</div>
         <h2 id="dzName">${esc(p.name)}</h2>
-        <p class="real">${esc(p.real)}${p.native&&p.native!==p.real?` · ${esc(p.native)}`:""}${p.country?` · ${esc(p.country)}`:""}</p>
+        <p class="real">${esc(p.real)}${p.native&&p.native!==p.real?` · ${esc(p.native)}`:""}${p.country?` · ${esc(country(p.country))}`:""}</p>
         <div class="tags">${t?`<span class="tag"><img src="${esc(t.img)}" alt="">${esc(t.name)}</span>`:""}${t?`<span class="tag">${esc(t.seed)}</span>`:""}</div>
         <div class="stats">
-          <div><b>${n}</b><span>Past Worlds</span></div>
-          <div><b>${c}</b><span>Titles</span></div>
-          <div><b>${finals}</b><span>Finals</span></div>
-          <div><b>${p.games.toLocaleString()}</b><span>Pro games</span></div>
+          <div><b>${n}</b><span>${tl("pl_past_w","Past Worlds")}</span></div>
+          <div><b>${c}</b><span>${tl("pl_titles","Titles")}</span></div>
+          <div><b>${finals}</b><span>${tl("pl_finals","Finals")}</span></div>
+          <div><b>${nf(p.games)}</b><span>${tl("pl_pro_games","Pro games")}</span></div>
         </div>
       </div></div>
     <div class="dz-body">
-      <section><h3>Signature champions</h3><p class="sub">Most-played across ${p.games.toLocaleString()} recorded pro games (${p.nchamps} different champions). Tap one to open it in the Atlas.</p>
-        <div class="sig">${p.champs.map(([cn,g])=>{const img=tile(cn);const inner=`${img?`<img src="${img}" alt="" loading="lazy">`:`<span></span>`}<div style="min-width:0"><div class="n"><span>${esc(cn)}</span><span class="num">${g}</span></div><div class="meter"><i style="width:${Math.round(g/max*100)}%"></i></div><div class="g">${(g/p.games*100).toFixed(1)}% of games</div></div>`;const ch=champ(cn);return ch?`<a class="sc" href="atlas.html#c-${ch.id}">${inner}</a>`:`<div class="sc">${inner}</div>`;}).join("")}</div></section>
-      <section><h3>Worlds history</h3><p class="sub">${n?`${n} World Championship${n>1?"s":""} before 2026${c?`, ${c} title${c>1?"s":""}`:""}. Champion icons are the ones they played most that year.`:"2026 is their first World Championship."}</p>
+      <section><h3>${tl("pl_sig","Signature champions")}</h3><p class="sub">${EN?`Most-played across ${p.games.toLocaleString()} recorded pro games (${p.nchamps} different champions). Tap one to open it in the Atlas.`:esc(tx("pl_sig_sub",{g:nf(p.games),n:p.nchamps}))}</p>
+        <div class="sig">${p.champs.map(([cn,g])=>{const img=tile(cn);const inner=`${img?`<img src="${img}" alt="" loading="lazy">`:`<span></span>`}<div style="min-width:0"><div class="n"><span>${esc(cname(cn))}</span><span class="num">${g}</span></div><div class="meter"><i style="width:${Math.round(g/max*100)}%"></i></div><div class="g">${EN?(g/p.games*100).toFixed(1)+"% of games":esc(tx("pl_pct",{p:(g/p.games*100).toLocaleString(LOC,{minimumFractionDigits:1,maximumFractionDigits:1})}))}</div></div>`;const ch=champ(cn);return ch?`<a class="sc" href="atlas.html#c-${ch.id}">${inner}</a>`:`<div class="sc">${inner}</div>`;}).join("")}</div></section>
+      <section><h3>${tl("pl_hist","Worlds history")}</h3><p class="sub">${EN?(n?`${n} World Championship${n>1?"s":""} before 2026${c?`, ${c} title${c>1?"s":""}`:""}. Champion icons are the ones they played most that year.`:"2026 is their first World Championship."):esc(n?tx("pl_hist_n",{n})+(c?", "+tx("pl_hist_t",{n:c}):"")+". "+tx("pl_hist_icons"):tx("pl_first"))}</p>
         <div class="tl">${rows}</div></section>
-      <div class="more"><a href="https://lol.fandom.com/wiki/${encodeURIComponent(p.wiki.replace(/ /g,"_"))}" rel="noopener">Full profile on Leaguepedia ↗</a><a href="worlds.html">Worlds 2026 schedule →</a></div>
+      <div class="more"><a href="https://lol.fandom.com/wiki/${encodeURIComponent(p.wiki.replace(/ /g,"_"))}" rel="noopener">${tl("pl_leaguepedia","Full profile on Leaguepedia ↗")}</a><a href="worlds.html">${tl("pl_sched","Worlds 2026 schedule →")}</a></div>
     </div>`;
   if(!dz.open)dz.showModal();
   dz.scrollTop=0;
@@ -323,6 +340,7 @@ window.addEventListener("hashchange",fromHash);
 
 (function(){const t=new URLSearchParams(location.search).get("team");if(t&&byCode[t]){team=t;document.getElementById("team").value=t;}})();
 render();fromHash();
+})();
 </script>
 </body>
 </html>

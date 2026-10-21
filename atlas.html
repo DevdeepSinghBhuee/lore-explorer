@@ -390,33 +390,33 @@ footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width
 
   <section class="hero">
     <div>
-      <div class="eyebrow">A field guide to the world of League</div>
-      <h1>Every realm. <em>One world.</em> Pick a door.</h1>
+      <div class="eyebrow" data-t="at_eye">A field guide to the world of League</div>
+      <h1 id="atH1">Every realm. <em>One world.</em> Pick a door.</h1>
     </div>
     <div>
-      <p class="lede">No card games to unlock the next chapter. Open the map, step into a region, and see who lives there and how they are tied to each other.</p>
+      <p class="lede" data-t="at_lede">No card games to unlock the next chapter. Open the map, step into a region, and see who lives there and how they are tied to each other.</p>
       <div class="stats" id="stats"></div>
-      <a class="cta" href="#mapsec">Open the map <span aria-hidden="true">↓</span></a>
-      <a class="worldsnow" href="worlds.html"><span class="dot"></span>Worlds 2026 is on · live scores &amp; rosters →</a>
+      <a class="cta" href="#mapsec"><span data-t="at_open">Open the map</span> <span aria-hidden="true">↓</span></a>
+      <a class="worldsnow" href="worlds.html"><span class="dot"></span><span data-t="at_worlds">Worlds 2026 is on · live scores &amp; rosters →</span></a>
     </div>
   </section>
 
   <section class="mapsec" id="mapsec">
     <div class="sechead">
-      <h2>The Map of Runeterra</h2>
-      <p>Hover a land to light it up. Tap to choose it. Zoom in to see cities and landmarks.</p>
+      <h2 data-t="at_map">The Map of Runeterra</h2>
+      <p id="mapSub">Hover a land to light it up. Tap to choose it. Zoom in to see cities and landmarks.</p>
     </div>
     <div class="mapframe" id="mapframe">
       <div class="stage" id="stage">
         <svg id="map" viewBox="0 0 1000 620" role="group" aria-label="Map of Runeterra with selectable regions"></svg>
       </div>
-      <div class="loading" id="loading">Charting the known world…</div>
+      <div class="loading" id="loading" data-t="at_loading">Charting the known world…</div>
       <div class="hud">
-        <button type="button" id="zin" aria-label="Zoom in">+</button>
-        <button type="button" id="zout" aria-label="Zoom out">−</button>
-        <button type="button" id="zreset" aria-label="Reset view" style="font-size:13px">⤢</button>
+        <button type="button" id="zin" aria-label="Zoom in" data-ta="at_zin">+</button>
+        <button type="button" id="zout" aria-label="Zoom out" data-ta="at_zout">−</button>
+        <button type="button" id="zreset" aria-label="Reset view" data-ta="at_reset" style="font-size:13px">⤢</button>
       </div>
-      <div class="hint" id="hint">Drag to pan · double-click or + to zoom</div>
+      <div class="hint" id="hint" data-t="at_hint">Drag to pan · double-click or + to zoom</div>
       <div class="tip" id="tip"></div>
     </div>
     <div class="travel" id="travel">
@@ -455,7 +455,7 @@ footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width
 
     <div class="dossier">
       <div class="webcard">
-        <h3>Web of bonds</h3>
+        <h3 data-t="at_web">Web of bonds</h3>
         <svg id="web" viewBox="-60 -30 640 590" aria-label="Relationship web"></svg>
         <div class="legend">
           <span><i style="background:var(--family)"></i>Family</span>
@@ -468,21 +468,21 @@ footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width
         </div>
       </div>
       <div class="detail">
-        <h3>Champion</h3>
+        <h3 data-t="col_champion">Champion</h3>
         <div class="dbody" id="detail"></div>
       </div>
     </div>
 
     <div class="roster">
       <div class="rosterbar"><h3 id="rosterHead">Champions</h3>
-        <label class="find"><span class="sr">Find a champion</span><input id="find" type="search" list="allChamps" placeholder="Find any champion…" autocomplete="off"></label>
+        <label class="find"><span class="sr">Find a champion</span><input id="find" type="search" list="allChamps" placeholder="Find any champion…" data-tp="at_find" autocomplete="off"></label>
         <datalist id="allChamps"></datalist></div>
       <div class="grid" id="grid"></div>
     </div>
   </section>
 
   <footer>
-    <div>Runeterra Atlas is an unofficial fan guide. Character summaries are written for this site. Champion art comes from Riot's Data Dragon. Connections between champions follow Riot's Universe biographies and stories, and the <a href="https://leagueoflegends.fandom.com/" rel="noopener">League of Legends Wiki</a> (CC BY-SA 3.0); each one says which. Lore videos linked from connections are by <a href="https://www.youtube.com/@Necrit" rel="noopener">Necrit</a>.</div>
+    <div id="atCredit">Runeterra Atlas is an unofficial fan guide. Character summaries are written for this site. Champion art comes from Riot's Data Dragon. Connections between champions follow Riot's Universe biographies and stories, and the <a href="https://leagueoflegends.fandom.com/" rel="noopener">League of Legends Wiki</a> (CC BY-SA 3.0); each one says which. Lore videos linked from connections are by <a href="https://www.youtube.com/@Necrit" rel="noopener">Necrit</a>.</div>
     <div class="legal">Runeterra Atlas was created under Riot Games' "Legal Jibber Jabber" policy using assets owned by Riot Games. Riot Games does not endorse or sponsor this project.</div>
   </footer>
 </div>
@@ -496,7 +496,23 @@ footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width
 <script src="data/champrb.js"></script>
 <script src="data/videos.js"></script>
 <script>
+(async()=>{
+// languages: wait for this language's UI text and Riot's champion text before drawing anything
+const I0=window.AtlasI18n, L0=I0?I0.lang:"en", EN0=L0==="en", tx=(k,v)=>I0?I0.t(k,v):k;
+if(I0&&!EN0)await Promise.all([I0.ready,I0.loadPack(),I0.loadFull(),I0.loadStories()]).catch(()=>{});
+const tl=(k,en,v)=>EN0?en:tx(k,v);
+if(!EN0){document.documentElement.lang=L0;if(/^(ko|ja|zh|th)/.test(L0))document.documentElement.classList.add("cjk");
+  document.title=tx("at_doc");
+  document.getElementById("atH1").innerHTML=`${tx("at_h1a")} <em>${tx("at_h1b")}</em> ${tx("at_h1c")}`;
+  document.querySelectorAll("[data-t]").forEach(e=>e.textContent=tx(e.dataset.t));
+  document.querySelectorAll("[data-tp]").forEach(e=>e.placeholder=tx(e.dataset.tp));
+  document.querySelectorAll("[data-ta]").forEach(e=>e.setAttribute("aria-label",tx(e.dataset.ta)));
+  document.getElementById("mapSub").textContent=tx("at_map_sub")+" "+tx("at_places");
+  document.getElementById("atCredit").innerHTML=tx("at_credit",{wiki:'<a href="https://leagueoflegends.fandom.com/" rel="noopener">League of Legends Wiki</a>',necrit:'<a href="https://www.youtube.com/@Necrit" rel="noopener">Necrit</a>'});}
 const REGIONS = window.ATLAS_REGIONS;
+// region names (Riot's), taglines and descriptions in this language; r.en keeps the English name
+REGIONS.forEach(r=>{r.en=r.en||r.name;if(EN0||!I0)return;r.name=I0.region(r.id,r.en);
+  const tg=tx("rg_"+r.id+"_tag"),ds=tx("rg_"+r.id+"_desc");if(tg!=="rg_"+r.id+"_tag")r.tag=tg;if(ds!=="rg_"+r.id+"_desc")r.desc=ds;});
 
 const CHAMPS = (window.ATLAS_CHAMPS||[]).map(c=>Object.assign({},c));
 CHAMPS.forEach(c=>{ c.img = c.img || `img/${c.id}-tile.webp`; c.full = `img/${c.id}-full.webp`; });
@@ -525,7 +541,7 @@ const emblem = id => EMB_SVG[id] || `img/emblem/${id}.webp`;
 
 // ---------- hero stats
 document.getElementById("stats").innerHTML =
-  [[REGIONS.length,"Regions"],[CHAMPS.length,"Champions"],[BONDS.length,"Bonds mapped"]]
+  [[REGIONS.length,tl("at_n_regions","Regions")],[CHAMPS.length,tl("lb_t_champions","Champions")],[BONDS.length,tl("at_n_bonds","Bonds mapped")]]
   .map(([n,l])=>`<div class="stat"><b>${n}</b><span>${l}</span></div>`).join("");
 
 // ---------- map geography (fan reconstruction of the official layout)
@@ -827,7 +843,7 @@ function renderMap(){
       :`<path d="M${x} ${y-2.6}l2.6 2.6-2.6 2.6-2.6-2.6z" fill="#c8aa6e" stroke="#0b0f18" stroke-width=".7"/><text x="${x+4.5}" y="${y+3}" font-style="italic">${esc(n)}</text>`).join("")}
     ${Object.entries(MAPPOS).filter(([id])=>id!=="bandle"&&id!=="piltover"&&id!=="zaun").map(([id,p])=>`<text x="${p.px+19}" y="${p.py+3}" font-style="italic">${esc(CAPITAL[id])}</text>`).join("")}
   </g>
-  ${TERR.concat("bandle","wanderers").map(id=>{const p=MAPPOS[id],r=regById[id];return `<text class="rname" data-id="${id}" x="${p.nx}" y="${p.ny}" font-size="${p.ns}" fill="${r.color}" text-anchor="${p.a||"middle"}" ${(id==="bandle"||id==="wanderers")?'font-style="italic" letter-spacing=".2em"':""}>${esc(r.name.toUpperCase())}</text>`;}).join("")}
+  ${TERR.concat("bandle","wanderers").map(id=>{const p=MAPPOS[id],r=regById[id];return `<text class="rname" data-id="${id}" x="${p.nx}" y="${p.ny}" font-size="${p.ns}" fill="${r.color}" text-anchor="${p.a||"middle"}" ${(id==="bandle"||id==="wanderers")?'font-style="italic" letter-spacing=".2em"':""}>${esc(r.name.toLocaleUpperCase(EN0?"en":L0))}</text>`;}).join("")}
   ${TERR.concat("bandle","wanderers").map(id=>{const p=MAPPOS[id],r=regById[id];return `<g class="pin" data-id="${id}" tabindex="0" role="button" aria-label="${esc(r.name)}" transform="translate(${p.px} ${p.py})">
       ${id==="bandle"?`<circle r="24" fill="${r.color}" filter="url(#b6)" class="bandle-glow"/>`:""}
       <circle class="pulse" r="16" fill="none" stroke="${r.color}" stroke-width="1.5"/>
@@ -898,7 +914,7 @@ function setupMapInteraction(){
   const showTip=(id,cx,cy)=>{
     const r=regById[id],rc=regionChamps(id),fr=frame.getBoundingClientRect();
     tip.style.setProperty("--tc",r.color);
-    tip.innerHTML=`<div class="th"><img src="${emblem(id)}" alt=""><div><b>${esc(r.name)}</b><div class="cap">${esc(CAPITAL[id])}</div></div></div>${esc(r.tag)}<div class="faces">${rc.slice(0,7).map(c=>`<img src="${esc(c.img)}" alt="">`).join("")}</div><small>${rc.length} champions · tap to choose</small>`;
+    tip.innerHTML=`<div class="th"><img src="${emblem(id)}" alt=""><div><b>${esc(r.name)}</b><div class="cap">${esc(CAPITAL[id])}</div></div></div>${esc(r.tag)}<div class="faces">${rc.slice(0,7).map(c=>`<img src="${esc(c.img)}" alt="">`).join("")}</div><small>${esc(tl("at_tip_n",rc.length+" champions · tap to choose",{n:rc.length}))}</small>`;
     tip.classList.add("on");
     const tw=tip.offsetWidth,th=tip.offsetHeight;
     let left=cx-fr.left+18,top=cy-fr.top+18;
@@ -958,11 +974,11 @@ function onRegionChange(rid){
   document.getElementById("tEmb").src=emblem(rid);
   document.getElementById("tName").textContent=r.name;
   document.getElementById("tTag").textContent=r.tag;
-  document.getElementById("tFaces").innerHTML=rc.slice(0,6).map(c=>`<img src="${esc(c.img)}" alt="${esc(c.name)}" title="${esc(c.name)}">`).join("");
-  document.getElementById("tGoName").textContent=r.name;
+  document.getElementById("tFaces").innerHTML=rc.slice(0,6).map(c=>`<img src="${esc(c.img)}" alt="${esc(cn(c))}" title="${esc(cn(c))}">`).join("");
+  if(EN0)document.getElementById("tGoName").textContent=r.name;else document.getElementById("tGo").textContent=tx("at_enter",{r:r.name});
   document.getElementById("rEmb").src=emblem(rid);
   {const LR={demacia:"Demacia",noxus:"Noxus",piltover:"PiltoverZaun",zaun:"PiltoverZaun",freljord:"Freljord",ionia:"Ionia",shurima:"Shurima",targon:"Targon",bilgewater:"Bilgewater",shadowisles:"ShadowIsles",bandle:"BandleCity",wanderers:"Runeterra"}[rid];
-   const a=document.getElementById("rLib"); a.hidden=!LR; if(LR){a.href="library.html?region="+LR; a.textContent="Browse "+(rid==="piltover"||rid==="zaun"?"Piltover & Zaun":regById[rid].name)+" cards in the Library →";}}
+   const a=document.getElementById("rLib"); a.hidden=!LR; if(LR){a.href="library.html?region="+LR; const rn=rid==="piltover"||rid==="zaun"?regById.piltover.name+" & "+regById.zaun.name:regById[rid].name;a.textContent=EN0?"Browse "+rn+" cards in the Library →":tx("at_lib",{r:rn});}}
   applyTheme(rid);
   drawHighlight();
 }
@@ -1260,7 +1276,7 @@ const Scene = (function(){
     if(tk!==token)return;
     const c=SCENE_CREDITS[rid]; 
     fb.src=img.src; fb.alt=c?`${c.title}, official artwork`:"";
-    cr.innerHTML=c?`<b>${esc(c.title)}</b> · ${esc(c.src)}${c.artist?` · art by ${esc(c.artist)}`:""}`:"";
+    cr.innerHTML=c?`<b>${esc(c.title)}</b> · ${esc(c.src)}${c.artist?` · ${esc(EN0?"art by "+c.artist:tx("lb_art",{a:c.artist}))}`:""}`:"";
     if(gl){
       try{upload(texI,0,img);upload(texD,1,dep);imgSize=[img.naturalWidth,img.naturalHeight];ready=true;draw(performance.now());}
       catch(e){gl=null;wrap.classList.remove("gl");}
@@ -1318,8 +1334,8 @@ function applyTheme(rid){
   st.setProperty("--t-corner-br",svgURL(cornerBR));
   Scene.set(rid);
   document.getElementById("rFx").innerHTML=buildFx(t.fx);
-  document.getElementById("rDna").innerHTML=`<div class="dna-grid">${Object.entries(t.dna).map(([k,v])=>`<div><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join("")}</div>
-    <div class="swatches" aria-label="Palette">${t.sw.map(c=>`<span style="background:${c}" title="${c}"></span>`).join("")}<em>Palette</em></div>`;
+  document.getElementById("rDna").innerHTML=`<div class="dna-grid">${Object.entries(t.dna).map(([k,v])=>`<div><dt>${esc(tl("at_dna_"+k.toLowerCase(),k))}</dt><dd>${esc(EN0?v:tl("dn_"+rid+"_"+k.toLowerCase(),v))}</dd></div>`).join("")}</div>
+    <div class="swatches" aria-label="${esc(tl("at_palette","Palette"))}">${t.sw.map(c=>`<span style="background:${c}" title="${c}"></span>`).join("")}<em>${esc(tl("at_palette","Palette"))}</em></div>`;
 }
 
 // ---------- region
@@ -1335,7 +1351,7 @@ function openRegion(rid, champId, scroll){
   const champs = regionChamps(rid);
   const idx = REGIONS.indexOf(r);
   const prev = REGIONS[(idx-1+REGIONS.length)%REGIONS.length], next = REGIONS[(idx+1)%REGIONS.length];
-  document.getElementById("rEyebrow").textContent = `Region ${String(idx+1).padStart(2,"0")} of ${REGIONS.length}`;
+  document.getElementById("rEyebrow").textContent = EN0?`Region ${String(idx+1).padStart(2,"0")} of ${REGIONS.length}`:tx("at_region_n",{a:String(idx+1).padStart(2,"0"),b:REGIONS.length});
   const parts = r.name.split(" ");
   document.getElementById("rName").innerHTML = parts.length>1 ? `${esc(parts.slice(0,-1).join(" "))} <span>${esc(parts.at(-1))}</span>` : `<span>${esc(r.name)}</span>`;
   document.getElementById("rTag").textContent = r.tag;
@@ -1344,7 +1360,7 @@ function openRegion(rid, champId, scroll){
   document.getElementById("nextName").textContent = next.name;
   document.getElementById("prev").onclick = ()=>openRegion(prev.id,null,false);
   document.getElementById("next").onclick = ()=>openRegion(next.id,null,false);
-  document.getElementById("rosterHead").textContent = `Champions of ${r.name} · ${champs.length}`;
+  document.getElementById("rosterHead").textContent = EN0?`Champions of ${r.name} · ${champs.length}`:tx("at_champs_of",{r:r.name,n:champs.length});
   document.querySelectorAll(".pin").forEach(p=>p.classList.toggle("active",p.dataset.id===rid));
   document.querySelectorAll("#strip .chip").forEach(b=>b.setAttribute("aria-pressed", String(b.dataset.id===rid)));
   onRegionChange(rid);
@@ -1530,6 +1546,7 @@ openRegion(regById[start] ? start : "zaun", startChamp, false);
 if(startChamp) setTimeout(()=>document.getElementById("region").scrollIntoView(),300);
 buildTerrain();
 if(AI&&ALANG!=="en")Promise.all([AI.ready,AI.loadPack(),AI.loadFull(),AI.loadStories()]).catch(()=>{}).then(()=>{if(/^(ko|ja|zh|th)/.test(ALANG))document.documentElement.classList.add("cjk");fillFind();document.querySelectorAll(".legend span").forEach(sp=>{const m=(sp.querySelector("i")||{}).getAttribute?.("style")?.match(/--(\w+)\)/);if(m)sp.lastChild.textContent=tr("bt_"+m[1]);});const lx=document.getElementById("lgExt");if(lx)lx.lastChild.textContent=tr("a_other_region");if(current){renderRoster();renderWeb();}if(selected)renderDetail();});
+})();
 </script>
 </body>
 </html>
