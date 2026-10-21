@@ -336,7 +336,7 @@ function render(){
   const save=()=>{if(k)LS.set(k,state);else{PR[mode].state=state;LS.set(PRAC,PR);}};
   if(pseed!=null&&PR[mode].state)Object.assign(state,PR[mode].state);
   const done=state.won||state.lost, ans=CH[p.id];
-  document.getElementById("eye").textContent=p.practice?t("practice_eye",{mode:MN(mode)}):t("puzzle_n",{n:p.n,date:new Date().toLocaleDateString(LANG,{day:"numeric",month:"long",year:"numeric"})});
+  document.getElementById("eye").textContent=p.practice?t("practice_eye",{mode:MN(mode)}):t("puzzle_n",{n:p.n,date:I&&LANG!=="en"?I.date(key):new Date().toLocaleDateString(LANG,{day:"numeric",month:"long",year:"numeric"})});
 
   let stage="";
   if(mode==="clues"){

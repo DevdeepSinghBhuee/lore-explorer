@@ -9,7 +9,7 @@
   var I=window.AtlasI18n||null;
   if(I&&/^(ko|ja|zh|th)/.test(I.lang))document.documentElement.classList.add("cjk");
   function T(k,v){return I?I.t(k,v):k;}
-  var TRANSLATED={"index.html":1,"journey.html":1,"atlas.html":2};   // 2 = partly   // pages whose own text is translated so far (the menu is translated everywhere)
+  var TRANSLATED={"index.html":1,"journey.html":1,"atlas.html":2,"skins.html":1,"timeline.html":1,"reading.html":1,"mine.html":1};   // 2 = partly   // pages whose own text is translated so far (the menu is translated everywhere)
   var GROUPS;
   function makeGroups(){GROUPS=[
     {t:T("g_champions"),items:[["journey.html",T("it_journeys"),T("it_journeys_d")],["skins.html",T("it_skins"),T("it_skins_d")],["timeline.html",T("it_timeline"),T("it_timeline_d")]]},
@@ -99,6 +99,7 @@
 .snav.sheet-open{z-index:1000}
 /* scripts without capital letters: wide letter-spacing pulls their characters apart */
 .cjk .snav *,.cjk .resume,.cjk .resume *{letter-spacing:.02em!important}
+html.cjk:not([lang="en"]) body *{letter-spacing:.02em!important}
 .snav .sheet{display:none;position:fixed;inset:0;z-index:1000;background:#080d18;overflow:auto;padding:max(18px,env(safe-area-inset-top)) 20px 40px}
 .snav .sheet .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
 .snav .sheet .top b{font-family:var(--f-display,serif);font-weight:400;color:var(--gold,#c8aa6e);font-size:22px;letter-spacing:.06em}

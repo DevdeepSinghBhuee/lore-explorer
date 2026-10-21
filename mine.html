@@ -117,34 +117,34 @@ footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width
 
   <section class="intro">
     <div>
-      <div class="eyebrow">Yours</div>
-      <h1>My champions <em>&amp; my reading.</em></h1>
-      <p>Star a champion on their journey, on the Atlas, the Timeline or in Skins and they'll gather here. Every story you open from this site is ticked off as read. It is all kept in this browser only: no account, nothing sent anywhere.</p>
+      <div class="eyebrow" data-t="yours">Yours</div>
+      <h1 id="mH1">My champions <em>&amp; my reading.</em></h1>
+      <p data-t="m_intro">Star a champion on their journey, on the Atlas, the Timeline or in Skins and they'll gather here. Every story you open from this site is ticked off as read. It is all kept in this browser only: no account, nothing sent anywhere.</p>
     </div>
     <div class="progress" id="progress"></div>
   </section>
 
   <section class="block">
-    <h2>Favourites <small id="favCount"></small></h2>
-    <p class="sub">Your starred champions, with how much of their story you've read.</p>
+    <h2><span data-t="m_favs_h">Favourites</span> <small id="favCount"></small></h2>
+    <p class="sub" data-t="m_favs_sub">Your starred champions, with how much of their story you've read.</p>
     <div id="favs"></div>
   </section>
 
   <section class="block" id="nextBlock">
-    <h2>Read next <small>about your champions</small></h2>
-    <p class="sub">Stories featuring your favourites that you haven't opened yet, shortest first.</p>
+    <h2><span data-t="m_next_h">Read next</span> <small data-t="m_next_small">about your champions</small></h2>
+    <p class="sub" data-t="m_next_sub">Stories featuring your favourites that you haven't opened yet, shortest first.</p>
     <div class="queue" id="queue"></div>
   </section>
 
   <section class="block">
-    <h2>Stories you've read <small id="logCount"></small></h2>
-    <p class="sub">Newest first. Tick a story off by hand in the Reading Room if you read it somewhere else.</p>
+    <h2><span data-t="m_log_h">Stories you've read</span> <small id="logCount"></small></h2>
+    <p class="sub" data-t="m_log_sub">Newest first. Tick a story off by hand in the Reading Room if you read it somewhere else.</p>
     <ul class="log" id="log"></ul>
-    <p class="note">Saved in this browser. Clearing your browser data, or using another device or a private window, starts fresh. <button class="danger" type="button" id="clear">Clear everything</button></p>
+    <p class="note"><span data-t="m_note">Saved in this browser. Clearing your browser data, or using another device or a private window, starts fresh.</span> <button class="danger" type="button" id="clear" data-t="m_clear">Clear everything</button></p>
   </section>
 
   <footer>
-    <div>Stories and comics belong to Riot Games and open on Riot's Universe site.</div>
+    <div data-t="m_credit">Stories and comics belong to Riot Games and open on Riot's Universe site.</div>
     <div class="legal">Runeterra Atlas was created under Riot Games' "Legal Jibber Jabber" policy using assets owned by Riot Games. Riot Games does not endorse or sponsor this project.</div>
   </footer>
 </div>
@@ -153,54 +153,60 @@ footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width
 <script src="data/regions.js"></script>
 <script src="data/reading.js"></script>
 <script>
-const CH=Object.fromEntries((window.ATLAS_CHAMPS||[]).map(c=>[c.id,c]));
+(async()=>{
+const I=window.AtlasI18n, LANG=I?I.lang:"en", t=(k,v)=>I?I.t(k,v):k, EN=LANG==="en";
+if(I&&!EN)await Promise.all([I.ready,I.loadPack(),I.loadStories()]).catch(()=>{});
+if(!EN){document.documentElement.lang=LANG;if(/^(ko|ja|zh|th)/.test(LANG))document.documentElement.classList.add("cjk");
+  document.title=t("m_doc");document.getElementById("mH1").innerHTML=`${esc(t("m_h1a"))} <em>${esc(t("m_h1b"))}</em>`;
+  document.querySelectorAll("[data-t]").forEach(e=>e.textContent=t(e.dataset.t));}
+const CH=Object.fromEntries((window.ATLAS_CHAMPS||[]).map(c=>[c.id,I&&!EN?{...c,name:I.name(c),title:I.title(c)}:c]));
 const RG=Object.fromEntries((window.ATLAS_REGIONS||[]).map(r=>[r.id,r]));
 const STORIES=window.ATLAS_READ_STORIES||[], BYS=Object.fromEntries(STORIES.map(s=>[s.s,s]));
 const DD="https://ddragon.leagueoflegends.com/cdn/img/champion/";
 const UIMG="https://cmsassets.rgpub.io/sanity/images/dsfx7636/universe/";
-const UNI="https://universe.leagueoflegends.com/en_US/story/";
-const esc=s=>String(s??"").replace(/[&<>"]/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch]));
+const UNI="https://universe.leagueoflegends.com/en_US/story/", sUrl=x=>I?I.storyUrl(x):`${UNI}${x}/`, sT=x=>I&&!EN?I.storyTitle(x.s,x.t):x.t;
+function esc(s){return String(s??"").replace(/[&<>"]/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch]));}
 const MON=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-const dm=d=>{const [y,m,dd]=d.split("-");return `${+dd} ${MON[+m-1]} ${y}`;};
-const hm=m=>m<60?`${m} min`:`${Math.floor(m/60)} h ${m%60?`${m%60} min`:""}`.trim();
+const dm=d=>{if(!EN)return I.date(d,{month:"short"});const [y,m,dd]=d.split("-");return `${+dd} ${MON[+m-1]} ${y}`;};
+const hm=m=>m<60?t("m_min",{n:m}):`${t("m_h",{n:Math.floor(m/60)})} ${m%60?t("m_min",{n:m%60}):""}`.trim();
 
 function render(){
   const M=window.AtlasMine; if(!M)return;
   const favs=M.favs().filter(id=>CH[id]), read=M.read();
   const readS=STORIES.filter(s=>read[s.s]);
   const mins=readS.reduce((a,s)=>a+s.min,0), total=STORIES.reduce((a,s)=>a+s.min,0);
-  document.getElementById("progress").innerHTML=`<div class="row"><div><b>${readS.length}</b> <span>of ${STORIES.length} stories read</span></div><div><b>${favs.length}</b> <span>${favs.length===1?"favourite":"favourites"}</span></div></div>
+  document.getElementById("progress").innerHTML=`<div class="row"><div><b>${readS.length}</b> <span>${esc(t("m_read_of",{n:STORIES.length}))}</span></div><div><b>${favs.length}</b> <span>${esc(t("m_favs",{n:favs.length}))}</span></div></div>
     <div class="meter"><i style="width:${(readS.length/STORIES.length*100).toFixed(1)}%"></i></div>
-    <small>${readS.length?`About ${hm(mins)} of Runeterra read, out of roughly ${Math.round(total/60)} hours.`:"Open any story from the Reading Room or a journey and it will count here."}</small>`;
-
-  document.getElementById("favCount").textContent=favs.length?`${favs.length} starred`:"";
+    <small>${esc(readS.length?t("m_progress",{t:hm(mins),h:Math.round(total/60)}):t("m_progress0"))}</small>`;
+  document.getElementById("favCount").textContent=favs.length?t("m_starred",{n:favs.length}):"";
   document.getElementById("favs").innerHTML=favs.length?`<div class="favs">${favs.map(id=>{const c=CH[id],rg=RG[c.region]||{};
     const mine=STORIES.filter(s=>s.ch.includes(id)), done=mine.filter(s=>read[s.s]).length;
     return `<article class="fav" style="--rc:${rg.color||"#c8aa6e"}">
       <a class="pic" href="journey.html?c=${id}"><img src="${DD}splash/${c.dd}_0.jpg" alt="" loading="lazy"></a>
-      <button class="unstar" type="button" data-fav="${id}" title="Remove from my champions" aria-label="Remove ${esc(c.name)} from my champions">★</button>
-      <div class="body"><h3>${esc(c.name)}<small>${esc(rg.name||"")} · ${esc(c.title)}</small></h3>
-        ${mine.length?`<div class="mini"><i style="width:${done/mine.length*100}%"></i></div><div class="stat"><b>${done}</b> of <b>${mine.length}</b> ${mine.length===1?"story":"stories"} read</div>`:`<div class="stat">No Riot stories about ${esc(c.name)} yet.</div>`}
-        <div class="links"><a href="journey.html?c=${id}">Journey</a><a href="reading.html?champion=${id}">Stories</a><a href="skins.html?champion=${id}">Skins</a><a href="atlas.html#c-${id}">Atlas</a></div></div></article>`;}).join("")}</div>`
-    :`<div class="empty"><p>No favourites yet. Open any champion's journey and press <b>☆ Add to my champions</b>.</p><a class="btn" href="journey.html">Find a champion</a></div>`;
+      <button class="unstar" type="button" data-fav="${id}" title="${esc(t("m_remove"))}" aria-label="${esc(t("m_remove_aria",{name:c.name}))}">★</button>
+      <div class="body"><h3>${esc(c.name)}<small>${esc(I?I.region(c.region,rg.name||""):(rg.name||""))} · ${esc(c.title)}</small></h3>
+        ${mine.length?`<div class="mini"><i style="width:${done/mine.length*100}%"></i></div><div class="stat">${EN?`<b>${done}</b> of <b>${mine.length}</b> ${mine.length===1?"story":"stories"} read`:t("m_stat",{a:`<b>${done}</b>`,b:`<b>${mine.length}</b>`})}</div>`:`<div class="stat">${esc(t("m_no_stories",{name:c.name}))}</div>`}
+        <div class="links"><a href="journey.html?c=${id}">${t("m_journey")}</a><a href="reading.html?champion=${id}">${t("c_stories")}</a><a href="skins.html?champion=${id}">${t("it_skins")}</a><a href="atlas.html#c-${id}">${t("it_atlas")}</a></div></div></article>`;}).join("")}</div>`
+    :`<div class="empty"><p>${t("m_empty")}</p><a class="btn" href="journey.html">${t("m_find")}</a></div>`;
 
   const q=STORIES.filter(s=>!read[s.s]&&s.ch.some(id=>favs.includes(id))).sort((a,b)=>a.min-b.min).slice(0,8);
   document.getElementById("nextBlock").hidden=!favs.length;
-  document.getElementById("queue").innerHTML=q.length?q.map(s=>`<a class="q" href="${UNI}${esc(s.s)}/" target="_blank" rel="noopener"><img src="${UIMG}${s.img}?w=240&fm=webp" alt="" loading="lazy"><div><small>${s.min} min · ${esc(s.ch.filter(id=>favs.includes(id)).map(id=>CH[id].name).join(", "))}</small><b>${esc(s.t)}</b></div></a>`).join("")
-    :`<p style="color:var(--muted);margin:0;grid-column:1/-1">${favs.length?"You've read every story about your favourites. Star another champion to keep going.":""}</p>`;
+  document.getElementById("queue").innerHTML=q.length?q.map(s=>`<a class="q" href="${esc(sUrl(s.s))}" target="_blank" rel="noopener"><img src="${UIMG}${s.img}?w=240&fm=webp" alt="" loading="lazy"><div><small>${esc(t("m_min",{n:s.min}))} · ${esc(s.ch.filter(id=>favs.includes(id)).map(id=>CH[id].name).join(", "))}</small><b>${esc(sT(s))}</b></div></a>`).join("")
+    :`<p style="color:var(--muted);margin:0;grid-column:1/-1">${favs.length?esc(t("m_all_read")):""}</p>`;
 
   const log=Object.entries(read).filter(([s])=>BYS[s]).sort((a,b)=>b[1].localeCompare(a[1]));
   document.getElementById("logCount").textContent=log.length?`${log.length}`:"";
-  document.getElementById("log").innerHTML=log.length?log.map(([s,d])=>{const x=BYS[s];return `<li><a href="${UNI}${esc(s)}/" target="_blank" rel="noopener">${esc(x.t)}</a><span style="display:flex;gap:12px;align-items:center"><small>${dm(d)}</small><button type="button" data-unread="${esc(s)}">Unmark</button></span></li>`;}).join("")
-    :`<li style="justify-content:center;color:var(--muted);border-style:dashed">Nothing yet. <a href="reading.html" style="color:var(--gold);margin-left:6px">Visit the Reading Room</a></li>`;
+  document.getElementById("log").innerHTML=log.length?log.map(([s,d])=>{const x=BYS[s];return `<li><a href="${esc(sUrl(s))}" target="_blank" rel="noopener">${esc(sT(x))}</a><span style="display:flex;gap:12px;align-items:center"><small>${dm(d)}</small><button type="button" data-unread="${esc(s)}">${t("m_unmark")}</button></span></li>`;}).join("")
+    :`<li style="justify-content:center;color:var(--muted);border-style:dashed">${esc(t("m_nothing"))} <a href="reading.html" style="color:var(--gold);margin-left:6px">${esc(t("m_visit"))}</a></li>`;
 }
 document.getElementById("log").addEventListener("click",e=>{const b=e.target.closest("[data-unread]");if(b)AtlasMine.unmarkRead(b.dataset.unread);});
 let armed=false;document.getElementById("clear").addEventListener("click",e=>{
-  if(!armed){armed=true;e.target.textContent="Click again to clear";setTimeout(()=>{armed=false;e.target.textContent="Clear everything";},4000);return;}
-  AtlasMine.clear();armed=false;e.target.textContent="Clear everything";});
+  if(!armed){armed=true;e.target.textContent=t("m_again");setTimeout(()=>{armed=false;e.target.textContent=t("m_clear");},4000);return;}
+  AtlasMine.clear();armed=false;e.target.textContent=t("m_clear");});
 // site.js is deferred, so wait for it
 function boot(){if(!window.AtlasMine){return setTimeout(boot,30);}render();AtlasMine.onChange(render);}
 boot();
+})();
 </script>
 </body>
 </html>

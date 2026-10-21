@@ -42,7 +42,13 @@ data/i18n/full-<code>.js (ATLAS_I18N_FULL id → [full lore, [5 ability descript
 AtlasI18n helpers: uni (Universe locale), loadFull/loadStories, bio(c), storyUrl/storyTitle/storyDesc, champUrl, skin(c,num,en), date(iso).
 Story links open Universe in the visitor's language when Riot has that story there; site.js marks stories read for any locale.
 UI translations source: scratchpad ui_tr.py + ui_tr2.py, merged by merge_ui.py (also syncs EN into i18n.js). Still English: bond notes, video/comic titles.
-Next: other pages (Skins, Reading Room, Timeline, My champions…), Arabic (RTL, no Riot data).
+Phase 3 (2026-10-21): skins.html, timeline.html, reading.html, mine.html fully translated (their inline script is wrapped in an async IIFE that
+awaits AtlasI18n data first; champion objects are copied with name/title localized and `en` = English name, so search matches both).
+data/i18n/skins-<code>.js (ATLAS_I18N_SKINS {s: "<champ>-<num>" → [name, description], l: lineId → skin-line name}; game client via CommunityDragon
+latest/plugins/rcp-be-lol-game-data/global/<ko_kr…>/v1/skins.json + skinlines.json, pulled through the browser pane as gzip+base64 chunks of 105,000
+chars — the device bridge cuts results at ~117 KB). Only "Classic Miss Fortune" has no match (stays English). Thai dates use the Gregorian calendar.
+UI source files: scratchpad ui_tr.py, ui_tr2.py, ui_tr3.py/3b/3c → merge_ui.py. Still English: Atlas map/regions, Worlds, Players, Theater, Music,
+card libraries, bond notes, video and comic titles. Next: those pages; Arabic (RTL, no Riot data).
 Menu: site.js (loaded with `defer` on every page) replaces each page's <nav class="nav"> with grouped dropdowns — Champions (Journeys, Skins, Timeline) ·
 Lore (Atlas = atlas.html, Reading Room) · Play (Runeterra Daily = ./) · Esports (Worlds, Players) · Watch & Listen (Theater, Music) · Card games (Runeterra cards, Riftbound) · ★ My champions;
 phone = star + "Menu" sheet. Edit GROUPS in site.js to change it (the plain links left in each page are only a no-JS fallback).
