@@ -1,10 +1,17 @@
-# Runeterra Atlas — project notes for Claude
+# Lore Explorer (formerly Runeterra Atlas) — project notes for Claude
 
 Free, fan-made League of Legends universe site. Owner: Devdeep (not a coder — he wants to see results,
 Claude takes full technical responsibility; explain outcomes in plain words, not code).
 **Hard rule: zero cost.** No paid APIs, hosting, credits or assets. Free for him and for every visitor.
 
-Live: https://devdeepsinghbhuee.github.io/runeterra-atlas/  ·  Repo: DevdeepSinghBhuee/runeterra-atlas (branch main)
+Live: https://devdeepsinghbhuee.github.io/lore-explorer/  ·  Repo: DevdeepSinghBhuee/lore-explorer (branch main)
+**Renamed 2026-10-22** from "Runeterra Atlas" / "Runeterra Daily" to **Lore Explorer** / **Lore Explorer Daily** (repo + address too) so the brand uses no
+Riot names (Riot's Legal Jibber Jabber §5: no Riot trademarks in domains, social accounts or search tags; trademarks not "anywhere in your Project").
+Runeterra as the WORLD in the content stays ("The map of Runeterra"); "Runeterra cards" = Legends of Runeterra. Never register a domain or social
+account with Riot names (also no paid domain — zero cost). Launch posts: no #LeagueOfLegends-style hashtags ("search tags").
+Riot §3 "No unauthorized games or apps" (champion appearance, abilities, icons): Devdeep chose to keep the Daily games, like LoLdle/Riftdle do under
+the same policy; if Riot ever asks, take them down. Internal names (localStorage atlas.*, AtlasI18n, atlas.html, ATLAS_* globals) were kept on purpose
+so visitors' progress carries over.
 Hosting: GitHub Pages, deploys ~1 min after push. Static HTML/CSS/JS, **no build step, no framework**.
 Custom domain is possible later via Pages settings + CNAME file (not set up).
 

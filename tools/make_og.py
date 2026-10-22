@@ -1,7 +1,7 @@
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 import math,os
-S="/tmp/claude-0/-home-claude/570379ca-5bd1-5dd1-95da-2896cd7126cd/scratchpad/og/"
-R="/home/claude/runeterra-atlas/"
+S="./og-work/"  # needs fonts/ (Marcellus SC, Alegreya Italic, Spline Sans Mono from github.com/google/fonts) and art/ (DDragon splashes from the InFinity54 mirror)
+R="./"  # run from the repo root
 OUT=R+"img/og/"; os.makedirs(OUT,exist_ok=True)
 W,H=1200,630
 GOLD=(200,170,110); TEXT=(235,228,211); MUTED=(170,176,192); INK=(8,13,24)
@@ -12,7 +12,7 @@ def font(n,size,wght=None):
         except Exception: pass
     return f
 PAGES=[ # file, art, title, tagline, focus x (0-1)
- ("index","art/Jinx_0.jpg","Runeterra Daily","Five League of Legends guessing games, new every day",0.62),
+ ("index","art/Jinx_0.jpg","Lore Explorer Daily","Five League of Legends guessing games, new every day",0.62),
  ("atlas",R+"img/scene/ionia.webp","The Atlas","The map of Runeterra: every region, 173 champions and their bonds",0.5),
  ("journey","art/Ahri_0.jpg","Champion Journeys","Pick a champion. We'll show you everything worth knowing",0.66),
  ("reading",R+"img/scene/shadowisles.webp","The Reading Room","Every official League of Legends story and comic",0.5),
@@ -59,7 +59,7 @@ for key,art,title,tag,fx in PAGES:
     d.rectangle((24,24,W-25,H-25),outline=(200,170,110,),width=2)
     d.rectangle((32,32,W-33,H-33),outline=(125,106,69),width=1)
     emblem(d,96,104,26,GOLD,3)
-    d.text((140,90),"RUNETERRA ATLAS",font=font("SplineSansMono.ttf",22,500),fill=GOLD,spacing=4)
+    d.text((140,90),"LORE EXPLORER",font=font("SplineSansMono.ttf",22,500),fill=GOLD,spacing=4)
     ft=font("MarcellusSC.ttf",92 if len(title)<17 else 80)
     lines=wrap(d,title,ft,720)
     y=230 if len(lines)==1 else 190
@@ -69,6 +69,6 @@ for key,art,title,tag,fx in PAGES:
     y+=14
     for ln in wrap(d,tag,fs,800):
         d.text((78,y),ln,font=fs,fill=(214,210,200)); y+=46
-    d.text((78,H-84),"Free fan site  ·  devdeepsinghbhuee.github.io/runeterra-atlas",font=font("SplineSansMono.ttf",18,400),fill=MUTED)
+    d.text((78,H-84),"Free fan site  ·  devdeepsinghbhuee.github.io/lore-explorer",font=font("SplineSansMono.ttf",18,400),fill=MUTED)
     im.save(OUT+key+".jpg",quality=84,optimize=True,progressive=True)
     print(key,os.path.getsize(OUT+key+".jpg")//1024,"KB")

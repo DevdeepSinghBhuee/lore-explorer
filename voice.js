@@ -1,4 +1,4 @@
-/* Runeterra Atlas — champion voice lines.
+/* Lore Explorer — champion voice lines.
    window.AtlasVoice.mount(el, champ) fills `el` with a row of speaker buttons:
    Pick + Ban (Riot's champion-select lines from the game client via CommunityDragon, in the visitor's language when Riot recorded it)
    and Joke / Taunt / Dance / Laugh — the Ctrl+1–4 emotes (base-skin lines, English, audio files hosted by the League of Legends Wiki).

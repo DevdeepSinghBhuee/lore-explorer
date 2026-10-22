@@ -1,8 +1,8 @@
-# Runeterra Atlas
+# Lore Explorer
 
 An interactive fan atlas of the League of Legends universe: a painted map of Runeterra, every region in its own visual language, all 173 champions, and the bonds between them.
 
-**Live site:** https://devdeepsinghbhuee.github.io/runeterra-atlas/
+**Live site:** https://devdeepsinghbhuee.github.io/lore-explorer/
 
 ## What's inside
 - Interactive, zoomable map of Runeterra with region highlights and lore locations
@@ -19,4 +19,4 @@ An interactive fan atlas of the League of Legends universe: a painted map of Run
 - `img/` champion art, region emblems and paintings
 
 ## Legal
-Runeterra Atlas was created under Riot Games' "Legal Jibber Jabber" policy using assets owned by Riot Games. Riot Games does not endorse or sponsor this project.
+Lore Explorer was created under Riot Games' "Legal Jibber Jabber" policy using assets owned by Riot Games. Riot Games does not endorse or sponsor this project.

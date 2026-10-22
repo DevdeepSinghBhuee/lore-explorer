@@ -1,4 +1,4 @@
-/* Runeterra Atlas: shared site menu + "My champions" (favourites and stories read, kept in this browser only).
+/* Lore Explorer: shared site menu + "My champions" (favourites and stories read, kept in this browser only).
    Every page loads this file. It
    1. replaces the plain link list in <nav class="nav"> with the grouped menu (the plain links stay in the HTML as a fallback),
    2. exposes window.AtlasMine for favourites and read stories,
@@ -143,7 +143,7 @@ html.cjk:not([lang="en"]) body *{letter-spacing:.02em!important}
     h+='<a class="mine'+(file==="mine.html"?" here":"")+'" href="mine.html"'+(file==="mine.html"?' aria-current="page"':'')+' title="'+esc(T("mine"))+'"><i>★</i><span class="lbl">'+esc(T("mine"))+'</span> <em class="mine-n"></em></a>';
     h+='<div class="sg lang"><button type="button" aria-expanded="false" title="'+esc(T("language"))+'" aria-label="'+esc(T("language"))+': '+esc(curName)+'"><i>🌐</i><span class="ln">'+esc(curName)+'</span><span class="lc">'+esc(cur.split("-")[0].toUpperCase())+'</span></button><div class="dd" role="menu">'+note+langLinks(false)+'</div></div>';
     h+='<button type="button" class="menu" aria-expanded="false" style="font-family:var(--f-mono,monospace);font-size:12px;letter-spacing:.14em;text-transform:uppercase;background:none;border:1px solid rgba(200,170,110,.35);color:var(--text,#ebe4d3);padding:8px 12px;cursor:pointer">'+esc(T("menu"))+'</button>';
-    h+='<div class="sheet" role="dialog" aria-label="'+esc(T("menu"))+'"><div class="top"><b>Runeterra Atlas</b><button type="button" class="x" aria-label="'+esc(T("close_menu"))+'">×</button></div>'+
+    h+='<div class="sheet" role="dialog" aria-label="'+esc(T("menu"))+'"><div class="top"><b>Lore Explorer</b><button type="button" class="x" aria-label="'+esc(T("close_menu"))+'">×</button></div>'+
       GROUPS.map(function(g){return '<h3>'+esc(g.t)+'</h3>'+g.items.map(function(it){return '<a href="'+it[0]+'"'+(isHere(it[0])?' aria-current="page"':'')+'><b>'+esc(it[1])+'</b><span>'+esc(it[2])+'</span></a>';}).join("");}).join("")+
       '<h3>'+esc(T("yours"))+'</h3><a href="mine.html"><b>★ '+esc(T("mine"))+'</b><span>'+esc(T("mine_d"))+'</span></a>'+
       '<h3>🌐 '+esc(T("language"))+'</h3>'+(note?note.replace('<p>','<p style="color:var(--muted,#939bb0);margin:0 0 8px">'):'')+'<div class="langs">'+langLinks(true)+'</div></div>';
@@ -192,7 +192,7 @@ html.cjk:not([lang="en"]) body *{letter-spacing:.02em!important}
     mo=new MutationObserver(function(){if(pend)return;pend=true;requestAnimationFrame(function(){pend=false;sync();});});
     mo.observe(document.body,{childList:true,subtree:true});
   }
-  /* ---------- "back to your puzzle": on every other page while today's Runeterra Daily is unfinished ---------- */
+  /* ---------- "back to your puzzle": on every other page while today's Lore Explorer Daily is unfinished ---------- */
   function resumeChip(){
     if(file==="index.html")return;
     var d=new Date(),key=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");

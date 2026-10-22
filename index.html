@@ -8,25 +8,25 @@
 (function(){var h=location.hash;if(/^#c-[a-z]+$/.test(h)||/^#(demacia|noxus|piltover|zaun|freljord|ionia|shurima|targon|bilgewater|shadowisles|bandle|ixtal|void|wanderers)$/.test(h))location.replace("atlas.html"+h);})();
 </script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Runeterra Daily · League of Legends guessing games every day</title>
+<title>Lore Explorer Daily · League of Legends guessing games every day</title>
 <meta name="description" content="Five free League of Legends guessing games every day: name the champion from clues, a zoomed-in splash, an ability icon, their lore or their voice. Plus a stream mode for streamers.">
-<link rel="canonical" href="https://devdeepsinghbhuee.github.io/runeterra-atlas/">
+<link rel="canonical" href="https://devdeepsinghbhuee.github.io/lore-explorer/">
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="Runeterra Atlas">
-<meta property="og:title" content="Runeterra Daily">
+<meta property="og:site_name" content="Lore Explorer">
+<meta property="og:title" content="Lore Explorer Daily">
 <meta property="og:description" content="Five League of Legends guessing games, new every day: clues, splash art, abilities, lore and voice lines. Free, no sign-up.">
-<meta property="og:url" content="https://devdeepsinghbhuee.github.io/runeterra-atlas/">
-<meta property="og:image" content="https://devdeepsinghbhuee.github.io/runeterra-atlas/img/og/index.jpg">
+<meta property="og:url" content="https://devdeepsinghbhuee.github.io/lore-explorer/">
+<meta property="og:image" content="https://devdeepsinghbhuee.github.io/lore-explorer/img/og/index.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Runeterra Daily: Five League of Legends guessing games, new every day: clues, splash art, abilities, lore and voice lines. Free, no sign-up.">
+<meta property="og:image:alt" content="Lore Explorer Daily: Five League of Legends guessing games, new every day: clues, splash art, abilities, lore and voice lines. Free, no sign-up.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#080d18">
 <link rel="icon" href="img/icon.svg" type="image/svg+xml">
 <link rel="icon" href="img/icon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="img/icon-180.png">
 <link rel="manifest" href="manifest.webmanifest">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Runeterra Atlas","alternateName":"Runeterra Daily","url":"https://devdeepsinghbhuee.github.io/runeterra-atlas/","description":"A free fan site for the world of League of Legends: five daily guessing games, the map of Runeterra, champion journeys, every story, skin and song, and Worlds 2026.","inLanguage":["en","ko","zh-CN","zh-TW","ja","es-ES","es-MX","pt-BR","fr","de","it","pl","ru","tr","vi","th","id"]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Lore Explorer","alternateName":"Lore Explorer Daily","url":"https://devdeepsinghbhuee.github.io/lore-explorer/","description":"A free fan site for the world of League of Legends: five daily guessing games, the map of Runeterra, champion journeys, every story, skin and song, and Worlds 2026.","inLanguage":["en","ko","zh-CN","zh-TW","ja","es-ES","es-MX","pt-BR","fr","de","it","pl","ru","tr","vi","th","id"]}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://ddragon.leagueoflegends.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus+SC&family=Alegreya:ital,wght@0,400;0,500;0,700;1,400&family=Spline+Sans+Mono:wght@400;500&family=Teko:wght@400;500;600&display=swap">
@@ -242,7 +242,7 @@ html.stream footer{margin-top:28px;padding-block:14px 24px;font-size:12px}
   <header class="bar">
     <a class="brand" href="./">
       <svg viewBox="0 0 32 32" aria-hidden="true"><polygon points="16,2 29,9.5 29,22.5 16,30 3,22.5 3,9.5" fill="none" stroke="#c8aa6e" stroke-width="1.5"/><circle cx="16" cy="16" r="5" fill="none" stroke="#c8aa6e" stroke-width="1.5"/><path d="M16 2v9M16 21v9M3 9.5l8 4.5M21 18l8 4.5M29 9.5l-8 4.5M11 18l-8 4.5" stroke="#c8aa6e" stroke-width="1"/></svg>
-      Runeterra Atlas
+      Lore Explorer
     </a>
     <nav class="nav" aria-label="Site"><a href="atlas.html">Atlas</a><a href="journey.html">Journeys</a><a href="./" aria-current="page">Daily</a></nav>
   </header>
@@ -250,7 +250,7 @@ html.stream footer{margin-top:28px;padding-block:14px 24px;font-size:12px}
   <section class="head">
     <div>
       <div class="eyebrow" id="eye"></div>
-      <h1>Runeterra <em>Daily</em></h1>
+      <h1>Lore Explorer <em>Daily</em></h1>
       <p id="intro">Nine League of Legends champions to find every day: from clues, a zoomed-in splash, an ability icon, their lore and five voice lines. Same puzzles for everyone, free, no sign-up.</p>
     </div>
     <div class="clock"><b id="clock">--:--:--</b><span id="untilT">until tomorrow's puzzles</span><br><button type="button" class="streamtog" id="streamOn" title="Fresh rounds for streaming: today's puzzles stay unspoiled and your streak isn't touched"><i aria-hidden="true"></i><span>Stream mode</span></button></div>
@@ -286,7 +286,7 @@ html.stream footer{margin-top:28px;padding-block:14px 24px;font-size:12px}
   <footer>
     <div id="credit">Inspired by fan games like LoLdle. Champion facts from Riot's Data Dragon, the League Wiki and Leaguepedia; biographies are Riot's (or, where marked on the Atlas, written for this site). Results and streaks are kept in your browser only.</div>
     <div id="vcredit">Voice lines are Riot's own recordings: pick and ban lines from the game client (via CommunityDragon), emotes from the League of Legends Wiki.</div>
-    <div class="legal">Runeterra Atlas was created under Riot Games' "Legal Jibber Jabber" policy using assets owned by Riot Games. Riot Games does not endorse or sponsor this project.</div>
+    <div class="legal">Lore Explorer was created under Riot Games' "Legal Jibber Jabber" policy using assets owned by Riot Games. Riot Games does not endorse or sponsor this project.</div>
   </footer>
 </div>
 

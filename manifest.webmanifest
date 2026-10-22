@@ -1,6 +1,6 @@
 {
-  "name": "Runeterra Atlas",
-  "short_name": "Runeterra",
+  "name": "Lore Explorer",
+  "short_name": "Lore Explorer",
   "description": "A free fan site for the world of League of Legends: daily guessing games, the map of Runeterra, champions, stories, skins, music and Worlds.",
   "start_url": "./",
   "scope": "./",
