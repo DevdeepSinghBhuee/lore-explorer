@@ -119,5 +119,24 @@ window.ATLAS_RIFT = {
     ["19:45", "Rift Herald leaves", "herald"],
     ["20:00", "Baron Nashor takes the pit", "baron"]
   ],
+  // Painted art of each monster from Riot's own games and promotions (files in img/rift/lore/):
+  // [file, title, where it comes from, artist]. Legends of Runeterra card art via the LoR Data Dragon mirror and the League Wiki.
+  lore: {
+    baron:    [["baron", "Baron Nashor", "Legends of Runeterra card · Lab of Legends", ""],
+               ["baron-2", "Baron Nashor", "Legends of Runeterra card · The Path of Champions", "SIXMOREVODKA"]],
+    herald:   [["herald", "Rift Herald", "Legends of Runeterra card · Lab of Legends", ""]],
+    elder:    [["elder", "Elder Dragon", "Legends of Runeterra card · Fate's Voyage", "Envar Studio"],
+               ["elder-2", "Elder Dragon, levelled up", "Legends of Runeterra card · Fate's Voyage", "Envar Studio"]],
+    infernal: [["infernal", "Postcards from the Rift", "Riot promotional art", ""]],
+    mountain: [["mountain", "Mountain Drake", "Legends of Runeterra card · Beyond the Bandlewood", "Kudos Productions"]],
+    ocean:    [["ocean", "Ocean Drake", "Legends of Runeterra card · Fate's Voyage", "Caravan Studio"]],
+    cloud:    [["cloud", "Cloud Drake", "Legends of Runeterra card · Fate's Voyage", "Wild Blue"]],
+    hextech:  [["hextech", "The Hextech and Chemtech drakes", "League of Legends preseason splash", ""]],
+    chemtech: [["chemtech", "Chemtech Drake", "Legends of Runeterra card · Fate's Voyage", "Caravan Studio"],
+               ["hextech", "The Hextech and Chemtech drakes", "League of Legends preseason splash", ""]],
+    blue:     [["blue", "Blue Sentinel", "Legends of Runeterra card · Empires of the Ascended", "MAR Studio"]],
+    raptors:  [["raptors", "Crimson Raptor", "Legends of Runeterra card · Lab of Legends", ""]],
+    krugs:    [["krugs", "Ancient Krug", "Legends of Runeterra card · Lab of Legends", ""]]
+  },
   removed: "Atakhan, added in 2025, spawned at 20:00 on whichever half of the map had seen more fighting. He was removed from the game at the start of the 2026 season (patch 26.01)."
 };

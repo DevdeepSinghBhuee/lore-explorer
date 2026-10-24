@@ -101,8 +101,8 @@ h1 em{font-style:normal;color:var(--gold)}
 .occ button img{width:24px;height:24px}
 .occ button small{font-family:var(--f-num);font-size:15px;color:var(--faint);margin-left:2px}
 .occ button[aria-pressed="true"]{border-color:var(--gold);color:var(--text);background:rgba(200,170,110,.08)}
-.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--rule);border:1px solid var(--rule);margin-top:18px}
-.facts div{background:#0d1729;padding:10px 12px;min-width:0}
+.facts{display:flex;flex-wrap:wrap;gap:1px;background:var(--rule);border:1px solid var(--rule);margin-top:18px}
+.facts div{flex:1 1 150px;background:#0d1729;padding:10px 12px;min-width:0}
 .facts dt{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
 .facts dd{margin:2px 0 0;font-size:16px;line-height:1.35}
 .facts dd b{font-family:var(--f-num);font-weight:500;font-size:26px;line-height:1;color:var(--gold);font-variant-numeric:tabular-nums;letter-spacing:.02em}
@@ -112,6 +112,25 @@ h1 em{font-style:normal;color:var(--gold)}
 .gift p{margin:0;font-size:16.5px;color:#d6d3c8}
 .trait{margin:12px 0 0;font-size:16px;color:var(--muted)}
 .wiki{display:inline-block;margin-top:18px;font-family:var(--f-mono);font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;text-decoration:none}
+/* painted art from Riot's other games */
+.lore{margin-top:20px}
+.lore .k{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.lore .pic{display:block;width:100%;padding:0;border:1px solid var(--rule);background:#05080f;cursor:zoom-in;aspect-ratio:2/1;overflow:hidden;position:relative}
+.lore .pic img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .8s ease}
+.lore .pic:hover img,.lore .pic:focus-visible img{transform:scale(1.03)}
+.lore .pic .zoom{position:absolute;right:8px;bottom:8px;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;background:rgba(5,8,15,.75);color:var(--text);padding:4px 7px;border:1px solid var(--rule)}
+.lore .cap{margin:8px 0 0;font-size:15px;line-height:1.4;color:var(--muted)}
+.lore .cap b{font-family:var(--f-display);font-weight:400;font-size:18px;color:var(--text);margin-right:6px}
+.lore .alts{display:flex;gap:6px;margin-top:8px}
+.lore .alts button{width:76px;aspect-ratio:2/1;padding:0;border:1px solid var(--rule);background:#05080f;cursor:pointer;overflow:hidden;opacity:.6}
+.lore .alts button img{width:100%;height:100%;object-fit:cover;display:block}
+.lore .alts button[aria-pressed="true"]{opacity:1;border-color:var(--gold)}
+dialog.zoom{border:1px solid var(--rule);background:#05080f;color:var(--text);padding:0;max-width:min(96vw,1600px);width:100%}
+dialog.zoom::backdrop{background:rgba(3,6,12,.88)}
+dialog.zoom img{display:block;width:100%;height:auto;max-height:82vh;object-fit:contain;background:#000}
+dialog.zoom .bar2{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 14px}
+dialog.zoom .bar2 p{margin:0;font-size:15px;color:var(--muted)}dialog.zoom .bar2 b{font-family:var(--f-display);font-weight:400;color:var(--text);margin-right:6px}
+dialog.zoom button{font-family:var(--f-mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;background:transparent;color:var(--text);border:1px solid var(--rule);padding:8px 12px;cursor:pointer;flex:none}
 
 /* the first twenty minutes */
 section.clock{margin-top:56px}
@@ -196,7 +215,7 @@ footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width
   <p class="gone" id="gone"></p>
 
   <footer>
-    <div>Monster facts, numbers and art come from the <a href="https://wiki.leagueoflegends.com/en-us/Monster" rel="noopener">League of Legends Wiki</a> (CC BY-SA 3.0), current to the 2026 season, and the map is Riot's own minimap from Data Dragon. The descriptions are written for this site. Saved 25 October 2026.</div>
+    <div>Monster facts, numbers and art come from the <a href="https://wiki.leagueoflegends.com/en-us/Monster" rel="noopener">League of Legends Wiki</a> (CC BY-SA 3.0), current to the 2026 season, and the map is Riot's own minimap from Data Dragon. The paintings under “Painted in the lore” are Riot's own: Legends of Runeterra card art (studios credited on each) and League of Legends promotional art. The descriptions are written for this site. Saved 25 October 2026.</div>
     <div class="legal">Lore Explorer was created under Riot Games' "Legal Jibber Jabber" policy using assets owned by Riot Games. Riot Games does not endorse or sponsor this project.</div>
   </footer>
 </div>
@@ -234,6 +253,21 @@ map.insertAdjacentHTML("beforeend",mk);
 map.addEventListener("click",e=>{const b=e.target.closest(".mk");if(!b)return;
   if(b.dataset.pit){const ids=PITS[b.dataset.pit].ids;show(ids.includes(cur)?cur:(b.dataset.pit==="baron"?"baron":"infernal"),true);}else show(b.dataset.id,true);});
 
+// painted art (Legends of Runeterra cards, Riot splashes) — the first one shows, the others swap in
+const LORE=R.lore||{};
+const capOf=L=>`<b>${esc(L[1])}</b>${esc(L[2])}${L[3]?" · art by "+esc(L[3]):""}`;
+function lore(m){const L=LORE[m.id];if(!L)return "";
+  return `<div class="lore"><div class="k">Painted in the lore</div>
+    <button type="button" class="pic" data-i="0" aria-label="Enlarge: ${esc(L[0][1])}"><img src="${IMG("lore/"+L[0][0])}.webp" alt="${esc(L[0][1])}" loading="lazy"><span class="zoom">Enlarge</span></button>
+    <p class="cap">${capOf(L[0])}</p>
+    ${L.length>1?`<div class="alts" role="group" aria-label="More paintings">${L.map((x,i)=>`<button type="button" data-i="${i}" aria-pressed="${!i}" aria-label="${esc(x[1])}"><img src="${IMG("lore/"+x[0])}.webp" alt="" loading="lazy"></button>`).join("")}</div>`:""}</div>`;}
+const zoom=document.createElement("dialog");zoom.className="zoom";zoom.innerHTML=`<img alt=""><div class="bar2"><p></p><button type="button">Close</button></div>`;document.body.appendChild(zoom);
+zoom.querySelector("button").onclick=()=>zoom.close();zoom.addEventListener("click",e=>{if(e.target===zoom)zoom.close();});
+function wireLore(m){const box=plate.querySelector(".lore");if(!box)return;const L=LORE[m.id];let i=0;
+  const pic=box.querySelector(".pic"),cap=box.querySelector(".cap");
+  pic.onclick=()=>{const x=L[i];const im=zoom.querySelector("img");im.src=IMG("lore/"+x[0])+".webp";im.alt=x[1];zoom.querySelector("p").innerHTML=capOf(x);zoom.showModal();};
+  box.querySelectorAll(".alts button").forEach(b=>b.onclick=()=>{i=+b.dataset.i;const x=L[i];pic.querySelector("img").src=IMG("lore/"+x[0])+".webp";pic.querySelector("img").alt=x[1];pic.setAttribute("aria-label","Enlarge: "+x[1]);cap.innerHTML=capOf(x);
+    box.querySelectorAll(".alts button").forEach(o=>o.setAttribute("aria-pressed",String(o===b)));});}
 // detail plate
 const plate=document.getElementById("plate");
 function show(id,fromMap){
@@ -248,6 +282,7 @@ function show(id,fromMap){
       ${pit?`<div class="occ" role="group" aria-label="${esc(PITS[pit].label)}">${PITS[pit].ids.map(o=>`<button type="button" data-id="${o}" aria-pressed="${o===id}"><img src="${IMG(o+"-icon")}.webp" alt="">${esc(by[o].name.replace(" Drake",""))}${pit==="baron"?`<small>${esc(by[o].spawn)}</small>`:""}</button>`).join("")}</div>`:""}
       <p class="about">${esc(m.about)}</p>
       ${m.trait?`<p class="trait">In the fight: ${esc(m.trait.charAt(0).toLowerCase()+m.trait.slice(1))}</p>`:""}
+      ${lore(m)}
       ${m.reward?`<div class="gift"><div class="k">${m.group==="dragons"?"Each kill gives your team":"Killing it gives"}</div><b>${esc(m.reward[0])}</b><p>${esc(m.reward[1])}</p></div>`:""}
       ${m.soul?`<div class="gift"><div class="k">If ${esc(m.element)} takes over the Rift, 4 drakes give</div><b>${esc(m.soul[0])}</b><p>${esc(m.soul[1])}</p></div>`:""}
       ${m.forms?`<div class="gift" style="--c:var(--gold-dim)"><div class="k">Three forms</div><b>${m.forms.map(f=>esc(f[1])).join(" · ")}</b><p>${esc(m.formsNote)}</p></div>`:""}
@@ -255,6 +290,7 @@ function show(id,fromMap){
       <a class="wiki" href="https://wiki.leagueoflegends.com/en-us/${esc(m.wiki)}" target="_blank" rel="noopener">More on the League Wiki ↗</a>
     </div>`;
   plate.querySelectorAll(".occ button").forEach(b=>b.onclick=()=>show(b.dataset.id));
+  wireLore(m);
   map.querySelectorAll(".mk").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.id===id||(b.dataset.pit&&b.dataset.pit===pit))));
   document.querySelectorAll(".card").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.id===id)));
   try{history.replaceState(null,"","#m-"+id);}catch(e){}
