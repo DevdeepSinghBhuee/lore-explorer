@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<script src="i18n.js"></script>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>The Rift · Dragons, Baron Nashor and every jungle camp</title>
+<meta name="description" content="Every monster on Summoner's Rift: the six elemental drakes, Elder Dragon, Baron Nashor, Rift Herald, Voidgrubs and every jungle camp, with where they spawn, when, and what they give your team.">
+<link rel="canonical" href="https://devdeepsinghbhuee.github.io/lore-explorer/rift.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Lore Explorer">
+<meta property="og:title" content="The Rift">
+<meta property="og:description" content="Dragons, Baron Nashor, the Rift Herald and every jungle camp on Summoner's Rift: where they live, when they spawn and what they give.">
+<meta property="og:url" content="https://devdeepsinghbhuee.github.io/lore-explorer/rift.html">
+<meta property="og:image" content="https://devdeepsinghbhuee.github.io/lore-explorer/img/og/rift.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Rift: Dragons, Baron Nashor, the Rift Herald and every jungle camp on Summoner's Rift.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#080d18">
+<link rel="icon" href="img/icon.svg" type="image/svg+xml">
+<link rel="icon" href="img/icon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="img/icon-180.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus+SC&family=Alegreya:ital,wght@0,400;0,500;0,700;1,400&family=Spline+Sans+Mono:wght@400;500&family=Teko:wght@400;500;600&display=swap">
+<style>
+/* Layout: a field guide to Summoner's Rift. Riot's minimap (recoloured) with a marker on every pit and camp beside a detail plate, then the first 20 minutes on a clock, then every monster as cards grouped by kind. Shares the Atlas tokens. */
+:root{
+  color-scheme:dark;
+  --ink:#080d18; --panel:#0f1a2e; --panel-2:#142238;
+  --gold:#c8aa6e; --gold-dim:#7d6a45; --text:#ebe4d3; --muted:#939bb0; --faint:#5b6580;
+  --rule:rgba(200,170,110,.22);
+  --void:#b07ce8; --blueside:#5aa8ff; --redside:#ff6f5e;
+  --f-display:"Marcellus SC","Cinzel",Georgia,serif;
+  --f-body:"Alegreya",Georgia,"Times New Roman",serif;
+  --f-mono:"Spline Sans Mono",ui-monospace,Menlo,monospace;
+  --f-num:"Teko","Oxanium",var(--f-display),sans-serif;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box}
+html{scroll-padding-top:16px}
+body{margin:0;background:var(--ink);color:var(--text);font-family:var(--f-body);font-size:18px;line-height:1.55;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+img{max-width:100%}
+[hidden]{display:none!important}
+a{color:var(--gold)}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+.wrap{max-width:1240px;margin-inline:auto}
+
+.bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:18px;border-bottom:1px solid var(--rule);flex-wrap:wrap}
+.brand{font-family:var(--f-display);font-size:20px;letter-spacing:.08em;color:var(--gold);display:flex;align-items:center;gap:10px;text-decoration:none}
+.brand svg{width:26px;height:26px}
+.nav{display:flex;gap:4px;flex-wrap:wrap}
+.nav a{font-family:var(--f-mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-decoration:none;padding:7px 12px}
+
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+.intro{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;padding-block:34px 24px}
+h1{font-family:var(--f-display);font-weight:400;font-size:clamp(40px,6vw,78px);line-height:.95;margin:12px 0 14px;text-wrap:balance}
+h1 em{font-style:normal;color:var(--gold)}
+.lede{font-size:19px;max-width:50ch;margin:0;color:#c4c8d3}
+.counts{display:flex;gap:22px;flex-wrap:wrap}
+.counts div b{display:block;font-family:var(--f-num);font-weight:600;font-size:40px;line-height:.9;color:var(--gold);font-variant-numeric:tabular-nums}
+.counts div span{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+
+/* map + plate */
+.field{display:grid;grid-template-columns:minmax(0,560px) minmax(0,1fr);gap:28px;align-items:start}
+.mapbox{position:sticky;top:12px}
+.map{position:relative;aspect-ratio:1;border:1px solid var(--rule);background:#060a14;overflow:hidden}
+.map img.bg{position:absolute;inset:0;width:100%;height:100%;display:block}
+.map::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(circle at 6% 94%,rgba(90,168,255,.22),transparent 26%),radial-gradient(circle at 94% 6%,rgba(255,111,94,.2),transparent 26%)}
+.mk{position:absolute;z-index:2;width:38px;height:38px;margin:-19px 0 0 -19px;border-radius:50%;padding:0;border:2px solid var(--c,var(--gold-dim));background:#0b1222;cursor:pointer;
+  box-shadow:0 0 0 3px rgba(8,13,24,.7);transition:transform .15s,border-color .15s}
+.mk img{width:100%;height:100%;border-radius:50%;display:block;object-fit:cover}
+.mk:hover,.mk:focus-visible{transform:scale(1.15)}
+.mk[aria-pressed="true"]{transform:scale(1.22);border-color:var(--gold);box-shadow:0 0 0 3px rgba(8,13,24,.7),0 0 18px rgba(200,170,110,.7)}
+.mk.pit{width:44px;height:44px;margin:-22px 0 0 -22px}
+.mk.sm{width:28px;height:28px;margin:-14px 0 0 -14px}
+.mk.pit[data-pit="baron"] .tag{top:50%;left:auto;right:100%;transform:translate(-6px,-50%)}
+.mk .tag{position:absolute;left:50%;top:100%;transform:translate(-50%,4px);white-space:nowrap;font-family:var(--f-mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--text);background:rgba(8,13,24,.82);padding:1px 5px;pointer-events:none}
+.legend{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:8px;font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.legend i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px;vertical-align:0}
+
+.plate{border:1px solid var(--rule);background:linear-gradient(180deg,var(--panel),#0b1426);min-width:0}
+.plate .art{position:relative;aspect-ratio:16/9;background:radial-gradient(ellipse at 50% 70%,color-mix(in srgb,var(--c,#c8aa6e) 30%,#142238),#0a1120 70%);overflow:hidden}
+.plate .art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.plate .art.render img{object-fit:contain;padding:10px 6% 0}
+.plate .art::after{content:"";position:absolute;inset:auto 0 0 0;height:45%;background:linear-gradient(transparent,rgba(11,20,38,.95))}
+.plate .body{padding:0 24px 24px;margin-top:-46px;position:relative;z-index:1}
+.plate .head{display:flex;gap:14px;align-items:flex-end}
+.plate .head img{width:72px;height:72px;border:2px solid var(--c,var(--gold));background:#0b1222;flex:none}
+.plate .kind{font-family:var(--f-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--c,var(--gold))}
+.plate h2{font-family:var(--f-display);font-weight:400;font-size:clamp(30px,3.4vw,42px);line-height:1;margin:4px 0 0}
+.plate .about{margin:16px 0 0;color:#d6d3c8}
+.occ{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}
+.occ button{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--rule);background:transparent;padding:5px 9px 5px 5px;cursor:pointer;font-size:14.5px;color:var(--muted)}
+.occ button img{width:24px;height:24px}
+.occ button small{font-family:var(--f-num);font-size:15px;color:var(--faint);margin-left:2px}
+.occ button[aria-pressed="true"]{border-color:var(--gold);color:var(--text);background:rgba(200,170,110,.08)}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--rule);border:1px solid var(--rule);margin-top:18px}
+.facts div{background:#0d1729;padding:10px 12px;min-width:0}
+.facts dt{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.facts dd{margin:2px 0 0;font-size:16px;line-height:1.35}
+.facts dd b{font-family:var(--f-num);font-weight:500;font-size:26px;line-height:1;color:var(--gold);font-variant-numeric:tabular-nums;letter-spacing:.02em}
+.gift{margin-top:16px;border-left:3px solid var(--c,var(--gold));padding:10px 14px;background:rgba(200,170,110,.05)}
+.gift .k{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.gift b{display:block;font-family:var(--f-display);font-weight:400;font-size:21px;color:var(--text);margin:2px 0 2px}
+.gift p{margin:0;font-size:16.5px;color:#d6d3c8}
+.trait{margin:12px 0 0;font-size:16px;color:var(--muted)}
+.wiki{display:inline-block;margin-top:18px;font-family:var(--f-mono);font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;text-decoration:none}
+
+/* the first twenty minutes */
+section.clock{margin-top:56px}
+h3.sec{font-family:var(--f-display);font-weight:400;font-size:clamp(28px,3vw,38px);margin:0 0 4px}
+.sub{margin:0 0 20px;color:var(--muted);max-width:70ch}
+.tl{position:relative;height:262px;margin:0 8px}
+.tl .line{position:absolute;left:0;right:0;top:112px;height:2px;background:linear-gradient(90deg,var(--gold-dim),var(--gold))}
+.tl .tick{position:absolute;top:106px;width:1px;height:14px;background:var(--gold-dim)}
+.tl .tick span{position:absolute;top:128px;left:50%;transform:translateX(-50%);font-family:var(--f-num);font-size:16px;color:var(--faint)}
+.ev{position:absolute;width:0;top:0;height:100%}
+.ev button{position:absolute;left:0;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:4px;background:none;border:0;padding:0;cursor:pointer;width:118px;text-align:center}
+.ev.up button{bottom:calc(100% - 102px)}
+.ev.down button{top:124px;flex-direction:column-reverse}
+.ev img{width:30px;height:30px;border-radius:50%;border:2px solid var(--c,var(--gold-dim))}
+.ev b{font-family:var(--f-num);font-weight:500;font-size:20px;line-height:1;color:var(--gold)}
+.ev small{font-size:13px;line-height:1.2;color:var(--muted)}
+.ev button:hover small,.ev button:focus-visible small{color:var(--text)}
+.tl-list{display:none;list-style:none;margin:0;padding:0;border-left:2px solid var(--gold-dim)}
+.tl-list li{position:relative;padding:0 0 14px 22px}
+.tl-list li::before{content:"";position:absolute;left:-7px;top:6px;width:12px;height:12px;border-radius:50%;background:var(--ink);border:2px solid var(--gold)}
+.tl-list b{font-family:var(--f-num);font-weight:500;font-size:22px;color:var(--gold);margin-right:8px}
+
+/* cards */
+section.group{margin-top:52px}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.card{display:grid;grid-template-columns:56px minmax(0,1fr);gap:12px;align-items:center;text-align:left;border:1px solid var(--rule);background:var(--panel);padding:10px;cursor:pointer;transition:border-color .15s}
+.card:hover,.card[aria-pressed="true"]{border-color:var(--c,var(--gold))}
+.card img{width:56px;height:56px;border:1px solid var(--c,var(--gold-dim))}
+.card b{display:block;font-weight:500;font-size:18px;line-height:1.2}
+.card small{display:block;font-size:14px;line-height:1.35;color:var(--muted)}
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin:0 0 16px;padding:0;list-style:none;counter-reset:r}
+.rules li{border:1px solid var(--rule);padding:12px 14px 12px 46px;position:relative;font-size:16px;color:#d6d3c8;counter-increment:r}
+.rules li::before{content:counter(r);position:absolute;left:14px;top:8px;font-family:var(--f-num);font-size:28px;color:var(--gold)}
+.gone{margin-top:40px;border:1px dashed var(--rule);padding:14px 16px;color:var(--muted);font-size:16px}
+.gone b{color:var(--text);font-weight:500}
+
+footer{border-top:1px solid var(--rule);margin-top:48px;padding-block:24px 40px;color:var(--muted);font-size:14px;display:grid;gap:8px}
+footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width:80ch}
+
+@media (max-width:980px){.field{grid-template-columns:minmax(0,1fr)}.mapbox{position:static;max-width:560px;margin-inline:auto;width:100%}}
+@media (max-width:760px){.tl{display:none}.tl-list{display:block}}
+@media (max-width:480px){.mk{width:28px;height:28px;margin:-14px 0 0 -14px;border-width:1.5px}.mk.pit{width:38px;height:38px;margin:-19px 0 0 -19px}.mk .tag{font-size:8px}
+  .plate .body{padding:0 14px 16px}.plate .head img{width:58px;height:58px}.counts{gap:16px}.counts div b{font-size:34px}}
+</style>
+<script src="site.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header class="bar">
+    <a class="brand" href="./">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><polygon points="16,2 29,9.5 29,22.5 16,30 3,22.5 3,9.5" fill="none" stroke="#c8aa6e" stroke-width="1.5"/><circle cx="16" cy="16" r="5" fill="none" stroke="#c8aa6e" stroke-width="1.5"/><path d="M16 2v9M16 21v9M3 9.5l8 4.5M21 18l8 4.5M29 9.5l-8 4.5M11 18l-8 4.5" stroke="#c8aa6e" stroke-width="1"/></svg>
+      Lore Explorer
+    </a>
+    <nav class="nav" aria-label="Site"><a href="./">Daily</a><a href="atlas.html">Atlas</a><a href="journey.html">Journeys</a><a href="rift.html" aria-current="page">The Rift</a></nav>
+  </header>
+
+  <section class="intro">
+    <div>
+      <div class="eyebrow">Summoner's Rift · the monsters</div>
+      <h1>Everything that lives <em>on the Rift.</em></h1>
+      <p class="lede">Dragons, Baron Nashor, the Rift Herald and every jungle camp: where they live, when they appear, and what they give the team that takes them. Tap the map or any card.</p>
+    </div>
+    <div class="counts" id="counts"></div>
+  </section>
+
+  <section class="field" aria-label="Map of Summoner's Rift">
+    <div class="mapbox">
+      <div class="map" id="map"><img class="bg" src="img/rift/map.webp" alt="Map of Summoner's Rift" width="1024" height="1024"></div>
+      <div class="legend"><span><i style="background:var(--blueside)"></i>Blue side (bottom left)</span><span><i style="background:var(--redside)"></i>Red side (top right)</span></div>
+    </div>
+    <article class="plate" id="plate" aria-live="polite"></article>
+  </section>
+
+  <section class="clock" aria-labelledby="clockT">
+    <h3 class="sec" id="clockT">The first twenty minutes</h3>
+    <p class="sub">Every game follows the same clock. Here is when each monster first appears, from the opening camps to Baron Nashor.</p>
+    <div class="tl" id="tl"></div>
+    <ol class="tl-list" id="tlList"></ol>
+  </section>
+
+  <div id="groups"></div>
+  <p class="gone" id="gone"></p>
+
+  <footer>
+    <div>Monster facts, numbers and art come from the <a href="https://wiki.leagueoflegends.com/en-us/Monster" rel="noopener">League of Legends Wiki</a> (CC BY-SA 3.0), current to the 2026 season, and the map is Riot's own minimap from Data Dragon. The descriptions are written for this site. Saved 25 October 2026.</div>
+    <div class="legal">Lore Explorer was created under Riot Games' "Legal Jibber Jabber" policy using assets owned by Riot Games. Riot Games does not endorse or sponsor this project.</div>
+  </footer>
+</div>
+
+<script src="data/rift.js"></script>
+<script>
+(function(){
+"use strict";
+const R=window.ATLAS_RIFT, M=R.monsters, by=Object.fromEntries(M.map(m=>[m.id,m]));
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const IMG=id=>`img/rift/${id}`;
+const COL={epic:"#b07ce8",elder:"#e0c27a",infernal:"#ef7a43",mountain:"#c49a6c",ocean:"#43bccc",cloud:"#a9c8e2",hextech:"#5fd0e8",chemtech:"#8fd65a",blue:"#5aa8ff",red:"#ff6f5e",camps:"#9d8a62",scuttle:"#7fcfb4"};
+const colOf=m=>COL[m.id]||(m.group==="epic"?COL.epic:COL.camps);
+const art=m=>m.art?IMG(m.art):IMG(m.id+"-art");
+const isRender=m=>m.group==="dragons"||m.id==="herald"||m.id==="grubs"||m.art==="elder-render";
+const DRAKES=M.filter(m=>m.group==="dragons").map(m=>m.id);
+// the two pits hold monsters in turn; the map has one marker per pit
+const PITS={baron:{label:"Baron pit",ids:["grubs","herald","baron"],pos:by.baron.pos[0],icon:"baron"},
+            dragon:{label:"Dragon pit",ids:DRAKES.concat("elder"),pos:by.elder.pos[0],icon:"infernal"}};
+const pitOf=id=>Object.keys(PITS).find(p=>PITS[p].ids.includes(id));
+let cur=null;
+
+// counts
+const nEpic=M.filter(m=>m.group==="epic"||m.group==="dragons").length, nCamps=M.length-nEpic;
+document.getElementById("counts").innerHTML=[[nEpic,"epic monsters"],[nCamps,"jungle camps"],["0:55","first camps"],["20:00","Baron arrives"]].map(([b,s])=>`<div><b>${b}</b><span>${s}</span></div>`).join("");
+
+// map markers
+const map=document.getElementById("map");
+let mk="";
+for(const [k,p] of Object.entries(PITS)) mk+=`<button type="button" class="mk pit" data-pit="${k}" style="left:${p.pos[0]*100}%;top:${p.pos[1]*100}%;--c:${k==="baron"?COL.epic:COL.elder}" aria-label="${esc(p.label)}" title="${esc(p.label)}"><img src="${IMG(p.icon+"-icon")}.webp" alt=""><span class="tag">${esc(p.label)}</span></button>`;
+for(const m of M){ if(pitOf(m.id))continue;
+  m.pos.forEach((p,i)=>{const side=m.id==="scuttle"?(i?"bottom river":"top river"):(i?"red side":"blue side");
+    mk+=`<button type="button" class="mk${m.id==="scuttle"?" sm":""}" data-id="${m.id}" style="left:${p[0]*100}%;top:${p[1]*100}%;--c:${colOf(m)}" aria-label="${esc(m.name)}, ${side}" title="${esc(m.name)} · ${side}"><img src="${IMG(m.id+"-icon")}.webp" alt=""></button>`;});}
+map.insertAdjacentHTML("beforeend",mk);
+map.addEventListener("click",e=>{const b=e.target.closest(".mk");if(!b)return;
+  if(b.dataset.pit){const ids=PITS[b.dataset.pit].ids;show(ids.includes(cur)?cur:(b.dataset.pit==="baron"?"baron":"infernal"),true);}else show(b.dataset.id,true);});
+
+// detail plate
+const plate=document.getElementById("plate");
+function show(id,fromMap){
+  const m=by[id];if(!m)return;cur=id;
+  const c=colOf(m), pit=pitOf(id);
+  const facts=[["First spawn",m.spawn],["Respawn",m.respawn],["Gold",m.gold],["Experience",m.exp],["Health",m.hp]];
+  const big=v=>/^\d+:\d\d$/.test(v)?`<b>${esc(v)}</b>`:esc(v);
+  plate.style.setProperty("--c",c);
+  plate.innerHTML=`<div class="art${isRender(m)?" render":""}"><img src="${art(m)}.webp" alt="${esc(m.name)}"></div>
+    <div class="body">
+      <div class="head"><img src="${IMG(m.id+"-icon")}.webp" alt=""><div style="min-width:0"><div class="kind">${esc(m.kind)}</div><h2>${esc(m.name)}</h2></div></div>
+      ${pit?`<div class="occ" role="group" aria-label="${esc(PITS[pit].label)}">${PITS[pit].ids.map(o=>`<button type="button" data-id="${o}" aria-pressed="${o===id}"><img src="${IMG(o+"-icon")}.webp" alt="">${esc(by[o].name.replace(" Drake",""))}${pit==="baron"?`<small>${esc(by[o].spawn)}</small>`:""}</button>`).join("")}</div>`:""}
+      <p class="about">${esc(m.about)}</p>
+      ${m.trait?`<p class="trait">In the fight: ${esc(m.trait.charAt(0).toLowerCase()+m.trait.slice(1))}</p>`:""}
+      ${m.reward?`<div class="gift"><div class="k">${m.group==="dragons"?"Each kill gives your team":"Killing it gives"}</div><b>${esc(m.reward[0])}</b><p>${esc(m.reward[1])}</p></div>`:""}
+      ${m.soul?`<div class="gift"><div class="k">If ${esc(m.element)} takes over the Rift, 4 drakes give</div><b>${esc(m.soul[0])}</b><p>${esc(m.soul[1])}</p></div>`:""}
+      ${m.forms?`<div class="gift" style="--c:var(--gold-dim)"><div class="k">Three forms</div><b>${m.forms.map(f=>esc(f[1])).join(" · ")}</b><p>${esc(m.formsNote)}</p></div>`:""}
+      <dl class="facts">${facts.map(([k,v])=>`<div><dt>${k}</dt><dd>${big(v)}</dd></div>`).join("")}</dl>
+      <a class="wiki" href="https://wiki.leagueoflegends.com/en-us/${esc(m.wiki)}" target="_blank" rel="noopener">More on the League Wiki ↗</a>
+    </div>`;
+  plate.querySelectorAll(".occ button").forEach(b=>b.onclick=()=>show(b.dataset.id));
+  map.querySelectorAll(".mk").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.id===id||(b.dataset.pit&&b.dataset.pit===pit))));
+  document.querySelectorAll(".card").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.id===id)));
+  try{history.replaceState(null,"","#m-"+id);}catch(e){}
+  // on narrow screens the plate sits under the map: bring it into view
+  if(fromMap&&innerWidth<=980)plate.scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+// timeline
+const T=R.timeline, toS=t=>{const [a,b]=t.split(":").map(Number);return a*60+b;}, max=20*60;
+const tl=document.getElementById("tl");
+let th=`<div class="line"></div>`;
+for(let mm=0;mm<=20;mm+=5)th+=`<div class="tick" style="left:${mm/20*100}%"><span>${mm}:00</span></div>`;
+T.forEach(([t,txt,ic],i)=>{th+=`<div class="ev ${i%2?"down":"up"}" style="left:${Math.min(98.5,Math.max(1.5,toS(t)/max*100))}%"><button type="button" data-id="${ic}" style="--c:${colOf(by[ic])}"><img src="${IMG(ic+"-icon")}.webp" alt=""><b>${t}</b><small>${esc(txt)}</small></button></div>`;});
+tl.innerHTML=th;
+document.getElementById("tlList").innerHTML=T.map(([t,txt,ic])=>`<li><b>${t}</b>${esc(txt)}</li>`).join("");
+tl.addEventListener("click",e=>{const b=e.target.closest("button");if(b){show(b.dataset.id);document.getElementById("plate").scrollIntoView({behavior:"smooth",block:"center"});}});
+
+// groups of cards
+const RULES=["The first drake appears at 5:00, with one of six elements chosen at random. A new one spawns 5 minutes after each kill.",
+  "After the second drake dies, the third drake's element takes over: the map changes into that Elemental Rift, and every drake after it is the same element.",
+  "The first team to slay 4 drakes also gets that element's Dragon Soul, for the rest of the game.",
+  "From then on, the pit only ever holds the Elder Dragon."];
+document.getElementById("groups").innerHTML=R.groups.map(([g,title,sub])=>`<section class="group" aria-labelledby="g-${g}"><h3 class="sec" id="g-${g}">${esc(title)}</h3><p class="sub">${esc(sub)}</p>
+  ${g==="dragons"?`<ol class="rules">${RULES.map(r=>`<li>${esc(r)}</li>`).join("")}</ol>`:""}
+  <div class="cards">${M.filter(m=>m.group===g).map(m=>`<button type="button" class="card" data-id="${m.id}" aria-pressed="false" style="--c:${colOf(m)}"><img src="${IMG(m.id+"-icon")}.webp" alt="" loading="lazy"><span style="min-width:0"><b>${esc(m.name)}</b><small>${esc(m.reward?m.reward[0]+" · ":"")}${esc((m.spawn.match(/^\d+:\d\d/)||[])[0]?"from "+m.spawn.match(/^\d+:\d\d/)[0]:m.spawn)}</small></span></button>`).join("")}</div></section>`).join("");
+document.getElementById("groups").addEventListener("click",e=>{const b=e.target.closest(".card");if(b){show(b.dataset.id);document.getElementById("plate").scrollIntoView({behavior:"smooth",block:"start"});}});
+document.getElementById("gone").innerHTML=`<b>Gone from the Rift:</b> ${esc(R.removed)}`;
+
+addEventListener("hashchange",()=>{const k=(location.hash.match(/^#m-([a-z-]+)$/)||[])[1];if(by[k]&&k!==cur){show(k);plate.scrollIntoView({block:"start"});}});
+// start: the monster in the address (#m-baron), else Baron Nashor
+const h=(location.hash.match(/^#m-([a-z-]+)$/)||[])[1];
+show(by[h]?h:"baron");
+if(by[h])setTimeout(()=>plate.scrollIntoView({block:"start"}),50);
+})();
+</script>
+</body>
+</html>

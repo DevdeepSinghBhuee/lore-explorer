@@ -36,7 +36,7 @@
     it_timeline:"Timeline",it_timeline_d:"Every champion in release order",
     it_atlas:"Atlas",it_atlas_d:"The map of Runeterra and its web of bonds",
     it_reading:"Reading Room",it_reading_d:"Every official story and comic",
-    it_daily:"Lore Explorer Daily",it_daily_d:"Guess today's champions: clues, splash, ability, lore, voice",
+    it_daily:"Lore Explorer Daily",it_rift:"The Rift",it_rift_d:"Dragons, Baron and every jungle camp",it_daily_d:"Guess today's champions: clues, splash, ability, lore, voice",
     it_worlds:"Worlds 2026",it_worlds_d:"Live scores, schedule and teams",
     it_players:"Players",it_players_d:"The pros at Worlds 2026",
     it_theater:"Theater",it_theater_d:"Official cinematics and trailers",

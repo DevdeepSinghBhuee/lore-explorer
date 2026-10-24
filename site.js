@@ -14,7 +14,7 @@
   function makeGroups(){GROUPS=[
     {t:T("g_champions"),items:[["journey.html",T("it_journeys"),T("it_journeys_d")],["skins.html",T("it_skins"),T("it_skins_d")],["timeline.html",T("it_timeline"),T("it_timeline_d")]]},
     {t:T("g_lore"),items:[["atlas.html",T("it_atlas"),T("it_atlas_d")],["reading.html",T("it_reading"),T("it_reading_d")]]},
-    {t:T("g_play"),items:[["./",T("it_daily"),T("it_daily_d")]]},
+    {t:T("g_play"),items:[["./",T("it_daily"),T("it_daily_d")],["rift.html",T("it_rift"),T("it_rift_d")]]},
     {t:T("g_esports"),items:[["worlds.html",T("it_worlds"),T("it_worlds_d")],["players.html",T("it_players"),T("it_players_d")]]},
     {t:T("g_watch"),items:[["theater.html",T("it_theater"),T("it_theater_d")],["music.html",T("it_music"),T("it_music_d")]]},
     {t:T("g_cards"),items:[["library.html",T("it_lor"),T("it_lor_d")],["riftbound.html",T("it_rb"),T("it_rb_d")]]}
