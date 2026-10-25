@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<script src="i18n.js"></script>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>The Seasons · Every season of League of Legends</title>
+<meta name="description" content="Every season of League of Legends from the 2009 launch to 2026: the themed seasons with their acts, skin lines and cinematics, and every year's new champions and Worlds final.">
+<link rel="canonical" href="https://devdeepsinghbhuee.github.io/lore-explorer/seasons.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Lore Explorer">
+<meta property="og:title" content="The Seasons">
+<meta property="og:description" content="Every League of Legends season since 2009: themes, skin lines, cinematics, new champions and Worlds champions.">
+<meta property="og:url" content="https://devdeepsinghbhuee.github.io/lore-explorer/seasons.html">
+<meta property="og:image" content="https://devdeepsinghbhuee.github.io/lore-explorer/img/og/seasons.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Seasons: every season of League of Legends.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#080d18">
+<link rel="icon" href="img/icon.svg" type="image/svg+xml">
+<link rel="icon" href="img/icon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="img/icon-180.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus+SC&family=Alegreya:ital,wght@0,400;0,500;0,700;1,400&family=Spline+Sans+Mono:wght@400;500&family=Teko:wght@400;500;600&display=swap">
+<style>
+/* Layout: an almanac. The current season up top, then the themed seasons (2025+) as big key-art cards with act tabs, then one row per year back to the 2009 launch. Shares the Atlas tokens. */
+:root{
+  color-scheme:dark;
+  --ink:#080d18; --panel:#0f1a2e; --panel-2:#142238;
+  --gold:#c8aa6e; --gold-dim:#7d6a45; --text:#ebe4d3; --muted:#939bb0; --faint:#5b6580;
+  --rule:rgba(200,170,110,.22);
+  --void:#b07ce8; --blueside:#5aa8ff; --redside:#ff6f5e;
+  --f-display:"Marcellus SC","Cinzel",Georgia,serif;
+  --f-body:"Alegreya",Georgia,"Times New Roman",serif;
+  --f-mono:"Spline Sans Mono",ui-monospace,Menlo,monospace;
+  --f-num:"Teko","Oxanium",var(--f-display),sans-serif;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box}
+html{scroll-padding-top:16px}
+body{margin:0;background:var(--ink);color:var(--text);font-family:var(--f-body);font-size:18px;line-height:1.55;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+img{max-width:100%}
+[hidden]{display:none!important}
+a{color:var(--gold)}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+.wrap{max-width:1240px;margin-inline:auto}
+
+.bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:18px;border-bottom:1px solid var(--rule);flex-wrap:wrap}
+.brand{font-family:var(--f-display);font-size:20px;letter-spacing:.08em;color:var(--gold);display:flex;align-items:center;gap:10px;text-decoration:none}
+.brand svg{width:26px;height:26px}
+.nav{display:flex;gap:4px;flex-wrap:wrap}
+.nav a{font-family:var(--f-mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-decoration:none;padding:7px 12px}
+
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+.intro{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;padding-block:34px 24px}
+h1{font-family:var(--f-display);font-weight:400;font-size:clamp(40px,6vw,78px);line-height:.95;margin:12px 0 14px;text-wrap:balance}
+h1 em{font-style:normal;color:var(--gold)}
+.lede{font-size:19px;max-width:50ch;margin:0;color:#c4c8d3}
+.counts{display:flex;gap:22px;flex-wrap:wrap}
+.counts div b{display:block;font-family:var(--f-num);font-weight:600;font-size:40px;line-height:.9;color:var(--gold);font-variant-numeric:tabular-nums}
+.counts div span{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+
+
+h3.sec{font-family:var(--f-display);font-weight:400;font-size:clamp(28px,3vw,38px);margin:56px 0 4px}
+.sub{margin:0 0 20px;color:var(--muted);max-width:70ch}
+.now{display:inline-flex;align-items:center;gap:8px;font-family:var(--f-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#0b1426;background:var(--gold);padding:4px 9px}
+.now i{width:7px;height:7px;border-radius:50%;background:#0b1426;animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.25}}
+
+/* themed seasons */
+.season{border:1px solid var(--rule);background:linear-gradient(180deg,var(--panel),#0b1426);margin-bottom:22px;min-width:0}
+.season.live{border-color:var(--gold)}
+.season .art{position:relative;aspect-ratio:16/7;overflow:hidden;background:#05080f}
+.season .art img.k{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity .4s}
+.season .art::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(8,13,24,.88) 0%,rgba(8,13,24,.35) 45%,transparent 70%),linear-gradient(transparent 55%,rgba(11,20,38,.96))}
+.season .art .over{position:absolute;left:0;bottom:0;right:0;padding:22px 24px;z-index:1;display:grid;gap:8px;justify-items:start}
+.season .art .logo{max-width:min(320px,52%);max-height:110px;object-fit:contain;filter:drop-shadow(0 2px 10px rgba(0,0,0,.6))}
+.season .k2{font-family:var(--f-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+.season h2{font-family:var(--f-display);font-weight:400;font-size:clamp(30px,4vw,50px);line-height:1;margin:0}
+.season .theme{color:#d6d3c8;margin:0;font-size:17px}
+.season .acts{display:flex;gap:6px;padding:14px 24px 0;flex-wrap:wrap}
+.season .acts button{border:1px solid var(--rule);background:transparent;padding:7px 12px;cursor:pointer;text-align:left}
+.season .acts button b{display:block;font-family:var(--f-display);font-weight:400;font-size:17px}
+.season .acts button small{font-family:var(--f-num);font-size:16px;color:var(--muted)}
+.season .acts button[aria-pressed="true"]{border-color:var(--gold);background:rgba(200,170,110,.1)}
+.season .act{padding:6px 24px 24px}
+.lab{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:16px 0 8px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--rule);background:#0d1729;padding:4px 10px 4px 4px;text-decoration:none;color:var(--text);font-size:15px}
+.chip img{width:30px;height:30px;object-fit:cover}
+.chip small{font-family:var(--f-mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold)}
+.chip.plain{padding:5px 10px}
+a.chip:hover{border-color:var(--gold)}
+.skins{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;scrollbar-width:thin}
+.sk{flex:none;width:118px;text-decoration:none;color:var(--text);border:1px solid var(--rule);background:#0d1729}
+.sk:hover{border-color:var(--gold)}
+.sk img{width:100%;aspect-ratio:308/560;object-fit:cover;display:block;background:#05080f}
+.sk span{display:block;padding:5px 6px 7px;font-size:13px;line-height:1.25}
+.sk.pres{border-color:var(--gold-dim)}.sk.pres span::before{content:"Prestige · ";color:var(--gold);font-family:var(--f-mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;display:block}
+.media{display:grid;gap:6px;margin:0;padding:0;list-style:none}
+.media li{display:flex;gap:10px;align-items:baseline;font-size:16px}
+.media li small{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);min-width:110px}
+.cols{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:4px 28px}
+
+/* years */
+.years{display:grid;gap:10px}
+.yr{display:grid;grid-template-columns:110px 220px minmax(0,1fr);gap:18px;align-items:start;border:1px solid var(--rule);background:var(--panel);padding:14px;min-width:0}
+.yr .y{font-family:var(--f-num);font-size:52px;line-height:.85;color:var(--gold);font-variant-numeric:tabular-nums}
+.yr .y small{display:block;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-top:8px;line-height:1.4}
+.yr .pic{aspect-ratio:16/9;background:#05080f center/cover;border:1px solid var(--rule)}
+.yr .pic.none{display:grid;place-items:center;color:var(--faint);font-family:var(--f-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase}
+.yr p{margin:0;color:#d6d3c8}
+.yr .w{margin-top:8px;font-size:15.5px;color:var(--muted)}
+.yr .w b{color:var(--text);font-weight:500}
+.mini{display:flex;flex-wrap:wrap;gap:4px;margin-top:10px}
+.mini a{display:block;width:40px;height:40px;border:1px solid var(--rule)}
+.mini a:hover{border-color:var(--gold)}
+.mini img{width:100%;height:100%;object-fit:cover;display:block}
+.more{font-family:var(--f-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;display:inline-block;margin-top:10px}
+
+footer{border-top:1px solid var(--rule);margin-top:48px;padding-block:24px 40px;color:var(--muted);font-size:14px;display:grid;gap:8px}
+footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width:80ch}
+@media (max-width:900px){.yr{grid-template-columns:84px minmax(0,1fr)}.yr .pic{display:none}.cols{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:600px){.season .art{aspect-ratio:4/3}.season .art .over{padding:16px}.season .acts,.season .act{padding-inline:14px}.yr .y{font-size:40px}.yr{gap:12px;padding:12px}.media li{flex-direction:column;gap:0}}
+</style>
+<script src="site.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header class="bar">
+    <a class="brand" href="./">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><polygon points="16,2 29,9.5 29,22.5 16,30 3,22.5 3,9.5" fill="none" stroke="#c8aa6e" stroke-width="1.5"/><circle cx="16" cy="16" r="5" fill="none" stroke="#c8aa6e" stroke-width="1.5"/><path d="M16 2v9M16 21v9M3 9.5l8 4.5M21 18l8 4.5M29 9.5l-8 4.5M11 18l-8 4.5" stroke="#c8aa6e" stroke-width="1"/></svg>
+      Lore Explorer
+    </a>
+    <nav class="nav" aria-label="Site"><a href="./">Daily</a><a href="atlas.html">Atlas</a><a href="timeline.html">Timeline</a><a href="seasons.html" aria-current="page">Seasons</a></nav>
+  </header>
+
+  <section class="intro">
+    <div>
+      <div class="eyebrow">League of Legends · 2009 to today</div>
+      <h1>Every season, <em>every year.</em></h1>
+      <p class="lede">Since 2025, League has had three seasons a year, each with its own theme, story, skins and cinematics. Before that, every year was one long season. Here is all of it, newest first.</p>
+    </div>
+    <div class="counts" id="counts"></div>
+  </section>
+
+  <h3 class="sec" style="margin-top:12px">Themed seasons</h3>
+  <p class="sub">Each season has two acts. Pick an act to see its skins, cinematics and game modes.</p>
+  <div id="themed"></div>
+
+  <h3 class="sec">Year by year</h3>
+  <p class="sub">The champions who arrived each year and who won Worlds. Tap a champion to start their journey.</p>
+  <div class="years" id="years"></div>
+
+  <footer>
+    <div>Season themes, dates, skin lines, cinematics and modes come from the <a href="https://wiki.leagueoflegends.com/en-us/Season" rel="noopener">League of Legends Wiki</a> season pages (CC BY-SA 3.0); key art and logos are Riot's own. New champions per year from this site's Timeline, Worlds finals from its Worlds page. Saved 25 October 2026.</div>
+    <div class="legal">Lore Explorer was created under Riot Games' "Legal Jibber Jabber" policy using assets owned by Riot Games. Riot Games does not endorse or sponsor this project.</div>
+  </footer>
+</div>
+
+<script src="data/champions.js"></script>
+<script src="data/releases.js"></script>
+<script src="data/skins.js"></script>
+<script src="data/seasons.js"></script>
+<script>
+(function(){
+"use strict";
+const S=window.ATLAS_SEASONS, C=window.ATLAS_CHAMPS, CH=Object.fromEntries(C.map(c=>[c.id,c])), REL=window.ATLAS_RELEASES||{}, SK=window.ATLAS_SKINS||{};
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const IMG=n=>`img/seasons/${n}.webp`, TILE=id=>`img/${id}-tile.webp`;
+const DD="https://ddragon.leagueoflegends.com/cdn/img/champion/", CD="https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/";
+const fmt=d=>new Date(d+"T12:00:00").toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"});
+const today=new Date().toISOString().slice(0,10);
+const skinImg=(id,num)=>{const row=(SK[id]||[]).find(k=>k[0]===num);const c=CH[id];return row&&row[7]?CD+row[7]:`${DD}loading/${c.dd}_${num}.jpg`;};
+
+// which season and act are on now
+let liveS=null,liveA=null;
+S.themed.forEach(s=>s.acts.forEach((a,i)=>{const next=s.acts[i+1]?s.acts[i+1].start:s.end;if(a.start<=today&&today<next){liveS=s.id;liveA=i;}}));
+
+const byYear={};Object.entries(REL).forEach(([id,r])=>{if(!CH[id])return;const y=+r[0].slice(0,4);(byYear[y]=byYear[y]||[]).push([id,r[0]]);});
+Object.values(byYear).forEach(L=>L.sort((a,b)=>a[1].localeCompare(b[1])));
+document.getElementById("counts").innerHTML=[[new Date().getFullYear()-2009+1,"years of League"],[S.themed.length,"themed seasons"],[Object.keys(REL).length,"champions"]].map(([b,s])=>`<div><b>${b}</b><span>${s}</span></div>`).join("");
+
+// themed seasons, newest first
+const T=S.themed.slice().sort((a,b)=>b.acts[0].start.localeCompare(a.acts[0].start));
+function actHTML(s,i){const a=s.acts[i];
+  const champs=a.champs.filter(c=>c[1]).map(([kind,id])=>`<a class="chip" href="journey.html?c=${id}"><img src="${TILE(id)}" alt=""><span>${esc(CH[id].name)} <small>${esc(kind)}</small></span></a>`).join("");
+  const skins=a.skins.filter(k=>k[1]).map(([n,id,num,line])=>`<a class="sk${/^Prestige /.test(n)?" pres":""}" href="skins.html#s-${id}-${num}" title="${esc(n)}"><img src="${esc(skinImg(id,num))}" alt="" loading="lazy" referrerpolicy="no-referrer"><span>${esc(n.replace(/^Prestige /,""))}</span></a>`).join("");
+  const lines=[...new Set(a.skins.map(k=>k[3]).filter(Boolean))];
+  const media=a.media.map(([k,t,y])=>`<li><small>${esc(k)}</small>${y?`<a href="theater.html#v-${y}">${esc(t)} ▶</a>`:`<span>${esc(t)}</span>`}</li>`).join("");
+  const modes=a.modes.map(m=>`<span class="chip plain">${esc(m)}</span>`).join("");
+  return `${champs?`<div class="lab">Champions</div><div class="chips">${champs}</div>`:""}
+    ${skins?`<div class="lab">Skins${lines.length?` · ${esc(lines.join(" & "))}`:""}</div><div class="skins">${skins}</div>`:""}
+    <div class="cols">${media?`<div><div class="lab">Stories & cinematics</div><ul class="media">${media}</ul></div>`:""}${modes?`<div><div class="lab">Game modes</div><div class="chips">${modes}</div></div>`:""}</div>`;}
+document.getElementById("themed").innerHTML=T.map(s=>{const live=s.id===liveS, first=live?liveA:0;
+  return `<article class="season${live?" live":""}" id="s-${s.id}">
+    <div class="art"><img class="k" src="${IMG(s.img[Math.min(first,s.img.length-1)])}" alt="${esc(s.name)} key art" loading="lazy">
+      <div class="over">${live?`<span class="now"><i></i>On now · ${esc(s.acts[liveA].act)}</span>`:""}<img class="logo" src="${IMG(s.logo)}" alt="">
+        <div class="k2">${s.year} · Season ${s.n} · ${fmt(s.acts[0].start)} – ${fmt(s.end)}</div><h2>${esc(s.name)}</h2><p class="theme">Theme: ${esc(s.theme)}</p></div></div>
+    <div class="acts" role="group" aria-label="Acts">${s.acts.map((a,i)=>`<button type="button" data-i="${i}" aria-pressed="${i===first}"><b>${esc(a.act)}</b><small>from ${fmt(a.start)}</small></button>`).join("")}</div>
+    <div class="act">${actHTML(s,first)}</div>
+    <div style="padding:0 24px 20px"><a class="more" href="https://wiki.leagueoflegends.com/en-us/${esc(s.wiki)}" target="_blank" rel="noopener">The full season on the League Wiki ↗</a></div></article>`;}).join("");
+document.getElementById("themed").addEventListener("click",e=>{const b=e.target.closest(".acts button");if(!b)return;const card=b.closest(".season"),s=S.themed.find(x=>"s-"+x.id===card.id),i=+b.dataset.i;
+  card.querySelectorAll(".acts button").forEach(o=>o.setAttribute("aria-pressed",String(o===b)));card.querySelector(".act").innerHTML=actHTML(s,i);
+  const k=card.querySelector("img.k");k.src=IMG(s.img[Math.min(i,s.img.length-1)]);});
+
+// year by year (2025 and 2026 are the themed seasons above, but still get their champions and Worlds)
+const Y=[...S.years];[2025,2026].forEach(y=>Y.push({y,name:"Themed seasons",line:`${S.themed.filter(s=>s.year===y).map(s=>s.name).join(", ")}.`,img:S.themed.find(s=>s.year===y).img[0],worlds:y===2025?S.worlds2025:null,anchor:"s-"+S.themed.find(s=>s.year===y).id}));
+Y.sort((a,b)=>b.y-a.y);
+document.getElementById("years").innerHTML=Y.map(r=>{const nc=byYear[r.y]||[];
+  return `<div class="yr" id="y${r.y}"><div class="y">${r.y}<small>${esc(r.name)}</small></div>
+    ${r.img?`<div class="pic" style="background-image:url('${IMG(r.img)}')"></div>`:`<div class="pic none">${r.y}</div>`}
+    <div style="min-width:0"><p>${esc(r.line)}${r.anchor?` <a href="#${r.anchor}">See above ↑</a>`:""}</p>
+      ${r.worlds?`<p class="w">Worlds ${r.y}: <b>${esc(r.worlds[0])}</b> beat ${esc(r.worlds[2])} ${esc(r.worlds[1])} in ${esc(r.worlds[3])}.</p>`:r.y===2026?`<p class="w">Worlds 2026 is on now. <a href="worlds.html">Follow it live →</a></p>`:""}
+      ${nc.length?`<div class="lab">New champions (${nc.length})</div><div class="mini">${nc.map(([id])=>`<a href="journey.html?c=${id}" title="${esc(CH[id].name)}"><img src="${TILE(id)}" alt="${esc(CH[id].name)}" loading="lazy"></a>`).join("")}</div>`:""}
+      ${r.vgu&&r.vgu.length?`<div class="lab">Visual & gameplay updates</div><div class="mini">${r.vgu.map(id=>`<a href="journey.html?c=${id}" title="${esc(CH[id].name)}"><img src="${TILE(id)}" alt="${esc(CH[id].name)}" loading="lazy"></a>`).join("")}</div>`:""}
+      <a class="more" href="timeline.html#y${r.y}">${r.y} on the Timeline →</a></div></div>`;}).join("");
+if(location.hash){const el=document.getElementById(location.hash.slice(1));if(el)setTimeout(()=>el.scrollIntoView(),60);}
+})();
+</script>
+</body>
+</html>
