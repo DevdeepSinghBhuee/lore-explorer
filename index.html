@@ -614,7 +614,7 @@ function renderItem(p,state,save,key){
   const stage=`<div class="stage"><h2><span>${t("i_which")}</span><span>${done?"":grey?t("hint_colour"):""}</span></h2>
     <div class="itm"><div class="ic"><img src="${ITEM_ICON(p.id)}" alt="${done?esc(itName(p.id)):"?"}" style="filter:blur(${blur}px)${grey?" grayscale(1)":""}"></div><ul>${clues.join("")}</ul></div></div>`;
   const input=done?"":`<div class="guess"><input id="ii" type="text" placeholder="${esc(t("i_placeholder"))}" autocomplete="off" aria-label="${esc(t("i_which"))}" aria-autocomplete="list" aria-controls="isugg"><button type="button" id="ib">${t("guess_btn")}</button><div class="sugg" id="isugg" role="listbox" hidden></div></div>
-    <div class="meta-line"><span>${state.g.length?t("tried",{n:state.g.length}):t("start_typing")}</span>${state.g.length>=8?`<button type="button" id="giveup">${t("reveal")}</button>`:""}</div>`;
+    <div class="meta-line"><span>${state.g.length?t("tried",{n:state.g.length}):t("i_start")}</span>${state.g.length>=8?`<button type="button" id="giveup">${t("reveal")}</button>`:""}</div>`;
   const ANS=new Set(it.st.map(x=>x[1]));
   const rows=state.g.length?`<div class="irows">${state.g.slice().reverse().map(g=>{const G=IT[g];if(!G)return "";const ok=g===p.id,sh=G.st.filter(x=>ANS.has(x[1])).length,d=it.g-G.g;
     const c=ok?`<span class="c hit">${G.g}</span>`:`<span class="c ${Math.abs(d)<=300?"near":""}" title="${esc(d>0?t("i_more"):d<0?t("i_less"):t("i_same"))}">${G.g} ${d>0?"↑":d<0?"↓":"="}</span>`;
