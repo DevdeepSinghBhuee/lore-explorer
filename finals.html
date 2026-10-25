@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<script src="i18n.js"></script>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>The Finals · Every Worlds and MSI final</title>
+<meta name="description" content="Every League of Legends World Championship and Mid-Season Invitational final since 2011: winners, scores, venues, MVPs, every pick in every game and the official LoL Esports video of each game.">
+<link rel="canonical" href="https://devdeepsinghbhuee.github.io/lore-explorer/finals.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Lore Explorer">
+<meta property="og:title" content="The Finals">
+<meta property="og:description" content="Every Worlds and MSI final, game by game, with the official videos.">
+<meta property="og:url" content="https://devdeepsinghbhuee.github.io/lore-explorer/finals.html">
+<meta property="og:image" content="https://devdeepsinghbhuee.github.io/lore-explorer/img/og/finals.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Finals: every Worlds and MSI final.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#080d18">
+<link rel="icon" href="img/icon.svg" type="image/svg+xml">
+<link rel="icon" href="img/icon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="img/icon-180.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus+SC&family=Alegreya:ital,wght@0,400;0,500;0,700;1,400&family=Spline+Sans+Mono:wght@400;500&family=Teko:wght@400;500;600&display=swap">
+<style>
+/* Layout: a trophy timeline. Filter chips (all / Worlds / MSI), one row per final (year, trophy, winner, score, runner-up, city); the open final shows a game list with the official video player and every pick with player and KDA. Shares the Atlas tokens. */
+:root{
+  color-scheme:dark;
+  --ink:#080d18; --panel:#0f1a2e; --panel-2:#142238;
+  --gold:#c8aa6e; --gold-dim:#7d6a45; --text:#ebe4d3; --muted:#939bb0; --faint:#5b6580;
+  --rule:rgba(200,170,110,.22);
+  --void:#b07ce8; --blueside:#5aa8ff; --redside:#ff6f5e;
+  --f-display:"Marcellus SC","Cinzel",Georgia,serif;
+  --f-body:"Alegreya",Georgia,"Times New Roman",serif;
+  --f-mono:"Spline Sans Mono",ui-monospace,Menlo,monospace;
+  --f-num:"Teko","Oxanium",var(--f-display),sans-serif;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box}
+html{scroll-padding-top:16px}
+body{margin:0;background:var(--ink);color:var(--text);font-family:var(--f-body);font-size:18px;line-height:1.55;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+img{max-width:100%}
+[hidden]{display:none!important}
+a{color:var(--gold)}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+.wrap{max-width:1240px;margin-inline:auto}
+
+.bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:18px;border-bottom:1px solid var(--rule);flex-wrap:wrap}
+.brand{font-family:var(--f-display);font-size:20px;letter-spacing:.08em;color:var(--gold);display:flex;align-items:center;gap:10px;text-decoration:none}
+.brand svg{width:26px;height:26px}
+.nav{display:flex;gap:4px;flex-wrap:wrap}
+.nav a{font-family:var(--f-mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-decoration:none;padding:7px 12px}
+
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+.intro{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;padding-block:34px 24px}
+h1{font-family:var(--f-display);font-weight:400;font-size:clamp(40px,6vw,78px);line-height:.95;margin:12px 0 14px;text-wrap:balance}
+h1 em{font-style:normal;color:var(--gold)}
+.lede{font-size:19px;max-width:50ch;margin:0;color:#c4c8d3}
+.counts{display:flex;gap:22px;flex-wrap:wrap}
+.counts div b{display:block;font-family:var(--f-num);font-weight:600;font-size:40px;line-height:.9;color:var(--gold);font-variant-numeric:tabular-nums}
+.counts div span{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+
+
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.chips button{border:1px solid var(--rule);background:transparent;padding:8px 14px;cursor:pointer;font-family:var(--f-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.chips button[aria-pressed="true"]{border-color:var(--gold);color:var(--text);background:rgba(200,170,110,.1)}
+.list{display:grid;gap:8px}
+.fin{border:1px solid var(--rule);background:var(--panel);min-width:0}
+.fin.open{border-color:var(--gold-dim)}
+.fin>button{display:grid;grid-template-columns:84px minmax(0,1fr) auto;gap:14px;align-items:center;width:100%;border:0;background:transparent;color:var(--text);padding:12px 14px;cursor:pointer;text-align:left}
+.fin .yr{font-family:var(--f-num);font-size:38px;line-height:.85;color:var(--gold);font-variant-numeric:tabular-nums}
+.fin .yr small{display:block;font-family:var(--f-mono);font-size:10px;letter-spacing:.14em;color:var(--muted);margin-top:4px}
+.fin .who{min-width:0}
+.fin .who b{font-family:var(--f-display);font-weight:400;font-size:22px;line-height:1.1}
+.fin .who .sc{font-family:var(--f-num);font-size:24px;color:var(--gold);margin:0 8px;font-variant-numeric:tabular-nums}
+.fin .who span.l{color:var(--muted)}
+.fin .who .where{display:block;font-size:14px;color:var(--muted);margin-top:2px}
+.fin .arr{font-family:var(--f-mono);font-size:11px;color:var(--muted)}
+.det{border-top:1px solid var(--rule);padding:14px;display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:18px}
+.player{aspect-ratio:16/9;background:#05080f;border:1px solid var(--rule);display:grid;place-items:center;overflow:hidden}
+.player iframe{width:100%;height:100%;border:0;display:block}
+.player p{color:var(--muted);padding:16px;text-align:center;margin:0}
+.facts{display:flex;flex-wrap:wrap;gap:6px 16px;margin:10px 0 0;font-size:14px;color:var(--muted)}
+.facts b{color:var(--text);font-weight:400}
+.games{display:grid;gap:8px}
+.gm{border:1px solid var(--rule);background:#0b1426;padding:8px 10px;min-width:0}
+.gm[aria-current="true"]{border-color:var(--gold)}
+.gm .h{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.gm .h b{font-family:var(--f-mono);font-weight:400;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)}
+.gm .h span{font-size:14px;color:var(--muted)}
+.gm .h button{border:1px solid var(--rule);background:transparent;color:var(--text);font-family:var(--f-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;padding:6px 10px;cursor:pointer}
+.gm .h button:hover{border-color:var(--gold)}
+.side{display:grid;grid-template-columns:minmax(0,1fr);gap:3px;margin-top:6px}
+.side .tn{font-size:13px;color:var(--muted);display:flex;justify-content:space-between;gap:6px}
+.side .tn.win{color:var(--text)}.side .tn.win::after{content:"Won";font-family:var(--f-mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)}
+.picks{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px}
+.pk{min-width:0;text-align:center}
+.pk a{display:block}
+.pk img{width:100%;aspect-ratio:1;object-fit:cover;display:block;border:1px solid var(--rule)}
+.pk span{display:block;font-size:11.5px;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
+.pk small{display:block;font-family:var(--f-num);font-size:14px;color:var(--muted);line-height:1}
+.note{font-size:13px;color:var(--faint);margin:10px 0 0}
+footer{border-top:1px solid var(--rule);margin-top:48px;padding-block:24px 40px;color:var(--muted);font-size:14px;display:grid;gap:8px}
+footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width:80ch}
+@media (max-width:900px){.det{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:480px){.fin>button{grid-template-columns:58px minmax(0,1fr) auto;gap:10px;padding:10px}.fin .yr{font-size:30px}.fin .who b{font-size:18px}.fin .who .sc{font-size:20px;margin:0 5px}.det{padding:10px}.counts{gap:16px}.counts div b{font-size:34px}}
+</style>
+<script src="site.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header class="bar">
+    <a class="brand" href="./">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><polygon points="16,2 29,9.5 29,22.5 16,30 3,22.5 3,9.5" fill="none" stroke="#c8aa6e" stroke-width="1.5"/><circle cx="16" cy="16" r="5" fill="none" stroke="#c8aa6e" stroke-width="1.5"/><path d="M16 2v9M16 21v9M3 9.5l8 4.5M21 18l8 4.5M29 9.5l-8 4.5M11 18l-8 4.5" stroke="#c8aa6e" stroke-width="1"/></svg>
+      Lore Explorer
+    </a>
+    <nav class="nav" aria-label="Site"><a href="./">Daily</a><a href="worlds.html">Worlds</a><a href="finals.html" aria-current="page">The Finals</a></nav>
+  </header>
+
+  <section class="intro">
+    <div>
+      <div class="eyebrow">Esports history</div>
+      <h1>Every final, <em>game by game.</em></h1>
+      <p class="lede">Every World Championship and Mid-Season Invitational final since the first Worlds in 2011: who lifted the trophy, where, and how. Open a final to see every pick, every player's score and the official broadcast of each game.</p>
+    </div>
+    <div class="counts" id="counts"></div>
+  </section>
+
+  <div class="chips" id="chips" role="group" aria-label="Show">
+    <button type="button" data-f="all" aria-pressed="true">All finals</button>
+    <button type="button" data-f="worlds" aria-pressed="false">Worlds</button>
+    <button type="button" data-f="msi" aria-pressed="false">MSI</button>
+  </div>
+  <div class="list" id="list"></div>
+
+  <footer>
+    <div>Results, picks, venues and video links from <a href="https://lol.fandom.com/">Leaguepedia</a> (CC BY-SA 3.0). Videos play from LoL Esports' own YouTube channels. Saved 25 October 2026; the Worlds 2026 final (14 November) will be added after it's played. Live Worlds 2026 coverage is on the <a href="worlds.html">Worlds page</a>.</div>
+    <div class="legal">Lore Explorer was created under Riot Games' "Legal Jibber Jabber" policy using assets owned by Riot Games. Riot Games does not endorse or sponsor this project.</div>
+  </footer>
+</div>
+
+<script src="data/champions.js"></script>
+<script src="data/finals.js"></script>
+<script>
+(function(){
+"use strict";
+const F=window.ATLAS_FINALS, CH=Object.fromEntries((window.ATLAS_CHAMPS||[]).map(c=>[c.id,c]));
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const D=iso=>{const [y,m,d]=iso.split("-").map(Number);return new Date(Date.UTC(y,m-1,d)).toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric",timeZone:"UTC"});};
+const key=f=>f.t+"-"+f.y, NAME={worlds:"Worlds",msi:"MSI"};
+const games=F.reduce((a,f)=>a+f.games.length,0), vids=F.reduce((a,f)=>a+f.games.filter(g=>g.v).length,0);
+document.getElementById("counts").innerHTML=[[F.filter(f=>f.t==="worlds").length,"Worlds finals"],[F.filter(f=>f.t==="msi").length,"MSI finals"],[games,"games"],[vids,"official videos"]].map(([b,s])=>`<div><b>${b}</b><span>${s}</span></div>`).join("");
+let filt="all",open=null;
+function sideHTML(g,team,list,win){return `<div class="side"><div class="tn${win?" win":""}">${esc(team)}</div>${list&&list.length?`<div class="picks">${list.map(p=>{const c=CH[p[1]];return `<div class="pk">${c?`<a href="journey.html?c=${p[1]}" title="${esc(c.name)}"><img src="img/${p[1]}-tile.webp" alt="${esc(c.name)}" loading="lazy"></a>`:""}<span title="${esc(p[0])}">${esc(p[0])}</span><small>${p[2]}/${p[3]}/${p[4]}</small></div>`;}).join("")}</div>`:""}</div>`;}
+function detail(f){const first=f.games.find(g=>g.v);
+  return `<div class="det"><div><div class="player" id="pl-${key(f)}">${first?`<p>Pick a game to watch the official broadcast.</p>`:`<p>LoL Esports has no embeddable video of this final.</p>`}</div>
+    <div class="facts"><span>Date <b>${esc(D(f.date))}</b></span>${f.venue?`<span>Venue <b>${esc(f.venue)}</b></span>`:""}${f.cap?`<span>Seats <b>${esc(f.cap)}</b></span>`:""}${f.patch?`<span>Patch <b>${esc(f.patch)}</b></span>`:""}${f.mvp?`<span>Finals MVP <b>${esc(f.mvp)}</b></span>`:""}</div>
+    <p class="note"><a href="https://lol.fandom.com/wiki/${encodeURIComponent(f.lp.replace(/ /g,"_"))}">Full tournament on Leaguepedia</a></p></div>
+    <div class="games">${f.games.map(g=>{const bw=g.w===g.b;return `<div class="gm" data-g="${g.n}"><div class="h"><b>Game ${g.n}</b><span>${g.len?esc(g.len):""}${g.k?` · kills ${g.k[0]}–${g.k[1]}`:""}</span>${g.v?`<button type="button" data-v="${g.v}" data-s="${g.s||0}" data-n="${g.n}">▶ Watch</button>`:""}</div>${sideHTML(g,g.b,g.bp,bw)}${sideHTML(g,g.r,g.rp,!bw)}</div>`;}).join("")}
+    ${f.games.some(g=>!g.bp)?`<p class="note">Leaguepedia has no pick data for these games.</p>`:""}</div></div>`;}
+function draw(){const L=F.filter(f=>filt==="all"||f.t===filt);
+  document.getElementById("list").innerHTML=L.map(f=>{const k=key(f),o=open===k;return `<article class="fin${o?" open":""}" id="${k}"><button type="button" data-k="${k}" aria-expanded="${o}"><div class="yr">${f.y}<small>${NAME[f.t]}</small></div><div class="who"><b>${esc(f.w)}</b><span class="sc">${f.sc[0]}–${f.sc[1]}</span><span class="l">${esc(f.l)}</span><span class="where">${esc(f.city)}</span></div><span class="arr">${o?"Close":"Open"}</span></button>${o?detail(f):""}</article>`;}).join("");}
+function play(btn){const f=F.find(x=>key(x)===open);if(!f)return;const pl=document.getElementById("pl-"+open);
+  pl.innerHTML=`<iframe src="https://www.youtube-nocookie.com/embed/${btn.dataset.v}?start=${btn.dataset.s}&autoplay=1&rel=0" title="${esc(NAME[f.t]+" "+f.y+" final, game "+btn.dataset.n)}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>`;
+  document.querySelectorAll(`#${open} .gm`).forEach(x=>x.setAttribute("aria-current",String(x.dataset.g===btn.dataset.n)));
+  if(window.innerWidth<900)pl.scrollIntoView({behavior:"smooth",block:"center"});}
+document.getElementById("list").addEventListener("click",e=>{const v=e.target.closest("[data-v]");if(v){play(v);return;}const b=e.target.closest("[data-k]");if(!b)return;open=open===b.dataset.k?null:b.dataset.k;draw();try{history.replaceState(null,"",open?"#"+open:location.pathname);}catch(x){}if(open)document.getElementById(open).scrollIntoView({behavior:"smooth",block:"start"});});
+document.getElementById("chips").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;filt=b.dataset.f;document.querySelectorAll("#chips button").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));draw();});
+const h=location.hash.slice(1);if(F.some(f=>key(f)===h))open=h;draw();if(open)document.getElementById(open).scrollIntoView({block:"start"});
+})();
+</script>
+</body>
+</html>

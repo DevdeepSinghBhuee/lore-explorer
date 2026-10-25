@@ -11,3 +11,5 @@ Object.assign(window.ATLAS_UI,{"it_tft": "チームファイト タクティク�
 Object.assign(window.ATLAS_UI,{"it_gallery": "コレクション", "it_gallery_d": "すべてのアイコン、エモート、ワードスキン"});
 
 Object.assign(window.ATLAS_UI,{"it_makeovers": "今と昔", "it_makeovers_d": "リワークされたチャンピオンの新旧アート"});
+
+Object.assign(window.ATLAS_UI,{"it_finals": "決勝の歴史", "it_finals_d": "すべてのWorldsとMSIの決勝を1試合ずつ"});

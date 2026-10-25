@@ -11,3 +11,5 @@ Object.assign(window.ATLAS_UI,{"it_tft": "Teamfight Tactics", "it_tft_d": "Jedes
 Object.assign(window.ATLAS_UI,{"it_gallery": "Die Sammlung", "it_gallery_d": "Alle Symbole, Emotes und Augen-Skins"});
 
 Object.assign(window.ATLAS_UI,{"it_makeovers": "Damals & heute", "it_makeovers_d": "Alte und neue Bilder überarbeiteter Champions"});
+
+Object.assign(window.ATLAS_UI,{"it_finals": "Die Finals", "it_finals_d": "Alle Worlds- und MSI-Finals, Spiel für Spiel"});

@@ -11,3 +11,5 @@ Object.assign(window.ATLAS_UI,{"it_tft": "전략적 팀 전투", "it_tft_d": "�
 Object.assign(window.ATLAS_UI,{"it_gallery": "컬렉션", "it_gallery_d": "모든 소환사 아이콘, 감정 표현, 와드 스킨"});
 
 Object.assign(window.ATLAS_UI,{"it_makeovers": "그때와 지금", "it_makeovers_d": "리워크된 챔피언의 예전 아트와 지금 아트"});
+
+Object.assign(window.ATLAS_UI,{"it_finals": "결승전", "it_finals_d": "모든 월즈와 MSI 결승, 세트별로"});

@@ -11,3 +11,5 @@ Object.assign(window.ATLAS_UI,{"it_tft": "Teamfight Tactics", "it_tft_d": "Setia
 Object.assign(window.ATLAS_UI,{"it_gallery": "Koleksi", "it_gallery_d": "Semua ikon, emote, dan skin ward"});
 
 Object.assign(window.ATLAS_UI,{"it_makeovers": "Dulu & kini", "it_makeovers_d": "Art lama dan baru champion yang dirombak"});
+
+Object.assign(window.ATLAS_UI,{"it_finals": "Final", "it_finals_d": "Semua final Worlds dan MSI, gim demi gim"});
