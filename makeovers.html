@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<script src="i18n.js"></script>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Then &amp; Now · Champion makeovers</title>
+<meta name="description" content="Old and new splash art side by side for the 97 League of Legends champions whose look has changed, with every relaunch and visual update date from the League Wiki.">
+<link rel="canonical" href="https://devdeepsinghbhuee.github.io/lore-explorer/makeovers.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Lore Explorer">
+<meta property="og:title" content="Then &amp; Now">
+<meta property="og:description" content="Old and new splash art of every reworked League champion, side by side.">
+<meta property="og:url" content="https://devdeepsinghbhuee.github.io/lore-explorer/makeovers.html">
+<meta property="og:image" content="https://devdeepsinghbhuee.github.io/lore-explorer/img/og/makeovers.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Then and Now: champion makeovers.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#080d18">
+<link rel="icon" href="img/icon.svg" type="image/svg+xml">
+<link rel="icon" href="img/icon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="img/icon-180.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus+SC&family=Alegreya:ital,wght@0,400;0,500;0,700;1,400&family=Spline+Sans+Mono:wght@400;500&family=Teko:wght@400;500;600&display=swap">
+<style>
+/* Layout: a before/after viewer on top (drag the handle between the oldest and today's splash, pick any older look from the strip), then a wall of every champion whose classic splash changed. Shares the Atlas tokens. */
+:root{
+  color-scheme:dark;
+  --ink:#080d18; --panel:#0f1a2e; --panel-2:#142238;
+  --gold:#c8aa6e; --gold-dim:#7d6a45; --text:#ebe4d3; --muted:#939bb0; --faint:#5b6580;
+  --rule:rgba(200,170,110,.22);
+  --void:#b07ce8; --blueside:#5aa8ff; --redside:#ff6f5e;
+  --f-display:"Marcellus SC","Cinzel",Georgia,serif;
+  --f-body:"Alegreya",Georgia,"Times New Roman",serif;
+  --f-mono:"Spline Sans Mono",ui-monospace,Menlo,monospace;
+  --f-num:"Teko","Oxanium",var(--f-display),sans-serif;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box}
+html{scroll-padding-top:16px}
+body{margin:0;background:var(--ink);color:var(--text);font-family:var(--f-body);font-size:18px;line-height:1.55;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+img{max-width:100%}
+[hidden]{display:none!important}
+a{color:var(--gold)}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+.wrap{max-width:1240px;margin-inline:auto}
+
+.bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:18px;border-bottom:1px solid var(--rule);flex-wrap:wrap}
+.brand{font-family:var(--f-display);font-size:20px;letter-spacing:.08em;color:var(--gold);display:flex;align-items:center;gap:10px;text-decoration:none}
+.brand svg{width:26px;height:26px}
+.nav{display:flex;gap:4px;flex-wrap:wrap}
+.nav a{font-family:var(--f-mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-decoration:none;padding:7px 12px}
+
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+.intro{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;padding-block:34px 24px}
+h1{font-family:var(--f-display);font-weight:400;font-size:clamp(40px,6vw,78px);line-height:.95;margin:12px 0 14px;text-wrap:balance}
+h1 em{font-style:normal;color:var(--gold)}
+.lede{font-size:19px;max-width:50ch;margin:0;color:#c4c8d3}
+.counts{display:flex;gap:22px;flex-wrap:wrap}
+.counts div b{display:block;font-family:var(--f-num);font-weight:600;font-size:40px;line-height:.9;color:var(--gold);font-variant-numeric:tabular-nums}
+.counts div span{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+
+
+.viewer{border:1px solid var(--rule);background:linear-gradient(180deg,var(--panel),#0b1426);margin-bottom:22px;scroll-margin-top:12px}
+.cmp{position:relative;aspect-ratio:1215/717;background:#05080f;overflow:hidden;user-select:none;touch-action:pan-y}
+.cmp img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}
+.cmp .now{clip-path:inset(0 0 0 var(--x,50%))}
+.cmp .bar{position:absolute;top:0;bottom:0;left:var(--x,50%);width:2px;margin-left:-1px;background:var(--gold);box-shadow:0 0 12px rgba(0,0,0,.7);pointer-events:none}
+.cmp .bar::after{content:"⟷";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:38px;height:38px;border-radius:50%;background:#0b1426;border:2px solid var(--gold);color:var(--gold);display:grid;place-items:center;font-size:18px}
+.cmp input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:ew-resize;margin:0}
+.cmp .tag{position:absolute;top:10px;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;background:rgba(5,8,15,.78);border:1px solid var(--rule);padding:5px 8px;pointer-events:none}
+.cmp .tag.l{left:10px}.cmp .tag.r{right:10px;color:var(--gold)}
+.vb{padding:16px 18px 18px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:20px}
+.vb h2{font-family:var(--f-display);font-weight:400;font-size:34px;line-height:1;margin:2px 0 4px}
+.vb .k{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+.vb .sub{color:var(--muted);font-style:italic;margin:0 0 10px}
+.vb ol{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.vb ol li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;align-items:baseline;border-left:2px solid var(--rule);padding-left:10px}
+.vb ol b{font-family:var(--f-num);font-weight:500;font-size:20px;color:var(--gold);font-variant-numeric:tabular-nums;line-height:1}
+.vb .links{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.vb .links a{border:1px solid var(--rule);padding:6px 10px;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--text);text-decoration:none}
+.vb .links a:hover{border-color:var(--gold)}
+.looks h5{font-family:var(--f-mono);font-weight:400;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+.strip{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:6px}
+.strip button{border:1px solid var(--rule);background:#05080f;padding:0;cursor:pointer;color:var(--text);text-align:left;min-width:0}
+.strip button img{width:100%;aspect-ratio:1215/717;object-fit:cover;display:block}
+.strip button span{display:block;font-family:var(--f-mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:4px 6px;color:var(--muted)}
+.strip button[aria-pressed="true"]{border-color:var(--gold)}.strip button[aria-pressed="true"] span{color:var(--gold)}
+.strip button[disabled]{cursor:default;opacity:.95}
+.note{font-size:13px;color:var(--faint);margin:10px 0 0}
+.tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+.tools input,.tools select{background:#0a1222;border:1px solid var(--rule);color:var(--text);font:inherit;font-size:16px;padding:8px 10px;min-width:0}
+.tools input{flex:1 1 220px}
+.tools label{display:inline-flex;align-items:center;gap:6px;font-size:15px;color:var(--muted);white-space:nowrap}
+.res{font-family:var(--f-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+.wall{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.card{border:1px solid var(--rule);background:var(--panel);padding:0;cursor:pointer;text-align:left;color:var(--text);min-width:0}
+.card:hover,.card[aria-current="true"]{border-color:var(--gold)}
+.card .pair{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:#05080f}
+.card .pair img{width:100%;aspect-ratio:1;object-fit:cover;display:block}
+.card .t{padding:8px 10px 10px}
+.card b{font-family:var(--f-display);font-weight:400;font-size:20px;display:block;line-height:1.1}
+.card small{font-family:var(--f-mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+footer{border-top:1px solid var(--rule);margin-top:48px;padding-block:24px 40px;color:var(--muted);font-size:14px;display:grid;gap:8px}
+footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width:80ch}
+@media (max-width:820px){.vb{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:480px){.wall{grid-template-columns:repeat(2,minmax(0,1fr))}.card b{font-size:17px}.vb h2{font-size:28px}.cmp .bar::after{width:32px;height:32px}.strip{grid-template-columns:repeat(3,minmax(0,1fr))}}
+</style>
+<script src="site.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header class="bar">
+    <a class="brand" href="./">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><polygon points="16,2 29,9.5 29,22.5 16,30 3,22.5 3,9.5" fill="none" stroke="#c8aa6e" stroke-width="1.5"/><circle cx="16" cy="16" r="5" fill="none" stroke="#c8aa6e" stroke-width="1.5"/><path d="M16 2v9M16 21v9M3 9.5l8 4.5M21 18l8 4.5M29 9.5l-8 4.5M11 18l-8 4.5" stroke="#c8aa6e" stroke-width="1"/></svg>
+      Lore Explorer
+    </a>
+    <nav class="nav" aria-label="Site"><a href="./">Daily</a><a href="skins.html">Skins</a><a href="makeovers.html" aria-current="page">Then &amp; Now</a></nav>
+  </header>
+
+  <section class="intro">
+    <div>
+      <div class="eyebrow">Champion makeovers</div>
+      <h1>Then <em>&amp; now.</em></h1>
+      <p class="lede">Many champions don't look the way they did on day one. Riot has repainted, remodelled and fully relaunched them over the years. Drag the handle to compare a champion's first splash art with today's, or pick any look in between.</p>
+    </div>
+    <div class="counts" id="counts"></div>
+  </section>
+
+  <section class="viewer" id="viewer" aria-live="polite"></section>
+
+  <div class="tools">
+    <input id="q" type="search" placeholder="Find a champion" aria-label="Find a champion">
+    <select id="sort" aria-label="Sort"><option value="recent">Newest makeover first</option><option value="looks">Most looks first</option><option value="az">A to Z</option></select>
+    <label><input type="checkbox" id="full"> Full relaunches only</label>
+  </div>
+  <p class="res" id="res"></p>
+  <div class="wall" id="wall"></div>
+
+  <footer>
+    <div>Splash art history and update dates from the <a href="https://wiki.leagueoflegends.com/en-us/Champion_update">League of Legends Wiki</a> (CC BY-SA 3.0); the art itself is Riot's. Saved 25 October 2026.</div>
+    <div class="legal">Lore Explorer was created under Riot Games' "Legal Jibber Jabber" policy using assets owned by Riot Games. Riot Games does not endorse or sponsor this project.</div>
+  </footer>
+</div>
+
+<script src="data/champions.js"></script>
+<script src="data/makeovers.js"></script>
+<script>
+(function(){
+"use strict";
+const M=window.ATLAS_MAKEOVERS, CH=Object.fromEntries((window.ATLAS_CHAMPS||[]).map(c=>[c.id,c]));
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const W="https://wiki.leagueoflegends.com/en-us/images/", enc=f=>encodeURIComponent(f);
+const TH=(f,w)=>W+"thumb/"+enc(f)+"/"+w+"px-"+enc(f), FULL=f=>W+enc(f);
+const fix=img=>{img.onerror=null;img.src=FULL(img.dataset.f);}; window.__mkfix=fix;
+const D=iso=>{if(!iso)return "";const [y,m,d]=iso.split("-").map(Number);return new Date(Date.UTC(y,m-1,d)).toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric",timeZone:"UTC"});};
+const LABEL={"Visual and Gameplay Update":"Full relaunch (new look and kit)","Visual Update":"Visual update","Art and Sustainability Update":"Art and sustainability update","Visual (Texture) Update":"Texture update"};
+const last=r=>(r[3].length?r[3][r[3].length-1][0]:"");
+const isFull=r=>r[3].some(u=>u[1]==="Visual and Gameplay Update");
+const name=id=>CH[id]?CH[id].name:id;
+document.getElementById("counts").innerHTML=[[M.length,"champions with a new look"],[M.reduce((a,r)=>a+r[1].length-1,0),"retired splash arts"],[M.filter(isFull).length,"full relaunches"]].map(([b,s])=>`<div><b>${b}</b><span>${s}</span></div>`).join("");
+const IMG=(f,w,cls,extra)=>`<img ${cls?`class="${cls}" `:""}src="${TH(f,w)}" data-f="${esc(f)}" onerror="__mkfix(this)" alt="" ${extra||""}>`;
+let cur=null,then=0;
+function lookLabel(r,i){const n=r[1].length;if(i===n-1)return "Today";if(i===0)return "First look"+(r[2]?" · "+r[2].slice(0,4):"");return "Look "+(i+1);}
+function view(id,scroll){const r=M.find(x=>x[0]===id)||M[0];cur=r;then=0;const n=r[1].length,c=CH[r[0]]||{};
+  const V=document.getElementById("viewer");
+  V.innerHTML=`<div class="cmp" id="cmp" style="--x:50%">${IMG(r[1][0],1200,"old","id=\"imOld\"")}${IMG(r[1][n-1],1200,"now")}<div class="bar"></div><span class="tag l" id="tagL">${esc(lookLabel(r,0))}</span><span class="tag r">Today</span><input type="range" min="0" max="100" value="50" aria-label="Drag to compare the old and new art"></div>
+  <div class="vb"><div><div class="k">${esc(c.region?c.region.replace(/^\w/,m=>m.toUpperCase()):"Champion")}</div><h2>${esc(name(r[0]))}</h2><p class="sub">${esc(c.title||"")}</p>
+    <ol>${r[2]?`<li><b>${r[2].slice(0,4)}</b><span>Released ${esc(D(r[2]))}</span></li>`:""}${r[3].map(u=>`<li><b>${u[0].slice(0,4)}</b><span>${esc(LABEL[u[1]]||u[1])} · ${esc(D(u[0]))}</span></li>`).join("")}</ol>
+    ${r[3].length?"":`<p class="note">The Wiki doesn't list a dated update for ${esc(name(r[0]))}; the splash art was repainted on its own.</p>`}
+    ${r[4].length?`<p class="note">Today's splash art: ${esc(r[4].join(", "))}</p>`:""}
+    <div class="links"><a href="journey.html?c=${r[0]}">Journey</a><a href="skins.html?champion=${r[0]}">All skins</a><a href="atlas.html#c-${r[0]}">Atlas</a></div></div>
+  <div class="looks"><h5>Every look (${n}) · tap one to compare it with today</h5><div class="strip">${r[1].map((f,i)=>`<button type="button" data-i="${i}" aria-pressed="${i===0}"${i===n-1?" disabled":""}>${IMG(f,240,"",'loading="lazy"')}<span>${esc(lookLabel(r,i))}</span></button>`).join("")}</div></div></div>`;
+  const cmp=document.getElementById("cmp"),rng=cmp.querySelector("input");rng.addEventListener("input",()=>cmp.style.setProperty("--x",rng.value+"%"));
+  V.querySelector(".strip").addEventListener("click",e=>{const b=e.target.closest("button");if(!b||b.disabled)return;then=+b.dataset.i;const im=document.getElementById("imOld");im.dataset.f=r[1][then];im.onerror=()=>fix(im);im.src=TH(r[1][then],1200);document.getElementById("tagL").textContent=lookLabel(r,then);V.querySelectorAll(".strip button").forEach(x=>x.setAttribute("aria-pressed",String(+x.dataset.i===then)));});
+  document.querySelectorAll(".card").forEach(x=>x.setAttribute("aria-current",String(x.dataset.id===r[0])));
+  try{history.replaceState(null,"","#c-"+r[0]);}catch(e){}
+  if(scroll)V.scrollIntoView({behavior:"smooth",block:"start"});}
+function wall(){const q=document.getElementById("q").value.trim().toLowerCase(),so=document.getElementById("sort").value,full=document.getElementById("full").checked;
+  let L=M.filter(r=>(!full||isFull(r))&&(!q||name(r[0]).toLowerCase().includes(q)));
+  L.sort(so==="az"?(a,b)=>name(a[0]).localeCompare(name(b[0])):so==="looks"?(a,b)=>(b[1].length-a[1].length)||name(a[0]).localeCompare(name(b[0])):(a,b)=>last(b).localeCompare(last(a))||name(a[0]).localeCompare(name(b[0])));
+  document.getElementById("res").textContent=`${L.length} champions`;
+  document.getElementById("wall").innerHTML=L.length?L.map(r=>`<button type="button" class="card" data-id="${r[0]}" aria-current="${cur&&cur[0]===r[0]}"><div class="pair">${IMG(r[1][0],320,"",'loading="lazy"')}${IMG(r[1][r[1].length-1],320,"",'loading="lazy"')}</div><div class="t"><b>${esc(name(r[0]))}</b><small>${r[1].length} looks${last(r)?" · changed "+last(r).slice(0,4):""}</small></div></button>`).join(""):`<p style="color:var(--muted)">No champion matches.</p>`;}
+["q","sort","full"].forEach(id=>document.getElementById(id).addEventListener(id==="q"?"input":"change",wall));
+document.getElementById("wall").addEventListener("click",e=>{const b=e.target.closest(".card");if(b)view(b.dataset.id,true);});
+const h=location.hash.match(/^#c-(.+)$/), start=h&&M.some(r=>r[0]===h[1])?h[1]:M.slice().sort((a,b)=>last(b).localeCompare(last(a)))[0][0];
+wall();view(start,false);
+})();
+</script>
+</body>
+</html>

@@ -9,3 +9,5 @@ Object.assign(window.ATLAS_UI,{"i_start": "Eşyaları görmek için yazmaya baş
 Object.assign(window.ATLAS_UI,{"it_tft": "Teamfight Tactics", "it_tft_d": "Her set, birim ve Minik Efsane"});
 
 Object.assign(window.ATLAS_UI,{"it_gallery": "Koleksiyon", "it_gallery_d": "Tüm simgeler, ifadeler ve totem kostümleri"});
+
+Object.assign(window.ATLAS_UI,{"it_makeovers": "Dün ve bugün", "it_makeovers_d": "Yenilenen şampiyonların eski ve yeni çizimleri"});

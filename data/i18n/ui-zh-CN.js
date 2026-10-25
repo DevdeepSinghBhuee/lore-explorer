@@ -9,3 +9,5 @@ Object.assign(window.ATLAS_UI,{"i_start": "开始输入以查看装备"});
 Object.assign(window.ATLAS_UI,{"it_tft": "云顶之弈", "it_tft_d": "每个赛季、棋子和小小英雄"});
 
 Object.assign(window.ATLAS_UI,{"it_gallery": "收藏馆", "it_gallery_d": "所有召唤师图标、表情和守卫皮肤"});
+
+Object.assign(window.ATLAS_UI,{"it_makeovers": "今昔对比", "it_makeovers_d": "重做英雄的新旧原画"});

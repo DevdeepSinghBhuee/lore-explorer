@@ -9,3 +9,5 @@ Object.assign(window.ATLAS_UI,{"i_start": "入力するとアイテムが表示�
 Object.assign(window.ATLAS_UI,{"it_tft": "チームファイト タクティクス", "it_tft_d": "全セット、ユニット、リトルレジェンド"});
 
 Object.assign(window.ATLAS_UI,{"it_gallery": "コレクション", "it_gallery_d": "すべてのアイコン、エモート、ワードスキン"});
+
+Object.assign(window.ATLAS_UI,{"it_makeovers": "今と昔", "it_makeovers_d": "リワークされたチャンピオンの新旧アート"});

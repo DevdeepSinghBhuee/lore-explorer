@@ -12,7 +12,7 @@
   var TRANSLATED={"index.html":1,"journey.html":1,"atlas.html":2,"skins.html":1,"timeline.html":1,"reading.html":1,"mine.html":1};   // 2 = partly   // pages whose own text is translated so far (the menu is translated everywhere)
   var GROUPS;
   function makeGroups(){GROUPS=[
-    {t:T("g_champions"),items:[["journey.html",T("it_journeys"),T("it_journeys_d")],["skins.html",T("it_skins"),T("it_skins_d")],["gallery.html",T("it_gallery"),T("it_gallery_d")],["timeline.html",T("it_timeline"),T("it_timeline_d")],["beyond.html",T("it_beyond"),T("it_beyond_d")]]},
+    {t:T("g_champions"),items:[["journey.html",T("it_journeys"),T("it_journeys_d")],["skins.html",T("it_skins"),T("it_skins_d")],["gallery.html",T("it_gallery"),T("it_gallery_d")],["makeovers.html",T("it_makeovers"),T("it_makeovers_d")],["timeline.html",T("it_timeline"),T("it_timeline_d")],["beyond.html",T("it_beyond"),T("it_beyond_d")]]},
     {t:T("g_lore"),items:[["atlas.html",T("it_atlas"),T("it_atlas_d")],["reading.html",T("it_reading"),T("it_reading_d")],["seasons.html",T("it_seasons"),T("it_seasons_d")]]},
     {t:T("g_play"),items:[["./",T("it_daily"),T("it_daily_d")],["rift.html",T("it_rift"),T("it_rift_d")],["items.html",T("it_items"),T("it_items_d")],["patches.html",T("it_patches"),T("it_patches_d")],["tft.html",T("it_tft"),T("it_tft_d")]]},
     {t:T("g_esports"),items:[["worlds.html",T("it_worlds"),T("it_worlds_d")],["players.html",T("it_players"),T("it_players_d")]]},

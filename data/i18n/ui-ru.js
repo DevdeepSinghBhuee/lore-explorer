@@ -9,3 +9,5 @@ Object.assign(window.ATLAS_UI,{"i_start": "Начните вводить, что
 Object.assign(window.ATLAS_UI,{"it_tft": "Teamfight Tactics", "it_tft_d": "Все сеты, юниты и Маленькие легенды"});
 
 Object.assign(window.ATLAS_UI,{"it_gallery": "Коллекция", "it_gallery_d": "Все иконки, эмоции и облики тотемов"});
+
+Object.assign(window.ATLAS_UI,{"it_makeovers": "Тогда и сейчас", "it_makeovers_d": "Старые и новые арты переработанных чемпионов"});

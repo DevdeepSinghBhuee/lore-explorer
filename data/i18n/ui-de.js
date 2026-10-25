@@ -9,3 +9,5 @@ Object.assign(window.ATLAS_UI,{"i_start": "Tippe, um Gegenstände zu sehen"});
 Object.assign(window.ATLAS_UI,{"it_tft": "Teamfight Tactics", "it_tft_d": "Jedes Set, jede Einheit, jede Kleine Legende"});
 
 Object.assign(window.ATLAS_UI,{"it_gallery": "Die Sammlung", "it_gallery_d": "Alle Symbole, Emotes und Augen-Skins"});
+
+Object.assign(window.ATLAS_UI,{"it_makeovers": "Damals & heute", "it_makeovers_d": "Alte und neue Bilder überarbeiteter Champions"});

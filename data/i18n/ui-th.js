@@ -9,3 +9,5 @@ Object.assign(window.ATLAS_UI,{"i_start": "เริ่มพิมพ์เพ�
 Object.assign(window.ATLAS_UI,{"it_tft": "Teamfight Tactics", "it_tft_d": "ทุกเซ็ต ยูนิต และ Little Legend"});
 
 Object.assign(window.ATLAS_UI,{"it_gallery": "คอลเลกชัน", "it_gallery_d": "ไอคอน อีโมต และสกินวอร์ดทั้งหมด"});
+
+Object.assign(window.ATLAS_UI,{"it_makeovers": "วันวานและวันนี้", "it_makeovers_d": "ภาพเก่าและใหม่ของแชมเปี้ยนที่ถูกปรับใหม่"});

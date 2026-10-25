@@ -9,3 +9,5 @@ Object.assign(window.ATLAS_UI,{"i_start": "Bắt đầu nhập để xem trang b
 Object.assign(window.ATLAS_UI,{"it_tft": "Đấu Trường Chân Lý", "it_tft_d": "Mọi mùa, tướng và Linh Thú"});
 
 Object.assign(window.ATLAS_UI,{"it_gallery": "Bộ sưu tập", "it_gallery_d": "Mọi biểu tượng, biểu cảm và trang phục mắt"});
+
+Object.assign(window.ATLAS_UI,{"it_makeovers": "Xưa và nay", "it_makeovers_d": "Hình cũ và mới của các tướng được làm lại"});

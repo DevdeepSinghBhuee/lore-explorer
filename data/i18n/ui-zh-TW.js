@@ -9,3 +9,5 @@ Object.assign(window.ATLAS_UI,{"i_start": "開始輸入以查看裝備"});
 Object.assign(window.ATLAS_UI,{"it_tft": "聯盟戰棋", "it_tft_d": "每個系列、棋子和小小英雄"});
 
 Object.assign(window.ATLAS_UI,{"it_gallery": "收藏館", "it_gallery_d": "所有召喚師頭像、表情與守衛造型"});
+
+Object.assign(window.ATLAS_UI,{"it_makeovers": "今昔對照", "it_makeovers_d": "重製英雄的新舊原畫"});
