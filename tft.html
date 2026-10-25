@@ -200,7 +200,8 @@ const seg=document.getElementById("lgf");seg.innerHTML=KIND.map(([k,l])=>`<butto
 seg.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;kind=b.dataset.k;sel=null;seg.querySelectorAll("button").forEach(o=>o.setAttribute("aria-pressed",String(o===b)));drawL();});
 const icon=v=>CD+v[2];
 function drawL(){const L=sp.filter(([n,v])=>v.t===kind).sort((a,b)=>a[0].localeCompare(b[0]));
-  document.getElementById("legends").innerHTML=L.map(([n,v])=>{const d=v.v.find(x=>x[3])||v.v[0];return `<button type="button" class="lg" data-n="${esc(n)}" aria-pressed="${n===sel}"><img src="${icon(d)}" alt="" loading="lazy"><span>${esc(n)}</span><small>${v.v.length}</small></button>`;}).join("");
+  // small copies of each species' first look are kept on this site; the full-size looks load only when a species is opened
+  document.getElementById("legends").innerHTML=L.map(([n,v])=>{return `<button type="button" class="lg" data-n="${esc(n)}" aria-pressed="${n===sel}"><img src="img/tft/ll/${n.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")}.webp" alt="" loading="lazy"><span>${esc(n)}</span><small>${v.v.length}</small></button>`;}).join("");
   const P=document.getElementById("lgp"),x=sel&&T.legends[sel];
   P.innerHTML=x?`<div class="lgpanel"><h4>${esc(sel)}</h4>${x.d?`<p>${esc(x.d)}</p>`:""}<div class="vars">${x.v.map(v=>`<div class="var" style="--rc:${RC[v[1]]||"var(--rule)"}"><img src="${icon(v)}" alt="" loading="lazy"><span>${esc(v[0])}</span><small>${esc(v[1])}</small></div>`).join("")}</div></div>`:"";}
 document.getElementById("legends").addEventListener("click",e=>{const b=e.target.closest(".lg");if(!b)return;sel=sel===b.dataset.n?null:b.dataset.n;drawL();if(sel)document.getElementById("lgp").scrollIntoView({behavior:"smooth",block:"nearest"});});
