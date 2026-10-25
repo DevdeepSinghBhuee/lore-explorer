@@ -26,6 +26,7 @@ PAGES=[ # file, art, title, tagline, focus x (0-1)
  ("riftbound",R+"img/scene/void.webp","Riftbound Gallery","Every card of League's trading card game",0.5),
  ("rift",R+"img/rift/baron-art.webp","The Rift","Dragons, Baron Nashor and every jungle camp on Summoner's Rift",0.55),
  ("tft",R+"img/scene/bandle.webp","Teamfight Tactics","Every set, unit and Little Legend",0.5),
+ ("gallery",R+"img/scene/piltover.webp","The Collection","Every profile icon, emote and ward skin",0.6),
  ("patches",R+"img/scene/zaun.webp","Patch Calendar","When the next League patch lands",0.5),
  ("items",R+"img/scene/piltover.webp","The Armory","Every item on Summoner's Rift and what it does",0.5),
  ("seasons",R+"img/seasons/s2026-1a.webp","The Seasons","Every season of League since 2009",0.62),

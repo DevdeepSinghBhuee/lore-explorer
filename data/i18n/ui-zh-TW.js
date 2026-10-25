@@ -7,3 +7,5 @@ Object.assign(window.ATLAS_UI,{"it_patches": "版本行事曆", "it_patches_d": 
 Object.assign(window.ATLAS_UI,{"m_quote": "台詞", "md_quote": "誰說的？他們自己的話", "m_item": "裝備", "md_item": "商店裡的一個模糊圖示", "how_quote": "<b>台詞：</b>閱讀英雄在自己語音中說的話（不會出現帶有自己名字的台詞）。每猜錯一次顯示一句新台詞；猜錯 4 次後顯示地區，6 次後顯示職業。", "how_item": "<b>裝備：</b>商店裡的一件傳說裝備或一雙鞋子，圖示模糊且為灰色。每猜錯一次圖示變清晰並增加線索：價格、一項屬性、全部屬性和效果。你的每次猜測都會顯示答案更貴（↑）還是更便宜（↓），以及相同屬性的數量。", "q_who": "誰說的？", "q_shown": "台詞：{a}/{b}", "q_next_after": "每猜錯一次多一句台詞", "q_hidden": "隱藏的台詞", "q_en": "台詞為英文，由英雄聯盟維基整理。", "i_which": "這是什麼裝備？", "i_cost": "價格 {n} 金幣", "i_gives": "屬性：{s}", "i_effect": "效果：{e}", "i_clue_after": "第 {n} 次猜錯後的線索", "i_placeholder": "輸入裝備名稱…", "i_more": "答案更貴", "i_less": "答案更便宜", "i_same": "價格相同", "i_shared": "相同屬性：{n}", "i_legend": "數字是你猜的裝備價格：↑ 答案更貴，↓ 更便宜，金色邊框表示相差 300 金幣以內。", "i_gold": "金幣", "i_armory": "在軍械庫中查看", "intro": "每天找出十位英雄聯盟英雄和一件裝備：線索、放大的原畫、技能圖示、背景故事、五句語音、他們自己的台詞，還有一件商店裝備。所有人同一套謎題，免費，無需註冊。"});
 Object.assign(window.ATLAS_UI,{"i_start": "開始輸入以查看裝備"});
 Object.assign(window.ATLAS_UI,{"it_tft": "聯盟戰棋", "it_tft_d": "每個系列、棋子和小小英雄"});
+
+Object.assign(window.ATLAS_UI,{"it_gallery": "收藏館", "it_gallery_d": "所有召喚師頭像、表情與守衛造型"});

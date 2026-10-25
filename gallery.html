@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<script src="i18n.js"></script>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>The Collection · Every icon, emote and ward skin</title>
+<meta name="description" content="Every League of Legends profile icon, emote and ward skin from the game client: 5,202 icons, 2,430 emotes and 266 wards, searchable by name, year, set and champion.">
+<link rel="canonical" href="https://devdeepsinghbhuee.github.io/lore-explorer/gallery.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Lore Explorer">
+<meta property="og:title" content="The Collection">
+<meta property="og:description" content="Every League profile icon, emote and ward skin, searchable.">
+<meta property="og:url" content="https://devdeepsinghbhuee.github.io/lore-explorer/gallery.html">
+<meta property="og:image" content="https://devdeepsinghbhuee.github.io/lore-explorer/img/og/gallery.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Collection: every League icon, emote and ward skin.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#080d18">
+<link rel="icon" href="img/icon.svg" type="image/svg+xml">
+<link rel="icon" href="img/icon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="img/icon-180.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus+SC&family=Alegreya:ital,wght@0,400;0,500;0,700;1,400&family=Spline+Sans+Mono:wght@400;500&family=Teko:wght@400;500;600&display=swap">
+<style>
+/* Layout: a collector's binder. Three tabs (icons, emotes, wards), filters, a paged grid (120 at a time) and a dialog with the big picture and Riot's description. Shares the Atlas tokens. */
+:root{
+  color-scheme:dark;
+  --ink:#080d18; --panel:#0f1a2e; --panel-2:#142238;
+  --gold:#c8aa6e; --gold-dim:#7d6a45; --text:#ebe4d3; --muted:#939bb0; --faint:#5b6580;
+  --rule:rgba(200,170,110,.22);
+  --void:#b07ce8; --blueside:#5aa8ff; --redside:#ff6f5e;
+  --f-display:"Marcellus SC","Cinzel",Georgia,serif;
+  --f-body:"Alegreya",Georgia,"Times New Roman",serif;
+  --f-mono:"Spline Sans Mono",ui-monospace,Menlo,monospace;
+  --f-num:"Teko","Oxanium",var(--f-display),sans-serif;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box}
+html{scroll-padding-top:16px}
+body{margin:0;background:var(--ink);color:var(--text);font-family:var(--f-body);font-size:18px;line-height:1.55;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+img{max-width:100%}
+[hidden]{display:none!important}
+a{color:var(--gold)}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+.wrap{max-width:1240px;margin-inline:auto}
+
+.bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:18px;border-bottom:1px solid var(--rule);flex-wrap:wrap}
+.brand{font-family:var(--f-display);font-size:20px;letter-spacing:.08em;color:var(--gold);display:flex;align-items:center;gap:10px;text-decoration:none}
+.brand svg{width:26px;height:26px}
+.nav{display:flex;gap:4px;flex-wrap:wrap}
+.nav a{font-family:var(--f-mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-decoration:none;padding:7px 12px}
+
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+.intro{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;padding-block:34px 24px}
+h1{font-family:var(--f-display);font-weight:400;font-size:clamp(40px,6vw,78px);line-height:.95;margin:12px 0 14px;text-wrap:balance}
+h1 em{font-style:normal;color:var(--gold)}
+.lede{font-size:19px;max-width:50ch;margin:0;color:#c4c8d3}
+.counts{display:flex;gap:22px;flex-wrap:wrap}
+.counts div b{display:block;font-family:var(--f-num);font-weight:600;font-size:40px;line-height:.9;color:var(--gold);font-variant-numeric:tabular-nums}
+.counts div span{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+
+
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.tabs button{border:1px solid var(--rule);background:transparent;padding:9px 14px;cursor:pointer;font-family:var(--f-display);font-size:19px;color:var(--muted)}
+.tabs button small{font-family:var(--f-num);font-size:17px;margin-left:6px;color:var(--faint)}
+.tabs button[aria-pressed="true"]{border-color:var(--gold);color:var(--text);background:rgba(200,170,110,.1)}
+.tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+.tools input,.tools select{background:#0a1222;border:1px solid var(--rule);color:var(--text);font:inherit;font-size:16px;padding:8px 10px;min-width:0}
+.tools input{flex:1 1 220px}
+.tools label{display:inline-flex;align-items:center;gap:6px;font-size:15px;color:var(--muted)}
+.res{font-family:var(--f-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+.grid{display:grid;gap:8px;align-items:start}
+.grid.icons{grid-template-columns:repeat(auto-fill,minmax(96px,1fr))}
+.grid.emotes{grid-template-columns:repeat(auto-fill,minmax(112px,1fr))}
+.grid.wards{grid-template-columns:repeat(auto-fill,minmax(130px,1fr))}
+.g{border:1px solid var(--rule);background:#0d1729;padding:0;cursor:pointer;text-align:left;min-width:0;color:var(--text)}
+.g:hover{border-color:var(--gold-dim)}
+.g .p{aspect-ratio:1;background:#05080f;display:grid;place-items:center;overflow:hidden}
+.wards .g .p{aspect-ratio:460/550}
+.g .p img{width:100%;height:100%;object-fit:contain;display:block}
+.g span{display:block;padding:5px 6px 6px;font-size:13px;line-height:1.25;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.g small{display:block;padding:0 6px 6px;margin-top:-3px;font-family:var(--f-num);font-size:14px;color:var(--muted)}
+.more{display:block;margin:16px auto 0;border:1px solid var(--rule);background:transparent;color:var(--text);font-family:var(--f-mono);font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;padding:11px 18px;cursor:pointer}
+.more:hover{border-color:var(--gold)}
+.empty{color:var(--muted)}
+dialog.zoom{border:1px solid var(--rule);background:linear-gradient(180deg,var(--panel),#0b1426);color:var(--text);padding:0;width:min(92vw,560px)}
+dialog.zoom::backdrop{background:rgba(3,6,12,.86)}
+dialog.zoom .p{background:#05080f;display:grid;place-items:center;padding:16px}
+dialog.zoom .p img{max-width:100%;max-height:52vh;display:block}
+dialog.zoom .b{padding:16px 18px 18px}
+dialog.zoom .k{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+dialog.zoom h2{font-family:var(--f-display);font-weight:400;font-size:26px;line-height:1.1;margin:4px 0 8px}
+dialog.zoom p{margin:0 0 8px;color:#d6d3c8}
+dialog.zoom .chips{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+dialog.zoom .chips a,dialog.zoom .chips button{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--rule);background:#0d1729;padding:3px 9px 3px 3px;font-size:14px;color:var(--text);text-decoration:none;cursor:pointer}
+dialog.zoom .chips img{width:26px;height:26px}
+dialog.zoom .chips button{padding:5px 10px}
+dialog.zoom .x{float:right;border:1px solid var(--rule);background:transparent;color:var(--text);font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:7px 11px;cursor:pointer}
+footer{border-top:1px solid var(--rule);margin-top:48px;padding-block:24px 40px;color:var(--muted);font-size:14px;display:grid;gap:8px}
+footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width:80ch}
+@media (max-width:480px){.grid.icons{grid-template-columns:repeat(4,minmax(0,1fr))}.grid.emotes{grid-template-columns:repeat(3,minmax(0,1fr))}.grid.wards{grid-template-columns:repeat(3,minmax(0,1fr))}.g span{font-size:12px}.counts{gap:16px}.counts div b{font-size:34px}}
+</style>
+<script src="site.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header class="bar">
+    <a class="brand" href="./">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><polygon points="16,2 29,9.5 29,22.5 16,30 3,22.5 3,9.5" fill="none" stroke="#c8aa6e" stroke-width="1.5"/><circle cx="16" cy="16" r="5" fill="none" stroke="#c8aa6e" stroke-width="1.5"/><path d="M16 2v9M16 21v9M3 9.5l8 4.5M21 18l8 4.5M29 9.5l-8 4.5M11 18l-8 4.5" stroke="#c8aa6e" stroke-width="1"/></svg>
+      Lore Explorer
+    </a>
+    <nav class="nav" aria-label="Site"><a href="./">Daily</a><a href="skins.html">Skins</a><a href="gallery.html" aria-current="page">The Collection</a></nav>
+  </header>
+
+  <section class="intro">
+    <div>
+      <div class="eyebrow">From the game client</div>
+      <h1>Every icon, emote <em>and ward.</em></h1>
+      <p class="lede">The little things you collect in League: profile icons since 2009, the emotes you spam after a kill, and the ward skins you drop in the bushes. Search them, filter them, tap one for the big picture and Riot's description.</p>
+    </div>
+    <div class="counts" id="counts"></div>
+  </section>
+
+  <div class="tabs" id="tabs" role="tablist" aria-label="Collection"></div>
+  <div class="tools" id="tools"></div>
+  <p class="res" id="res"></p>
+  <div class="grid" id="grid"></div>
+  <button type="button" class="more" id="more" hidden>Show more</button>
+
+  <dialog class="zoom" id="zoom"></dialog>
+
+  <footer>
+    <div>Everything here comes from Riot's League client data as published by CommunityDragon (profile icons, icon sets, emotes and ward skins, with Riot's names and descriptions). Saved 25 October 2026.</div>
+    <div class="legal">Lore Explorer was created under Riot Games' "Legal Jibber Jabber" policy using assets owned by Riot Games. Riot Games does not endorse or sponsor this project.</div>
+  </footer>
+</div>
+
+<script src="data/champions.js"></script>
+<script src="data/gallery.js"></script>
+<script>
+(function(){
+"use strict";
+const G=window.ATLAS_GALLERY, CH=Object.fromEntries((window.ATLAS_CHAMPS||[]).map(c=>[c.id,c]));
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const CD="https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/";
+const ICON=i=>CD+(i[7]||`v1/profile-icons/${i[0]}.jpg`), WARD=w=>CD+(w[4]||`content/src/leagueclient/wardskinimages/wardhero_${w[0]}.png`), EMO=e=>CD+e[2];
+const setOf={};G.sets.forEach(([n,ids])=>ids.forEach(id=>(setOf[id]=setOf[id]||[]).push(n)));
+const norm=s=>String(s).normalize("NFD").replace(/\p{M}/gu,"").toLowerCase();
+document.getElementById("counts").innerHTML=[[G.icons.length,"profile icons"],[G.emotes.length,"emotes"],[G.wards.length,"ward skins"],[G.sets.length,"icon sets"]].map(([b,s])=>`<div><b>${b.toLocaleString("en")}</b><span>${s}</span></div>`).join("");
+const TABS=[["icons","Icons",G.icons.length],["emotes","Emotes",G.emotes.length],["wards","Wards",G.wards.length]];
+let tab="icons",st={q:"",year:"",set:"",esports:false,game:"",champ:"",legacy:false},shown=120;
+const years=[...new Set(G.icons.map(i=>i[2]).filter(Boolean))].sort((a,b)=>b-a);
+function tools(){const T=document.getElementById("tools");
+  if(tab==="icons")T.innerHTML=`<input id="q" type="search" placeholder="Search icons, e.g. Poro or T1" value="${esc(st.q)}" aria-label="Search"><select id="year" aria-label="Year"><option value="">Every year</option>${years.map(y=>`<option${String(y)===st.year?" selected":""}>${y}</option>`).join("")}</select><select id="set" aria-label="Set"><option value="">Every set</option>${G.sets.map(s=>s[0]).sort((a,b)=>a.localeCompare(b)).map(n=>`<option${n===st.set?" selected":""}>${esc(n)}</option>`).join("")}</select><label><input type="checkbox" id="esports"${st.esports?" checked":""}> Esports teams only</label>`;
+  else if(tab==="emotes")T.innerHTML=`<input id="q" type="search" placeholder="Search emotes or a champion, e.g. Teemo" value="${esc(st.q)}" aria-label="Search"><select id="game" aria-label="Game"><option value="">League and TFT</option><option value="lol"${st.game==="lol"?" selected":""}>League only</option><option value="tft"${st.game==="tft"?" selected":""}>TFT only</option></select>`;
+  else T.innerHTML=`<input id="q" type="search" placeholder="Search ward skins" value="${esc(st.q)}" aria-label="Search"><label><input type="checkbox" id="legacy"${st.legacy?" checked":""}> Legacy only</label>`;
+  const on=(id,ev,f)=>{const el=document.getElementById(id);if(el)el.addEventListener(ev,f);};
+  on("q","input",e=>{st.q=e.target.value.trim();shown=120;draw();});on("year","change",e=>{st.year=e.target.value;shown=120;draw();});on("set","change",e=>{st.set=e.target.value;shown=120;draw();});
+  on("esports","change",e=>{st.esports=e.target.checked;shown=120;draw();});on("game","change",e=>{st.game=e.target.value;shown=120;draw();});on("legacy","change",e=>{st.legacy=e.target.checked;shown=120;draw();});}
+function list(){const q=norm(st.q);
+  if(tab==="icons")return G.icons.filter(i=>(!st.year||String(i[2])===st.year)&&(!st.set||(setOf[i[0]]||[]).includes(st.set))&&(!st.esports||i[5])&&(!q||norm(i[1]+" "+i[5]+" "+i[6]).includes(q))).sort((a,b)=>(b[2]-a[2])||(b[0]-a[0]));
+  if(tab==="emotes")return G.emotes.filter(e=>{const tft=/\/tft\//.test(e[2]);if(st.game==="tft"&&!tft||st.game==="lol"&&tft)return false;return !q||norm(e[1]+" "+e[3].map(id=>CH[id]?CH[id].name:"").join(" ")).includes(q);}).sort((a,b)=>b[0]-a[0]);
+  return G.wards.filter(w=>(!st.legacy||w[3])&&(!q||norm(w[1]).includes(q))).sort((a,b)=>b[0]-a[0]);}
+function card(x){if(tab==="icons")return `<button type="button" class="g" data-id="${x[0]}"><div class="p"><img src="${ICON(x)}" alt="" loading="lazy"></div><span>${esc(x[1])}</span>${x[2]?`<small>${x[2]}</small>`:""}</button>`;
+  if(tab==="emotes")return `<button type="button" class="g" data-id="${x[0]}"><div class="p"><img src="${EMO(x)}" alt="" loading="lazy"></div><span>${esc(x[1])}</span></button>`;
+  return `<button type="button" class="g" data-id="${x[0]}"><div class="p"><img src="${WARD(x)}" alt="" loading="lazy"></div><span>${esc(x[1])}</span></button>`;}
+let L=[];
+function draw(){L=list();const g=document.getElementById("grid");g.className="grid "+tab;
+  document.getElementById("res").textContent=`${L.length.toLocaleString("en")} ${tab==="icons"?"icons":tab==="emotes"?"emotes":"ward skins"}${L.length>shown?` · showing ${shown}`:""}`;
+  g.innerHTML=L.length?L.slice(0,shown).map(card).join(""):`<p class="empty">Nothing matches. Try another word.</p>`;
+  document.getElementById("more").hidden=L.length<=shown;}
+document.getElementById("more").onclick=()=>{shown+=120;draw();};
+const tb=document.getElementById("tabs");tb.innerHTML=TABS.map(([k,l,n])=>`<button type="button" role="tab" data-t="${k}" aria-pressed="${k===tab}">${l}<small>${n.toLocaleString("en")}</small></button>`).join("");
+function setTab(k,keep){tab=k;if(!keep)st={q:"",year:"",set:"",esports:false,game:"",champ:"",legacy:false};shown=120;tb.querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.t===k)));tools();draw();}
+tb.addEventListener("click",e=>{const b=e.target.closest("button");if(b)setTab(b.dataset.t);});
+// the big picture
+const Z=document.getElementById("zoom");
+function open(kind,id){let x,html;
+  if(kind==="icons"){x=G.icons.find(i=>i[0]===+id);if(!x)return;const sets=setOf[x[0]]||[],d=G.desc[x[4]];
+    html=`<div class="p"><img src="${ICON(x)}" alt="" style="width:256px;image-rendering:auto"></div><div class="b"><button class="x" type="button">Close</button><div class="k">Profile icon${x[2]?` · ${x[2]}`:""}${x[3]?" · legacy":""}</div><h2>${esc(x[1])}</h2>${d?`<p>${esc(d)}</p>`:""}${x[5]?`<p>${esc(x[5])}${x[6]?` · ${esc(x[6])}`:""}</p>`:""}${sets.length?`<div class="chips">${sets.map(s=>`<button type="button" data-set="${esc(s)}">Set: ${esc(s)}</button>`).join("")}</div>`:""}</div>`;}
+  else if(kind==="emotes"){x=G.emotes.find(e=>e[0]===+id);if(!x)return;
+    html=`<div class="p"><img src="${EMO(x)}" alt="" style="width:256px"></div><div class="b"><button class="x" type="button">Close</button><div class="k">Emote · ${/\/tft\//.test(x[2])?"Teamfight Tactics":"League of Legends"}</div><h2>${esc(x[1])}</h2>${x[4]?`<p>${esc(x[4])}</p>`:""}${x[3].length?`<div class="chips">${x[3].filter(c=>CH[c]).map(c=>`<a href="journey.html?c=${c}"><img src="img/${c}-tile.webp" alt="">${esc(CH[c].name)}</a>`).join("")}</div>`:""}</div>`;}
+  else{x=G.wards.find(w=>w[0]===+id);if(!x)return;
+    html=`<div class="p"><img src="${WARD(x)}" alt=""></div><div class="b"><button class="x" type="button">Close</button><div class="k">Ward skin${x[3]?" · legacy":""}</div><h2>${esc(x[1])}</h2>${x[2]?`<p>${esc(x[2])}</p>`:""}</div>`;}
+  Z.innerHTML=html;Z.showModal();try{history.replaceState(null,"",`#${kind.slice(0,-1)}-${id}`);}catch(e){}}
+document.getElementById("grid").addEventListener("click",e=>{const b=e.target.closest(".g");if(b)open(tab,b.dataset.id);});
+Z.addEventListener("click",e=>{if(e.target===Z||e.target.closest(".x")){Z.close();return;}const s=e.target.closest("[data-set]");if(s){Z.close();setTab("icons");st.set=s.dataset.set;tools();draw();window.scrollTo({top:document.getElementById("tabs").offsetTop-10,behavior:"smooth"});}});
+Z.addEventListener("close",()=>{try{history.replaceState(null,"",location.pathname+"#"+tab);}catch(e){}});
+// start: #icons|#emotes|#wards or a deep link like #icon-4568
+const h=location.hash.slice(1),m=h.match(/^(icon|emote|ward)-(\d+)$/);
+setTab(m?m[1]+"s":(["icons","emotes","wards"].includes(h)?h:"icons"));if(m)open(m[1]+"s",m[2]);
+})();
+</script>
+</body>
+</html>
