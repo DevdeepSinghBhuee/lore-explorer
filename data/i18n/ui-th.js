@@ -3,3 +3,4 @@ Object.assign(window.ATLAS_UI,{"it_beyond": "นอกสนามรบ", "it_b
 Object.assign(window.ATLAS_UI,{"it_seasons": "ซีซั่น", "it_seasons_d": "ทุกซีซั่นตั้งแต่ปี 2009: ธีม สกิน และซีเนมาติก"});
 Object.assign(window.ATLAS_UI,{"it_items": "คลังอาวุธ", "it_items_d": "ไอเทมทั้งหมดใน Summoner's Rift"});
 Object.assign(window.ATLAS_UI,{"j_talk": "บทสนทนา", "j_talk_sub": "แชมเปี้ยนที่พูดคุยด้วย: {n}", "ix_title": "บทสนทนา", "ix_en": "บทพูดเป็นภาษาอังกฤษ ถอดความโดย League of Legends Wiki", "ix_more": "แสดงทั้งหมด"});
+Object.assign(window.ATLAS_UI,{"it_patches": "ปฏิทินแพตช์", "it_patches_d": "แพตช์ถัดไปมาเมื่อไร"});

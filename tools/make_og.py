@@ -25,6 +25,7 @@ PAGES=[ # file, art, title, tagline, focus x (0-1)
  ("library",R+"img/scene/freljord.webp","Runeterra Cards","Every Legends of Runeterra card and its lore",0.5),
  ("riftbound",R+"img/scene/void.webp","Riftbound Gallery","Every card of League's trading card game",0.5),
  ("rift",R+"img/rift/baron-art.webp","The Rift","Dragons, Baron Nashor and every jungle camp on Summoner's Rift",0.55),
+ ("patches",R+"img/scene/zaun.webp","Patch Calendar","When the next League patch lands",0.5),
  ("items",R+"img/scene/piltover.webp","The Armory","Every item on Summoner's Rift and what it does",0.5),
  ("seasons",R+"img/seasons/s2026-1a.webp","The Seasons","Every season of League since 2009",0.62),
  ("beyond",R+"img/beyond/2xko.webp","Beyond the Rift","Every champion in Riot's other games and shows",0.62),

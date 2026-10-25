@@ -3,3 +3,4 @@ Object.assign(window.ATLAS_UI,{"it_beyond": "Oltre la Landa", "it_beyond_d": "I 
 Object.assign(window.ATLAS_UI,{"it_seasons": "Le stagioni", "it_seasons_d": "Ogni stagione dal 2009: temi, skin, cinematiche"});
 Object.assign(window.ATLAS_UI,{"it_items": "L'armeria", "it_items_d": "Tutti gli oggetti della Landa degli Evocatori"});
 Object.assign(window.ATLAS_UI,{"j_talk": "Conversazioni", "j_talk_sub": "Campioni con cui parla: {n}", "ix_title": "Conversazioni", "ix_en": "Le battute sono in inglese, trascritte dalla League of Legends Wiki.", "ix_more": "Mostra tutto"});
+Object.assign(window.ATLAS_UI,{"it_patches": "Calendario delle patch", "it_patches_d": "Quando arriva la prossima patch"});

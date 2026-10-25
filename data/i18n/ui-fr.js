@@ -3,3 +3,4 @@ Object.assign(window.ATLAS_UI,{"it_beyond": "Au-delà de la Faille", "it_beyond_
 Object.assign(window.ATLAS_UI,{"it_seasons": "Les saisons", "it_seasons_d": "Toutes les saisons depuis 2009 : thèmes, skins, cinématiques"});
 Object.assign(window.ATLAS_UI,{"it_items": "L'armurerie", "it_items_d": "Tous les objets de la Faille de l'invocateur"});
 Object.assign(window.ATLAS_UI,{"j_talk": "Conversations", "j_talk_sub": "Champions concernés : {n}", "ix_title": "Conversations", "ix_en": "Les répliques sont en anglais, transcrites par le League of Legends Wiki.", "ix_more": "Tout afficher"});
+Object.assign(window.ATLAS_UI,{"it_patches": "Calendrier des patchs", "it_patches_d": "Quand arrive le prochain patch"});

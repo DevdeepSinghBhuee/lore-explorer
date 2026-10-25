@@ -3,3 +3,4 @@ Object.assign(window.ATLAS_UI,{"it_beyond": "峡谷之外", "it_beyond_d": "拳�
 Object.assign(window.ATLAS_UI,{"it_seasons": "赛季", "it_seasons_d": "2009 年以来的每个赛季：主题、皮肤、动画"});
 Object.assign(window.ATLAS_UI,{"it_items": "军械库", "it_items_d": "召唤师峡谷的所有装备"});
 Object.assign(window.ATLAS_UI,{"j_talk": "对话", "j_talk_sub": "对话的英雄：{n} 位", "ix_title": "对话", "ix_en": "台词为英文，由英雄联盟维基整理。", "ix_more": "显示全部"});
+Object.assign(window.ATLAS_UI,{"it_patches": "版本日历", "it_patches_d": "下一个版本何时上线"});

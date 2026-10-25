@@ -3,3 +3,4 @@ Object.assign(window.ATLAS_UI,{"it_beyond": "Di Luar Rift", "it_beyond_d": "Cham
 Object.assign(window.ATLAS_UI,{"it_seasons": "Musim", "it_seasons_d": "Setiap musim sejak 2009: tema, skin, sinematik"});
 Object.assign(window.ATLAS_UI,{"it_items": "Gudang Senjata", "it_items_d": "Semua item di Summoner's Rift"});
 Object.assign(window.ATLAS_UI,{"j_talk": "Percakapan", "j_talk_sub": "Champion yang diajak bicara: {n}", "ix_title": "Percakapan", "ix_en": "Dialog dalam bahasa Inggris, ditranskripsi oleh League of Legends Wiki.", "ix_more": "Lihat semua"});
+Object.assign(window.ATLAS_UI,{"it_patches": "Kalender patch", "it_patches_d": "Kapan patch berikutnya rilis"});

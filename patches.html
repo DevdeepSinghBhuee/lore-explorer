@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<script src="i18n.js"></script>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Patch Calendar · League of Legends 2026 patches</title>
+<meta name="description" content="When the next League of Legends patch arrives, and every 2026 patch with its date, Riot's tagline and a link to the official patch notes.">
+<link rel="canonical" href="https://devdeepsinghbhuee.github.io/lore-explorer/patches.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Lore Explorer">
+<meta property="og:title" content="Patch Calendar">
+<meta property="og:description" content="A countdown to the next League patch and every 2026 patch with its notes.">
+<meta property="og:url" content="https://devdeepsinghbhuee.github.io/lore-explorer/patches.html">
+<meta property="og:image" content="https://devdeepsinghbhuee.github.io/lore-explorer/img/og/patches.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Patch Calendar: every League of Legends patch of 2026.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#080d18">
+<link rel="icon" href="img/icon.svg" type="image/svg+xml">
+<link rel="icon" href="img/icon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="img/icon-180.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus+SC&family=Alegreya:ital,wght@0,400;0,500;0,700;1,400&family=Spline+Sans+Mono:wght@400;500&family=Teko:wght@400;500;600&display=swap">
+<style>
+/* Layout: a calendar. A countdown card for the next patch beside the latest patch, then the year as a list of patch rows grouped by season. Shares the Atlas tokens. */
+:root{
+  color-scheme:dark;
+  --ink:#080d18; --panel:#0f1a2e; --panel-2:#142238;
+  --gold:#c8aa6e; --gold-dim:#7d6a45; --text:#ebe4d3; --muted:#939bb0; --faint:#5b6580;
+  --rule:rgba(200,170,110,.22);
+  --void:#b07ce8; --blueside:#5aa8ff; --redside:#ff6f5e;
+  --f-display:"Marcellus SC","Cinzel",Georgia,serif;
+  --f-body:"Alegreya",Georgia,"Times New Roman",serif;
+  --f-mono:"Spline Sans Mono",ui-monospace,Menlo,monospace;
+  --f-num:"Teko","Oxanium",var(--f-display),sans-serif;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box}
+html{scroll-padding-top:16px}
+body{margin:0;background:var(--ink);color:var(--text);font-family:var(--f-body);font-size:18px;line-height:1.55;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+img{max-width:100%}
+[hidden]{display:none!important}
+a{color:var(--gold)}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+.wrap{max-width:1240px;margin-inline:auto}
+
+.bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:18px;border-bottom:1px solid var(--rule);flex-wrap:wrap}
+.brand{font-family:var(--f-display);font-size:20px;letter-spacing:.08em;color:var(--gold);display:flex;align-items:center;gap:10px;text-decoration:none}
+.brand svg{width:26px;height:26px}
+.nav{display:flex;gap:4px;flex-wrap:wrap}
+.nav a{font-family:var(--f-mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-decoration:none;padding:7px 12px}
+
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+.intro{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;padding-block:34px 24px}
+h1{font-family:var(--f-display);font-weight:400;font-size:clamp(40px,6vw,78px);line-height:.95;margin:12px 0 14px;text-wrap:balance}
+h1 em{font-style:normal;color:var(--gold)}
+.lede{font-size:19px;max-width:50ch;margin:0;color:#c4c8d3}
+.counts{display:flex;gap:22px;flex-wrap:wrap}
+.counts div b{display:block;font-family:var(--f-num);font-weight:600;font-size:40px;line-height:.9;color:var(--gold);font-variant-numeric:tabular-nums}
+.counts div span{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+
+
+.top{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:18px;align-items:stretch}
+.next{border:1px solid var(--gold);background:linear-gradient(160deg,#16243d,#0b1426);padding:24px;display:grid;align-content:center;gap:6px}
+.next .k{font-family:var(--f-mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
+.next .p{font-family:var(--f-num);font-size:96px;line-height:.8;color:var(--text);font-variant-numeric:tabular-nums}
+.next .when{font-size:20px;color:#d6d3c8}
+.next .cd{display:flex;gap:18px;margin-top:10px}
+.next .cd div b{display:block;font-family:var(--f-num);font-weight:600;font-size:46px;line-height:.9;color:var(--gold);font-variant-numeric:tabular-nums}
+.next .cd div span{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.next .fine{margin:10px 0 0;font-size:14px;color:var(--muted)}
+.latest{position:relative;border:1px solid var(--rule);overflow:hidden;min-height:300px;display:grid;align-content:end;text-decoration:none;color:var(--text);background:#05080f}
+.latest img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.latest::after{content:"";position:absolute;inset:0;background:linear-gradient(transparent 30%,rgba(8,13,24,.95))}
+.latest .t{position:relative;z-index:1;padding:20px 22px}
+.latest .k{font-family:var(--f-mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
+.latest b{display:block;font-family:var(--f-display);font-weight:400;font-size:34px;line-height:1.05;margin:4px 0}
+.latest p{margin:0;color:#d6d3c8}
+.latest:hover{border-color:var(--gold)}
+h3.sec{font-family:var(--f-display);font-weight:400;font-size:clamp(28px,3vw,38px);margin:52px 0 4px}
+.sub{margin:0 0 18px;color:var(--muted);max-width:70ch}
+.sgrp{margin-bottom:20px}
+.sgrp h4{font-family:var(--f-mono);font-weight:400;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin:0 0 8px}
+.rows{display:grid;gap:6px}
+.row{display:grid;grid-template-columns:96px 150px minmax(0,1fr) 120px;gap:16px;align-items:center;border:1px solid var(--rule);background:var(--panel);padding:8px 12px 8px 8px;text-decoration:none;color:var(--text);min-width:0}
+a.row:hover{border-color:var(--gold)}
+.row.future{background:transparent;border-style:dashed}
+.row.cur{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold)}
+.row .pn{font-family:var(--f-num);font-size:34px;line-height:1;color:var(--gold);text-align:center}
+.row .th{aspect-ratio:16/9;background:#05080f center/cover;border:1px solid var(--rule)}
+.row .th.none{display:grid;place-items:center;font-family:var(--f-mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}
+.row .d{font-size:15px;color:var(--muted)}.row .d b{display:block;color:var(--text);font-weight:500;font-size:17px}
+.row .tg{margin:2px 0 0;font-size:15.5px;color:#d6d3c8}
+.row .go{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);text-align:right}
+.row.future .go{color:var(--faint)}
+footer{border-top:1px solid var(--rule);margin-top:48px;padding-block:24px 40px;color:var(--muted);font-size:14px;display:grid;gap:8px}
+footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width:80ch}
+@media (max-width:900px){.top{grid-template-columns:minmax(0,1fr)}.row{grid-template-columns:64px minmax(0,1fr) auto}.row .th{display:none}.row .pn{font-size:28px}}
+@media (max-width:480px){.next .p{font-size:76px}.next .cd div b{font-size:38px}.row .go{display:none}.row{grid-template-columns:58px minmax(0,1fr)}}
+</style>
+<script src="site.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header class="bar">
+    <a class="brand" href="./">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><polygon points="16,2 29,9.5 29,22.5 16,30 3,22.5 3,9.5" fill="none" stroke="#c8aa6e" stroke-width="1.5"/><circle cx="16" cy="16" r="5" fill="none" stroke="#c8aa6e" stroke-width="1.5"/><path d="M16 2v9M16 21v9M3 9.5l8 4.5M21 18l8 4.5M29 9.5l-8 4.5M11 18l-8 4.5" stroke="#c8aa6e" stroke-width="1"/></svg>
+      Lore Explorer
+    </a>
+    <nav class="nav" aria-label="Site"><a href="./">Daily</a><a href="items.html">The Armory</a><a href="patches.html" aria-current="page">Patches</a></nav>
+  </header>
+
+  <section class="intro">
+    <div>
+      <div class="eyebrow">League of Legends · 2026</div>
+      <h1>The patch <em>calendar.</em></h1>
+      <p class="lede">League updates about every two weeks. Here is when the next patch lands, the latest one, and every patch of the year with Riot's notes.</p>
+    </div>
+  </section>
+
+  <section class="top" id="top"></section>
+
+  <h3 class="sec">Every patch of 2026</h3>
+  <p class="sub">Dates are Riot's schedule (Pacific Time), and Riot says they can move, so check the official page a day or two before. Tap a patch to read its notes on leagueoflegends.com.</p>
+  <div id="list"></div>
+
+  <footer>
+    <div>Schedule from Riot's <a href="https://support.riotgames.com/league-of-legends/gameplay/patch-schedule-league-of-legends" rel="noopener">Patch Schedule</a> support page; taglines, art and notes from <a href="https://www.leagueoflegends.com/en-us/news/tags/patch-notes/" rel="noopener">League of Legends patch notes</a>. Saved 25 October 2026.</div>
+    <div class="legal">Lore Explorer was created under Riot Games' "Legal Jibber Jabber" policy using assets owned by Riot Games. Riot Games does not endorse or sponsor this project.</div>
+  </footer>
+</div>
+
+<script src="data/patches.js"></script>
+<script src="data/seasons.js"></script>
+<script>
+(function(){
+"use strict";
+const P=window.ATLAS_PATCHES, S=(window.ATLAS_SEASONS||{}).themed||[];
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const ART=f=>`https://cmsassets.rgpub.io/sanity/images/dsfx7636/news_live/${f}?w=720&fm=webp`;
+const day=d=>new Date(d+"T12:00:00");
+const long=d=>day(d).toLocaleDateString(undefined,{weekday:"long",day:"numeric",month:"long"});
+const short=d=>day(d).toLocaleDateString(undefined,{day:"numeric",month:"short"});
+const wd=d=>day(d).toLocaleDateString(undefined,{weekday:"long"});
+// today in Pacific Time, since Riot's dates are Pacific
+const ptToday=new Intl.DateTimeFormat("en-CA",{timeZone:"America/Los_Angeles",year:"numeric",month:"2-digit",day:"2-digit"}).format(new Date());
+const next=P.find(p=>p[1]>ptToday)||null, today=P.find(p=>p[1]===ptToday)||null, latest=[...P].reverse().find(p=>p[1]<=ptToday&&p[2]);
+const seasonOf=d=>{for(const s of S){if(d>=s.acts[0].start&&d<s.end){let a=s.acts.length-1;while(a>0&&d<s.acts[a].start)a--;return `${s.name} · ${s.acts[a].act}`;}}return "";};
+function cd(){if(!next)return "";const diff=day(next[1])-day(ptToday),d=Math.round(diff/864e5);return d;}
+const top=document.getElementById("top");
+const d=cd();
+top.innerHTML=`<div class="next">${today?`<div class="k">Out today</div><div class="p">${today[0]}</div><div class="when">${esc(long(today[1]))} (Pacific Time)</div>`:
+  next?`<div class="k">Next patch</div><div class="p">${next[0]}</div><div class="when">${esc(long(next[1]))} (Pacific Time)</div>
+  <div class="cd"><div><b>${d}</b><span>${d===1?"day":"days"} to go</span></div><div><b>${P.filter(p=>p[1]>ptToday).length}</b><span>left this year</span></div></div>`:`<div class="k">That's the year</div><div class="p">2026</div><div class="when">Riot hasn't published 2027 dates yet.</div>`}
+  <p class="fine">${next?`${esc(seasonOf(next[1]))}. `:""}Riot says dates can change; delays within 48 hours are flagged on its schedule page.</p></div>
+  ${latest?`<a class="latest" href="${esc(latest[2])}" target="_blank" rel="noopener">${latest[4]?`<img src="${ART(latest[4])}" alt="">`:""}<div class="t"><div class="k">Latest · ${esc(short(latest[1]))}</div><b>Patch ${latest[0]}</b><p>${esc(latest[3])}</p></div></a>`:""}`;
+// the year, grouped by season
+const groups=[];P.forEach(p=>{const g=seasonOf(p[1]).split(" · ")[0]||"2026";let G=groups.find(x=>x.n===g);if(!G)groups.push(G={n:g,L:[]});G.L.push(p);});
+document.getElementById("list").innerHTML=groups.reverse().map(G=>`<div class="sgrp"><h4>${esc(G.n)}</h4><div class="rows">${G.L.slice().reverse().map(p=>{const fut=!p[2];const cur=latest&&p[0]===latest[0];
+  const inner=`<div class="pn">${p[0]}</div>${p[4]?`<div class="th" style="background-image:url('${ART(p[4])}')"></div>`:`<div class="th none">${fut?"Coming":""}</div>`}
+    <div style="min-width:0"><div class="d"><b>${esc(short(p[1]))}</b>${esc(wd(p[1]))}${cur?" · latest":""}</div>${p[3]?`<p class="tg">${esc(p[3])}</p>`:fut?`<p class="tg" style="color:var(--muted)">Notes arrive on patch day.</p>`:""}</div>
+    <div class="go">${fut?(p===next?"Next up":"Scheduled"):"Read notes ↗"}</div>`;
+  return fut?`<div class="row future" id="p${p[0]}">${inner}</div>`:`<a class="row${cur?" cur":""}" id="p${p[0]}" href="${esc(p[2])}" target="_blank" rel="noopener">${inner}</a>`;}).join("")}</div></div>`).join("");
+})();
+</script>
+</body>
+</html>

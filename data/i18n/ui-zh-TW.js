@@ -3,3 +3,4 @@ Object.assign(window.ATLAS_UI,{"it_beyond": "峽谷之外", "it_beyond_d": "Riot
 Object.assign(window.ATLAS_UI,{"it_seasons": "賽季", "it_seasons_d": "2009 年以來的每個賽季：主題、造型、動畫"});
 Object.assign(window.ATLAS_UI,{"it_items": "軍械庫", "it_items_d": "召喚峽谷的所有裝備"});
 Object.assign(window.ATLAS_UI,{"j_talk": "對話", "j_talk_sub": "對話的英雄：{n} 位", "ix_title": "對話", "ix_en": "台詞為英文，由英雄聯盟維基整理。", "ix_more": "顯示全部"});
+Object.assign(window.ATLAS_UI,{"it_patches": "版本行事曆", "it_patches_d": "下一個版本何時上線"});

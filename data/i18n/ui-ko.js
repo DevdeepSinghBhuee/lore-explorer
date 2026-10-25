@@ -3,3 +3,4 @@ Object.assign(window.ATLAS_UI,{"it_beyond": "협곡 너머", "it_beyond_d": "라
 Object.assign(window.ATLAS_UI,{"it_seasons": "시즌", "it_seasons_d": "2009년부터 모든 시즌: 테마, 스킨, 시네마틱"});
 Object.assign(window.ATLAS_UI,{"it_items": "아이템 상점", "it_items_d": "소환사의 협곡의 모든 아이템"});
 Object.assign(window.ATLAS_UI,{"j_talk": "대화", "j_talk_sub": "대화하는 챔피언: {n}명", "ix_title": "대화", "ix_en": "대사는 영어이며 리그 오브 레전드 위키의 기록입니다.", "ix_more": "모두 보기"});
+Object.assign(window.ATLAS_UI,{"it_patches": "패치 일정", "it_patches_d": "다음 리그 패치는 언제?"});

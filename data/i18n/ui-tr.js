@@ -3,3 +3,4 @@ Object.assign(window.ATLAS_UI,{"it_beyond": "Vadi'nin Ötesinde", "it_beyond_d":
 Object.assign(window.ATLAS_UI,{"it_seasons": "Sezonlar", "it_seasons_d": "2009'dan bu yana her sezon: temalar, kostümler, sinematikler"});
 Object.assign(window.ATLAS_UI,{"it_items": "Cephanelik", "it_items_d": "Sihirdar Vadisi'ndeki tüm eşyalar"});
 Object.assign(window.ATLAS_UI,{"j_talk": "Konuşmalar", "j_talk_sub": "Konuştuğu şampiyonlar: {n}", "ix_title": "Konuşmalar", "ix_en": "Replikler İngilizcedir, League of Legends Wiki tarafından yazıya geçirilmiştir.", "ix_more": "Tümünü göster"});
+Object.assign(window.ATLAS_UI,{"it_patches": "Yama takvimi", "it_patches_d": "Sıradaki yama ne zaman geliyor"});

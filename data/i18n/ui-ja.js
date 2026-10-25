@@ -3,3 +3,4 @@ Object.assign(window.ATLAS_UI,{"it_beyond": "リフトの外へ", "it_beyond_d":
 Object.assign(window.ATLAS_UI,{"it_seasons": "シーズン", "it_seasons_d": "2009年からの全シーズン：テーマ、スキン、シネマティック"});
 Object.assign(window.ATLAS_UI,{"it_items": "アーモリー", "it_items_d": "サモナーズリフトの全アイテム"});
 Object.assign(window.ATLAS_UI,{"j_talk": "会話", "j_talk_sub": "会話するチャンピオン：{n}人", "ix_title": "会話", "ix_en": "セリフは英語で、League of Legends Wikiによる書き起こしです。", "ix_more": "すべて表示"});
+Object.assign(window.ATLAS_UI,{"it_patches": "パッチカレンダー", "it_patches_d": "次のパッチはいつ？"});

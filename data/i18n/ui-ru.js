@@ -3,3 +3,4 @@ Object.assign(window.ATLAS_UI,{"it_beyond": "За пределами Ущель�
 Object.assign(window.ATLAS_UI,{"it_seasons": "Сезоны", "it_seasons_d": "Все сезоны с 2009 года: темы, образы, ролики"});
 Object.assign(window.ATLAS_UI,{"it_items": "Арсенал", "it_items_d": "Все предметы Ущелья призывателей"});
 Object.assign(window.ATLAS_UI,{"j_talk": "Разговоры", "j_talk_sub": "Чемпионы в разговорах: {n}", "ix_title": "Разговоры", "ix_en": "Реплики на английском, расшифровка League of Legends Wiki.", "ix_more": "Показать все"});
+Object.assign(window.ATLAS_UI,{"it_patches": "Календарь патчей", "it_patches_d": "Когда выйдет следующий патч"});

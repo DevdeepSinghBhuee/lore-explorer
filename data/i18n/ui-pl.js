@@ -3,3 +3,4 @@ Object.assign(window.ATLAS_UI,{"it_beyond": "Poza Rozpadliną", "it_beyond_d": "
 Object.assign(window.ATLAS_UI,{"it_seasons": "Sezony", "it_seasons_d": "Każdy sezon od 2009 roku: motywy, skórki, filmy"});
 Object.assign(window.ATLAS_UI,{"it_items": "Zbrojownia", "it_items_d": "Wszystkie przedmioty na Summoner's Rift"});
 Object.assign(window.ATLAS_UI,{"j_talk": "Rozmowy", "j_talk_sub": "Bohaterowie w rozmowach: {n}", "ix_title": "Rozmowy", "ix_en": "Kwestie są po angielsku, spisane przez League of Legends Wiki.", "ix_more": "Pokaż wszystko"});
+Object.assign(window.ATLAS_UI,{"it_patches": "Kalendarz patchy", "it_patches_d": "Kiedy będzie następny patch"});

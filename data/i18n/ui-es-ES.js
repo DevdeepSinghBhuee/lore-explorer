@@ -3,3 +3,4 @@ Object.assign(window.ATLAS_UI,{"it_beyond": "Más allá de la Grieta", "it_beyon
 Object.assign(window.ATLAS_UI,{"it_seasons": "Las temporadas", "it_seasons_d": "Todas las temporadas desde 2009: temas, aspectos y cinemáticas"});
 Object.assign(window.ATLAS_UI,{"it_items": "La armería", "it_items_d": "Todos los objetos de la Grieta del Invocador"});
 Object.assign(window.ATLAS_UI,{"j_talk": "Conversaciones", "j_talk_sub": "Campeones con los que habla: {n}", "ix_title": "Conversaciones", "ix_en": "Las frases están en inglés y las transcribe la League of Legends Wiki.", "ix_more": "Ver todo"});
+Object.assign(window.ATLAS_UI,{"it_patches": "Calendario de parches", "it_patches_d": "Cuándo llega el próximo parche"});

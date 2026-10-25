@@ -3,3 +3,4 @@ Object.assign(window.ATLAS_UI,{"it_beyond": "Ngoài Khe Nứt", "it_beyond_d": "
 Object.assign(window.ATLAS_UI,{"it_seasons": "Các mùa giải", "it_seasons_d": "Mọi mùa giải từ 2009: chủ đề, trang phục, phim ngắn"});
 Object.assign(window.ATLAS_UI,{"it_items": "Kho vũ khí", "it_items_d": "Mọi trang bị trên Summoner's Rift"});
 Object.assign(window.ATLAS_UI,{"j_talk": "Hội thoại", "j_talk_sub": "Số tướng trò chuyện: {n}", "ix_title": "Hội thoại", "ix_en": "Câu thoại bằng tiếng Anh, do League of Legends Wiki ghi lại.", "ix_more": "Xem tất cả"});
+Object.assign(window.ATLAS_UI,{"it_patches": "Lịch cập nhật", "it_patches_d": "Khi nào có bản cập nhật tiếp theo"});

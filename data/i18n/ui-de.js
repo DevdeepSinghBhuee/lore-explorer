@@ -3,3 +3,4 @@ Object.assign(window.ATLAS_UI,{"it_beyond": "Jenseits der Kluft", "it_beyond_d":
 Object.assign(window.ATLAS_UI,{"it_seasons": "Die Saisons", "it_seasons_d": "Jede Saison seit 2009: Themen, Skins, Cinematics"});
 Object.assign(window.ATLAS_UI,{"it_items": "Die Waffenkammer", "it_items_d": "Alle Gegenstände auf der Kluft der Beschwörer"});
 Object.assign(window.ATLAS_UI,{"j_talk": "Gespräche", "j_talk_sub": "Champions im Gespräch: {n}", "ix_title": "Gespräche", "ix_en": "Die Sätze sind auf Englisch, transkribiert vom League of Legends Wiki.", "ix_more": "Alle zeigen"});
+Object.assign(window.ATLAS_UI,{"it_patches": "Patch-Kalender", "it_patches_d": "Wann der nächste Patch kommt"});
