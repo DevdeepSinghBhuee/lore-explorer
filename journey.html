@@ -236,6 +236,13 @@ footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width
   .cards a{width:calc(50% - 6px)}
   .faces{grid-template-columns:repeat(auto-fill,minmax(76px,1fr))}.face img{width:64px;height:64px}
 }
+.beyond{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}
+.beyond .by{display:grid;grid-template-columns:104px minmax(0,1fr);gap:12px;align-items:center;border:1px solid var(--rule);background:rgba(15,26,46,.6);padding:8px;text-decoration:none;color:var(--text);min-width:0}
+.beyond .by:hover{border-color:var(--gold)}
+.beyond .by img{width:104px;aspect-ratio:16/9;object-fit:cover;display:block}
+.beyond .by b{display:block;font-family:var(--f-display);font-weight:400;font-size:17px;line-height:1.15}
+.beyond .by small{display:block;color:var(--muted);font-size:14.5px;line-height:1.35;margin-top:2px}
+@media (max-width:480px){.beyond .by{grid-template-columns:84px minmax(0,1fr)}.beyond .by img{width:84px}}
 </style>
 <script src="site.js" defer></script>
 </head>
@@ -299,6 +306,7 @@ footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width
 <script src="data/music.js"></script>
 <script src="data/champcards.js"></script>
 <script src="data/champrb.js"></script>
+<script src="data/beyond.js"></script>
 <script src="data/abilityvideos.js"></script>
 <script>
 const I=window.AtlasI18n, LANG=I?I.lang:"en", t=(k,v)=>I?I.t(k,v):k;
@@ -451,6 +459,19 @@ async function journey(c){
   add("cards",t("j_cards"),`Legends of Runeterra${RB.length?" & Riftbound":""}`,(LR.length||RB.length)?`<div class="cards">
       ${LR.map(([code,n])=>`<a href="library.html#card-${code}" title="${esc(n)}"><img src="img/cards/${code}.webp" alt="${esc(n)}" loading="lazy"><small>Runeterra</small></a>`).join("")}
       ${RB.map(([id,n,img])=>`<a href="riftbound.html#card-${id}" title="${esc(n)}"><img src="https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/${img}?w=300&fm=webp" alt="${esc(n)}" loading="lazy"><small>Riftbound</small></a>`).join("")}</div>`:"");
+
+  // 7b · beyond the Rift: Riot's other games and shows (data/beyond.js)
+  const BY=window.ATLAS_BEYOND, BA=BY?BY.of(c.id):[];
+  if(BA.length){const BG=Object.fromEntries(BY.games.map(g=>[g.id,g])), SN=Object.fromEntries(BY.tftSets.map(s=>[s[0],s[1]]));
+    const RL={playable:t("b_playable"),major:t("b_major"),minor:t("b_minor"),main:t("b_main"),supporting:t("b_support")};
+    const line=a=>{const [gid,role,x]=a;
+      if(gid==="tft")return esc(t("b_sets",{n:x.length}))+": "+x.slice(-3).map(r=>esc(SN[r[0]]||r[0])).join(", ")+(x.length>3?"…":"");
+      if(gid==="2xko")return `${esc(x[0])} · ${esc(t("b_likes"))}: ${esc(x[1])}`;
+      if(gid==="lor"||gid==="riftbound")return esc(t("b_card_n",{n:x}));
+      return esc(RL[role]||t("b_playable"));};
+    add("beyond",t("j_beyond"),t("j_beyond_sub",{n:BA.length}),`<div class="beyond">${BA.map(a=>{const g=BG[a[0]];return `<a class="by" href="beyond.html#g-${g.id}"><img src="img/beyond/${g.img}.webp" alt="" loading="lazy"><span style="min-width:0"><b>${esc(g.name)}</b><small>${line(a)}</small></span></a>`;}).join("")}</div>
+      <p style="margin-top:14px"><a class="more-link" href="beyond.html#c-${c.id}">${esc(t("b_all"))}</a></p>`);
+  }
 
   // 8 · arrival
   if(R){

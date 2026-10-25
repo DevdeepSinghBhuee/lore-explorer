@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<script src="i18n.js"></script>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Beyond the Rift · Champions in Riot's other games and shows</title>
+<meta name="description" content="Where League of Legends champions appear outside League: 2XKO, Wild Rift, Teamfight Tactics, Legends of Runeterra, Riftbound, Arcane and the Riot Forge story games.">
+<link rel="canonical" href="https://devdeepsinghbhuee.github.io/lore-explorer/beyond.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Lore Explorer">
+<meta property="og:title" content="Beyond the Rift">
+<meta property="og:description" content="Every League champion in 2XKO, Wild Rift, Teamfight Tactics, Arcane, the card games and the Riot Forge story games.">
+<meta property="og:url" content="https://devdeepsinghbhuee.github.io/lore-explorer/beyond.html">
+<meta property="og:image" content="https://devdeepsinghbhuee.github.io/lore-explorer/img/og/beyond.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Beyond the Rift: League champions in Riot's other games and shows.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#080d18">
+<link rel="icon" href="img/icon.svg" type="image/svg+xml">
+<link rel="icon" href="img/icon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="img/icon-180.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus+SC&family=Alegreya:ital,wght@0,400;0,500;0,700;1,400&family=Spline+Sans+Mono:wght@400;500&family=Teko:wght@400;500;600&display=swap">
+<style>
+/* Layout: a shelf of Riot's other games and shows (cover cards). Picking one opens its roster below; a champion finder at the top shows everywhere one champion appears. Shares the Atlas tokens. */
+:root{
+  color-scheme:dark;
+  --ink:#080d18; --panel:#0f1a2e; --panel-2:#142238;
+  --gold:#c8aa6e; --gold-dim:#7d6a45; --text:#ebe4d3; --muted:#939bb0; --faint:#5b6580;
+  --rule:rgba(200,170,110,.22);
+  --void:#b07ce8; --blueside:#5aa8ff; --redside:#ff6f5e;
+  --f-display:"Marcellus SC","Cinzel",Georgia,serif;
+  --f-body:"Alegreya",Georgia,"Times New Roman",serif;
+  --f-mono:"Spline Sans Mono",ui-monospace,Menlo,monospace;
+  --f-num:"Teko","Oxanium",var(--f-display),sans-serif;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box}
+html{scroll-padding-top:16px}
+body{margin:0;background:var(--ink);color:var(--text);font-family:var(--f-body);font-size:18px;line-height:1.55;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+img{max-width:100%}
+[hidden]{display:none!important}
+a{color:var(--gold)}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+.wrap{max-width:1240px;margin-inline:auto}
+
+.bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:18px;border-bottom:1px solid var(--rule);flex-wrap:wrap}
+.brand{font-family:var(--f-display);font-size:20px;letter-spacing:.08em;color:var(--gold);display:flex;align-items:center;gap:10px;text-decoration:none}
+.brand svg{width:26px;height:26px}
+.nav{display:flex;gap:4px;flex-wrap:wrap}
+.nav a{font-family:var(--f-mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-decoration:none;padding:7px 12px}
+
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+.intro{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;padding-block:34px 24px}
+h1{font-family:var(--f-display);font-weight:400;font-size:clamp(40px,6vw,78px);line-height:.95;margin:12px 0 14px;text-wrap:balance}
+h1 em{font-style:normal;color:var(--gold)}
+.lede{font-size:19px;max-width:50ch;margin:0;color:#c4c8d3}
+.counts{display:flex;gap:22px;flex-wrap:wrap}
+.counts div b{display:block;font-family:var(--f-num);font-weight:600;font-size:40px;line-height:.9;color:var(--gold);font-variant-numeric:tabular-nums}
+.counts div span{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+
+
+/* champion finder */
+.finder{border:1px solid var(--rule);background:linear-gradient(180deg,var(--panel),#0b1426);padding:18px 20px;display:grid;gap:14px}
+.finder .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.finder label{font-family:var(--f-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.finder input{flex:1 1 240px;min-width:0;background:#0a1222;border:1px solid var(--rule);color:var(--text);font:inherit;font-size:17px;padding:9px 12px}
+.btn{font-family:var(--f-mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;padding:10px 14px;border:1px solid var(--rule);background:transparent;color:var(--text);cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+.btn:hover{border-color:var(--gold)}
+.who{display:grid;grid-template-columns:84px minmax(0,1fr);gap:16px;align-items:center}
+.who img{width:84px;height:84px;object-fit:cover;border:2px solid var(--gold-dim)}
+.who h2{font-family:var(--f-display);font-weight:400;font-size:30px;line-height:1;margin:0}
+.who p{margin:4px 0 0;color:var(--muted)}
+.apps{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}
+.app{display:grid;grid-template-columns:96px minmax(0,1fr);gap:12px;align-items:center;border:1px solid var(--rule);background:#0d1729;padding:8px;text-decoration:none;color:var(--text);text-align:left;cursor:pointer;min-width:0}
+.app:hover{border-color:var(--gold)}
+.app img{width:96px;aspect-ratio:16/9;object-fit:cover;display:block}
+.app b{display:block;font-family:var(--f-display);font-weight:400;font-size:17px;line-height:1.15}
+.app small{display:block;color:var(--muted);font-size:14.5px;line-height:1.35;margin-top:2px}
+.none{color:var(--muted);margin:0}
+
+/* shelf */
+h3.sec{font-family:var(--f-display);font-weight:400;font-size:clamp(28px,3vw,38px);margin:52px 0 4px}
+.sub{margin:0 0 18px;color:var(--muted);max-width:70ch}
+.shelf{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px}
+.game{display:flex;flex-direction:column;border:1px solid var(--rule);background:var(--panel);cursor:pointer;text-align:left;padding:0;min-width:0;transition:border-color .15s,transform .15s}
+.game:hover{border-color:var(--gold-dim);transform:translateY(-2px)}
+.game[aria-pressed="true"]{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold)}
+.game .cov{aspect-ratio:16/9;overflow:hidden;background:#05080f}
+.game .cov img{width:100%;height:100%;object-fit:cover;display:block}
+.game .txt{padding:12px 14px 14px;display:grid;gap:3px}
+.game .k{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+.game b{font-family:var(--f-display);font-weight:400;font-size:21px;line-height:1.1}
+.game small{color:var(--muted);font-size:14.5px}
+.game .n{font-family:var(--f-num);font-size:24px;line-height:1;color:var(--text);font-variant-numeric:tabular-nums}
+.game .n span{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-left:6px}
+
+/* roster panel */
+.panel{margin-top:22px;border:1px solid var(--rule);background:linear-gradient(180deg,var(--panel),#0b1426)}
+.panel .top{display:grid;grid-template-columns:minmax(0,360px) minmax(0,1fr);gap:22px;padding:20px;align-items:center}
+.panel .top img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;border:1px solid var(--rule)}
+.panel h2{font-family:var(--f-display);font-weight:400;font-size:clamp(30px,3.6vw,44px);line-height:1;margin:6px 0 8px}
+.panel .meta{font-family:var(--f-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.panel .note{margin:10px 0 0;color:#d6d3c8;max-width:62ch}
+.panel .body{padding:0 20px 22px}
+.role{font-family:var(--f-mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin:18px 0 10px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:8px}
+.tile{display:block;text-decoration:none;color:var(--text);border:1px solid var(--rule);background:#0d1729;min-width:0}
+.tile:hover{border-color:var(--gold)}
+.tile img{width:100%;aspect-ratio:1;object-fit:cover;display:block}
+.tile span{display:block;padding:5px 6px 6px;font-size:14px;line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tile small{display:block;padding:0 6px 6px;margin-top:-4px;font-size:12.5px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fighters{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px}
+.fighter{display:grid;grid-template-rows:auto 1fr;border:1px solid var(--rule);background:#0d1729;text-decoration:none;color:var(--text);min-width:0}
+.fighter:hover{border-color:var(--gold)}
+.fighter img{width:100%;aspect-ratio:3/4;object-fit:cover;object-position:top;display:block;background:#05080f}
+.fighter div{padding:9px 11px 12px}
+.fighter b{font-family:var(--f-display);font-weight:400;font-size:19px}
+.fighter .arch{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin:2px 0 6px}
+.fighter p{margin:0;font-size:14px;line-height:1.4;color:var(--muted)}
+.fighter p em{font-style:normal;color:#d6d3c8}
+.sets{display:flex;gap:6px;overflow-x:auto;padding:4px 0 10px;scrollbar-width:thin}
+.sets button{flex:none;border:1px solid var(--rule);background:#0d1729;padding:7px 10px 8px;cursor:pointer;text-align:left;min-width:118px}
+.sets button b{display:block;font-family:var(--f-num);font-size:20px;line-height:1;color:var(--gold);font-weight:500}
+.sets button span{display:block;font-size:13.5px;line-height:1.25;color:var(--text)}
+.sets button small{display:block;font-family:var(--f-num);font-size:15px;color:var(--muted)}
+.sets button[aria-pressed="true"]{border-color:var(--gold);background:rgba(200,170,110,.1)}
+.missing{margin:16px 0 0;font-size:15px;color:var(--muted)}
+.missing a{color:var(--muted)}
+.links{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap}
+
+footer{border-top:1px solid var(--rule);margin-top:48px;padding-block:24px 40px;color:var(--muted);font-size:14px;display:grid;gap:8px}
+footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width:80ch}
+@media (min-width:900px){.sets{flex-wrap:wrap;overflow:visible}}
+@media (max-width:760px){.panel .top{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:480px){.counts{gap:16px}.counts div b{font-size:34px}.tiles{grid-template-columns:repeat(auto-fill,minmax(88px,1fr))}.fighters{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .app{grid-template-columns:80px minmax(0,1fr)}.app img{width:80px}.panel .top,.panel .body{padding-inline:14px}.finder{padding:14px}}
+</style>
+<script src="site.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header class="bar">
+    <a class="brand" href="./">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><polygon points="16,2 29,9.5 29,22.5 16,30 3,22.5 3,9.5" fill="none" stroke="#c8aa6e" stroke-width="1.5"/><circle cx="16" cy="16" r="5" fill="none" stroke="#c8aa6e" stroke-width="1.5"/><path d="M16 2v9M16 21v9M3 9.5l8 4.5M21 18l8 4.5M29 9.5l-8 4.5M11 18l-8 4.5" stroke="#c8aa6e" stroke-width="1"/></svg>
+      Lore Explorer
+    </a>
+    <nav class="nav" aria-label="Site"><a href="./">Daily</a><a href="atlas.html">Atlas</a><a href="journey.html">Journeys</a><a href="beyond.html" aria-current="page">Beyond the Rift</a></nav>
+  </header>
+
+  <section class="intro">
+    <div>
+      <div class="eyebrow">Riot's other games and shows</div>
+      <h1>Champions <em>beyond the Rift.</em></h1>
+      <p class="lede">League's champions don't stay in League. They fight in 2XKO, star in Arcane, carry their own story games and turn up in every Teamfight Tactics set. Pick a champion to see everywhere they appear, or open a game.</p>
+    </div>
+    <div class="counts" id="counts"></div>
+  </section>
+
+  <section class="finder" aria-label="Find a champion">
+    <div class="row">
+      <label for="q">Champion</label>
+      <input id="q" list="names" placeholder="Type a name, e.g. Jinx" autocomplete="off">
+      <datalist id="names"></datalist>
+      <button class="btn" type="button" id="rnd">Surprise me</button>
+    </div>
+    <div id="found"><p class="none">Choose a champion to see every game and show they appear in.</p></div>
+  </section>
+
+  <h3 class="sec">The shelf</h3>
+  <p class="sub">Every Riot game and show with League champions in it. Open one to see its whole roster.</p>
+  <div class="shelf" id="shelf"></div>
+  <div id="panel"></div>
+
+  <footer>
+    <div>Rosters come from the official <a href="https://2xko.riotgames.com/en-us/champions/" rel="noopener">2XKO</a> and <a href="https://wildrift.leagueoflegends.com/en-us/champions/" rel="noopener">Wild Rift</a> champion pages, and from the <a href="https://wiki.leagueoflegends.com/en-us/" rel="noopener">League of Legends Wiki</a> (CC BY-SA 3.0) for Teamfight Tactics (every set), Arcane's cast and the Riot Forge games. Release dates from the Wiki and Wikipedia. Covers and portraits are Riot's own. Saved 25 October 2026.</div>
+    <div class="legal">Lore Explorer was created under Riot Games' "Legal Jibber Jabber" policy using assets owned by Riot Games. Riot Games does not endorse or sponsor this project.</div>
+  </footer>
+</div>
+
+<script src="data/champions.js"></script>
+<script src="data/champcards.js"></script>
+<script src="data/champrb.js"></script>
+<script src="data/beyond.js"></script>
+<script>
+(function(){
+"use strict";
+const B=window.ATLAS_BEYOND, C=window.ATLAS_CHAMPS, CH=Object.fromEntries(C.map(c=>[c.id,c])), G=Object.fromEntries(B.games.map(g=>[g.id,g]));
+const LOR=window.ATLAS_LOR||{}, RB=window.ATLAS_RB||{};
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const COV=id=>`img/beyond/${id}.webp`, TILE=id=>`img/${id}-tile.webp`;
+const X2IMG=f=>`https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/${f}?w=420&fm=webp`;
+const ROLE={playable:"Playable",major:"Major role",minor:"Cameo",main:"Main cast",supporting:"Supporting role",cards:"Cards"};
+const year=d=>d.slice(0,4);
+const SETN=Object.fromEntries(B.tftSets.map(s=>[s[0],s]));
+const LORc=Object.keys(LOR).filter(k=>LOR[k].length&&CH[k]), RBc=Object.keys(RB).filter(k=>RB[k].length&&CH[k]);
+const roster=g=>g.id==="lor"?LORc:g.id==="riftbound"?RBc:[...new Set(Object.values(g.roles).flat())];
+
+// counts
+document.getElementById("counts").innerHTML=[[B.games.length,"games & shows"],[Object.keys(B.tft).length,"in Teamfight Tactics"],[Object.keys(B.wr).length,"on Wild Rift"],[Object.keys(B.x2).length,"in 2XKO"]].map(([b,s])=>`<div><b>${b}</b><span>${s}</span></div>`).join("");
+
+// shelf
+document.getElementById("shelf").innerHTML=B.games.map(g=>`<button type="button" class="game" data-g="${g.id}" aria-pressed="false">
+  <div class="cov"><img src="${COV(g.img)}" alt="" loading="lazy"></div>
+  <div class="txt"><span class="k">${esc(g.kind)} · ${year(g.date)}</span><b>${esc(g.name)}</b><small>${esc(g.by)}</small>
+  <span class="n">${roster(g).length}<span>champions</span></span></div></button>`).join("");
+
+// one champion's line for a game
+function detail(a){const [gid,role,x]=a;
+  if(gid==="tft")return `${x.length} set${x.length>1?"s":""}: ${x.slice(-3).map(r=>esc(SETN[r[0]]?SETN[r[0]][1]:"Set "+r[0])).join(", ")}${x.length>3?"…":""}`;
+  if(gid==="2xko")return `${esc(x[0])} · likes ${esc(x[1].toLowerCase())}`;
+  if(gid==="lor"||gid==="riftbound")return `${x} card${x>1?"s":""}`;
+  if(gid==="wildrift")return "Playable on phones and consoles";
+  return ROLE[role];}
+
+// finder
+const dl=document.getElementById("names");dl.innerHTML=C.slice().sort((a,b)=>a.name.localeCompare(b.name)).map(c=>`<option value="${esc(c.name)}">`).join("");
+const q=document.getElementById("q"), found=document.getElementById("found");
+function pick(id,push){const c=CH[id];if(!c)return;q.value=c.name;
+  const A=B.of(id);
+  found.innerHTML=`<div class="who"><img src="${TILE(id)}" alt=""><div><h2>${esc(c.name)}</h2><p>${A.length?`Appears in <b>${A.length}</b> of Riot's other games and shows.`:"Hasn't appeared outside League yet."}</p></div></div>
+    ${A.length?`<div class="apps">${A.map(a=>{const g=G[a[0]];return `<button type="button" class="app" data-g="${g.id}" data-c="${id}"><img src="${COV(g.img)}" alt="" loading="lazy"><span style="min-width:0"><b>${esc(g.name)}</b><small>${detail(a)}</small></span></button>`;}).join("")}</div>`:""}
+    <div class="links"><a class="btn" href="journey.html?c=${id}">${esc(c.name)}'s journey →</a></div>`;
+  if(push!==false)try{history.replaceState(null,"","#c-"+id);}catch(e){}}
+const byName=Object.fromEntries(C.map(c=>[c.name.toLowerCase(),c.id]));
+q.addEventListener("change",()=>{const id=byName[q.value.trim().toLowerCase()];if(id)pick(id);});
+q.addEventListener("input",()=>{const id=byName[q.value.trim().toLowerCase()];if(id)pick(id);});
+document.getElementById("rnd").onclick=()=>pick(C[Math.floor(Math.random()*C.length)].id);
+found.addEventListener("click",e=>{const b=e.target.closest(".app");if(b)open(b.dataset.g,b.dataset.c,true);});
+
+// roster panel
+const panel=document.getElementById("panel");
+const tile=(id,sub)=>CH[id]?`<a class="tile" href="journey.html?c=${id}"><img src="${TILE(id)}" alt="" loading="lazy"><span>${esc(CH[id].name)}</span>${sub?`<small>${esc(sub)}</small>`:""}</a>`:"";
+const byNameSort=L=>L.slice().sort((a,b)=>CH[a].name.localeCompare(CH[b].name));
+function open(gid,focus,scroll){const g=G[gid];if(!g)return;
+  document.querySelectorAll(".game").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.g===gid)));
+  let body="";
+  if(gid==="2xko"){body=`<div class="role">The roster</div><div class="fighters">${byNameSort(Object.keys(B.x2)).map(id=>{const x=B.x2[id];return `<a class="fighter" href="https://2xko.riotgames.com/en-us/champions/${id}/" target="_blank" rel="noopener"><img src="${X2IMG(x[3])}" alt="${esc(CH[id].name)} in 2XKO" loading="lazy"><div><b>${esc(CH[id].name)}</b><div class="arch">${esc(x[0])}</div><p><em>Likes:</em> ${esc(x[1])}</p><p><em>Dislikes:</em> ${esc(x[2])}</p></div></a>`;}).join("")}</div>`;}
+  else if(gid==="tft"){const counts={};Object.values(B.tft).forEach(L=>L.forEach(r=>counts[r[0]]=(counts[r[0]]||0)+1));
+    body=`<div class="role">Every set</div><div class="sets" id="sets">${B.tftSets.slice().reverse().map(s=>`<button type="button" data-s="${s[0]}" aria-pressed="false"><b>Set ${s[0]}</b><span>${esc(s[1])}</span><small>${year(s[2])} · ${counts[s[0]]||0} champions</small></button>`).join("")}</div><div id="setBody"></div>`;}
+  else if(gid==="wildrift"){const on=Object.keys(B.wr), off=C.filter(c=>!B.wr[c.id]).map(c=>c.id);
+    body=`<div class="role">Playable (${on.length})</div><div class="tiles">${byNameSort(on).map(id=>tile(id)).join("")}</div>
+      <p class="missing"><b>Not on Wild Rift yet (${off.length}):</b> ${byNameSort(off).map(id=>`<a href="journey.html?c=${id}">${esc(CH[id].name)}</a>`).join(", ")}.</p>`;}
+  else if(gid==="lor"||gid==="riftbound"){const L=gid==="lor"?LORc:RBc, M=gid==="lor"?LOR:RB;
+    body=`<div class="role">Champions with cards (${L.length})</div><div class="tiles">${byNameSort(L).map(id=>tile(id,`${M[id].length} card${M[id].length>1?"s":""}`)).join("")}</div>`;}
+  else{body=Object.entries(g.roles).filter(([r,L])=>L.length).map(([r,L])=>`<div class="role">${ROLE[r]} (${L.length})</div><div class="tiles">${byNameSort(L).map(id=>tile(id)).join("")}</div>`).join("");}
+  const link=g.url.startsWith("http")?`<a class="btn" href="${esc(g.url)}" target="_blank" rel="noopener">${g.url.includes("wiki.")?"More on the League Wiki":"Official site"} ↗</a>`:`<a class="btn" href="${esc(g.url)}">Browse every card →</a>`;
+  panel.innerHTML=`<article class="panel" id="p-${gid}"><div class="top"><img src="${COV(g.img)}" alt="${esc(g.name)}"><div><div class="meta">${esc(g.kind)} · ${esc(g.by)} · ${esc(new Date(g.date+"T12:00:00").toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"}))}</div><h2>${esc(g.name)}</h2>${g.note?`<p class="note">${esc(g.note)}</p>`:""}<div class="links">${link}</div></div></div><div class="body">${body}</div></article>`;
+  if(gid==="tft"){const sb=document.getElementById("setBody"),sets=document.getElementById("sets");
+    const show=n=>{sets.querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.s===n)));
+      const L=Object.entries(B.tft).map(([id,R])=>[id,R.find(r=>r[0]===n)]).filter(x=>x[1]).sort((a,b)=>a[1][2]-b[1][2]||CH[a[0]].name.localeCompare(CH[b[0]].name));
+      sb.innerHTML=`<div class="role">Set ${n} · ${esc(SETN[n][1])} · ${L.length} champions, cheapest first</div><div class="tiles">${L.map(([id,r])=>tile(id,`${r[1]&&r[1]!=="Original"?r[1]+" · ":""}${r[2]} gold`)).join("")}</div>`;};
+    sets.addEventListener("click",e=>{const b=e.target.closest("button");if(b)show(b.dataset.s);});
+    let n=B.tftSets[B.tftSets.length-1][0];if(focus&&B.tft[focus])n=B.tft[focus][B.tft[focus].length-1][0];show(n);
+    const btn=sets.querySelector(`[data-s="${n}"]`);if(btn)sets.scrollLeft=btn.offsetLeft-sets.offsetLeft-8;}
+  try{history.replaceState(null,"","#g-"+gid);}catch(e){}
+  if(scroll!==false)panel.scrollIntoView({behavior:"smooth",block:"start"});}
+document.getElementById("shelf").addEventListener("click",e=>{const b=e.target.closest(".game");if(b)open(b.dataset.g);});
+
+// start from the address: #c-<champion> or #g-<game>
+const h=location.hash;let m;
+if((m=h.match(/^#c-([a-z0-9]+)$/))&&CH[m[1]])pick(m[1],false);
+else if((m=h.match(/^#g-([a-z0-9]+)$/))&&G[m[1]])open(m[1],null,true);
+})();
+</script>
+</body>
+</html>

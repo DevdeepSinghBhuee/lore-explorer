@@ -25,6 +25,7 @@ PAGES=[ # file, art, title, tagline, focus x (0-1)
  ("library",R+"img/scene/freljord.webp","Runeterra Cards","Every Legends of Runeterra card and its lore",0.5),
  ("riftbound",R+"img/scene/void.webp","Riftbound Gallery","Every card of League's trading card game",0.5),
  ("rift",R+"img/rift/baron-art.webp","The Rift","Dragons, Baron Nashor and every jungle camp on Summoner's Rift",0.55),
+ ("beyond",R+"img/beyond/2xko.webp","Beyond the Rift","Every champion in Riot's other games and shows",0.62),
  ("mine","art/Lux_0.jpg","My Champions","Your favourite champions and the stories you've read",0.62),
 ]
 def cover(im,fx):
