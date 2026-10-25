@@ -36,7 +36,7 @@
     it_timeline:"Timeline",it_timeline_d:"Every champion in release order",
     it_atlas:"Atlas",it_atlas_d:"The map of Runeterra and its web of bonds",
     it_reading:"Reading Room",it_reading_d:"Every official story and comic",
-    it_daily:"Lore Explorer Daily",it_rift:"The Rift",it_rift_d:"Dragons, Baron and every jungle camp",it_seasons:"The Seasons",it_seasons_d:"Every season since 2009: themes, skins, cinematics",it_beyond:"Beyond the Rift",it_beyond_d:"Champions in Riot's other games and shows",j_beyond:"Beyond the Rift",j_beyond_sub:"Games and shows: {n}",b_playable:"Playable",b_major:"Major role",b_minor:"Cameo",b_main:"Main cast",b_support:"Supporting role",b_sets:"TFT sets: {n}",b_likes:"Likes",b_all:"Every champion beyond the Rift",b_card_n:"Cards: {n}",it_daily_d:"Guess today's champions: clues, splash, ability, lore, voice",
+    it_daily:"Lore Explorer Daily",it_rift:"The Rift",it_rift_d:"Dragons, Baron and every jungle camp",it_items:"The Armory",it_items_d:"Every item on Summoner's Rift",it_seasons:"The Seasons",it_seasons_d:"Every season since 2009: themes, skins, cinematics",it_beyond:"Beyond the Rift",it_beyond_d:"Champions in Riot's other games and shows",j_beyond:"Beyond the Rift",j_beyond_sub:"Games and shows: {n}",b_playable:"Playable",b_major:"Major role",b_minor:"Cameo",b_main:"Main cast",b_support:"Supporting role",b_sets:"TFT sets: {n}",b_likes:"Likes",b_all:"Every champion beyond the Rift",b_card_n:"Cards: {n}",it_daily_d:"Guess today's champions: clues, splash, ability, lore, voice",
     it_worlds:"Worlds 2026",it_worlds_d:"Live scores, schedule and teams",
     it_players:"Players",it_players_d:"The pros at Worlds 2026",
     it_theater:"Theater",it_theater_d:"Official cinematics and trailers",

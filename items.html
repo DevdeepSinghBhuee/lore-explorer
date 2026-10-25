@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<script src="i18n.js"></script>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>The Armory · Every item on Summoner's Rift</title>
+<meta name="description" content="Every League of Legends item on Summoner's Rift: stats, passives and actives, what it builds from and into, its lore quote, and what's new in 2026.">
+<link rel="canonical" href="https://devdeepsinghbhuee.github.io/lore-explorer/items.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Lore Explorer">
+<meta property="og:title" content="The Armory">
+<meta property="og:description" content="Every item on Summoner's Rift with its stats, effects, recipe and lore.">
+<meta property="og:url" content="https://devdeepsinghbhuee.github.io/lore-explorer/items.html">
+<meta property="og:image" content="https://devdeepsinghbhuee.github.io/lore-explorer/img/og/items.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Armory: every League of Legends item.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#080d18">
+<link rel="icon" href="img/icon.svg" type="image/svg+xml">
+<link rel="icon" href="img/icon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="img/icon-180.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus+SC&family=Alegreya:ital,wght@0,400;0,500;0,700;1,400&family=Spline+Sans+Mono:wght@400;500&family=Teko:wght@400;500;600&display=swap">
+<style>
+/* Layout: a shop counter. Filters on top, a wall of item icons grouped by tier on the left, a sticky detail plate on the right (stats, effects, lore quote, recipe tree). Shares the Atlas tokens. */
+:root{
+  color-scheme:dark;
+  --ink:#080d18; --panel:#0f1a2e; --panel-2:#142238;
+  --gold:#c8aa6e; --gold-dim:#7d6a45; --text:#ebe4d3; --muted:#939bb0; --faint:#5b6580;
+  --rule:rgba(200,170,110,.22);
+  --void:#b07ce8; --blueside:#5aa8ff; --redside:#ff6f5e;
+  --f-display:"Marcellus SC","Cinzel",Georgia,serif;
+  --f-body:"Alegreya",Georgia,"Times New Roman",serif;
+  --f-mono:"Spline Sans Mono",ui-monospace,Menlo,monospace;
+  --f-num:"Teko","Oxanium",var(--f-display),sans-serif;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box}
+html{scroll-padding-top:16px}
+body{margin:0;background:var(--ink);color:var(--text);font-family:var(--f-body);font-size:18px;line-height:1.55;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+img{max-width:100%}
+[hidden]{display:none!important}
+a{color:var(--gold)}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+.wrap{max-width:1240px;margin-inline:auto}
+
+.bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:18px;border-bottom:1px solid var(--rule);flex-wrap:wrap}
+.brand{font-family:var(--f-display);font-size:20px;letter-spacing:.08em;color:var(--gold);display:flex;align-items:center;gap:10px;text-decoration:none}
+.brand svg{width:26px;height:26px}
+.nav{display:flex;gap:4px;flex-wrap:wrap}
+.nav a{font-family:var(--f-mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-decoration:none;padding:7px 12px}
+
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+.intro{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;padding-block:34px 24px}
+h1{font-family:var(--f-display);font-weight:400;font-size:clamp(40px,6vw,78px);line-height:.95;margin:12px 0 14px;text-wrap:balance}
+h1 em{font-style:normal;color:var(--gold)}
+.lede{font-size:19px;max-width:50ch;margin:0;color:#c4c8d3}
+.counts{display:flex;gap:22px;flex-wrap:wrap}
+.counts div b{display:block;font-family:var(--f-num);font-weight:600;font-size:40px;line-height:.9;color:var(--gold);font-variant-numeric:tabular-nums}
+.counts div span{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+
+
+.tools{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+.tools input{flex:1 1 220px;min-width:0;background:#0a1222;border:1px solid var(--rule);color:var(--text);font:inherit;font-size:17px;padding:9px 12px}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg button{border:1px solid var(--rule);background:transparent;padding:7px 11px;cursor:pointer;font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.seg button[aria-pressed="true"]{border-color:var(--gold);color:var(--text);background:rgba(200,170,110,.1)}
+.shop{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,420px);gap:24px;align-items:start}
+.tier{margin-bottom:22px}
+.tier h3{font-family:var(--f-display);font-weight:400;font-size:24px;margin:0 0 4px}
+.tier p{margin:0 0 10px;color:var(--muted);font-size:15.5px}
+.wall{display:grid;grid-template-columns:repeat(auto-fill,minmax(64px,1fr));gap:8px}
+.it{position:relative;padding:0;border:1px solid var(--rule);background:#0d1729;cursor:pointer;aspect-ratio:1;min-width:0}
+.it img{width:100%;height:100%;display:block}
+.it:hover{border-color:var(--gold-dim)}
+.it[aria-pressed="true"]{border-color:var(--gold);box-shadow:0 0 0 2px var(--gold)}
+.it .g{position:absolute;left:0;right:0;bottom:0;background:rgba(5,8,15,.82);font-family:var(--f-num);font-size:15px;line-height:1.1;color:var(--gold);text-align:center;padding:1px 0}
+.it .nw{position:absolute;top:2px;right:2px;font-family:var(--f-mono);font-size:8.5px;letter-spacing:.08em;background:var(--gold);color:#0b1426;padding:1px 3px}
+.empty{color:var(--muted)}
+.plate{position:sticky;top:16px;border:1px solid var(--rule);background:linear-gradient(180deg,var(--panel),#0b1426);padding:20px;min-width:0;max-height:calc(100vh - 32px);overflow:auto}
+.plate .hd{display:grid;grid-template-columns:72px minmax(0,1fr);gap:14px;align-items:center}
+.plate .hd img{width:72px;height:72px;border:2px solid var(--gold-dim)}
+.plate .k{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+.plate h2{font-family:var(--f-display);font-weight:400;font-size:30px;line-height:1.05;margin:2px 0 0}
+.plate .cost{font-family:var(--f-num);font-size:22px;color:var(--gold);margin-top:2px}.plate .cost small{font-size:16px;color:var(--muted);margin-left:8px}
+.plate .pt{margin:12px 0 0;color:#d6d3c8;font-style:italic}
+.quote{margin:14px 0 0;border-left:3px solid var(--gold);padding:8px 12px;background:rgba(200,170,110,.06);font-style:italic;color:#e6dcc4}
+.stats{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;margin:16px 0 0;padding:12px;border:1px solid var(--rule);background:#0d1729}
+.stats b{font-family:var(--f-num);font-weight:500;font-size:20px;line-height:1.1;color:var(--gold);text-align:right;font-variant-numeric:tabular-nums}
+.stats span{line-height:1.5}
+.fx{margin:14px 0 0;font-size:16.5px;line-height:1.55;color:#d6d3c8}
+.fx b{display:inline-block;margin-top:6px;font-family:var(--f-display);font-weight:400;font-size:18px;color:var(--text)}
+.lab{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:18px 0 8px}
+.tree{display:flex;flex-wrap:wrap;gap:8px}
+.tree button{display:grid;grid-template-columns:40px minmax(0,1fr);gap:8px;align-items:center;border:1px solid var(--rule);background:#0d1729;padding:4px 10px 4px 4px;cursor:pointer;text-align:left;max-width:100%}
+.tree button:hover{border-color:var(--gold)}
+.tree img{width:40px;height:40px;display:block}
+.tree span{font-size:14.5px;line-height:1.2}.tree small{display:block;font-family:var(--f-num);font-size:15px;color:var(--gold)}
+footer{border-top:1px solid var(--rule);margin-top:48px;padding-block:24px 40px;color:var(--muted);font-size:14px;display:grid;gap:8px}
+footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width:80ch}
+@media (max-width:980px){.shop{grid-template-columns:minmax(0,1fr)}.plate{position:static;max-height:none;order:-1}}
+@media (max-width:480px){.wall{grid-template-columns:repeat(auto-fill,minmax(54px,1fr));gap:6px}.plate{padding:14px}.counts{gap:16px}.counts div b{font-size:34px}}
+</style>
+<script src="site.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header class="bar">
+    <a class="brand" href="./">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><polygon points="16,2 29,9.5 29,22.5 16,30 3,22.5 3,9.5" fill="none" stroke="#c8aa6e" stroke-width="1.5"/><circle cx="16" cy="16" r="5" fill="none" stroke="#c8aa6e" stroke-width="1.5"/><path d="M16 2v9M16 21v9M3 9.5l8 4.5M21 18l8 4.5M29 9.5l-8 4.5M11 18l-8 4.5" stroke="#c8aa6e" stroke-width="1"/></svg>
+      Lore Explorer
+    </a>
+    <nav class="nav" aria-label="Site"><a href="./">Daily</a><a href="rift.html">The Rift</a><a href="items.html" aria-current="page">The Armory</a></nav>
+  </header>
+
+  <section class="intro">
+    <div>
+      <div class="eyebrow">Summoner's Rift · the shop</div>
+      <h1>Every item, <em>and what it does.</em></h1>
+      <p class="lede">All the items you can buy on Summoner's Rift, from a Health Potion to Infinity Edge: their stats, their effects, what they build from and into, and the lore line Riot wrote for some of them.</p>
+    </div>
+    <div class="counts" id="counts"></div>
+  </section>
+
+  <div class="tools">
+    <input id="q" type="search" placeholder="Search items or effects, e.g. shield" autocomplete="off" aria-label="Search items">
+    <div class="seg" id="roles" role="group" aria-label="Role"></div>
+  </div>
+  <div class="tools"><div class="seg" id="types" role="group" aria-label="Type"></div><div class="seg" id="sort" role="group" aria-label="Sort"></div></div>
+
+  <section class="shop">
+    <div id="wall"></div>
+    <article class="plate" id="plate" aria-live="polite"></article>
+  </section>
+
+  <footer>
+    <div>Items, stats, effects and icons come from Riot's Data Dragon (patch <span id="ver"></span>); tiers, roles and lore quotes from the <a href="https://wiki.leagueoflegends.com/en-us/Item" rel="noopener">League of Legends Wiki</a> (CC BY-SA 3.0). Saved 25 October 2026.</div>
+    <div class="legal">Lore Explorer was created under Riot Games' "Legal Jibber Jabber" policy using assets owned by Riot Games. Riot Games does not endorse or sponsor this project.</div>
+  </footer>
+</div>
+
+<script src="data/items.js"></script>
+<script>
+(function(){
+"use strict";
+const D=window.ATLAS_ITEMS, I=D.items, BY=Object.fromEntries(I.map(i=>[i.id,i]));
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const ICON=id=>`https://ddragon.leagueoflegends.com/cdn/${D.ver}/img/item/${id}.png`;
+document.getElementById("ver").textContent=D.ver;
+const TIERS=[["Legendary","Legendary items","The finished items that win games."],["Boots","Boots","One pair per champion; most upgrade from basic Boots."],["Epic","Epic items","The middle step: built from basic items, built into legendaries."],["Basic","Basic items","The building blocks."],["Starter","Starter items","What you buy at the start, including the jungle pets."],["Consumable","Consumables","Potions, elixirs and wards."],["Trinket","Trinkets","The free vision tools."]];
+const ROLES=[["","All roles"],["fighter","Fighter"],["marksman","Marksman"],["assassin","Assassin"],["mage","Mage"],["tank","Tank"],["support","Support"]];
+let st={q:"",role:"",type:"",sort:"tier",cur:null};
+document.getElementById("counts").innerHTML=[[I.length,"items"],[I.filter(i=>i.t==="Legendary").length,"legendary"],[I.filter(i=>i.q).length,"lore lines"],[I.filter(i=>i.new).length,"new in 2026"]].map(([b,s])=>`<div><b>${b}</b><span>${s}</span></div>`).join("");
+const seg=(id,opts,key)=>{const el=document.getElementById(id);el.innerHTML=opts.map(([v,l])=>`<button type="button" data-v="${v}" aria-pressed="${st[key]===v}">${esc(l)}</button>`).join("");
+  el.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;st[key]=b.dataset.v;el.querySelectorAll("button").forEach(o=>o.setAttribute("aria-pressed",String(o===b)));draw();});};
+seg("roles",ROLES,"role");seg("types",[["","Every type"],...TIERS.map(t=>[t[0],t[1]]),["new","New in 2026"]],"type");seg("sort",[["tier","By tier"],["gold","By cost"],["name","A–Z"]],"sort");
+const plain=s=>s.replace(/<[^>]+>/g," ").toLowerCase();
+function match(i){if(st.role&&!i.r.includes(st.role))return false;if(st.type==="new"&&!i.new)return false;if(st.type&&st.type!=="new"&&i.t!==st.type)return false;
+  if(st.q){const q=st.q.toLowerCase();if(!(i.n.toLowerCase().includes(q)||plain(i.fx).includes(q)||i.p.toLowerCase().includes(q)||i.st.some(s=>s[1].toLowerCase().includes(q))))return false;}return true;}
+const tile=i=>`<button type="button" class="it" data-id="${i.id}" title="${esc(i.n)} · ${i.g} gold" aria-label="${esc(i.n)}" aria-pressed="${i.id===st.cur}"><img src="${ICON(i.id)}" alt="" loading="lazy">${i.new?'<span class="nw">NEW</span>':""}<span class="g">${i.g}</span></button>`;
+function draw(){const L=I.filter(match);const w=document.getElementById("wall");
+  if(!L.length){w.innerHTML='<p class="empty">No items match. Try another word or role.</p>';return;}
+  if(st.sort==="tier"){w.innerHTML=TIERS.map(([t,h,p])=>{const G=L.filter(i=>i.t===t).sort((a,b)=>a.g-b.g||a.n.localeCompare(b.n));return G.length?`<div class="tier"><h3>${h} <span style="font-family:var(--f-num);color:var(--muted);font-size:20px">${G.length}</span></h3><p>${p}</p><div class="wall">${G.map(tile).join("")}</div></div>`:"";}).join("");}
+  else{const G=L.slice().sort(st.sort==="gold"?(a,b)=>b.g-a.g||a.n.localeCompare(b.n):(a,b)=>a.n.localeCompare(b.n));w.innerHTML=`<div class="tier"><h3>${G.length} items</h3><div class="wall">${G.map(tile).join("")}</div></div>`;}}
+const ROLE_L=Object.fromEntries(ROLES);
+const treeBtn=id=>{const i=BY[id];return i?`<button type="button" data-id="${id}"><img src="${ICON(id)}" alt="" loading="lazy"><span>${esc(i.n)}<small>${i.g}</small></span></button>`:"";};
+function show(id){const i=BY[id];if(!i)return;st.cur=id;
+  document.getElementById("plate").innerHTML=`<div class="hd"><img src="${ICON(i.id)}" alt=""><div style="min-width:0"><div class="k">${esc(i.t)}${i.r.length?" · "+i.r.map(r=>ROLE_L[r]||r).join(", "):""}${i.new?" · new in 2026":""}</div><h2>${esc(i.n)}</h2><div class="cost">${i.g} gold<small>sells for ${i.s}</small></div></div></div>
+    ${i.q?`<p class="quote">“${esc(i.q.replace(/^["“]|["”]$/g,""))}”</p>`:""}
+    ${i.p?`<p class="pt">${esc(i.p)}</p>`:""}
+    ${i.st.length?`<div class="stats">${i.st.map(([v,l])=>`<b>${esc(v)}</b><span>${esc(l)}</span>`).join("")}</div>`:""}
+    ${i.fx?`<div class="fx">${i.fx}</div>`:""}
+    ${i.from.length?`<div class="lab">Builds from</div><div class="tree">${i.from.map(treeBtn).join("")}</div>`:""}
+    ${i.into.length?`<div class="lab">Builds into</div><div class="tree">${i.into.map(treeBtn).join("")}</div>`:""}
+    <p style="margin-top:16px"><a href="https://wiki.leagueoflegends.com/en-us/${encodeURIComponent(i.n.replace(/ /g,"_"))}" target="_blank" rel="noopener" style="font-family:var(--f-mono);font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;text-decoration:none">More on the League Wiki ↗</a></p>`;
+  document.querySelectorAll(".it").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.id===id)));
+  try{history.replaceState(null,"","#i-"+id);}catch(e){}}
+document.getElementById("wall").addEventListener("click",e=>{const b=e.target.closest(".it");if(b){show(b.dataset.id);if(innerWidth<=980)document.getElementById("plate").scrollIntoView({behavior:"smooth",block:"start"});}});
+document.getElementById("plate").addEventListener("click",e=>{const b=e.target.closest(".tree button");if(b)show(b.dataset.id);});
+const qi=document.getElementById("q");qi.addEventListener("input",()=>{st.q=qi.value.trim();draw();});
+draw();
+const h=(location.hash.match(/^#i-(\d+)$/)||[])[1];
+show(BY[h]?h:(I.find(i=>i.n==="Infinity Edge")||I[0]).id);
+})();
+</script>
+</body>
+</html>
