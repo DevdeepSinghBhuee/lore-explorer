@@ -69,8 +69,8 @@ h1 em{font-style:normal;color:var(--gold)}
 .clock b{display:block;font-family:var(--f-num);font-weight:500;font-size:38px;line-height:.9;color:var(--gold);font-variant-numeric:tabular-nums}
 .clock span{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
 
-.modes{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin-bottom:22px}
-@media (max-width:1100px){.modes{grid-template-columns:repeat(2,minmax(0,1fr))}.mode[data-m="voice"]{grid-column:span 2}}
+.modes{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:22px}
+@media (max-width:1100px){.modes{grid-template-columns:repeat(2,minmax(0,1fr))}.mode[data-m="item"]{grid-column:span 2}}
 .abil{display:grid;place-items:center;padding:18px 0 6px}
 .abil img{width:min(180px,46vw);height:auto;aspect-ratio:1;border:2px solid var(--gold-dim);box-shadow:0 14px 30px rgba(0,0,0,.5);transition:transform .7s cubic-bezier(.2,.8,.2,1),filter .7s;image-rendering:auto}
 .mode{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--panel);border:1px solid var(--rule);cursor:pointer;text-align:left;min-width:0}
@@ -212,6 +212,26 @@ footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width
 .vscore{font-family:var(--f-num);font-weight:600;font-size:64px;line-height:.9;color:var(--gold)}
 @media (max-width:480px){.vbtn{width:76px;height:76px}.vplay{gap:14px}.vplay .vt b{font-size:20px}.vreveal{grid-template-columns:60px minmax(0,1fr);gap:12px}.vreveal img{width:60px;height:60px}}
 html.cjk body *{letter-spacing:.02em!important}
+/* quote mode */
+.quotes{display:grid;gap:10px;margin:0;padding:0;list-style:none}
+.quotes li{border-left:3px solid var(--gold);background:rgba(200,170,110,.06);padding:12px 16px;font-size:21px;line-height:1.45;font-style:italic;color:#e6dcc4}
+.quotes li.hid{border-left-color:var(--rule);background:transparent;color:var(--faint);font-style:normal;font-size:15px;font-family:var(--f-mono);letter-spacing:.08em;text-transform:uppercase}
+.quotes li small{display:block;font-style:normal;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:6px}
+/* item mode */
+.itm{display:grid;grid-template-columns:auto minmax(0,1fr);gap:22px;align-items:center}
+.itm .ic{width:128px;height:128px;border:2px solid var(--gold-dim);overflow:hidden;background:#05080f}
+.itm .ic img{width:100%;height:100%;display:block;transition:filter .5s}
+.itm ul{margin:0;padding:0;list-style:none;display:grid;gap:6px}
+.itm li{font-size:17px;color:#d6d3c8}.itm li b{color:var(--gold);font-weight:500}
+.itm li.no{color:var(--faint);font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase}
+.irows{display:grid;gap:6px;margin-top:14px}
+.irow{display:grid;grid-template-columns:40px minmax(0,1fr) auto auto;gap:10px;align-items:center;border:1px solid var(--rule);border-left:3px solid var(--miss);padding:5px 10px 5px 5px;background:var(--panel)}
+.irow.ok{border-left-color:var(--hit)}
+.irow img{width:40px;height:40px;display:block}
+.irow .c{font-family:var(--f-num);font-size:18px;padding:2px 8px;border:1px solid var(--rule);white-space:nowrap}
+.irow .c.near{border-color:var(--near)}.irow .c.hit{border-color:var(--hit);color:#9fe0b6}
+.irow .s{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+@media (max-width:480px){.itm{grid-template-columns:1fr;justify-items:center;text-align:center}.itm .ic{width:110px;height:110px}.irow{grid-template-columns:36px minmax(0,1fr) auto}.irow .s{display:none}.quotes li{font-size:18px}}
 /* stream mode: fresh rounds in a clean layout for streaming (no menu, countdown, explore cards or personal stats) */
 .streamtog{margin-top:12px;display:inline-flex;align-items:center;gap:8px;background:transparent;border:1px solid var(--rule);color:var(--text);font-family:var(--f-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;padding:8px 12px;cursor:pointer}
 .streamtog:hover{border-color:var(--gold)}
@@ -251,7 +271,7 @@ html.stream footer{margin-top:28px;padding-block:14px 24px;font-size:12px}
     <div>
       <div class="eyebrow" id="eye"></div>
       <h1>Lore Explorer <em>Daily</em></h1>
-      <p id="intro">Nine League of Legends champions to find every day: from clues, a zoomed-in splash, an ability icon, their lore and five voice lines. Same puzzles for everyone, free, no sign-up.</p>
+      <p id="intro">Ten League of Legends champions and one item to find every day: from clues, a zoomed-in splash, an ability icon, their lore, five voice lines and their own words, plus an item from the shop. Same puzzles for everyone, free, no sign-up.</p>
     </div>
     <div class="clock"><b id="clock">--:--:--</b><span id="untilT">until tomorrow's puzzles</span><br><button type="button" class="streamtog" id="streamOn" title="Fresh rounds for streaming: today's puzzles stay unspoiled and your streak isn't touched"><i aria-hidden="true"></i><span>Stream mode</span></button></div>
   </section>
@@ -263,6 +283,8 @@ html.stream footer{margin-top:28px;padding-block:14px 24px;font-size:12px}
     <button class="mode" role="tab" data-m="ability" aria-selected="false"><i>◈</i><span><b>Ability</b><small>A spell icon, turned and greyed</small></span><span class="st" data-st="ability"></span></button>
     <button class="mode" role="tab" data-m="lore" aria-selected="false"><i>¶</i><span><b>Lore</b><small>Their biography, name hidden</small></span><span class="st" data-st="lore"></span></button>
     <button class="mode" role="tab" data-m="voice" aria-selected="false"><i>♪</i><span><b>Voice</b><small>Five voices: who's speaking?</small></span><span class="st" data-st="voice"></span></button>
+    <button class="mode" role="tab" data-m="quote" aria-selected="false"><i>“</i><span><b>Quote</b><small>Who said it? Their own words</small></span><span class="st" data-st="quote"></span></button>
+    <button class="mode" role="tab" data-m="item" aria-selected="false"><i>◆</i><span><b>Item</b><small>A blurred icon from the shop</small></span><span class="st" data-st="item"></span></button>
   </div>
 
   <div class="play" id="play"></div>
@@ -304,7 +326,7 @@ const REL=window.ATLAS_RELEASES||{}, SK=window.ATLAS_SKINS||{}, GM=window.ATLAS_
 const DD="https://ddragon.leagueoflegends.com/cdn/img/champion/";
 const esc=s=>String(s??"").replace(/[&<>"]/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch]));
 const I=window.AtlasI18n, LANG=I?I.lang:"en", t=(k,v)=>I?I.t(k,v):k;
-const MODES={clues:1,splash:1,ability:1,lore:1,voice:1};
+const MODES={clues:1,splash:1,ability:1,lore:1,voice:1,quote:1,item:1};
 const MN=m=>t("m_"+m);
 let PK=null; // Riot's official text in the visitor's language (null = English)
 const pc=id=>PK&&PK.champs[id]||null;
@@ -326,7 +348,37 @@ function rng(seed){let a=seed>>>0;return()=>{a=(a+0x6D2B79F5)>>>0;let t=a;t=Math
 const hash=s=>{let h=2166136261;for(const ch of s){h^=ch.codePointAt(0);h=Math.imul(h,16777619);}return h>>>0;};
 // each mode walks its own fixed shuffle of all champions, so no champion repeats in a mode until all 173 have come up
 function shuffled(mode){const r=rng(hash("atlas-daily-"+mode));const a=CHAMPS.map(c=>c.id);for(let i=a.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
-const ORDER={clues:shuffled("clues"),splash:shuffled("splash"),ability:shuffled("ability"),lore:shuffled("lore"),voice:shuffled("voice")};
+const ORDER={clues:shuffled("clues"),splash:shuffled("splash"),ability:shuffled("ability"),lore:shuffled("lore"),voice:shuffled("voice"),quote:shuffled("quote"),item:[]};
+/* ---------- item mode: legendary items and boots from the shop (data/items.js + item names in the visitor's language) ---------- */
+let IT={},ITL=null,itemLoading=null;
+const itName=id=>(ITL&&ITL[id]&&ITL[id][0])||(IT[id]&&IT[id].n)||id;
+const itStats=id=>ITL&&ITL[id]?ITL[id][1].map(x=>(x[0]?x[0]+" ":"")+x[1]):(IT[id]?IT[id].st.map(x=>x.join(" ").trim()):[]);
+const itFx=id=>{if(ITL&&ITL[id])return ITL[id][2];return IT[id]?[...IT[id].fx.matchAll(/<b>(?:Active: )?([^<]+)<\/b>/g)].map(m=>m[1]):[];};
+const ITEM_ICON=id=>`https://ddragon.leagueoflegends.com/cdn/${(window.ATLAS_ITEMS||{}).ver||"16.21.1"}/img/item/${id}.png`;
+function loadItems(){if(ORDER.item.length)return Promise.resolve();
+  if(!itemLoading)itemLoading=Promise.all([new Promise(res=>{if(window.ATLAS_ITEMS)return res();const s=document.createElement("script");s.src="data/items.js";s.onload=res;s.onerror=res;document.head.appendChild(s);}),
+    LANG==="en"?null:new Promise(res=>{const s=document.createElement("script");s.src=`data/i18n/items-${LANG}.js`;s.onload=res;s.onerror=res;document.head.appendChild(s);})]).then(()=>{
+    const A=(window.ATLAS_ITEMS||{items:[]}).items;A.forEach(i=>IT[i.id]=i);ITL=window.ATLAS_I18N_ITEMS||null;
+    const pool=A.filter(i=>(i.t==="Legendary"||i.t==="Boots")&&i.n!=="Boots").map(i=>i.id).sort();
+    const r=rng(hash("atlas-daily-item"));for(let i=pool.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]];}ORDER.item=pool;});
+  return itemLoading;}
+/* ---------- quote mode: what the champion says, in their own words (Wiki transcripts of their voice lines; never one that says their own name) ---------- */
+let quoteLoading=null;
+function loadQuotes(){if(window.ATLAS_VOICE&&window.ATLAS_IX)return Promise.resolve();
+  if(!quoteLoading)quoteLoading=Promise.all([loadVoice(),new Promise(res=>{if(window.ATLAS_IX)return res();const s=document.createElement("script");s.src="data/interactions.js";s.onload=res;s.onerror=res;document.head.appendChild(s);})]);
+  return quoteLoading;}
+let QIDX=null;
+function quotesOf(id){
+  if(!QIDX){QIDX={};(window.ATLAS_IX||[]).forEach(r=>{(QIDX[r[0]]=QIDX[r[0]]||[]).push([r[3],r[2]]);});}
+  const c=CH[id],v=(window.ATLAS_VOICE||{})[id]||{};
+  const parts=[c.name,...c.name.split(/[^A-Za-z']+/)].map(w=>w.toLowerCase()).filter(w=>w.length>=3&&!["the","and"].includes(w));
+  const spoken=txt=>(String(txt||"").match(/["“][^"”]+["”]?/g)||[]).join(" ");
+  const says=txt=>{const w=spoken(txt).toLowerCase();return parts.some(x=>new RegExp(`(^|[^a-z])${x.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")}([^a-z]|$)`).test(w));};
+  const out=[],seen=new Set(),add=(txt,ctx,own)=>{const q=spoken(txt).replace(/^["“]|["”]$/g,"").replace(/["“”]/g,"").trim();if(q.length<12||seen.has(q)||says(txt))return;seen.add(q);out.push({q,ctx,own});};
+  add(v.p,t("v_k_pick"),1);add(v.b,t("v_k_ban"),1);["j","t","d"].forEach(k=>(v[k]||[]).forEach(x=>add(x[1],t(k==="j"?"v_k_joke":k==="t"?"v_k_taunt":"v_dance"),1)));
+  // lines about other champions name them, so they come last (they are the bigger hint)
+  (QIDX[id]||[]).forEach(x=>{if(!/^[A-Z][a-z]+( and [A-Z][a-z]+)?:/.test(x[0]))add(x[0],x[1],0);});
+  return out;}
 const ABI="https://ddragon.leagueoflegends.com/cdn/16.20.1/img/", SLOT=["Passive","Q","W","E","R"];
 function puzzle(mode,key,practiceSeed){
   const n=practiceSeed!=null?practiceSeed:dayNo(key);
@@ -346,6 +398,13 @@ function puzzle(mode,key,practiceSeed){
     const L=((window.ATLAS_ABILITIES||{})[id]||[0,[]])[1];
     p.ai=Math.floor(r()*L.length);p.rot=[90,180,270][Math.floor(r()*3)];p.abl=L;
     p.aopts=L.map((a,i)=>i);for(let i=p.aopts.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[p.aopts[i],p.aopts[j]]=[p.aopts[j],p.aopts[i]];}
+  }
+  if(mode==="quote"){
+    // the next champion in the shuffle who has at least three usable quotes; own lines first, lines about others after
+    let i=0,q=[];while(i<L.length){q=quotesOf(L[(((n-1)+i)%L.length+L.length)%L.length]);if(q.length>=3)break;i++;}
+    p.id=L[(((n-1)+i)%L.length+L.length)%L.length];
+    const own=q.filter(x=>x.own),oth=q.filter(x=>!x.own);[own,oth].forEach(A=>{for(let k=A.length-1;k>0;k--){const j=Math.floor(r()*(k+1));[A[k],A[j]]=[A[j],A[k]];}});
+    p.quotes=own.concat(oth).slice(0,4);
   }
   if(mode==="voice"){
     // five different champions a day: the next five places in the voice shuffle (a practice round picks five at random)
@@ -481,6 +540,8 @@ function render(){
   streamBar();
   if(mode!=="voice")vStop();
   if(mode==="voice"&&!window.ATLAS_VOICE){play.innerHTML=`<div class="stage"><h2><span>${t("v_who")}</span></h2><p style="margin:0;color:var(--muted)">…</p></div>`;loadVoice().then(()=>{if(mode==="voice")render();});statusChips();return;}
+  if(mode==="quote"&&!(window.ATLAS_VOICE&&window.ATLAS_IX)){play.innerHTML=`<div class="stage"><h2><span>${t("q_who")}</span></h2><p style="margin:0;color:var(--muted)">…</p></div>`;loadQuotes().then(()=>{if(mode==="quote")render();});statusChips();return;}
+  if(mode==="item"&&!ORDER.item.length){play.innerHTML=`<div class="stage"><h2><span>${t("i_which")}</span></h2><p style="margin:0;color:var(--muted)">…</p></div>`;loadItems().then(()=>{if(mode==="item"&&ORDER.item.length)render();});statusChips();return;}
   const p=puzzle(mode,key,pseed);
   const k=sKey(p,key);
   const state=(k&&LS.get(k,null))||p._state||{g:[],won:false,lost:false,bonus:null};
@@ -488,10 +549,11 @@ function render(){
   const save=()=>{if(SR){SR.state=state;LS.set(SKEY,SST);if(state.won||state.lost)streamTally(p,state);}else if(k)LS.set(k,state);else{PR[mode].state=state;LS.set(PRAC,PR);}};
   if(SR){if(SR.state)Object.assign(state,SR.state);}else if(pseed!=null&&PR[mode].state)Object.assign(state,PR[mode].state);
   if(mode==="voice"&&!state.rounds){state.rounds=p.rounds.map(()=>({g:[],done:false,ok:false}));state.cur=0;}
-  const done=state.won||state.lost, ans=CH[p.id];
+  const done=state.won||state.lost, ans=CH[p.id]||null;
   document.getElementById("eye").textContent=SR?t("s_eye",{mode:MN(mode)}):p.practice?t("practice_eye",{mode:MN(mode)}):t("puzzle_n",{n:p.n,date:I&&LANG!=="en"?I.date(key):new Date().toLocaleDateString(LANG,{day:"numeric",month:"long",year:"numeric"})});
 
   if(mode==="voice"){renderVoice(p,state,save,key);return;}
+  if(mode==="item"){renderItem(p,state,save,key);return;}
   let stage="";
   if(mode==="clues"){
     stage=`<div class="stage"><h2><span>${t("guess_champ")}</span><span>${t("guesses",{n:state.g.length})}</span></h2>
@@ -507,6 +569,13 @@ function render(){
     stage=`<div class="stage"><h2><span>${t("whose_ability")}</span><span>${done?"":grey?t("hint_colour"):turned?t("hint_upright"):t("no_more_hints")}</span></h2>
       <div class="abil"><img src="${ABI}${p.ai?"spell":"passive"}/${a[2]}" alt="${done?esc(ablName(p,p.ai)):"?"}" style="filter:${grey?"grayscale(1) contrast(1.1)":"none"};transform:rotate(${turned?p.rot:0}deg)"></div>
       ${state.won?abilityBonusHTML(p,state):""}</div>`;
+  }else if(mode==="quote"){
+    const wrong=state.g.filter(x=>x!==p.id).length, Q=p.quotes, show=done?Q.length:Math.min(Q.length,1+wrong);
+    const hints=[];if(done||wrong>=4)hints.push(t("from_region",{r:`<b>${esc(regName(ans.region))}</b>`}));if(done||wrong>=6)hints.push(t("class_is",{c:`<b>${esc(cls(ans))}</b>`}));
+    stage=`<div class="stage"><h2><span>${t("q_who")}</span><span>${t("q_shown",{a:show,b:Q.length})}${done?"":wrong<Q.length-1?" · "+t("q_next_after"):wrong<4?" · "+t("hint_region_after"):""}</span></h2>
+      <ul class="quotes">${Q.map((x,i)=>i<show?`<li>“${esc(x.q)}”${done?`<small>${esc(x.ctx)}</small>`:""}</li>`:`<li class="hid">${t("q_hidden")}</li>`).join("")}</ul>
+      ${hints.length?`<p style="margin:12px 0 0;font-size:15px;color:var(--muted)">${hints.join(" · ")}</p>`:""}
+      ${LANG!=="en"?`<p style="margin:10px 0 0;font-size:13px;color:var(--faint)">${t("q_en")}</p>`:""}</div>`;
   }else{
     const B=bioChunks(ans), ch=B.c, wrong=state.g.filter(x=>x!==p.id).length, show=done?ch.length:Math.min(ch.length,1+wrong);
     const hints=[];if(done||wrong>=3)hints.push(t("from_region",{r:`<b>${esc(regName(ans.region))}</b>`}));if(done||wrong>=5)hints.push(t("class_is",{c:`<b>${esc(cls(ans))}</b>`}));
@@ -534,6 +603,61 @@ function render(){
   if(STREAM&&done){const sn=document.getElementById("snext");if(sn)sn.focus({preventScroll:true});}
 }
 
+function renderItem(p,state,save,key){
+  const it=IT[p.id], done=state.won||state.lost, wrong=state.g.filter(x=>x!==p.id).length;
+  const blur=done?0:Math.max(0,7-wrong*1.6), grey=!done&&wrong<3;
+  const st=itStats(p.id), fx=itFx(p.id);
+  const clues=[];
+  clues.push(done||wrong>=1?`<li>${t("i_cost",{n:`<b>${it.g}</b>`})}</li>`:`<li class="no">${t("i_clue_after",{n:1})}</li>`);
+  clues.push(done||wrong>=2?`<li>${t("i_gives",{s:`<b>${esc((done||wrong>=4?st:st.slice(0,1)).join(" · "))}</b>`})}</li>`:`<li class="no">${t("i_clue_after",{n:2})}</li>`);
+  if(fx.length)clues.push(done||wrong>=5?`<li>${t("i_effect",{e:`<b>${esc(fx.join(" · "))}</b>`})}</li>`:`<li class="no">${t("i_clue_after",{n:5})}</li>`);
+  const stage=`<div class="stage"><h2><span>${t("i_which")}</span><span>${done?"":grey?t("hint_colour"):""}</span></h2>
+    <div class="itm"><div class="ic"><img src="${ITEM_ICON(p.id)}" alt="${done?esc(itName(p.id)):"?"}" style="filter:blur(${blur}px)${grey?" grayscale(1)":""}"></div><ul>${clues.join("")}</ul></div></div>`;
+  const input=done?"":`<div class="guess"><input id="ii" type="text" placeholder="${esc(t("i_placeholder"))}" autocomplete="off" aria-label="${esc(t("i_which"))}" aria-autocomplete="list" aria-controls="isugg"><button type="button" id="ib">${t("guess_btn")}</button><div class="sugg" id="isugg" role="listbox" hidden></div></div>
+    <div class="meta-line"><span>${state.g.length?t("tried",{n:state.g.length}):t("start_typing")}</span>${state.g.length>=8?`<button type="button" id="giveup">${t("reveal")}</button>`:""}</div>`;
+  const ANS=new Set(it.st.map(x=>x[1]));
+  const rows=state.g.length?`<div class="irows">${state.g.slice().reverse().map(g=>{const G=IT[g];if(!G)return "";const ok=g===p.id,sh=G.st.filter(x=>ANS.has(x[1])).length,d=it.g-G.g;
+    const c=ok?`<span class="c hit">${G.g}</span>`:`<span class="c ${Math.abs(d)<=300?"near":""}" title="${esc(d>0?t("i_more"):d<0?t("i_less"):t("i_same"))}">${G.g} ${d>0?"↑":d<0?"↓":"="}</span>`;
+    return `<div class="irow ${ok?"ok":""}"><img src="${ITEM_ICON(g)}" alt=""><b style="font-weight:500;min-width:0">${esc(itName(g))}</b>${c}<span class="s">${ok?"✓":t("i_shared",{n:sh})}</span></div>`;}).join("")}</div>
+    <p style="margin:8px 0 0;font-size:13.5px;color:var(--muted)">${t("i_legend")}</p>`:"";
+  const back=p.practice&&!STREAM?`<div class="meta-line" style="margin:0 0 10px"><span>${t("practice_note")}</span><button type="button" id="today">${t("back_today")}</button></div>`:"";
+  play.innerHTML=back+(done?itemResultHTML(p,state):"")+stage+input+rows;
+  wireItem(p,state,save,key);wire(p,state,save,key);statusChips();
+  if(STREAM&&done){const sn=document.getElementById("snext");if(sn)sn.focus({preventScroll:true});}
+}
+function itemResultHTML(p,state){
+  const it=IT[p.id],n=state.g.length,s=stats("item"),maxD=Math.max(1,...Object.values(s.dist||{})),me=Math.min(n,7);
+  return `<div class="result"><div class="pic" style="background:#05080f url('${ITEM_ICON(p.id)}') center/contain no-repeat;image-rendering:auto"></div><div class="body">
+    <div class="eyebrow">${state.won?(n===1?t("first_try"):t("found_it")):p.practice?t("v_out"):t("better_luck")}</div>
+    <h3>${esc(itName(p.id))}</h3><p>${state.won?t("in_n",{guesses:t("guesses",{n})}):t("revealed")} · ${it.g} ${esc(t("i_gold"))}</p>
+    ${it.q?`<p style="font-style:italic;color:#e6dcc4">“${esc(it.q.replace(/^["“]|["”]$/g,""))}”</p>`:""}
+    ${STREAM?streamActs(null):`<div class="acts"><button class="btn" type="button" id="share">${t("share")}</button><a class="btn ghost" href="items.html#i-${p.id}">${esc(t("i_armory"))}</a><button class="btn ghost" type="button" id="practice">${t("practice_btn")}</button></div>`}
+    ${STREAM?"":p.practice?`<p style="font-size:14px;color:var(--muted)">${t("practice_no_streak")}</p>`:`<div class="stats"><div><b>${s.played}</b><span>${t("st_played")}</span></div><div><b>${s.played?Math.round(s.won/s.played*100):0}%</b><span>${t("st_won")}</span></div><div><b>${s.streak}</b><span>${t("st_streak")}</span></div><div><b>${s.best}</b><span>${t("st_best")}</span></div></div>
+    <div class="dist">${[1,2,3,4,5,6,7].map(i=>{const v=(s.dist||{})[i]||0;return `<div><span>${i===7?"7+":i}</span><i class="${state.won&&i===me?"me":""}" style="width:${Math.max(6,v/maxD*100)}%">${v}</i></div>`;}).join("")}</div>`}
+  </div></div>`;
+}
+function wireItem(p,state,save,key){
+  const gi=document.getElementById("ii"),sugg=document.getElementById("isugg");if(!gi)return;
+  const DRAFT=`atlas.daily.draft.item.${p.practice?"p"+p.n:key}`;
+  const POOL=Object.values(IT).filter(i=>i.t==="Legendary"||i.t==="Boots"&&i.n!=="Boots");
+  const keys=i=>[...new Set([norm(itName(i.id)),norm(i.n)])];
+  let sel=0,list=[];
+  const draw=()=>{const q=norm(gi.value.trim());const pool=POOL.filter(i=>!state.g.includes(i.id)),starts=q?pool.filter(i=>keys(i).some(k=>k.startsWith(q))):[];
+    list=q?starts.concat(pool.filter(i=>!starts.includes(i)&&keys(i).some(k=>k.includes(q)))).slice(0,8):[];sel=0;sugg.hidden=!list.length;
+    sugg.innerHTML=list.map((i,k)=>`<button type="button" role="option" data-id="${i.id}" aria-selected="${k===sel}"><img src="${ITEM_ICON(i.id)}" alt="">${esc(itName(i.id))}${LANG!=="en"&&itName(i.id)!==i.n?` <span style="color:var(--faint);font-size:13px">${esc(i.n)}</span>`:""}<small>${i.g}</small></button>`).join("");};
+  const choose=id=>{if(!id||state.g.includes(id))return;try{sessionStorage.removeItem(DRAFT)}catch(e){}state.g.push(id);if(id===p.id){state.won=true;record(p,key,state);}save();render();const g2=document.getElementById("ii");if(g2)g2.focus();};
+  try{const d=sessionStorage.getItem(DRAFT);if(d){gi.value=d;draw();}}catch(e){}
+  gi.addEventListener("input",()=>{try{sessionStorage.setItem(DRAFT,gi.value)}catch(e){}draw();});
+  gi.addEventListener("keydown",e=>{
+    if(e.key==="ArrowDown"&&list.length){e.preventDefault();sel=(sel+1)%list.length;}
+    else if(e.key==="ArrowUp"&&list.length){e.preventDefault();sel=(sel-1+list.length)%list.length;}
+    else if(e.key==="Enter"){e.preventDefault();if(list[sel])choose(list[sel].id);return;}
+    else if(e.key==="Escape"){sugg.hidden=true;return;}else return;
+    sugg.querySelectorAll("button").forEach((b,i)=>b.setAttribute("aria-selected",String(i===sel)));});
+  sugg.addEventListener("click",e=>{const b=e.target.closest("button");if(b)choose(b.dataset.id);});
+  document.getElementById("ib").onclick=()=>{if(list[sel])choose(list[sel].id);else{const q=norm(gi.value.trim()),ex=q&&POOL.find(i=>keys(i).includes(q));if(ex)choose(ex.id);}};
+  if(!matchMedia("(hover:none)").matches)gi.focus();
+}
 function voiceKind(k){return t(k==="laugh"?"v_laugh":"v_k_"+k);}
 function renderVoice(p,state,save,key){
   const R=state.rounds, done=state.won||state.lost, cur=Math.min(state.cur||0,VOICE_N-1), rd=p.rounds[cur], st=R[cur], ans=CH[rd.id];
@@ -713,7 +837,7 @@ document.getElementById("streamOn").onclick=()=>setStream(true);
 
 // how to play + the page's fixed text, in the visitor's language
 function staticText(){
-  document.getElementById("how").innerHTML=`<h3>${t("how_title")}</h3><ul>${["clues","splash","ability","lore","voice","more","stream"].map(k=>`<li>${t("how_"+k)}</li>`).join("")}</ul>`;
+  document.getElementById("how").innerHTML=`<h3>${t("how_title")}</h3><ul>${["clues","splash","ability","lore","voice","quote","item","more","stream"].map(k=>`<li>${t("how_"+k)}</li>`).join("")}</ul>`;
   if(LANG==="en")return;
   document.documentElement.lang=LANG;
   document.getElementById("intro").textContent=t("intro");

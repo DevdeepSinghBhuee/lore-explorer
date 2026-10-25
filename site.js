@@ -196,9 +196,9 @@ html.cjk:not([lang="en"]) body *{letter-spacing:.02em!important}
   function resumeChip(){
     if(file==="index.html")return;
     var d=new Date(),key=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
-    var names={clues:T("m_clues"),splash:T("m_splash"),ability:T("m_ability"),lore:T("m_lore"),voice:T("m_voice")},open=null;
+    var names={clues:T("m_clues"),splash:T("m_splash"),ability:T("m_ability"),lore:T("m_lore"),voice:T("m_voice"),quote:T("m_quote"),item:T("m_item")},open=null;
     var v=load("atlas.daily.view")||{};
-    var order=[v.mode].concat(["clues","splash","ability","lore","voice"]).filter(function(m,i,a){return m&&names[m]&&a.indexOf(m)===i;});
+    var order=[v.mode].concat(["clues","splash","ability","lore","voice","quote","item"]).filter(function(m,i,a){return m&&names[m]&&a.indexOf(m)===i;});
     for(var i=0;i<order.length;i++){var st=load("atlas.daily."+order[i]+"."+key);if(st&&st.g&&st.g.length&&!st.won&&!st.lost){open={m:order[i],n:st.g.length};break;}}
     if(!open)return;
     var st2=document.createElement("style");st2.textContent=`
