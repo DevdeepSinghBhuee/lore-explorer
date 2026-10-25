@@ -446,6 +446,9 @@ async function journey(c){
       <p class="${x.src==="u"?"u":""}">${esc(x.note)}</p></div></a>`).join("")}</div>
       <p style="margin-top:14px"><a class="more-link" href="atlas.html#c-${c.id}">${esc(t("j_web",{name:nm(c)}))}</a></p>`:"");
 
+  // 5b · conversations: their special in-game lines with other champions (ix.js + data/interactions.js, loaded after render)
+  add("talk",t("j_talk"),"",`<div class="ixb" id="ixBox" data-c="${c.id}"></div>`);
+
   // 6 · wardrobe: rarest first, then newest
   const K=((window.ATLAS_SKINS||{})[c.id]||[]).map(k=>({num:k[0],name:k[1],rar:k[2],path:k[7]}));
   const skN=k=>I?I.skin(c,k.num,k.name):k.name;
@@ -510,6 +513,12 @@ async function journey(c){
     document.querySelector(".abilities").addEventListener("keydown",e=>{if(!/Arrow(Left|Right)/.test(e.key))return;const cur=+document.querySelector('.ab[aria-selected="true"]').dataset.i;const n=(cur+(e.key==="ArrowRight"?1:4))%5;show(n);document.querySelector(`.ab[data-i="${n}"]`).focus();});
     show(0);}
 
+  // conversations: drop the chapter (and renumber) when this champion has none
+  loadScript("ix.js").then(()=>{const box=document.getElementById("ixBox");if(!box)return;
+    const drop=()=>{const sec=document.getElementById("talk");if(sec)sec.remove();const a=document.querySelector('#rail a[data-id="talk"]');if(a)a.remove();
+      document.querySelectorAll("#chapters .chap header .n").forEach((n,i)=>n.textContent=i+1);document.querySelectorAll("#rail a b").forEach((n,i)=>n.textContent=i+1);};
+    if(!window.AtlasIX){drop();return;}
+    window.AtlasIX.mount(box,c.id,{title:false,limit:12}).then(n=>{if(!n){drop();return;}const sm=document.querySelector("#talk header h2 small");if(sm)sm.textContent=t("j_talk_sub",{n});});});
   // voice lines (voice.js + data/voice.js, loaded now)
   loadScript("voice.js").then(()=>{const vb=document.getElementById("voxBox");if(window.AtlasVoice&&vb)window.AtlasVoice.mount(vb,c);else if(vb)vb.remove();});
 

@@ -2,3 +2,4 @@ window.ATLAS_UI={"g_champions":"英雄","g_lore":"背景故事","g_play":"遊戲
 Object.assign(window.ATLAS_UI,{"it_beyond": "峽谷之外", "it_beyond_d": "Riot 其他遊戲與作品中的英雄", "j_beyond": "峽谷之外", "j_beyond_sub": "遊戲與作品：{n} 部", "b_playable": "可操作", "b_major": "主要角色", "b_minor": "客串", "b_main": "主演", "b_support": "配角", "b_sets": "聯盟戰棋系列：{n} 個", "b_likes": "喜歡", "b_all": "峽谷之外的所有英雄", "b_card_n": "卡牌：{n} 張"});
 Object.assign(window.ATLAS_UI,{"it_seasons": "賽季", "it_seasons_d": "2009 年以來的每個賽季：主題、造型、動畫"});
 Object.assign(window.ATLAS_UI,{"it_items": "軍械庫", "it_items_d": "召喚峽谷的所有裝備"});
+Object.assign(window.ATLAS_UI,{"j_talk": "對話", "j_talk_sub": "對話的英雄：{n} 位", "ix_title": "對話", "ix_en": "台詞為英文，由英雄聯盟維基整理。", "ix_more": "顯示全部"});

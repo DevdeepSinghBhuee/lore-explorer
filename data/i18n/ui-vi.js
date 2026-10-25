@@ -2,3 +2,4 @@ window.ATLAS_UI={"g_champions":"Tướng","g_lore":"Cốt truyện","g_play":"Ch
 Object.assign(window.ATLAS_UI,{"it_beyond": "Ngoài Khe Nứt", "it_beyond_d": "Tướng trong các game và phim khác của Riot", "j_beyond": "Ngoài Khe Nứt", "j_beyond_sub": "Game và phim: {n}", "b_playable": "Chơi được", "b_major": "Vai chính", "b_minor": "Xuất hiện ngắn", "b_main": "Dàn diễn viên chính", "b_support": "Vai phụ", "b_sets": "Mùa TFT: {n}", "b_likes": "Thích", "b_all": "Mọi tướng ngoài Khe Nứt", "b_card_n": "Thẻ bài: {n}"});
 Object.assign(window.ATLAS_UI,{"it_seasons": "Các mùa giải", "it_seasons_d": "Mọi mùa giải từ 2009: chủ đề, trang phục, phim ngắn"});
 Object.assign(window.ATLAS_UI,{"it_items": "Kho vũ khí", "it_items_d": "Mọi trang bị trên Summoner's Rift"});
+Object.assign(window.ATLAS_UI,{"j_talk": "Hội thoại", "j_talk_sub": "Số tướng trò chuyện: {n}", "ix_title": "Hội thoại", "ix_en": "Câu thoại bằng tiếng Anh, do League of Legends Wiki ghi lại.", "ix_more": "Xem tất cả"});

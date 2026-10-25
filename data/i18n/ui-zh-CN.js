@@ -2,3 +2,4 @@ window.ATLAS_UI={"g_champions":"英雄","g_lore":"背景故事","g_play":"游戏
 Object.assign(window.ATLAS_UI,{"it_beyond": "峡谷之外", "it_beyond_d": "拳头其他游戏与作品中的英雄", "j_beyond": "峡谷之外", "j_beyond_sub": "游戏与作品：{n} 部", "b_playable": "可操作", "b_major": "主要角色", "b_minor": "客串", "b_main": "主演", "b_support": "配角", "b_sets": "云顶之弈赛季：{n} 个", "b_likes": "喜欢", "b_all": "峡谷之外的所有英雄", "b_card_n": "卡牌：{n} 张"});
 Object.assign(window.ATLAS_UI,{"it_seasons": "赛季", "it_seasons_d": "2009 年以来的每个赛季：主题、皮肤、动画"});
 Object.assign(window.ATLAS_UI,{"it_items": "军械库", "it_items_d": "召唤师峡谷的所有装备"});
+Object.assign(window.ATLAS_UI,{"j_talk": "对话", "j_talk_sub": "对话的英雄：{n} 位", "ix_title": "对话", "ix_en": "台词为英文，由英雄联盟维基整理。", "ix_more": "显示全部"});

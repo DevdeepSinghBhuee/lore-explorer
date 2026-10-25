@@ -2,3 +2,4 @@ window.ATLAS_UI={"g_champions":"챔피언","g_lore":"세계관","g_play":"플레
 Object.assign(window.ATLAS_UI,{"it_beyond": "협곡 너머", "it_beyond_d": "라이엇의 다른 게임과 작품 속 챔피언", "j_beyond": "협곡 너머", "j_beyond_sub": "게임·작품 {n}개", "b_playable": "플레이 가능", "b_major": "주요 인물", "b_minor": "카메오", "b_main": "주연", "b_support": "조연", "b_sets": "TFT 세트 {n}개", "b_likes": "좋아하는 것", "b_all": "협곡 너머의 모든 챔피언", "b_card_n": "카드 {n}장"});
 Object.assign(window.ATLAS_UI,{"it_seasons": "시즌", "it_seasons_d": "2009년부터 모든 시즌: 테마, 스킨, 시네마틱"});
 Object.assign(window.ATLAS_UI,{"it_items": "아이템 상점", "it_items_d": "소환사의 협곡의 모든 아이템"});
+Object.assign(window.ATLAS_UI,{"j_talk": "대화", "j_talk_sub": "대화하는 챔피언: {n}명", "ix_title": "대화", "ix_en": "대사는 영어이며 리그 오브 레전드 위키의 기록입니다.", "ix_more": "모두 보기"});

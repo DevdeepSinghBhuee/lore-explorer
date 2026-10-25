@@ -1463,6 +1463,13 @@ function fillVoice(c){
   if(!voxLoading)voxLoading=new Promise(res=>{const s=document.createElement("script");s.src="voice.js";s.onload=res;s.onerror=res;document.head.appendChild(s);});
   voxLoading.then(()=>{const b=document.getElementById("voxBox");if(b&&b.dataset.c===c.id&&window.AtlasVoice)window.AtlasVoice.mount(b,c);else if(b&&!window.AtlasVoice)b.remove();});
 }
+// Conversations: ix.js (+ data/interactions.js) load on first use; special in-game lines between this champion and others
+let ixLoading=null;
+function fillTalk(c){
+  const box=document.getElementById("ixBox");if(!box)return;
+  if(!ixLoading)ixLoading=new Promise(res=>{if(window.AtlasIX)return res();const s=document.createElement("script");s.src="ix.js";s.onload=res;s.onerror=res;document.head.appendChild(s);});
+  ixLoading.then(()=>{const b=document.getElementById("ixBox");if(!b||b.dataset.c!==c.id)return;if(!window.AtlasIX){b.remove();return;}window.AtlasIX.stop();window.AtlasIX.mount(b,c.id,{limit:8});});
+}
 // Ability icons: data/abilities.js loads on first use, then shows passive + Q W E R linking to the journey's "How they play"
 let abLoading=null;
 function fillAbilities(c){
@@ -1516,6 +1523,7 @@ return `<a class="released" href="timeline.html#t-${c.id}" title="See ${esc(c.na
     </div>
     <div class="extra vox" id="voxBox" data-c="${c.id}"></div>
     <div class="ties"><h5>${esc(tr("a_ties"))}</h5>${ties || `<p class="none">${esc(tr("a_loner"))}</p>`}</div>
+    <div class="extra ixb" id="ixBox" data-c="${c.id}"></div>
     ${(()=>{const st=(window.ATLAS_STORIES||{})[c.id]||[];return `<div class="extra" id="readBox" data-c="${c.id}"${st.length?"":" hidden"}><h5>${esc(tr("a_stories"))}</h5><ul class="stories">${st.map(([t,u])=>`<li><a href="${esc(AI?AI.storyUrl(u):`https://universe.leagueoflegends.com/en_US/story/${u}/`)}" target="_blank" rel="noopener">${esc(AI?AI.storyTitle(u,t):t)}<span aria-hidden="true"> ↗</span></a></li>`).join("")}</ul></div>`;})()}
     ${(()=>{const L=(window.ATLAS_LOR||{})[c.id]||[];return L.length?`<div class="extra"><h5>${esc(tr("a_in_lor"))}</h5><div class="lor">${L.map(([code,n])=>`<a href="library.html#card-${code}" title="${esc(n)}"><img src="img/cards/${code}.webp" alt="${esc(n)}" loading="lazy"></a>`).join("")}</div></div>`:"";})()}
     ${(()=>{const R=(window.ATLAS_RB||{})[c.id]||[];return R.length?`<div class="extra"><h5>${esc(tr("a_in_rb"))}</h5><div class="lor">${R.map(([id,n,img])=>`<a href="riftbound.html#card-${id}" title="${esc(n)}"><img src="https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/${img}?w=200&fm=webp" alt="${esc(n)}" loading="lazy"></a>`).join("")}</div></div>`:"";})()}
@@ -1523,6 +1531,7 @@ return `<a class="released" href="timeline.html#t-${c.id}" title="See ${esc(c.na
     <div class="extra skins" id="skinsBox" data-c="${c.id}"></div>
     ${(()=>{const V=[];(window.ATLAS_VIDEOS||[]).forEach(sh=>sh.v.forEach(v=>{if(v.ch.includes(c.id)&&sh.id!=="login"&&sh.id!=="making")V.push(v);}));const L2=(window.ATLAS_VIDEOS||[]).find(sh=>sh.id==="login");const lg=L2?L2.v.find(v=>v.ch.includes(c.id)):null;if(lg)V.push(lg);return V.length?`<div class="extra"><h5>${esc(tr("j_watch"))}</h5><div class="vids">${V.slice(0,6).map(v=>`<a href="theater.html#v-${v.y}"><img src="https://i.ytimg.com/vi/${v.y}/mqdefault.jpg" alt="" loading="lazy"><span>${esc(v.t)}</span></a>`).join("")}</div></div>`:"";})()}`;
   fillVoice(c);
+  fillTalk(c);
   fillSkins(c);
   fillAbilities(c);
   fillReading(c);

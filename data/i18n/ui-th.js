@@ -2,3 +2,4 @@ window.ATLAS_UI={"g_champions":"แชมเปียน","g_lore":"เรื่
 Object.assign(window.ATLAS_UI,{"it_beyond": "นอกสนามรบ", "it_beyond_d": "แชมเปี้ยนในเกมและซีรีส์อื่นของ Riot", "j_beyond": "นอกสนามรบ", "j_beyond_sub": "เกมและซีรีส์: {n}", "b_playable": "เล่นได้", "b_major": "บทสำคัญ", "b_minor": "รับเชิญ", "b_main": "นักแสดงหลัก", "b_support": "บทสมทบ", "b_sets": "เซ็ต TFT: {n}", "b_likes": "ชอบ", "b_all": "แชมเปี้ยนทั้งหมดนอกสนามรบ", "b_card_n": "การ์ด: {n}"});
 Object.assign(window.ATLAS_UI,{"it_seasons": "ซีซั่น", "it_seasons_d": "ทุกซีซั่นตั้งแต่ปี 2009: ธีม สกิน และซีเนมาติก"});
 Object.assign(window.ATLAS_UI,{"it_items": "คลังอาวุธ", "it_items_d": "ไอเทมทั้งหมดใน Summoner's Rift"});
+Object.assign(window.ATLAS_UI,{"j_talk": "บทสนทนา", "j_talk_sub": "แชมเปี้ยนที่พูดคุยด้วย: {n}", "ix_title": "บทสนทนา", "ix_en": "บทพูดเป็นภาษาอังกฤษ ถอดความโดย League of Legends Wiki", "ix_more": "แสดงทั้งหมด"});

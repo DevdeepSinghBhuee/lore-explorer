@@ -2,3 +2,4 @@ window.ATLAS_UI={"g_champions":"Чемпионы","g_lore":"Лор","g_play":"И
 Object.assign(window.ATLAS_UI,{"it_beyond": "За пределами Ущелья", "it_beyond_d": "Чемпионы в других играх и сериалах Riot", "j_beyond": "За пределами Ущелья", "j_beyond_sub": "Игры и сериалы: {n}", "b_playable": "Можно играть", "b_major": "Главная роль", "b_minor": "Камео", "b_main": "Основной состав", "b_support": "Второстепенная роль", "b_sets": "Сеты TFT: {n}", "b_likes": "Любит", "b_all": "Все чемпионы за пределами Ущелья", "b_card_n": "Карты: {n}"});
 Object.assign(window.ATLAS_UI,{"it_seasons": "Сезоны", "it_seasons_d": "Все сезоны с 2009 года: темы, образы, ролики"});
 Object.assign(window.ATLAS_UI,{"it_items": "Арсенал", "it_items_d": "Все предметы Ущелья призывателей"});
+Object.assign(window.ATLAS_UI,{"j_talk": "Разговоры", "j_talk_sub": "Чемпионы в разговорах: {n}", "ix_title": "Разговоры", "ix_en": "Реплики на английском, расшифровка League of Legends Wiki.", "ix_more": "Показать все"});

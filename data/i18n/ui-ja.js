@@ -2,3 +2,4 @@ window.ATLAS_UI={"g_champions":"チャンピオン","g_lore":"ストーリー","
 Object.assign(window.ATLAS_UI,{"it_beyond": "リフトの外へ", "it_beyond_d": "Riotのほかのゲームや作品に登場するチャンピオン", "j_beyond": "リフトの外へ", "j_beyond_sub": "ゲーム・作品：{n}本", "b_playable": "プレイアブル", "b_major": "主要キャラクター", "b_minor": "カメオ出演", "b_main": "メインキャスト", "b_support": "脇役", "b_sets": "TFTセット：{n}回", "b_likes": "好きなもの", "b_all": "リフトの外のチャンピオン一覧", "b_card_n": "カード：{n}枚"});
 Object.assign(window.ATLAS_UI,{"it_seasons": "シーズン", "it_seasons_d": "2009年からの全シーズン：テーマ、スキン、シネマティック"});
 Object.assign(window.ATLAS_UI,{"it_items": "アーモリー", "it_items_d": "サモナーズリフトの全アイテム"});
+Object.assign(window.ATLAS_UI,{"j_talk": "会話", "j_talk_sub": "会話するチャンピオン：{n}人", "ix_title": "会話", "ix_en": "セリフは英語で、League of Legends Wikiによる書き起こしです。", "ix_more": "すべて表示"});
