@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<script src="i18n.js"></script>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Teamfight Tactics · Every set, unit and Little Legend</title>
+<meta name="description" content="Every Teamfight Tactics set since 2019 with its champions in their TFT skins, its traits and what they do, plus every Little Legend.">
+<link rel="canonical" href="https://devdeepsinghbhuee.github.io/lore-explorer/tft.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Lore Explorer">
+<meta property="og:title" content="Teamfight Tactics">
+<meta property="og:description" content="All 25 Teamfight Tactics sets, their units, traits and every Little Legend.">
+<meta property="og:url" content="https://devdeepsinghbhuee.github.io/lore-explorer/tft.html">
+<meta property="og:image" content="https://devdeepsinghbhuee.github.io/lore-explorer/img/og/tft.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Teamfight Tactics: every set, unit and Little Legend.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#080d18">
+<link rel="icon" href="img/icon.svg" type="image/svg+xml">
+<link rel="icon" href="img/icon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="img/icon-180.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus+SC&family=Alegreya:ital,wght@0,400;0,500;0,700;1,400&family=Spline+Sans+Mono:wght@400;500&family=Teko:wght@400;500;600&display=swap">
+<style>
+/* Layout: a set browser. A strip of all 25 sets; the chosen set shows its traits (tap one to light up its units) and its units by cost as TFT renders. Then a Little Legends gallery by species. Shares the Atlas tokens. */
+:root{
+  color-scheme:dark;
+  --ink:#080d18; --panel:#0f1a2e; --panel-2:#142238;
+  --gold:#c8aa6e; --gold-dim:#7d6a45; --text:#ebe4d3; --muted:#939bb0; --faint:#5b6580;
+  --rule:rgba(200,170,110,.22);
+  --void:#b07ce8; --blueside:#5aa8ff; --redside:#ff6f5e;
+  --f-display:"Marcellus SC","Cinzel",Georgia,serif;
+  --f-body:"Alegreya",Georgia,"Times New Roman",serif;
+  --f-mono:"Spline Sans Mono",ui-monospace,Menlo,monospace;
+  --f-num:"Teko","Oxanium",var(--f-display),sans-serif;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box}
+html{scroll-padding-top:16px}
+body{margin:0;background:var(--ink);color:var(--text);font-family:var(--f-body);font-size:18px;line-height:1.55;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+img{max-width:100%}
+[hidden]{display:none!important}
+a{color:var(--gold)}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+.wrap{max-width:1240px;margin-inline:auto}
+
+.bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:18px;border-bottom:1px solid var(--rule);flex-wrap:wrap}
+.brand{font-family:var(--f-display);font-size:20px;letter-spacing:.08em;color:var(--gold);display:flex;align-items:center;gap:10px;text-decoration:none}
+.brand svg{width:26px;height:26px}
+.nav{display:flex;gap:4px;flex-wrap:wrap}
+.nav a{font-family:var(--f-mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-decoration:none;padding:7px 12px}
+
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+.intro{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;padding-block:34px 24px}
+h1{font-family:var(--f-display);font-weight:400;font-size:clamp(40px,6vw,78px);line-height:.95;margin:12px 0 14px;text-wrap:balance}
+h1 em{font-style:normal;color:var(--gold)}
+.lede{font-size:19px;max-width:50ch;margin:0;color:#c4c8d3}
+.counts{display:flex;gap:22px;flex-wrap:wrap}
+.counts div b{display:block;font-family:var(--f-num);font-weight:600;font-size:40px;line-height:.9;color:var(--gold);font-variant-numeric:tabular-nums}
+.counts div span{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+
+
+:root{--c1:#9aa4b2;--c2:#3fae6a;--c3:#3c8fe0;--c4:#b35be0;--c5:#e8b440}
+h3.sec{font-family:var(--f-display);font-weight:400;font-size:clamp(28px,3vw,38px);margin:52px 0 4px}
+.sub{margin:0 0 18px;color:var(--muted);max-width:70ch}
+.sets{display:flex;gap:6px;flex-wrap:wrap}
+.sets button{border:1px solid var(--rule);background:#0d1729;padding:7px 10px 8px;cursor:pointer;text-align:left;min-width:120px;flex:1 1 120px}
+.sets button b{display:block;font-family:var(--f-num);font-size:20px;line-height:1;color:var(--gold);font-weight:500}
+.sets button span{display:block;font-size:13.5px;line-height:1.25;color:var(--text)}
+.sets button small{display:block;font-family:var(--f-num);font-size:15px;color:var(--muted)}
+.sets button[aria-pressed="true"]{border-color:var(--gold);background:rgba(200,170,110,.12)}
+.sethd{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin:26px 0 14px}
+.sethd h2{font-family:var(--f-display);font-weight:400;font-size:clamp(32px,4vw,52px);line-height:1;margin:4px 0 0}
+.sethd .k{font-family:var(--f-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+.lab{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:18px 0 8px}
+.traits{display:flex;flex-wrap:wrap;gap:6px}
+.trait{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--rule);background:#0d1729;padding:4px 10px 4px 5px;cursor:pointer;font-size:14.5px;color:var(--text)}
+.trait img{width:22px;height:22px;filter:invert(.85) sepia(.4) saturate(.6)}
+.trait small{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.trait[aria-pressed="true"]{border-color:var(--gold);background:rgba(200,170,110,.14)}
+.tbox{margin-top:10px;border-left:3px solid var(--gold);background:rgba(200,170,110,.06);padding:10px 14px}
+.tbox b{font-family:var(--f-display);font-weight:400;font-size:20px}
+.tbox p{margin:4px 0 0;color:#d6d3c8;font-size:16px}
+.tbox ul{margin:6px 0 0;padding:0;list-style:none;display:grid;gap:3px;font-size:15.5px;color:#d6d3c8}
+.tbox li b{font-family:var(--f-num);font-weight:500;font-size:18px;color:var(--gold);margin-right:8px}
+.cost{margin-top:4px}
+.cost h4{display:flex;align-items:center;gap:8px;font-family:var(--f-mono);font-weight:400;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:16px 0 8px}
+.cost h4 i{width:10px;height:10px;background:var(--cc)}
+.units{display:grid;grid-template-columns:repeat(auto-fill,minmax(122px,1fr));gap:8px}
+.unit{position:relative;display:block;border:1px solid var(--rule);border-bottom:3px solid var(--cc);background:radial-gradient(ellipse at 50% 70%,color-mix(in srgb,var(--cc) 22%,#142238),#0a1120 75%);text-decoration:none;color:var(--text);min-width:0;transition:opacity .2s}
+.unit .r{aspect-ratio:1;display:grid;place-items:center;overflow:hidden}
+.unit .r img{width:100%;height:100%;object-fit:contain}
+.unit span{display:block;padding:4px 6px 0;font-size:14.5px;line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.unit small{display:block;padding:0 6px 6px;font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.unit.dim{opacity:.22}
+a.unit:hover{border-color:var(--gold)}
+.legends{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px}
+.lg{border:1px solid var(--rule);background:#0d1729;padding:0;cursor:pointer;text-align:center;min-width:0}
+.lg img{width:100%;aspect-ratio:1;object-fit:cover;display:block;background:#05080f}
+.lg span{display:block;padding:5px 4px 2px;font-size:14px;line-height:1.2}
+.lg small{display:block;padding:0 4px 6px;font-family:var(--f-num);font-size:14px;color:var(--muted)}
+.lg[aria-pressed="true"]{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold)}
+.lgpanel{margin:14px 0 6px;border:1px solid var(--rule);background:linear-gradient(180deg,var(--panel),#0b1426);padding:16px}
+.lgpanel h4{font-family:var(--f-display);font-weight:400;font-size:28px;margin:0}
+.lgpanel p{margin:4px 0 12px;color:#d6d3c8;max-width:70ch}
+.vars{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;scrollbar-width:thin}
+.var{flex:none;width:118px;border:1px solid var(--rule);background:#05080f;border-bottom:3px solid var(--rc,var(--rule))}
+.var img{width:100%;aspect-ratio:1;object-fit:cover;display:block}
+.var span{display:block;padding:4px 6px 2px;font-size:12.5px;line-height:1.2}
+.var small{display:block;padding:0 6px 6px;font-family:var(--f-mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--rc,var(--muted))}
+.seg{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.seg button{border:1px solid var(--rule);background:transparent;padding:7px 11px;cursor:pointer;font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.seg button[aria-pressed="true"]{border-color:var(--gold);color:var(--text);background:rgba(200,170,110,.1)}
+footer{border-top:1px solid var(--rule);margin-top:48px;padding-block:24px 40px;color:var(--muted);font-size:14px;display:grid;gap:8px}
+footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width:80ch}
+@media (max-width:480px){.sets button{min-width:96px}.units{grid-template-columns:repeat(3,minmax(0,1fr))}.legends{grid-template-columns:repeat(3,minmax(0,1fr))}.counts{gap:16px}.counts div b{font-size:34px}}
+</style>
+<script src="site.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header class="bar">
+    <a class="brand" href="./">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><polygon points="16,2 29,9.5 29,22.5 16,30 3,22.5 3,9.5" fill="none" stroke="#c8aa6e" stroke-width="1.5"/><circle cx="16" cy="16" r="5" fill="none" stroke="#c8aa6e" stroke-width="1.5"/><path d="M16 2v9M16 21v9M3 9.5l8 4.5M21 18l8 4.5M29 9.5l-8 4.5M11 18l-8 4.5" stroke="#c8aa6e" stroke-width="1"/></svg>
+      Lore Explorer
+    </a>
+    <nav class="nav" aria-label="Site"><a href="./">Daily</a><a href="beyond.html">Beyond the Rift</a><a href="tft.html" aria-current="page">Teamfight Tactics</a></nav>
+  </header>
+
+  <section class="intro">
+    <div>
+      <div class="eyebrow">Teamfight Tactics · 2019 to today</div>
+      <h1>Every set, <em>every unit.</em></h1>
+      <p class="lede">Teamfight Tactics puts League's champions on a chessboard, in a new set every few months, each with its own traits and skins. Pick a set to see who was in it and what their traits did, then meet the Little Legends.</p>
+    </div>
+    <div class="counts" id="counts"></div>
+  </section>
+
+  <div class="sets" id="sets" role="group" aria-label="Sets"></div>
+  <section id="set"></section>
+
+  <h3 class="sec" id="ll">Little Legends</h3>
+  <p class="sub">The little creatures you play as in Teamfight Tactics, with Riot's own descriptions. Pick a species to see all its versions.</p>
+  <div class="seg" id="lgf" role="group" aria-label="Kind"></div>
+  <div id="lgp"></div>
+  <div class="legends" id="legends"></div>
+
+  <footer>
+    <div>Sets, units, skins and traits come from the <a href="https://wiki.leagueoflegends.com/en-us/TFT:Teamfight_Tactics" rel="noopener">League of Legends Wiki</a> (CC BY-SA 3.0), with its unit renders and trait icons; Little Legends from Riot's game client data via CommunityDragon. Saved 25 October 2026.</div>
+    <div class="legal">Lore Explorer was created under Riot Games' "Legal Jibber Jabber" policy using assets owned by Riot Games. Riot Games does not endorse or sponsor this project.</div>
+  </footer>
+</div>
+
+<script src="data/tft.js"></script>
+<script>
+(function(){
+"use strict";
+const T=window.ATLAS_TFT;
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const W="https://wiki.leagueoflegends.com/en-us/images/", CD="https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/";
+const wf=f=>encodeURIComponent(f.replace(/ /g,"_"));
+const thumb=f=>`${W}thumb/${wf(f)}/240px-${wf(f)}`, full=f=>W+wf(f);
+const CC=c=>`var(--c${Math.min(5,Math.max(1,c))})`;
+const allUnits=new Set();Object.values(T.units).forEach(L=>L.forEach(u=>allUnits.add(u[0])));
+const sp=Object.entries(T.legends);
+document.getElementById("counts").innerHTML=[[T.sets.length,"sets"],[allUnits.size,"different units"],[sp.filter(([k,v])=>v.t==="LittleLegend").length,"Little Legend species"],[sp.reduce((a,[k,v])=>a+v.v.length,0),"Little Legend looks"]].map(([b,s])=>`<div><b>${b}</b><span>${s}</span></div>`).join("");
+// sets strip, newest first
+const SETS=T.sets.slice().reverse();
+document.getElementById("sets").innerHTML=SETS.map(s=>`<button type="button" data-s="${s[0]}" aria-pressed="false"><b>Set ${s[0]}</b><span>${esc(s[1])}</span><small>${s[2].slice(0,4)} · ${(T.units[s[0]]||[]).length}</small></button>`).join("");
+let cur=null,trait=null;
+function showSet(n,push){const S=T.sets.find(s=>s[0]===n);if(!S)return;cur=n;trait=null;
+  document.querySelectorAll("#sets button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.s===n)));
+  const U=T.units[n]||[], TR=T.traits[n]||{}, costs=[...new Set(U.map(u=>u[3]))].sort((a,b)=>a-b);
+  const tnames=Object.keys(TR).sort((a,b)=>(TR[a][0]>TR[b][0]?-1:TR[a][0]<TR[b][0]?1:0)||a.localeCompare(b));
+  document.getElementById("set").innerHTML=`<div class="sethd"><div><div class="k">Set ${n} · from ${new Date(S[2]+"T12:00:00").toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"})}</div><h2>${esc(S[1])}</h2></div><div class="k" style="color:var(--muted)">${U.length} units · ${tnames.length} traits</div></div>
+    ${tnames.length?`<div class="lab">Traits · tap one to see its units</div><div class="traits">${tnames.map(t=>`<button type="button" class="trait" data-t="${esc(t)}" aria-pressed="false">${TR[t][1]?`<img src="${full(TR[t][1])}" alt="" loading="lazy">`:""}${esc(t)} <small>${esc(TR[t][0])}</small></button>`).join("")}</div><div id="tbox"></div>`:""}
+    ${costs.map(c=>`<div class="cost" style="--cc:${CC(c)}"><h4><i></i>${c} gold</h4><div class="units">${U.filter(u=>u[3]===c).map(u=>{const tag=u[1]?"a":"div";
+      return `<${tag} class="unit" ${u[1]?`href="journey.html?c=${u[1]}"`:""} data-tr="${esc(u[4].join("|"))}" title="${esc(u[0])}${u[2]&&u[2]!=="Original"?" · "+u[2]:""}${u[5]?" · ability: "+u[5]:""}"><div class="r">${u[6]?`<img src="${thumb(u[6])}" data-full="${esc(full(u[6]))}" alt="" loading="lazy">`:""}</div><span>${esc(u[0])}</span><small>${esc(u[4].join(" · ")||(u[2]&&u[2]!=="Original"?u[2]:""))}</small></${tag}>`;}).join("")}</div></div>`).join("")}`;
+  // a render smaller than 240px has no thumbnail: fall back to the file itself
+  document.querySelectorAll("#set .unit img").forEach(i=>i.addEventListener("error",()=>{if(i.dataset.full&&i.src!==i.dataset.full)i.src=i.dataset.full;},{once:true}));
+  if(push!==false)try{history.replaceState(null,"","#set-"+n);}catch(e){}
+}
+document.getElementById("sets").addEventListener("click",e=>{const b=e.target.closest("button");if(b)showSet(b.dataset.s);});
+document.getElementById("set").addEventListener("click",e=>{const b=e.target.closest(".trait");if(!b)return;const t=b.dataset.t;trait=trait===t?null:t;
+  document.querySelectorAll(".trait").forEach(x=>x.setAttribute("aria-pressed",String(x.dataset.t===trait)));
+  document.querySelectorAll("#set .unit").forEach(u=>u.classList.toggle("dim",!!trait&&!u.dataset.tr.split("|").includes(trait)));
+  const box=document.getElementById("tbox"),x=trait&&T.traits[cur][trait];
+  box.innerHTML=x?`<div class="tbox"><b>${esc(trait)}</b> <span style="font-family:var(--f-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">${esc(x[0])}</span>${x[2]?`<p>${esc(x[2])}</p>`:""}${x[3].length?`<ul>${x[3].slice().sort((a,b)=>a[0]-b[0]).map(([n,v])=>`<li><b>(${n})</b>${esc(v)}</li>`).join("")}</ul>`:""}</div>`:"";});
+// Little Legends
+const RC={Default:"#9aa4b2",Epic:"#3c8fe0",Legendary:"#e0a33c",Mythic:"#c45bf0"};
+const KIND=[["LittleLegend","Little Legends"],["Chibi","Chibi champions"],["Style2","Other looks"]];
+let kind="LittleLegend",sel=null;
+const seg=document.getElementById("lgf");seg.innerHTML=KIND.map(([k,l])=>`<button type="button" data-k="${k}" aria-pressed="${k===kind}">${l} (${sp.filter(([n,v])=>v.t===k).length})</button>`).join("");
+seg.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;kind=b.dataset.k;sel=null;seg.querySelectorAll("button").forEach(o=>o.setAttribute("aria-pressed",String(o===b)));drawL();});
+const icon=v=>CD+v[2];
+function drawL(){const L=sp.filter(([n,v])=>v.t===kind).sort((a,b)=>a[0].localeCompare(b[0]));
+  document.getElementById("legends").innerHTML=L.map(([n,v])=>{const d=v.v.find(x=>x[3])||v.v[0];return `<button type="button" class="lg" data-n="${esc(n)}" aria-pressed="${n===sel}"><img src="${icon(d)}" alt="" loading="lazy"><span>${esc(n)}</span><small>${v.v.length}</small></button>`;}).join("");
+  const P=document.getElementById("lgp"),x=sel&&T.legends[sel];
+  P.innerHTML=x?`<div class="lgpanel"><h4>${esc(sel)}</h4>${x.d?`<p>${esc(x.d)}</p>`:""}<div class="vars">${x.v.map(v=>`<div class="var" style="--rc:${RC[v[1]]||"var(--rule)"}"><img src="${icon(v)}" alt="" loading="lazy"><span>${esc(v[0])}</span><small>${esc(v[1])}</small></div>`).join("")}</div></div>`:"";}
+document.getElementById("legends").addEventListener("click",e=>{const b=e.target.closest(".lg");if(!b)return;sel=sel===b.dataset.n?null:b.dataset.n;drawL();if(sel)document.getElementById("lgp").scrollIntoView({behavior:"smooth",block:"nearest"});});
+drawL();
+const h=location.hash.match(/^#set-([\d.]+)$/);showSet(h&&T.units[h[1]]?h[1]:SETS[0][0],!!h);
+})();
+</script>
+</body>
+</html>
