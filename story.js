@@ -304,8 +304,9 @@
     on(bk.querySelector(".bk-skip"),"click",function(){powered=powered.map(function(){return true;});showPage(pageI,0);});
     bk.querySelectorAll(".bk-dots button").forEach(function(d){on(d,"click",function(){var j=+d.dataset.i;if(j!==pageI)showPage(j,j<pageI?-1:1);});});
     // swipe between plates on touch screens (not on the crystal)
-    var sx=null; on(bk.querySelector(".bk-plate"),"touchstart",function(e){sx=e.touches[0].clientX;},{passive:true});
-    on(bk.querySelector(".bk-plate"),"touchend",function(e){if(sx==null)return;var dx=e.changedTouches[0].clientX-sx;sx=null;if(Math.abs(dx)>50)showPage(pageI+(dx<0?1:-1),dx<0?1:-1);},{passive:true});
+    var sx=null,sy=0; on(bk.querySelector(".bk-plate"),"touchstart",function(e){if(e.touches.length!==1){sx=null;return;}sx=e.touches[0].clientX;sy=e.touches[0].clientY;},{passive:true});
+    on(bk.querySelector(".bk-plate"),"touchend",function(e){if(sx==null)return;var t=e.changedTouches[0],dx=t.clientX-sx,dy=t.clientY-sy;sx=null;
+      if(Math.abs(dx)>60&&Math.abs(dx)>2*Math.abs(dy))showPage(pageI+(dx<0?1:-1),dx<0?1:-1);},{passive:true}); // only clearly sideways swipes turn the page
     showPage(0,0);
     off.push(function(){cancelAnimationFrame(chargeRaf);cancelAnimationFrame(capRaf);});
 
