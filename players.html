@@ -290,7 +290,7 @@ document.getElementById("grid").addEventListener("click",e=>{const b=e.target.cl
 
 /* Dossier */
 const dz=document.getElementById("dz");
-function chLink(n,inner){const c=champ(n);return c?`<a href="atlas.html#c-${c.id}" title="${esc(n)} in the Atlas">${inner}</a>`:`<span title="${esc(n)}">${inner}</span>`;}
+function chLink(n,inner){const c=champ(n);return c?`<a href="journey.html?c=${c.id}" title="${esc(n)}">${inner}</a>`:`<span title="${esc(n)}">${inner}</span>`;}
 function open(id,push=true){
   const p=P.find(x=>x.id===id); if(!p)return;
   const t=byCode[p.team], max=Math.max(1,...p.champs.map(c=>c[1]));
@@ -319,7 +319,7 @@ function open(id,push=true){
       </div></div>
     <div class="dz-body">
       <section><h3>Signature champions</h3><p class="sub">Most-played across ${p.games.toLocaleString()} recorded pro games (${p.nchamps} different champions). Tap one to open it in the Atlas.</p>
-        <div class="sig">${p.champs.map(([cn,g])=>{const img=tile(cn);const inner=`${img?`<img src="${img}" alt="" loading="lazy">`:`<span></span>`}<div style="min-width:0"><div class="n"><span>${esc(cn)}</span><span class="num">${g}</span></div><div class="meter"><i style="width:${Math.round(g/max*100)}%"></i></div><div class="g">${(g/p.games*100).toFixed(1)}% of games</div></div>`;const ch=champ(cn);return ch?`<a class="sc" href="atlas.html#c-${ch.id}">${inner}</a>`:`<div class="sc">${inner}</div>`;}).join("")}</div></section>
+        <div class="sig">${p.champs.map(([cn,g])=>{const img=tile(cn);const inner=`${img?`<img src="${img}" alt="" loading="lazy">`:`<span></span>`}<div style="min-width:0"><div class="n"><span>${esc(cn)}</span><span class="num">${g}</span></div><div class="meter"><i style="width:${Math.round(g/max*100)}%"></i></div><div class="g">${(g/p.games*100).toFixed(1)}% of games</div></div>`;const ch=champ(cn);return ch?`<a class="sc" href="journey.html?c=${ch.id}">${inner}</a>`:`<div class="sc">${inner}</div>`;}).join("")}</div></section>
       <section><h3>Worlds history</h3><p class="sub">${n?`${n} World Championship${n>1?"s":""} before 2026${c?`, ${c} title${c>1?"s":""}`:""}. Champion icons are the ones they played most that year.`:"2026 is their first World Championship."}</p>
         <div class="tl">${rows}</div></section>
       <div class="more"><a href="https://lol.fandom.com/wiki/${encodeURIComponent(p.wiki.replace(/ /g,"_"))}" rel="noopener">Full profile on Leaguepedia ↗</a><a href="worlds.html">Worlds 2026 schedule →</a></div>

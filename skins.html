@@ -328,7 +328,7 @@ function render(){
   document.getElementById("empty").hidden=list.length>0;
   document.getElementById("more").hidden=S.shown>=list.length;
   const filtered=S.q||S.champ||S.rar!=="all"||S.line||S.regions.size||S.legacy;
-  document.getElementById("status").innerHTML=`${t("s_showing",{a:`<b>${Math.min(S.shown,list.length).toLocaleString(LANG)}</b>`,b:`<b>${list.length.toLocaleString(LANG)}</b>`})}${S.champ?" "+t("s_for",{name:`<a href="atlas.html#c-${S.champ}">${esc(CH[S.champ].name)}</a>`}):""}${filtered?` · <button class="clear" type="button" id="clear">${t("c_clear")}</button>`:""}`;
+  document.getElementById("status").innerHTML=`${t("s_showing",{a:`<b>${Math.min(S.shown,list.length).toLocaleString(LANG)}</b>`,b:`<b>${list.length.toLocaleString(LANG)}</b>`})}${S.champ?" "+t("s_for",{name:`<a href="journey.html?c=${S.champ}">${esc(CH[S.champ].name)}</a>`}):""}${filtered?` · <button class="clear" type="button" id="clear">${t("c_clear")}</button>`:""}`;
   const cl=document.getElementById("clear"); if(cl)cl.onclick=()=>{reset();apply();};
 }
 function reset(){S.q="";S.champ="";S.rar="all";S.line="";S.regions.clear();S.legacy=false;S.shown=PAGE;
@@ -374,11 +374,11 @@ function open(s){
       </div>
       <div class="side">
         <h3>${t("s_champion")}</h3>
-        <a class="who" href="atlas.html#c-${c.id}"><img src="img/${c.id}-tile.webp" alt=""><div><b>${esc(c.name)}</b><span>${esc(c.title)}</span></div></a>
+        <a class="who" href="journey.html?c=${c.id}"><img src="img/${c.id}-tile.webp" alt=""><div><b>${esc(c.name)}</b><span>${esc(c.title)}</span></div></a>
         <div class="links">
           <button type="button" class="fav-btn" data-fav="${c.id}" data-fav-label>${t("fav_add")}</button>
           <a href="journey.html?c=${c.id}">${esc(t("a_take",{name:c.name}))}</a>
-          <a href="atlas.html#c-${c.id}">${esc(t("s_meet",{name:c.name}))}</a>
+          <a href="journey.html?c=${c.id}">${esc(t("s_meet",{name:c.name}))}</a>
           <a href="#" id="allc">${esc(t("s_all_c",{name:c.name,n:total}))}</a>
         </div>
         <div class="step"><button type="button" id="pv">${t("c_prev")}</button><button type="button" id="nx">${t("c_next")}</button></div>

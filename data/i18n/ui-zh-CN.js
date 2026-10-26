@@ -15,3 +15,7 @@ Object.assign(window.ATLAS_UI,{"it_makeovers": "今昔对比", "it_makeovers_d":
 Object.assign(window.ATLAS_UI,{"it_finals": "历届决赛", "it_finals_d": "每一届全球总决赛和MSI决赛，逐局回顾"});
 
 Object.assign(window.ATLAS_UI,{"it_gallery_t": "图标、表情和守卫", "it_champs": "全部英雄", "it_champs_d": "每位英雄，尽在一处", "it_cos": "皮肤与收藏", "it_cos_d": "所有皮肤、新旧原画、图标、表情和守卫", "it_history": "历史", "it_history_d": "每位英雄的发布与每个赛季", "it_game": "游戏", "it_game_d": "召唤师峡谷、所有装备与版本日程", "it_cards": "卡牌游戏", "it_cards_d": "符文之地传说与Riftbound卡牌", "search": "搜索", "search_ph": "搜索英雄、皮肤、装备、故事…", "section_tabs": "本栏目", "loading": "加载中…", "no_results": "没有找到，换个词试试。", "k_c": "英雄", "k_pg": "页面", "k_s": "皮肤", "k_i": "装备", "k_st": "故事", "k_cm": "漫画", "k_p": "选手", "k_v": "视频", "k_m": "音乐", "k_t": "云顶之弈", "k_f": "决赛"});
+
+Object.assign(window.ATLAS_UI,{"j_prev": "上一位", "j_nextc": "下一位", "j_mk_first": "最初的样子", "j_mk_today": "现在", "j_mk_drag": "拖动对比新旧原画", "j_mk_sub": "历年造型：{n}", "j_mk_all": "查看所有造型", "j_stage": "大舞台上", "j_stage_sub": "全球总决赛与MSI决赛局数：{n} · 胜：{w}", "j_stage_pro": "最常使用该英雄的2026全球总决赛选手", "j_game_n": "第{n}局", "j_won": "胜", "j_lost": "负", "j_pro_games": "场次：{n}", "j_stage_all": "历届全球总决赛与MSI决赛"});
+
+Object.assign(window.ATLAS_UI,{"s_meet": "认识{name} →"});

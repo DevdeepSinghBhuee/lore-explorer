@@ -267,7 +267,7 @@ function open(k){
       <div class="meta">${c.d.map(d=>`<span class="tagm"><i style="background:${DOM[d]}"></i>${d}</span>`).join("")}<span class="tagm">${esc(c.t)}</span><span class="tagm">${esc(c.ra)}</span>${stat.map(s=>`<span class="tagm">${s}</span>`).join("")}${c.tg.map(t=>`<span class="tagm">${esc(t)}</span>`).join("")}</div>
       ${c.tx?`<h3>Ability</h3><p>${esc(c.tx)}</p>`:""}
       ${c.fx?`<h3>Effect</h3><p>${esc(c.fx)}</p>`:""}
-      ${champ?`<a class="goto" href="atlas.html#c-${champ.id}">Meet ${esc(champ.name)} in the Atlas →</a>`:""}
+      ${champ?`<a class="goto" href="journey.html?c=${champ.id}">Meet ${esc(champ.name)} →</a>`:""}
       <div class="credit">${c.ar?`Art by ${esc(c.ar)} · `:""}Riftbound ${esc(c.s)}</div>
       <div class="step"><button type="button" id="pv">← Previous</button><button type="button" id="nx">Next →</button></div>
     </div>`;

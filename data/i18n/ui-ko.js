@@ -15,3 +15,7 @@ Object.assign(window.ATLAS_UI,{"it_makeovers": "그때와 지금", "it_makeovers
 Object.assign(window.ATLAS_UI,{"it_finals": "결승전", "it_finals_d": "모든 월즈와 MSI 결승, 세트별로"});
 
 Object.assign(window.ATLAS_UI,{"it_gallery_t": "아이콘, 감정 표현, 와드", "it_champs": "모든 챔피언", "it_champs_d": "모든 챔피언을 한곳에서", "it_cos": "스킨과 수집품", "it_cos_d": "모든 스킨, 예전과 지금의 아트, 아이콘, 감정 표현, 와드", "it_history": "역사", "it_history_d": "모든 챔피언 출시와 모든 시즌", "it_game": "게임", "it_game_d": "협곡, 모든 아이템, 패치 일정", "it_cards": "카드 게임", "it_cards_d": "레전드 오브 룬테라와 리프트바운드 카드", "search": "검색", "search_ph": "챔피언, 스킨, 아이템, 이야기 검색…", "section_tabs": "이 섹션", "loading": "불러오는 중…", "no_results": "찾지 못했습니다. 다른 단어를 입력해 보세요.", "k_c": "챔피언", "k_pg": "페이지", "k_s": "스킨", "k_i": "아이템", "k_st": "이야기", "k_cm": "코믹스", "k_p": "선수", "k_v": "영상", "k_m": "음악", "k_t": "전략적 팀 전투", "k_f": "결승전"});
+
+Object.assign(window.ATLAS_UI,{"j_prev": "이전", "j_nextc": "다음", "j_mk_first": "첫 모습", "j_mk_today": "현재", "j_mk_drag": "드래그해서 예전과 지금의 아트를 비교하세요", "j_mk_sub": "지금까지의 모습: {n}", "j_mk_all": "모든 모습 보기", "j_stage": "큰 무대에서", "j_stage_sub": "월즈·MSI 결승 세트: {n} · 승리: {w}", "j_stage_pro": "이 챔피언을 가장 많이 한 월즈 2026 선수", "j_game_n": "{n}세트", "j_won": "승리", "j_lost": "패배", "j_pro_games": "경기: {n}", "j_stage_all": "모든 월즈와 MSI 결승"});
+
+Object.assign(window.ATLAS_UI,{"s_meet": "{name} 만나기 →"});

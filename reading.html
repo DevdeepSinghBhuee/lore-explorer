@@ -316,7 +316,7 @@ function render(){
   const filtered=S.q||S.len!=="all"||S.regions.size||S.champ;
   const lm=list.reduce((a,s)=>a+s.min,0);
   const nB=`<b>${list.length}</b>`, stN=EN?`${nB} ${list.length===1?"story":"stories"}`:esc(t("j_stories",{n:list.length})).replace(String(list.length),nB);
-  document.getElementById("status").innerHTML=`${stN}${S.champ?" "+t("r_featuring",{name:`<a href="atlas.html#c-${S.champ}">${esc(CH[S.champ].name)}</a>`}):""} · ${t(lm<90?"r_about_min":"r_about_h",{n:`<b>${lm<90?lm:Math.round(lm/60)}</b>`})}${filtered?` · <button class="clear" type="button" id="clear">${t("c_clear")}</button>`:""}`;
+  document.getElementById("status").innerHTML=`${stN}${S.champ?" "+t("r_featuring",{name:`<a href="journey.html?c=${S.champ}">${esc(CH[S.champ].name)}</a>`}):""} · ${t(lm<90?"r_about_min":"r_about_h",{n:`<b>${lm<90?lm:Math.round(lm/60)}</b>`})}${filtered?` · <button class="clear" type="button" id="clear">${t("c_clear")}</button>`:""}`;
   const cl=document.getElementById("clear"); if(cl)cl.onclick=()=>{reset();apply();renderComics();};
 }
 function reset(){S.q="";S.len="all";S.regions.clear();S.champ="";S.shown=PAGE;
@@ -348,7 +348,7 @@ function renderComics(){
         <div class="cov"><img src="${img(c.img,c.ar>1?720:420)}" alt="${esc(c.t)} cover" loading="lazy" decoding="async"></div>
         <span class="nm">${esc(c.t)}</span><span class="dt">${fdate(c.date)}</span></button>`).join("")}</div></section>`;}).join("");
   window._groups=groups;
-  document.getElementById("cstatus").innerHTML=`${esc(t("j_comics",{n:pool.length})).replace(String(pool.length),`<b>${pool.length}</b>`)}${S.champ?" "+t("r_featuring",{name:`<a href="atlas.html#c-${S.champ}">${esc(CH[S.champ].name)}</a>`}):""}${pool.length?"":" "+esc(t("r_none_champ"))}`;
+  document.getElementById("cstatus").innerHTML=`${esc(t("j_comics",{n:pool.length})).replace(String(pool.length),`<b>${pool.length}</b>`)}${S.champ?" "+t("r_featuring",{name:`<a href="journey.html?c=${S.champ}">${esc(CH[S.champ].name)}</a>`}):""}${pool.length?"":" "+esc(t("r_none_champ"))}`;
 }
 document.getElementById("racks").addEventListener("click",e=>{const b=e.target.closest(".issue");if(b){const L=window._groups[b.dataset.k];open(L[+b.dataset.i],L);}});
 
@@ -365,7 +365,7 @@ document.getElementById("tComics").onclick=()=>{tab("comics");try{history.replac
 // plate
 const dlg=document.getElementById("dlg"), plate=document.getElementById("plate");
 let cur=null, curList=[];
-const who=ch=>ch.length?`<h4>${t("r_featuring_h")}</h4><div class="who">${ch.map(c=>`<a href="atlas.html#c-${c}"><img src="img/${c}-tile.webp" alt="">${esc(CH[c].name)}</a>`).join("")}</div>`:"";
+const who=ch=>ch.length?`<h4>${t("r_featuring_h")}</h4><div class="who">${ch.map(c=>`<a href="journey.html?c=${c}"><img src="img/${c}-tile.webp" alt="">${esc(CH[c].name)}</a>`).join("")}</div>`:"";
 function open(x,L){
   if(!x)return; cur=x; curList=L||[x];
   plate.style.setProperty("--rc",rc(x.ch));

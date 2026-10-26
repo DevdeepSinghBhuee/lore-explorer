@@ -283,7 +283,7 @@ function open(i){
       ${c.f?`<blockquote>${esc(c.f)}</blockquote>`:""}
       ${c.d?`<h3>On the card</h3><p>${esc(c.d)}</p>`:""}
       ${c.l?`<h3>Level up</h3><p>${esc(c.l)}</p>`:""}
-      ${champ?`<a class="goto" href="atlas.html#c-${champ.id}">Meet ${esc(champ.name)} in the Atlas →</a>`:""}
+      ${champ?`<a class="goto" href="journey.html?c=${champ.id}">Meet ${esc(champ.name)} →</a>`:""}
       <div class="credit">${c.ar?`Art by ${esc(c.ar)} · `:""}Card ${esc(c.c)}</div>
       <div class="step"><button type="button" id="pv">← Previous</button><button type="button" id="nx">Next →</button></div>
     </div>`;

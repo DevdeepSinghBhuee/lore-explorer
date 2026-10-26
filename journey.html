@@ -243,6 +243,39 @@ footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width
 .beyond .by b{display:block;font-family:var(--f-display);font-weight:400;font-size:17px;line-height:1.15}
 .beyond .by small{display:block;color:var(--muted);font-size:14.5px;line-height:1.35;margin-top:2px}
 @media (max-width:480px){.beyond .by{grid-template-columns:84px minmax(0,1fr)}.beyond .by img{width:84px}}
+
+/* prev / next champion */
+.pn{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.pn a{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--rule);background:rgba(8,13,24,.55);padding:4px 12px 4px 4px;color:var(--text);text-decoration:none;font-size:15px}
+.pn a:hover{border-color:var(--rc)}
+.pn a img{width:30px;height:30px;object-fit:cover}
+.pn a small{font-family:var(--f-mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);display:block;line-height:1.1}
+/* then & now slider */
+.tn{margin-top:22px;border:1px solid var(--rule);background:var(--panel)}
+.tn .cmp{position:relative;aspect-ratio:1215/717;max-height:520px;width:100%;background:#05080f;overflow:hidden;user-select:none;touch-action:pan-y}
+.tn .cmp img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}
+.tn .cmp .now{clip-path:inset(0 0 0 var(--x,50%))}
+.tn .cmp .bar{position:absolute;top:0;bottom:0;left:var(--x,50%);width:2px;margin-left:-1px;background:var(--gold);pointer-events:none}
+.tn .cmp .bar::after{content:"⟷";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:36px;height:36px;border-radius:50%;background:#0b1426;border:2px solid var(--gold);color:var(--gold);display:grid;place-items:center;font-size:17px}
+.tn .cmp input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:ew-resize;margin:0}
+.tn .cmp .tg{position:absolute;top:10px;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;background:rgba(5,8,15,.78);border:1px solid var(--rule);padding:5px 8px;pointer-events:none}
+.tn .cmp .tg.l{left:10px}.tn .cmp .tg.r{right:10px;color:var(--gold)}
+.tn .cap2{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:10px 14px;font-size:15px;color:var(--muted)}
+/* big stage */
+.stage{display:grid;gap:6px;max-width:860px}
+.stage a{display:grid;grid-template-columns:86px minmax(0,1fr) auto;gap:12px;align-items:center;border:1px solid var(--rule);padding:8px 12px;color:var(--text);text-decoration:none;background:rgba(15,26,46,.5)}
+.stage a:hover{border-color:var(--rc)}
+.stage .ev{font-family:var(--f-num);font-size:22px;line-height:1;color:var(--gold)}
+.stage .ev small{display:block;font-family:var(--f-mono);font-size:9.5px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase}
+.stage b{font-weight:500}
+.stage .r{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase}
+.stage .r.w{color:#7fd1a0}.stage .r.l{color:var(--muted)}
+.pros{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.pros a{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--rule);padding:4px 12px 4px 4px;color:var(--text);text-decoration:none;font-size:15px;background:rgba(15,26,46,.5)}
+.pros a:hover{border-color:var(--rc)}
+.pros img{width:30px;height:30px;object-fit:cover;background:#05080f}
+.pros small{color:var(--muted);font-size:13px}
+@media (max-width:560px){.stage a{grid-template-columns:64px minmax(0,1fr)}.stage .r{grid-column:2}}
 </style>
 <script src="site.js" defer></script>
 </head>
@@ -282,6 +315,7 @@ footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width
         <div class="ttl" id="hTitle"></div>
         <div class="meta" id="hMeta"></div>
         <div class="change"><button type="button" class="fav-btn" id="hFav" data-fav-label>Add to my champions</button><a class="btn ghost" href="journey.html" id="hAnother">Pick another champion</a><button class="btn ghost" type="button" id="hRandom">Surprise me</button></div>
+        <div class="pn" id="hPN"></div>
       </div>
     </section>
     <div class="tour">
@@ -372,10 +406,12 @@ async function journey(c){
   const ttl=I?I.title(c):c.title;document.getElementById("hTitle").textContent=ttl.charAt(0).toUpperCase()+ttl.slice(1);
   document.getElementById("hMeta").innerHTML=`<span>${emb(c.region)}${esc(rgN)}</span><span>${esc(tagsOf(c," · "))}</span>${R?`<span>${t("j_arrived",{d:`<b>${full(R[0])}</b>`})}</span>`:""}`;
   document.getElementById("hRandom").onclick=()=>surprise(c.id);
+  {const L=CHAMPS,i=L.indexOf(c),pv=L[(i-1+L.length)%L.length],nx=L[(i+1)%L.length];
+   document.getElementById("hPN").innerHTML=[[pv,t("j_prev")],[nx,t("j_nextc")]].map(([o,l],k)=>`<a href="journey.html?c=${o.id}" rel="${k?"next":"prev"}">${k?"":"← "}<img src="img/${o.id}-tile.webp" alt=""><span><small>${esc(l)}</small>${esc(nm(o))}</span>${k?" →":""}</a>`).join("");}
   document.getElementById("hFav").setAttribute("data-fav",c.id);
 
   // the heavier data files load now, in parallel
-  await Promise.all([loadScript("data/reading.js"),loadScript("data/skins.js"),loadScript("data/abilities.js"),loadScript("data/game.js")]);
+  await Promise.all([loadScript("data/reading.js"),loadScript("data/skins.js"),loadScript("data/abilities.js"),loadScript("data/game.js"),loadScript("data/makeovers.js"),loadScript("data/finals.js"),loadScript("data/players.js")]);
 
   const chapters=[];
   const add=(id,title,sub,html)=>{if(html)chapters.push({id,title,sub,html});};
@@ -449,13 +485,21 @@ async function journey(c){
   // 5b · conversations: their special in-game lines with other champions (ix.js + data/interactions.js, loaded after render)
   add("talk",t("j_talk"),"",`<div class="ixb" id="ixBox" data-c="${c.id}"></div>`);
 
+
+  // then & now: their first splash art against today's (data/makeovers.js, League Wiki files)
+  const MK=(window.ATLAS_MAKEOVERS||[]).find(r=>r[0]===c.id);
+  const WK="https://wiki.leagueoflegends.com/en-us/images/", wth=f=>WK+"thumb/"+encodeURIComponent(f)+"/1200px-"+encodeURIComponent(f);
+  window.__mkfix=window.__mkfix||(img=>{img.onerror=null;img.src=WK+encodeURIComponent(img.dataset.f);});
+  const tnHTML=()=>{if(!MK)return "";const f=MK[1],last=MK[3].length?MK[3][MK[3].length-1][0]:"";
+    return `<div class="tn"><div class="cmp" id="tnCmp"><img src="${wth(f[0])}" data-f="${esc(f[0])}" onerror="__mkfix(this)" alt="" loading="lazy"><img class="now" src="${wth(f[f.length-1])}" data-f="${esc(f[f.length-1])}" onerror="__mkfix(this)" alt="" loading="lazy"><div class="bar"></div><span class="tg l">${esc(t("j_mk_first"))}${MK[2]?" · "+MK[2].slice(0,4):""}</span><span class="tg r">${esc(t("j_mk_today"))}</span><input type="range" min="0" max="100" value="50" aria-label="${esc(t("j_mk_drag"))}"></div>
+      <div class="cap2"><span>${esc(t("j_mk_sub",{n:f.length}))}${last?" · "+esc(full(last)):""}</span><a class="more-link" href="makeovers.html#c-${c.id}">${esc(t("j_mk_all"))}</a></div></div>`;};
   // 6 · wardrobe: rarest first, then newest
   const K=((window.ATLAS_SKINS||{})[c.id]||[]).map(k=>({num:k[0],name:k[1],rar:k[2],path:k[7]}));
   const skN=k=>I?I.skin(c,k.num,k.name):k.name;
   const top=K.slice().sort((a,b)=>b.rar-a.rar||(typeof b.num==="number"?b.num:0)-(typeof a.num==="number"?a.num:0)).slice(0,6);
   add("skins",t("j_skins"),`${t("j_skin_n",{n:K.length})} · ${t("j_rarest")}`,K.length?`<div class="wardrobe">${top.map(k=>`<a class="skin" href="skins.html#s-${c.id}-${k.num}" style="--rar:${RAR[k.rar][1]}">
       <div class="p"><img src="${k.path?CD+k.path:`${DD}loading/${c.dd}_${k.num}.jpg`}" alt="${esc(skN(k))}" loading="lazy" referrerpolicy="no-referrer"></div><span>${esc(skN(k))}</span><small>${t("rar_"+k.rar)}</small></a>`).join("")}</div>
-      <p style="margin-top:14px"><a class="more-link" href="skins.html?champion=${c.id}">${t("j_all_skins",{n:K.length})}</a></p>`:"");
+      <p style="margin-top:14px"><a class="more-link" href="skins.html?champion=${c.id}">${t("j_all_skins",{n:K.length})}</a></p>${tnHTML()}`:"");
 
   // 7 · cards
   const LR=(window.ATLAS_LOR||{})[c.id]||[], RB=(window.ATLAS_RB||{})[c.id]||[];
@@ -476,6 +520,15 @@ async function journey(c){
       <p style="margin-top:14px"><a class="more-link" href="beyond.html#c-${c.id}">${esc(t("b_all"))}</a></p>`);
   }
 
+
+  // 7c · on the big stage: every Worlds / MSI final game they were picked in (data/finals.js, Leaguepedia) + Worlds 2026 players who main them (data/players.js)
+  {const G=[];(window.ATLAS_FINALS||[]).forEach(f=>f.games.forEach(g=>["bp","rp"].forEach(sd=>(g[sd]||[]).forEach(p=>{if(p[1]===c.id)G.push({f,g,p,team:sd==="bp"?g.b:g.r});}))));
+   const PR=((window.ATLAS_PLAYERS||{}).players||[]).map(p=>{const k=(p.champs||[]).find(x=>norm(x[0])===norm(c.name));return k?{p,n:k[1]}:null;}).filter(Boolean).sort((a,b)=>b.n-a.n);
+   const won=G.filter(x=>x.g.w===x.team).length;
+   if(G.length||PR.length)add("stage",t("j_stage"),G.length?t("j_stage_sub",{n:G.length,w:won}):t("j_stage_pro"),
+     (G.length?`<div class="stage">${G.slice(0,10).map(x=>{const ok=x.g.w===x.team;return `<a href="finals.html#${x.f.t}-${x.f.y}"><span class="ev">${x.f.y}<small>${x.f.t==="worlds"?"Worlds":"MSI"} · ${esc(t("j_game_n",{n:x.g.n}))}</small></span><span style="min-width:0"><b>${esc(x.p[0])}</b> <span class="tag">${esc(x.team)} · ${x.p[2]}/${x.p[3]}/${x.p[4]}</span></span><span class="r ${ok?"w":"l"}">${esc(ok?t("j_won"):t("j_lost"))}</span></a>`;}).join("")}</div>${G.length>10?`<p class="tag" style="margin-top:8px">${esc(t("j_and_others",{n:G.length-10}))}</p>`:""}`:"")+
+     (PR.length?`<h3 class="tag" style="margin:20px 0 0">${esc(t("j_stage_pro"))}</h3><div class="pros">${PR.slice(0,8).map(x=>`<a href="players.html#p-${encodeURIComponent(x.p.id)}"><img src="${esc(x.p.photo||"")}" alt="" loading="lazy" referrerpolicy="no-referrer"><span>${esc(x.p.name)} <small>${esc(x.p.team||"")} · ${esc(t("j_pro_games",{n:x.n}))}</small></span></a>`).join("")}</div>`:"")+
+     `<p style="margin-top:14px"><a class="more-link" href="finals.html">${esc(t("j_stage_all"))}</a></p>`);}
   // 8 · arrival
   if(R){
     const all=Object.entries(REL).sort((a,b)=>a[1][0].localeCompare(b[1][0])||CH[a[0]].name.localeCompare(CH[b[0]].name));
@@ -500,6 +553,8 @@ async function journey(c){
   document.getElementById("chapters").innerHTML=chapters.map((ch,i)=>`<section class="chap" id="${ch.id}"><header><span class="n">${i+1}</span><h2>${ch.title}<small>${ch.sub}</small></h2></header>${ch.html}</section>`).join("");
   document.getElementById("rail").innerHTML=chapters.map((ch,i)=>`<a href="#${ch.id}" data-id="${ch.id}"><b>${i+1}</b>${ch.title}</a>`).join("");
 
+  // then & now slider
+  {const cm=document.getElementById("tnCmp");if(cm){const r=cm.querySelector("input");r.addEventListener("input",()=>cm.style.setProperty("--x",r.value+"%"));}}
   // ability panel
   const abp=document.getElementById("abpanel");
   if(abp&&window._ab){const {list,K4,VID,slots,letters}=window._ab;

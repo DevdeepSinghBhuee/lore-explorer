@@ -164,7 +164,7 @@ function show(v,autoplay){
   const champs=v.ch.filter(c=>CH[c]).slice(0,10);
   document.getElementById("now").innerHTML=`<div class="eyebrow">${esc(v.shelfT)} · ${esc(v.yr)}</div>
     <h1>${esc(v.t)}</h1>${v.d?`<p>${esc(v.d)}</p>`:""}<div class="who">${esc(v.by)}</div>
-    ${champs.length?`<div class="champs">${champs.map(c=>`<a href="atlas.html#c-${c}"><img src="img/${c}-tile.webp" alt="">${esc(CH[c].name)}</a>`).join("")}</div>`:""}
+    ${champs.length?`<div class="champs">${champs.map(c=>`<a href="journey.html?c=${c}"><img src="img/${c}-tile.webp" alt="">${esc(CH[c].name)}</a>`).join("")}</div>`:""}
     <a class="yt" href="https://www.youtube.com/watch?v=${v.y}" target="_blank" rel="noopener">Watch on YouTube ↗</a>`;
   document.querySelectorAll(".tile").forEach(t=>t.setAttribute("aria-current",String(t.dataset.y===v.y)));
   try{history.replaceState(null,"","#v-"+v.y);}catch(e){}
