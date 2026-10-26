@@ -160,6 +160,52 @@ Must work at phone width with no horizontal scroll (watch grid children: `min-wi
   each deployment; if the latest push has none, push an empty commit to re-trigger it.
 - Commit messages end with the session's attribution lines.
 
+## NEXT BIG PLAN: cinematic region stories (agreed 2026-10-26 — start here)
+**How we got here.** After the map rebuild (Devdeep loved it) he said the site still isn't responsive, and the Atlas page is a bad
+experience: the left half is empty space down to "Champions of the region", beside the web of bonds + champion panel ("just one of
+the bad experiences"). Before fixing it he asked for a thorough rundown of https://kprverse.com/ ("they made the user experience the
+story rather than just laying things in a section or two"). Then he chose the plan below.
+
+**kprverse.com findings (studied 2026-10-26 in the browser pane, desktop + 375px phone).** NFT brand "Keepers"; their principal
+artist Khoa Viet worked on League (Rageborn Mundo). Stack: Nuxt 3 (Vue), Storyblok CMS (paid), Three.js on ONE full-screen WebGL canvas
+behind the page with custom shaders (uniforms uProgress, uNoise, uMask, uFlickProgress, uPurple, uMapOffset, uGradient, uFramePush),
+GSAP + ScrollTrigger + own smooth scroll, Howler.js, wallet sign-in, Google Analytics. Assets: .ktx2 GPU textures + GLB scenes sized per
+device, webp art, 1080p trailer, a noise texture for dissolves, an After Effects JSON export driving the "click & hold" layer, music per
+chapter (INTROx/TBL1-3 + _AFTER_loop tracks) and UI sounds (hover, menu, typing, carousel, wind). Fonts: ABC Whyte / Whyte Inktrap
+(paid), Hexaframe stencil, IBM Plex Mono HUD labels, Fraktion, Noto Sans JP/SC/TC; language picker. Story techniques: scroll-pinned
+scenes; opens on an extreme close-up face then pulls back to the world; one line of story per screen; letter-scramble/typewriter text;
+in-world "computer" frame (rounded viewport border, crosshair rail, file numbers ■ 001, fake loading address, "INITIALIZING NEW FILES");
+CLICK & HOLD on a scene flips it to a dark scan mode with hidden facts + 3D model; HOLD SPACEBAR on Protocol = "K.A.I mode" secret lore;
+giant-word mask transitions between chapters; chamfered folder cards as one shape language; music changes per chapter; sound off until
+"click to enable sound"; ends on a question ("What path will you…"). Pages: Journal (editorial grid, sticky filters), Gallery (10,000,
+trait filters, shuffle), Protocol (whitepaper as chapters), Media (All/Image/Video/Audio counts), About (numbered dossier cards). Phone:
+same story lighter (animated logo intro, stacked tilted cards, swipe carousel, no sideways scroll, landscape/widescreen warnings).
+Lesson: they have ONE guided path and little content; we have huge content and no guided path.
+
+**Devdeep's decisions (2026-10-26):**
+1. A cinematic scroll story **per region**: the region's story, its champions, how they connect to each other, and the lore.
+   This replaces the half-empty Atlas region layout (layout fix + region stories = one job).
+2. Each region gets its OWN lore-specific "book"/element (he loved "Hextech book" but it only suits Piltover). What he liked most on
+   KPR: the small interactive elements, different in every scene. Proposed set (accepted): Piltover hextech blueprint book (hold = power a
+   hex crystal) · Zaun chem gauges/pipes, valves, rising green gas · Demacia heraldry tapestry, hold = petricite dampens the glowing magic ·
+   Noxus war table, red banner spreads over the map · Freljord ice runes, frost creeps over the screen, hold = thaw · Ionia ink-brush scroll,
+   spirit-blossom petals follow the cursor · Shurima drag to brush away sand, Sun Disc rises with scroll · Targon star chart, champion bonds
+   as constellations · Shadow Isles ruined journal, Black Mist creeps from the edges, hold your light to push it back · Bilgewater sea charts
+   + wanted posters, tide rocking · Ixtal elemental codex, jungle overgrows the page · Bandle City pop-up storybook · Void = the page gets
+   glitched/eaten. Story path per region: champion close-up → pull back to the region → lore in a few lines (Riot's words, link out to full
+   stories, never copy them) → champions + how they connect (bonds.js) → places on the map (ATLAS_RMAP). Real data only.
+3. Sound wanted. Riot music files can't be hosted and YouTube must stay visible (≥200px), so the mix is: ambience generated live in the
+   browser (Web Audio: wind, sea, bubbling, Void hum — no files, no copyright) + small effects from public-domain/CC0 libraries hosted by us
+   (Freesound CC0, Kenney, Sonniss) + champion voice lines we already have (voice.js / ix.js) + an optional visible "play the region's
+   theme" mini-player (official YouTube). Sound OFF until the visitor taps "enable sound".
+**Free tools agreed:** GSAP + ScrollTrigger + SplitText (all free since 2025), Three.js, Lenis (smooth scroll), Howler.js / Web Audio,
+browser-native scroll-driven animations + View Transitions + canvas, optional Rive/Lottie players. **No Vue** (needs a build step; we stay
+plain JS, no build). Load libraries from a CDN with exact versions; keep the Riot legal footer.
+**Next step:** build ONE region as a pilot (Claude suggested Freljord or Shadow Isles to show off effects, or Piltover for the Hextech book;
+Devdeep "liked the suggestion" — confirm which region with him, give the usual 3-line plan, then go), test desktop + phone with him, then the
+other 12. Then the wider responsiveness pass over the whole site. Devdeep also has a separate **lore task** he said he'd describe after
+the map fix — ask him for it.
+
 ## Ideas not started yet (ask Devdeep which next)
 1. ~~Player pages~~ (done 2026-10-19; refresh players.js after the 2026 final).
 2. ~~Music hub~~ (done 2026-10-19).
