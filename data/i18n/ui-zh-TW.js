@@ -21,3 +21,5 @@ Object.assign(window.ATLAS_UI,{"j_prev": "上一位", "j_nextc": "下一位", "j
 Object.assign(window.ATLAS_UI,{"s_meet": "認識{name} →"});
 
 Object.assign(window.ATLAS_UI,{"h_eye": "英雄聯盟世界的免費粉絲網站", "h_h1a": "每位英雄、每個故事、每款造型，", "h_h1b": "盡在一處。", "h_lede": "認識每位英雄，漫步符文大地地圖，閱讀Riot的故事，比較每款造型，重溫每屆世界大賽決賽，每天還有七個新的猜謎遊戲。", "h_d_eye": "每天更新", "h_daily": "今日猜謎", "h_daily_p": "七個猜謎遊戲，每天更新。免費，不必註冊。", "h_next_in": "距下一輪謎題", "h_play": "開始今日猜謎", "h_e_eye": "去哪裡", "h_explore": "探索", "h_n_eye": "英雄聯盟此刻", "h_now": "此刻", "h_yours": "我的英雄", "h_cotd": "今日英雄", "h_meet": "認識{name}", "h_solved": "已猜中", "h_revealed": "已揭曉", "h_in_progress": "進行中", "h_new": "今日新題", "h_door_c": "每位英雄一頁：背景、技能、造型、語音、故事等。", "h_door_l": "符文大地地圖、Riot的故事與漫畫，以及遊戲的歷史。", "h_door_p": "七個每日猜謎遊戲、召喚峽谷與裝備、聯盟戰棋和卡牌遊戲。", "h_door_e": "2026世界大賽直播、選手，以及2011年以來的每場決賽。", "h_door_w": "CG、預告片、主題曲和虛擬樂團。", "h_w_soon": "{d}開始", "h_w_on": "賽事第{n}天", "h_w_final": "決賽日", "h_w_final_on": "決賽：{d}", "h_days_left": "剩餘天數", "h_season": "本賽季", "h_until": "至{d}", "h_patch": "下個版本", "h_patch_n": "版本{p}"});
+
+Object.assign(window.ATLAS_UI,{"k_r": "召喚峽谷", "k_g": "地區", "k_z": "賽季"});
