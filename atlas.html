@@ -29,6 +29,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus+SC&family=Alegreya:ital,wght@0,400;0,500;0,700;1,400&family=Spline+Sans+Mono:wght@400;500&family=Teko:wght@500;600&display=swap">
 <script src="site.js" defer></script>
+<link rel="stylesheet" href="story.css">
 </head>
 <body>
 <style>
@@ -465,7 +466,9 @@ footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width
       </div>
     </div>
 
-    <div class="dossier">
+    <div class="rstory" id="rStory" hidden></div>
+
+    <div class="dossier" id="rDossier">
       <div class="webcard">
         <h3>Web of bonds</h3>
         <svg id="web" viewBox="-60 -30 640 590" aria-label="Relationship web"></svg>
@@ -509,6 +512,8 @@ footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width
 <script src="data/champcards.js"></script>
 <script src="data/champrb.js"></script>
 <script src="data/videos.js"></script>
+<script src="data/region-stories.js"></script>
+<script src="story.js"></script>
 <script>
 const REGIONS = window.ATLAS_REGIONS;
 
@@ -579,6 +584,18 @@ function onRegionChange(rid){
    const a=document.getElementById("rLib"); a.hidden=!LR; if(LR){a.href="library.html?region="+LR; a.textContent="Browse "+(rid==="piltover"||rid==="zaun"?"Piltover & Zaun":regById[rid].name)+" cards in the Library →";}}
   applyTheme(rid);
   if(window.AtlasMap)window.AtlasMap.select(rid);
+  mountStory(rid);
+}
+// cinematic region story (story.js; pilot = Piltover). Regions without one show the classic layout.
+function mountStory(rid){
+  if(!window.AtlasStory)return;
+  const smooth=()=>matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth";
+  window.AtlasStory.mount(document.getElementById("rStory"), rid, {
+    name:cn, title:ctitle,
+    onChamp:id=>{ selectChamp(id); document.getElementById("rDossier").scrollIntoView({behavior:smooth(),block:"start"}); },
+    onRegion:id=>openRegion(id,null,true),
+    onMap:id=>{ document.getElementById("mapsec").scrollIntoView({behavior:smooth()}); setTimeout(()=>window.AtlasMap&&window.AtlasMap.focus(id),500); }
+  });
 }
 
 // ---------- region design systems
