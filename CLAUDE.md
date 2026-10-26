@@ -218,7 +218,10 @@ after a click) · 8 crop of Riot's map (img/map/base-1024.webp) with Piltover + 
 "Below the cliffs, Zaun →", "Meet the champions ↓". Sound (Web Audio, nothing downloaded): harbour wind + low drone + clock ticks while the story is
 on screen, crystal hum rising with the charge, chime, paper-turn; OFF until the visitor presses "Enable sound" (saved in localStorage atlas.sound,
 but audio still needs that click each visit); ducked when the film plays. prefers-reduced-motion → .static (no pinning, all text shown).
-English only for now. Tested 1440×900 + 375×812 (touch hold via CDP), no errors, no sideways scroll.
+English only for now. Tested 1440×900 + 375×812 (touch hold via CDP), no errors, no sideways scroll. Checked live in the browser pane (desktop + 375 px):
+Riot images load from github.io. Folio plates turn on touch swipes only when clearly sideways (|dx|>60 and >2×|dy|) so scrolling past never flips
+a plate. Pages caches files ~10 min, so a returning visitor may see the old story.css/story.js briefly after a push. Browser-pane screenshots can lag
+one step after a JS scrollTo — nudge with a real wheel scroll before screenshotting.
 **To add a region:** add ATLAS_RSTORY.<id> (same shape; book.kind picks the interaction — only "hextech" exists yet; build the region's own element
 from the agreed list above), real data only. Waiting for Devdeep's verdict on the pilot before the other 12.
 (Old note) build ONE region as a pilot (Claude suggested Freljord or Shadow Isles to show off effects, or Piltover for the Hextech book;
