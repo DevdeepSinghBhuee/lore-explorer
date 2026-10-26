@@ -4,40 +4,43 @@
 <meta charset="utf-8">
 <script src="i18n.js"></script>
 <script>
-/* The map used to live at this address. Old shared links (…/#c-ahri, …/#zaun) still go to it. */
-(function(){var h=location.hash;if(/^#c-[a-z]+$/.test(h)||/^#(demacia|noxus|piltover|zaun|freljord|ionia|shurima|targon|bilgewater|shadowisles|bandle|ixtal|void|wanderers)$/.test(h))location.replace("atlas.html"+h);})();
+/* Old shared links: the map lived here first (…/#c-ahri, …/#zaun), then the Daily (…/#voice, …/?stream=CODE#clues). Send them on. */
+(function(){var h=location.hash,q=location.search;
+  if(/^#c-[a-z]+$/.test(h)||/^#(demacia|noxus|piltover|zaun|freljord|ionia|shurima|targon|bilgewater|shadowisles|bandle|ixtal|void|wanderers)$/.test(h))location.replace("atlas.html"+h);
+  else if(/^#(clues|splash|ability|lore|voice|quote|item)$/.test(h)||/[?&]stream\b/.test(q))location.replace("daily.html"+q+h);})();
 </script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Lore Explorer Daily · League of Legends guessing games every day</title>
-<meta name="description" content="Five free League of Legends guessing games every day: name the champion from clues, a zoomed-in splash, an ability icon, their lore or their voice. Plus a stream mode for streamers.">
+<title>Lore Explorer · The world of League of Legends, in one place</title>
+<meta name="description" content="A free fan site for the world of League of Legends: every champion with their lore, abilities, skins and voice lines, the map of Runeterra, Riot's stories, Worlds history and seven guessing games every day.">
 <link rel="canonical" href="https://devdeepsinghbhuee.github.io/lore-explorer/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Lore Explorer">
-<meta property="og:title" content="Lore Explorer Daily">
-<meta property="og:description" content="Five League of Legends guessing games, new every day: clues, splash art, abilities, lore and voice lines. Free, no sign-up.">
+<meta property="og:title" content="Lore Explorer">
+<meta property="og:description" content="Every League of Legends champion, story and skin in one place, plus daily guessing games. Free, no sign-up.">
 <meta property="og:url" content="https://devdeepsinghbhuee.github.io/lore-explorer/">
 <meta property="og:image" content="https://devdeepsinghbhuee.github.io/lore-explorer/img/og/index.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Lore Explorer Daily: Five League of Legends guessing games, new every day: clues, splash art, abilities, lore and voice lines. Free, no sign-up.">
+<meta property="og:image:alt" content="Lore Explorer: every League of Legends champion, story and skin in one place.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#080d18">
 <link rel="icon" href="img/icon.svg" type="image/svg+xml">
 <link rel="icon" href="img/icon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="img/icon-180.png">
 <link rel="manifest" href="manifest.webmanifest">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Lore Explorer","alternateName":"Lore Explorer Daily","url":"https://devdeepsinghbhuee.github.io/lore-explorer/","description":"A free fan site for the world of League of Legends: five daily guessing games, the map of Runeterra, champion journeys, every story, skin and song, and Worlds 2026.","inLanguage":["en","ko","zh-CN","zh-TW","ja","es-ES","es-MX","pt-BR","fr","de","it","pl","ru","tr","vi","th","id"]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Lore Explorer","url":"https://devdeepsinghbhuee.github.io/lore-explorer/","description":"A free fan site for the world of League of Legends: champions, lore, skins, Worlds history and daily guessing games."}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://ddragon.leagueoflegends.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus+SC&family=Alegreya:ital,wght@0,400;0,500;0,700;1,400&family=Spline+Sans+Mono:wght@400;500&family=Teko:wght@400;500;600&display=swap">
 <style>
-/* Layout: a game table. Title strip with puzzle number and countdown, three mode tabs, one centred play column: the clue (grid / splash / lore), the guess box, then guesses. A win opens a result card with share + stats. */
+/* Layout: the front door. A full-bleed hero (site promise + search on the left, today's champion painted behind),
+   a "Today's Daily" band with the state of each game, five big section doors, a "right now" row of live facts
+   (Worlds, season, patch) computed from our data, and the visitor's starred champions. Shares the Atlas tokens. */
 :root{
   color-scheme:dark;
   --ink:#080d18; --panel:#0f1a2e; --panel-2:#142238;
   --gold:#c8aa6e; --gold-dim:#7d6a45; --text:#ebe4d3; --muted:#939bb0; --faint:#5b6580;
-  --rule:rgba(200,170,110,.22);
-  --hit:#2f8a57; --near:#b9822a; --miss:#8e2f3a;
+  --rule:rgba(200,170,110,.22); --win:#7fd1a0; --rc:#c8aa6e;
   --f-display:"Marcellus SC","Cinzel",Georgia,serif;
   --f-body:"Alegreya",Georgia,"Times New Roman",serif;
   --f-mono:"Spline Sans Mono",ui-monospace,Menlo,monospace;
@@ -54,811 +57,250 @@ button,input{font:inherit;color:inherit}
 :focus-visible{outline:2px solid var(--gold);outline-offset:3px}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 .wrap{max-width:1240px;margin-inline:auto}
-.bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:18px;border-bottom:1px solid var(--rule);flex-wrap:wrap}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:18px;border-bottom:1px solid var(--rule);flex-wrap:wrap;position:relative;z-index:3}
 .brand{font-family:var(--f-display);font-size:20px;letter-spacing:.08em;color:var(--gold);display:flex;align-items:center;gap:10px;text-decoration:none}
 .brand svg{width:26px;height:26px}
 .nav{display:flex;gap:4px;flex-wrap:wrap}
 .nav a{font-family:var(--f-mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-decoration:none;padding:7px 12px}
 .eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
-
-.head{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap;padding-block:34px 18px}
-h1{font-family:var(--f-display);font-weight:400;font-size:clamp(38px,5.6vw,66px);line-height:.95;margin:10px 0 8px}
-h1 em{font-style:normal;color:var(--gold)}
-.head p{margin:0;color:#c4c8d3;max-width:52ch}
-.clock{text-align:right}
-.clock b{display:block;font-family:var(--f-num);font-weight:500;font-size:38px;line-height:.9;color:var(--gold);font-variant-numeric:tabular-nums}
-.clock span{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
-
-.modes{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:22px}
-@media (max-width:1100px){.modes{grid-template-columns:repeat(2,minmax(0,1fr))}.mode[data-m="item"]{grid-column:span 2}}
-.abil{display:grid;place-items:center;padding:18px 0 6px}
-.abil img{width:min(180px,46vw);height:auto;aspect-ratio:1;border:2px solid var(--gold-dim);box-shadow:0 14px 30px rgba(0,0,0,.5);transition:transform .7s cubic-bezier(.2,.8,.2,1),filter .7s;image-rendering:auto}
-.mode{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--panel);border:1px solid var(--rule);cursor:pointer;text-align:left;min-width:0}
-.mode i{font-style:normal;width:36px;height:36px;flex:none;display:grid;place-items:center;border:1px solid var(--gold-dim);font-family:var(--f-display);font-size:18px;color:var(--gold)}
-.mode b{display:block;font-family:var(--f-display);font-weight:400;font-size:20px;line-height:1.1}
-.mode small{display:block;font-size:13.5px;color:var(--muted);line-height:1.3}
-.mode[aria-selected="true"]{border-color:var(--gold);background:linear-gradient(135deg,rgba(200,170,110,.14),var(--panel) 70%)}
-.mode .st{margin-left:auto;font-family:var(--f-mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);white-space:nowrap}
-.mode .st.done{color:#7fd1a0}
-
-.play{max-width:880px;margin:0 auto}
-.stage{border:1px solid var(--rule);background:var(--panel);padding:18px;margin-bottom:14px}
-.stage h2{font-family:var(--f-mono);font-weight:400;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin:0 0 10px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
-
-/* splash */
-.crop{position:relative;aspect-ratio:1215/717;overflow:hidden;background:#000;border:1px solid var(--rule)}
-.crop img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform-origin:var(--fx) var(--fy);transform:scale(var(--z));transition:transform .7s cubic-bezier(.2,.8,.2,1);filter:var(--flt,none)}
-.zoomtag{font-family:var(--f-num);font-size:16px;color:var(--text)}
-.bonus{margin-top:14px;display:grid;gap:8px}
-.bonus .opts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
-.bonus button{padding:10px 12px;background:var(--panel-2);border:1px solid var(--rule);cursor:pointer;text-align:left}
-.bonus button:hover:not(:disabled){border-color:var(--gold)}
-.bonus button.right{background:color-mix(in srgb,var(--hit) 45%,var(--panel-2));border-color:var(--hit)}
-.bonus button.wrong{background:color-mix(in srgb,var(--miss) 45%,var(--panel-2));border-color:var(--miss)}
-
-/* lore */
-.lore{font-size:20px;line-height:1.65;margin:0}
-.lore .s{animation:fadein .6s}
-.lore .hid{color:var(--faint);letter-spacing:.06em}
-.lore mark{background:none;color:var(--gold);font-family:var(--f-mono);font-size:.8em;letter-spacing:.1em}
-@keyframes fadein{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
-
-/* clues legend */
-.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:14px;color:var(--muted)}
-.legend span{display:inline-flex;align-items:center;gap:6px}
-.legend i{width:14px;height:14px;display:inline-block}
-
-/* guess box */
-.guess{position:relative;display:flex;gap:8px}
-.guess input{flex:1;min-width:0;background:var(--ink);border:1px solid var(--gold-dim);padding:13px 14px;font-size:17px}
-.guess input:focus{border-color:var(--gold);outline:none}
-.guess button{font-family:var(--f-mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;padding:0 18px;border:1px solid var(--gold);background:var(--gold);color:var(--ink);cursor:pointer}
-.sugg{position:absolute;left:0;right:0;top:calc(100% + 4px);z-index:20;background:#0b1120;border:1px solid var(--gold-dim);max-height:300px;overflow:auto;box-shadow:0 18px 40px rgba(0,0,0,.6)}
-.sugg button{display:flex;align-items:center;gap:10px;width:100%;background:none;border:0;padding:7px 10px;cursor:pointer;text-align:left}
-.sugg button img{width:34px;height:34px;object-fit:cover}
-.sugg button[aria-selected="true"],.sugg button:hover{background:rgba(200,170,110,.12)}
-.sugg small{color:var(--muted);font-size:13px;margin-left:auto}
-.meta-line{display:flex;justify-content:space-between;gap:10px;margin:10px 0 0;font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);flex-wrap:wrap}
-.meta-line button{background:none;border:0;color:var(--faint);cursor:pointer;font:inherit;letter-spacing:inherit;text-transform:inherit;text-decoration:underline}
-
-/* clues grid */
-.grid-wrap{overflow-x:auto;margin-top:16px}
-.cgrid{display:grid;grid-template-columns:62px repeat(6,minmax(84px,1fr));gap:5px;min-width:620px}
-.cgrid .h{font-family:var(--f-mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-align:center;padding:4px 2px;border-bottom:1px solid var(--rule)}
-.cell{min-height:62px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:6px 4px;font-size:14px;line-height:1.2;border:1px solid rgba(0,0,0,.35);animation:flip .5s both;animation-delay:calc(var(--i) * 120ms)}
-.cell.p{padding:0;border:1px solid var(--rule)}
-.cell.p img{width:100%;height:100%;object-fit:cover;display:block}
-.cell.hit{background:var(--hit)}.cell.near{background:var(--near)}.cell.miss{background:var(--miss)}
-.cell .ic{font-size:11px;opacity:.85;margin-top:3px;font-family:var(--f-mono);letter-spacing:.06em}
-.cell b{font-family:var(--f-num);font-weight:500;font-size:22px;line-height:1}
-@keyframes flip{from{transform:rotateX(90deg);opacity:0}to{transform:none;opacity:1}}
-
-/* plain guess list (splash / lore) */
-.glist{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
-.glist span{display:inline-flex;align-items:center;gap:6px;padding:3px 9px 3px 3px;border:1px solid var(--miss);background:color-mix(in srgb,var(--miss) 25%,transparent);font-size:14px}
-.glist span img{width:26px;height:26px;object-fit:cover}
-.glist span.ok{border-color:var(--hit);background:color-mix(in srgb,var(--hit) 30%,transparent)}
-
-/* result */
-.result{border:1px solid var(--gold);background:linear-gradient(150deg,rgba(200,170,110,.12),var(--panel) 55%);margin-bottom:14px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr)}
-.result .pic{background:#000 center/cover no-repeat;min-height:240px}
-.result .body{padding:20px 22px}
-.result h3{font-family:var(--f-display);font-weight:400;font-size:32px;line-height:1;margin:6px 0 4px}
-.result p{margin:0 0 12px;color:#c4c8d3}
-.acts{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 16px}
-.btn{display:inline-flex;align-items:center;gap:8px;font-family:var(--f-mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;padding:10px 14px;text-decoration:none;cursor:pointer;border:1px solid var(--gold);background:var(--gold);color:var(--ink)}
-.btn.ghost{background:transparent;color:var(--text);border-color:var(--rule)}
+.k{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.btn{display:inline-flex;align-items:center;gap:8px;font-family:var(--f-mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;padding:12px 16px;text-decoration:none;cursor:pointer;border:1px solid var(--gold);background:var(--gold);color:var(--ink)}
+.btn.ghost{background:rgba(8,13,24,.5);color:var(--text);border-color:var(--rule)}
 .btn.ghost:hover{border-color:var(--gold)}
-.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:12px}
-.stats div{text-align:center;border:1px solid var(--rule);padding:6px 4px}
-.stats b{display:block;font-family:var(--f-num);font-weight:500;font-size:28px;line-height:1;color:var(--text)}
-.stats span{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
-.dist{display:grid;gap:3px}
-.dist div{display:grid;grid-template-columns:34px minmax(0,1fr);gap:6px;align-items:center;font-family:var(--f-num);font-size:15px;color:var(--muted)}
-.dist i{display:block;height:16px;background:var(--gold-dim);min-width:18px;text-align:right;padding-right:5px;font-style:normal;color:var(--ink);font-size:13px;line-height:16px}
-.dist i.me{background:var(--gold)}
-.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--gold);color:var(--ink);font-family:var(--f-mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;padding:10px 16px;z-index:50}
+h2.sec{font-family:var(--f-display);font-weight:400;font-size:clamp(28px,3.4vw,40px);line-height:1;margin:6px 0 0}
+.shead{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin:56px 0 18px}
+.shead p{margin:6px 0 0;color:#c4c8d3;max-width:60ch}
 
-.how{max-width:880px;margin:26px auto 0;color:#c4c8d3;font-size:16px;border-top:1px solid var(--rule);padding-top:18px}
-.how h3{font-family:var(--f-mono);font-weight:400;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
-.how ul{margin:0;padding-left:20px}
-.explore{max-width:1240px;margin:40px auto 0;border-top:1px solid var(--rule);padding-top:26px}
-.explore h2{font-family:var(--f-display);font-weight:400;font-size:clamp(28px,3.4vw,40px);margin:6px 0 16px}
-.exgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
-.ex{position:relative;display:flex;flex-direction:column;justify-content:flex-end;min-height:170px;padding:14px;text-decoration:none;color:var(--text);border:1px solid var(--rule);overflow:hidden;background:var(--panel)}
-.ex::before{content:"";position:absolute;inset:0;background:var(--img) center 25%/cover no-repeat;transition:transform .5s;z-index:0}
-.ex::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(8,13,24,.95) 10%,rgba(8,13,24,.25) 70%);z-index:0}
-.ex:hover::before{transform:scale(1.05)}
-.ex:hover{border-color:var(--gold)}
-.ex b,.ex span{position:relative;z-index:1}
-.ex b{font-family:var(--f-display);font-weight:400;font-size:22px;line-height:1.1}
-.ex span{font-size:14.5px;color:#c4c8d3;line-height:1.35;margin-top:4px}
-.ex.big{grid-row:span 2;min-height:352px}
-.ex.big b{font-size:32px}
-@media (max-width:900px){.exgrid{grid-template-columns:repeat(2,minmax(0,1fr))}.ex.big{grid-column:span 2;grid-row:auto;min-height:220px}}
-@media (max-width:480px){.exgrid{grid-template-columns:minmax(0,1fr)}.ex.big{grid-column:auto}.ex{min-height:140px}}
-footer{border-top:1px solid var(--rule);margin-top:48px;padding-block:24px 40px;color:var(--muted);font-size:14px;display:grid;gap:8px}
+/* hero */
+.hero{position:relative;margin:0 calc(-1 * max(16px,env(safe-area-inset-left,0px)));min-height:min(82vh,760px);display:flex;align-items:center;overflow:hidden;background:var(--panel);margin-top:-1px}
+.hero .art{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:var(--pos,70% 22%);opacity:0;transition:opacity 1s,transform 8s ease-out;transform:scale(1.04)}
+.hero .art.in{opacity:1;transform:scale(1)}
+.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(8,13,24,.96) 0%,rgba(8,13,24,.82) 34%,rgba(8,13,24,.1) 72%),linear-gradient(0deg,var(--ink) 0%,rgba(8,13,24,0) 34%),linear-gradient(180deg,rgba(8,13,24,.7) 0%,rgba(8,13,24,0) 18%)}
+.hero .in{position:relative;z-index:1;width:100%;max-width:1240px;margin:0 auto;padding:60px max(16px,env(safe-area-inset-left,0px)) 70px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.62fr);gap:30px;align-items:end}
+.hero h1{font-family:var(--f-display);font-weight:400;font-size:clamp(44px,6.6vw,88px);line-height:.92;margin:14px 0 16px;text-wrap:balance}
+.hero h1 em{font-style:normal;color:var(--gold)}
+.hero .lede{font-size:clamp(18px,1.6vw,21px);max-width:44ch;color:#d9dbe2;margin:0 0 24px}
+.find{display:flex;align-items:center;gap:12px;width:min(560px,100%);border:1px solid rgba(200,170,110,.55);background:rgba(8,13,24,.78);backdrop-filter:blur(6px);padding:14px 16px;cursor:text;color:var(--muted);font-size:18px;text-align:left}
+.find:hover{border-color:var(--gold)}
+.find svg{width:20px;height:20px;color:var(--gold);flex:none}
+.find span{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.find kbd{font-family:var(--f-mono);font-size:11px;border:1px solid var(--rule);padding:2px 7px;color:var(--muted)}
+.counts{display:flex;flex-wrap:wrap;gap:6px 22px;margin-top:22px}
+.counts a{text-decoration:none;color:var(--muted);font-family:var(--f-mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase}
+.counts a b{font-family:var(--f-num);font-weight:500;font-size:26px;letter-spacing:.02em;color:var(--text);margin-right:6px;vertical-align:-3px}
+.counts a:hover b{color:var(--gold)}
+.cotd{justify-self:end;width:min(380px,100%);border:1px solid color-mix(in srgb,var(--rc) 55%,transparent);background:rgba(8,13,24,.8);backdrop-filter:blur(8px);padding:18px 20px}
+.cotd h3{font-family:var(--f-display);font-weight:400;font-size:38px;line-height:1;margin:8px 0 2px}
+.cotd .t{font-style:italic;color:#d9dbe2;margin:0 0 10px}
+.cotd p{font-size:15.5px;line-height:1.5;color:#c4c8d3;margin:0 0 14px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.cotd .row{display:flex;gap:8px;flex-wrap:wrap}
+
+/* today's daily */
+.daily{border:1px solid var(--rule);background:linear-gradient(160deg,#121f36,#0b1426);padding:22px;display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,2fr);gap:24px;align-items:center}
+.daily h2{margin-top:8px}
+.daily p{margin:8px 0 14px;color:#c4c8d3}
+.daily .clock{font-family:var(--f-num);font-size:30px;line-height:1;color:var(--gold);font-variant-numeric:tabular-nums}
+.games{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px}
+.g{display:flex;flex-direction:column;justify-content:space-between;gap:10px;min-height:118px;border:1px solid var(--rule);background:rgba(8,13,24,.55);padding:12px;color:var(--text);text-decoration:none;min-width:0}
+.g:hover{border-color:var(--gold);transform:translateY(-2px)}
+.g{transition:transform .15s,border-color .15s}
+.g i{font-style:normal;font-size:22px;color:var(--gold);line-height:1}
+.g b{font-family:var(--f-display);font-weight:400;font-size:19px;line-height:1.05;display:block}
+.g small{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);display:block;margin-top:4px}
+.g.won{border-color:rgba(127,209,160,.45)}.g.won small{color:var(--win)}
+.g.open small{color:var(--gold)}
+
+/* doors */
+.doors{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px}
+.door{position:relative;overflow:hidden;border:1px solid var(--rule);background:var(--panel-2);min-height:300px;display:flex;flex-direction:column;justify-content:flex-end;color:var(--text);min-width:0}
+.door.a{grid-column:span 3;min-height:360px}.door.b{grid-column:span 3;min-height:360px}.door.c{grid-column:span 2}
+.door img.bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:var(--p,center);transition:transform .7s}
+.door:hover img.bg{transform:scale(1.04)}
+.door::before{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(8,13,24,.97) 18%,rgba(8,13,24,.55) 55%,rgba(8,13,24,.1) 100%);z-index:1}
+.door .tx{position:relative;z-index:2;padding:18px 20px 16px}
+.door h3{font-family:var(--f-display);font-weight:400;font-size:34px;line-height:1;margin:0 0 6px}
+.door h3 a{color:inherit;text-decoration:none}
+.door h3 a::after{content:"";position:absolute;inset:0;z-index:0}
+.door p{margin:0 0 12px;color:#c4c8d3;font-size:16px;max-width:46ch}
+.door ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px;position:relative;z-index:3}
+.door li a{display:inline-block;border:1px solid var(--rule);background:rgba(8,13,24,.7);padding:5px 10px;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--text);text-decoration:none}
+.door li a:hover{border-color:var(--gold);color:var(--gold)}
+
+/* right now */
+.now{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.nw{display:grid;grid-template-columns:96px minmax(0,1fr);gap:14px;align-items:center;border:1px solid var(--rule);background:var(--panel);padding:12px;color:var(--text);text-decoration:none;min-width:0}
+.nw:hover{border-color:var(--gold)}
+.nw img,.nw .bd{width:96px;height:96px;object-fit:cover;display:block;background:#05080f}
+.nw .bd{display:grid;place-items:center;align-content:center;border:1px solid var(--gold-dim);background:radial-gradient(circle at 50% 30%,#1d2c48,#0b1426);text-align:center}
+.nw .bd b{font-family:var(--f-num);font-weight:500;font-size:40px;line-height:.85;color:var(--gold);margin:0}
+.nw .bd small{font-family:var(--f-mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.nw b{display:block;font-family:var(--f-display);font-weight:400;font-size:22px;line-height:1.05;margin:4px 0}
+.nw span.s{display:block;color:#c4c8d3;font-size:15px;line-height:1.35}
+.nw .big{font-family:var(--f-num);font-size:26px;color:var(--gold);line-height:1}
+
+/* yours */
+.faces{display:flex;flex-wrap:wrap;gap:12px}
+.face{display:flex;flex-direction:column;align-items:center;gap:6px;width:84px;text-decoration:none;color:var(--text);text-align:center}
+.face img{width:72px;height:72px;object-fit:cover;border:1px solid var(--rule)}
+.face:hover img{border-color:var(--gold)}
+.face span{font-size:14px;line-height:1.2;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+footer{border-top:1px solid var(--rule);margin-top:64px;padding-block:24px 40px;color:var(--muted);font-size:14px;display:grid;gap:8px}
 footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width:80ch}
-@media (max-width:760px){.modes{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.mode{padding:10px}.mode small{display:none}.mode i{width:30px;height:30px;font-size:15px}.mode b{font-size:18px}.mode .st{display:none}.result{grid-template-columns:1fr}.result .pic{min-height:0;aspect-ratio:16/8}.clock{text-align:left}}
-/* voice mode */
-.vpips{display:flex;gap:6px;margin:0 0 14px}
-.vpips i{flex:1;height:6px;background:var(--panel-2);border:1px solid var(--rule)}
-.vpips i.ok{background:var(--hit);border-color:var(--hit)}.vpips i.no{background:var(--miss);border-color:var(--miss)}.vpips i.now{border-color:var(--gold);background:rgba(200,170,110,.35)}
-.vplay{display:flex;align-items:center;gap:18px;padding:8px 0 4px}
-.vbtn{flex:none;width:92px;height:92px;border-radius:50%;border:1px solid var(--gold);background:radial-gradient(circle at 50% 40%,rgba(200,170,110,.25),rgba(200,170,110,.06) 70%);color:var(--gold);cursor:pointer;display:grid;place-items:center;transition:transform .15s,background .15s}
-.vbtn:hover,.vbtn:focus-visible{transform:scale(1.04);outline:none;background:radial-gradient(circle at 50% 40%,rgba(200,170,110,.4),rgba(200,170,110,.1) 70%)}
-.vbtn svg{width:38px;height:38px}
-.vbtn .bars{display:none;gap:4px;align-items:center;height:36px}.vbtn .bars i{display:block;width:5px;height:10px;background:var(--gold);animation:vbar 1s ease-in-out infinite}
-.vbtn .bars i:nth-child(2){animation-delay:-.25s}.vbtn .bars i:nth-child(3){animation-delay:-.5s}.vbtn .bars i:nth-child(4){animation-delay:-.75s}
-.vbtn.on svg{display:none}.vbtn.on .bars{display:flex}
-@keyframes vbar{0%,100%{height:8px}50%{height:34px}}@media (prefers-reduced-motion:reduce){.vbtn .bars i{animation:none;height:20px}}
-.vplay .vt b{display:block;font-family:var(--f-display);font-weight:400;font-size:24px;line-height:1.15}
-.vplay .vt span{display:block;color:var(--muted);font-size:15px;margin-top:4px}
-.vhints{margin:12px 0 0;font-size:15px;color:var(--muted)}
-.vreveal{display:grid;grid-template-columns:84px minmax(0,1fr);gap:16px;align-items:center;border:1px solid var(--rule);padding:12px;margin-top:14px;background:var(--panel-2)}
-.vreveal img{width:84px;height:84px;object-fit:cover;display:block}
-.vreveal .k{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
-.vreveal h3{font-family:var(--f-display);font-weight:400;font-size:24px;margin:2px 0 4px}
-.vreveal q{display:block;font-style:italic;color:#c4c8d3}
-.vnext{margin-top:12px}
-.vlist{display:grid;gap:8px;margin:12px 0 14px}
-.vrow{display:grid;grid-template-columns:40px minmax(0,1fr) auto;gap:10px;align-items:center;padding:6px;border:1px solid var(--rule);border-left:3px solid var(--miss)}
-.vrow.ok{border-left-color:var(--hit)}
-.vrow img{width:40px;height:40px;object-fit:cover;display:block}
-.vrow b{display:block;font-weight:500;font-size:16px;line-height:1.2}.vrow b a{color:inherit;text-decoration:none}.vrow b a:hover{color:var(--gold)}
-.vrow small{display:block;color:var(--muted);font-size:13.5px;line-height:1.3;overflow-wrap:anywhere}
-.vrow button{width:36px;height:36px;border:1px solid var(--rule);background:none;color:var(--gold);cursor:pointer;display:grid;place-items:center}.vrow button:hover{border-color:var(--gold)}.vrow button svg{width:16px;height:16px}
-.vrow button.on{background:rgba(200,170,110,.18);border-color:var(--gold)}
-.vscore{font-family:var(--f-num);font-weight:600;font-size:64px;line-height:.9;color:var(--gold)}
-@media (max-width:480px){.vbtn{width:76px;height:76px}.vplay{gap:14px}.vplay .vt b{font-size:20px}.vreveal{grid-template-columns:60px minmax(0,1fr);gap:12px}.vreveal img{width:60px;height:60px}}
-html.cjk body *{letter-spacing:.02em!important}
-/* quote mode */
-.quotes{display:grid;gap:10px;margin:0;padding:0;list-style:none}
-.quotes li{border-left:3px solid var(--gold);background:rgba(200,170,110,.06);padding:12px 16px;font-size:21px;line-height:1.45;font-style:italic;color:#e6dcc4}
-.quotes li.hid{border-left-color:var(--rule);background:transparent;color:var(--faint);font-style:normal;font-size:15px;font-family:var(--f-mono);letter-spacing:.08em;text-transform:uppercase}
-.quotes li small{display:block;font-style:normal;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:6px}
-/* item mode */
-.itm{display:grid;grid-template-columns:auto minmax(0,1fr);gap:22px;align-items:center}
-.itm .ic{width:128px;height:128px;border:2px solid var(--gold-dim);overflow:hidden;background:#05080f}
-.itm .ic img{width:100%;height:100%;display:block;transition:filter .5s}
-.itm ul{margin:0;padding:0;list-style:none;display:grid;gap:6px}
-.itm li{font-size:17px;color:#d6d3c8}.itm li b{color:var(--gold);font-weight:500}
-.itm li.no{color:var(--faint);font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase}
-.irows{display:grid;gap:6px;margin-top:14px}
-.irow{display:grid;grid-template-columns:40px minmax(0,1fr) auto auto;gap:10px;align-items:center;border:1px solid var(--rule);border-left:3px solid var(--miss);padding:5px 10px 5px 5px;background:var(--panel)}
-.irow.ok{border-left-color:var(--hit)}
-.irow img{width:40px;height:40px;display:block}
-.irow .c{font-family:var(--f-num);font-size:18px;padding:2px 8px;border:1px solid var(--rule);white-space:nowrap}
-.irow .c.near{border-color:var(--near)}.irow .c.hit{border-color:var(--hit);color:#9fe0b6}
-.irow .s{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
-@media (max-width:480px){.itm{grid-template-columns:1fr;justify-items:center;text-align:center}.itm .ic{width:110px;height:110px}.irow{grid-template-columns:36px minmax(0,1fr) auto}.irow .s{display:none}.quotes li{font-size:18px}}
-/* stream mode: fresh rounds in a clean layout for streaming (no menu, countdown, explore cards or personal stats) */
-.streamtog{margin-top:12px;display:inline-flex;align-items:center;gap:8px;background:transparent;border:1px solid var(--rule);color:var(--text);font-family:var(--f-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;padding:8px 12px;cursor:pointer}
-.streamtog:hover{border-color:var(--gold)}
-.streamtog i{font-style:normal;width:8px;height:8px;border-radius:50%;background:#e0485a;box-shadow:0 0 0 3px rgba(224,72,90,.18)}
-.sbar{display:flex;flex-wrap:wrap;align-items:center;gap:8px 18px;margin:0 0 16px;padding:12px 14px;border:1px solid rgba(224,72,90,.45);background:linear-gradient(90deg,rgba(224,72,90,.12),rgba(15,26,46,.6) 60%);font-family:var(--f-mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
-.sbar .live{display:inline-flex;align-items:center;gap:8px;color:#ff8f9b}
-.sbar .live::before{content:"";width:8px;height:8px;border-radius:50%;background:#e0485a;animation:slive 1.6s ease-in-out infinite}
-@keyframes slive{50%{opacity:.35}}
-.sbar b{font-family:var(--f-num);font-size:22px;font-weight:500;letter-spacing:.04em;color:var(--text);vertical-align:-2px}
-.sbar .code b{color:var(--gold);letter-spacing:.14em}
-.sbar .sp{flex:1}
-.sbar button{background:none;border:1px solid var(--rule);color:var(--text);font:inherit;letter-spacing:inherit;text-transform:inherit;padding:7px 10px;cursor:pointer}
-.sbar button:hover{border-color:var(--gold)}
-.sbar .along{flex-basis:100%;text-transform:none;letter-spacing:.04em;font-size:13px;color:var(--muted)}
-.sbar .along b{font-family:var(--f-mono);font-size:13px;color:var(--gold);letter-spacing:.02em}
-html.stream .bar nav,html.stream .head p,html.stream .clock,html.stream .how,html.stream .explore,html.stream footer>div:not(.legal),html.stream .mode .st{display:none!important}
-html.stream .head{padding-block:16px 12px}
-html.stream h1{font-size:clamp(30px,4vw,46px)}
-html.stream footer{margin-top:28px;padding-block:14px 24px;font-size:12px}
-@media (min-width:1100px){html.stream .play{zoom:1.12}}
-@media (max-width:760px){.sbar{gap:8px 12px;padding:10px 12px}.sbar .sp{display:none}}
-@media (max-width:480px){.bonus .opts{grid-template-columns:1fr}.lore{font-size:18px}.stage{padding:14px}}
+
+@media (max-width:1100px){.games{grid-template-columns:repeat(4,minmax(0,1fr))}.daily{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:900px){
+  .hero{min-height:0;align-items:flex-end}
+  .hero .in{grid-template-columns:minmax(0,1fr);padding-top:200px;padding-bottom:40px}
+  .hero::after{background:linear-gradient(0deg,var(--ink) 4%,rgba(8,13,24,.86) 46%,rgba(8,13,24,.25) 100%)}
+  .cotd{justify-self:stretch;width:100%}
+  .doors{grid-template-columns:repeat(2,minmax(0,1fr))}.door.a,.door.b{grid-column:span 2;min-height:300px}.door.c{grid-column:span 1;min-height:280px}
+  .now{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:560px){
+  .games{grid-template-columns:repeat(2,minmax(0,1fr))}.g{min-height:96px}
+  .doors{grid-template-columns:minmax(0,1fr)}.door.a,.door.b,.door.c{grid-column:span 1;min-height:260px}
+  .find kbd{display:none}
+  .nw{grid-template-columns:72px minmax(0,1fr)}.nw img,.nw .bd{width:72px;height:72px}.nw .bd b{font-size:32px}
+}
 </style>
 <script src="site.js" defer></script>
 </head>
 <body>
 <div class="wrap">
   <header class="bar">
-    <a class="brand" href="./">
+    <a class="brand" href="./" aria-current="page">
       <svg viewBox="0 0 32 32" aria-hidden="true"><polygon points="16,2 29,9.5 29,22.5 16,30 3,22.5 3,9.5" fill="none" stroke="#c8aa6e" stroke-width="1.5"/><circle cx="16" cy="16" r="5" fill="none" stroke="#c8aa6e" stroke-width="1.5"/><path d="M16 2v9M16 21v9M3 9.5l8 4.5M21 18l8 4.5M29 9.5l-8 4.5M11 18l-8 4.5" stroke="#c8aa6e" stroke-width="1"/></svg>
       Lore Explorer
     </a>
-    <nav class="nav" aria-label="Site"><a href="atlas.html">Atlas</a><a href="journey.html">Journeys</a><a href="./" aria-current="page">Daily</a></nav>
+    <nav class="nav" aria-label="Site"><a href="journey.html">Champions</a><a href="atlas.html">Atlas</a><a href="daily.html">Daily</a><a href="worlds.html">Esports</a></nav>
   </header>
 
-  <section class="head">
-    <div>
-      <div class="eyebrow" id="eye"></div>
-      <h1>Lore Explorer <em>Daily</em></h1>
-      <p id="intro">Ten League of Legends champions and one item to find every day: from clues, a zoomed-in splash, an ability icon, their lore, five voice lines and their own words, plus an item from the shop. Same puzzles for everyone, free, no sign-up.</p>
+  <section class="hero" id="hero">
+    <img class="art" id="art" alt="">
+    <div class="in">
+      <div>
+        <div class="eyebrow" id="hEye">A free fan site for the world of League of Legends</div>
+        <h1 id="hH1">Every champion, story and skin, <em>in one place.</em></h1>
+        <p class="lede" id="hLede">Meet every champion, walk the map of Runeterra, read Riot's stories, compare every skin, relive every Worlds final, and play seven new guessing games every day.</p>
+        <button type="button" class="find srch" id="find"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M15.5 15.5 21 21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span id="findT">Search champions, skins, items, stories…</span><kbd>/</kbd></button>
+        <div class="counts" id="counts"></div>
+      </div>
+      <aside class="cotd" id="cotd" aria-live="polite"></aside>
     </div>
-    <div class="clock"><b id="clock">--:--:--</b><span id="untilT">until tomorrow's puzzles</span><br><button type="button" class="streamtog" id="streamOn" title="Fresh rounds for streaming: today's puzzles stay unspoiled and your streak isn't touched"><i aria-hidden="true"></i><span>Stream mode</span></button></div>
   </section>
 
-  <div class="sbar" id="sbar" hidden></div>
-  <div class="modes" role="tablist" aria-label="Game mode">
-    <button class="mode" role="tab" data-m="clues" aria-selected="true"><i>?</i><span><b>Clues</b><small>Region, class, range and more</small></span><span class="st" data-st="clues"></span></button>
-    <button class="mode" role="tab" data-m="splash" aria-selected="false"><i>◩</i><span><b>Splash</b><small>Zoomed-in art, then name the skin</small></span><span class="st" data-st="splash"></span></button>
-    <button class="mode" role="tab" data-m="ability" aria-selected="false"><i>◈</i><span><b>Ability</b><small>A spell icon, turned and greyed</small></span><span class="st" data-st="ability"></span></button>
-    <button class="mode" role="tab" data-m="lore" aria-selected="false"><i>¶</i><span><b>Lore</b><small>Their biography, name hidden</small></span><span class="st" data-st="lore"></span></button>
-    <button class="mode" role="tab" data-m="voice" aria-selected="false"><i>♪</i><span><b>Voice</b><small>Five voices: who's speaking?</small></span><span class="st" data-st="voice"></span></button>
-    <button class="mode" role="tab" data-m="quote" aria-selected="false"><i>“</i><span><b>Quote</b><small>Who said it? Their own words</small></span><span class="st" data-st="quote"></span></button>
-    <button class="mode" role="tab" data-m="item" aria-selected="false"><i>◆</i><span><b>Item</b><small>A blurred icon from the shop</small></span><span class="st" data-st="item"></span></button>
-  </div>
-
-  <div class="play" id="play"></div>
-
-  <section class="how" id="how"></section>
-
-  <section class="explore" aria-labelledby="exT">
-    <div class="eyebrow" id="exE">After your puzzles</div>
-    <h2 id="exT">Explore Runeterra</h2>
-    <div class="exgrid">
-      <a class="ex big" href="atlas.html" style="--img:url('img/scene/piltover.webp')"><b>The Atlas</b><span>The map of Runeterra: every region, all 173 champions and the bonds between them.</span></a>
-      <a class="ex" href="journey.html" style="--img:url('https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Jinx_0.jpg')"><b>Champion journeys</b><span>Pick a champion; we'll show you around.</span></a>
-      <a class="ex" href="reading.html" style="--img:url('img/scene/ionia.webp')"><b>Reading Room</b><span>244 stories and 38 comics from Riot.</span></a>
-      <a class="ex" href="skins.html" style="--img:url('https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Ahri_15.jpg')"><b>Skins</b><span>Every skin and its splash art.</span></a>
-      <a class="ex" href="timeline.html" style="--img:url('img/scene/shurima.webp')"><b>Timeline</b><span>Every champion in the order they arrived.</span></a>
-      <a class="ex" href="worlds.html" style="--img:url('img/scene/noxus.webp')"><b>Worlds 2026</b><span>Live scores, teams and players.</span></a>
-      <a class="ex" href="music.html" style="--img:url('img/scene/bilgewater.webp')"><b>Music</b><span>Anthems, virtual bands and champion themes.</span></a>
+  <section aria-labelledby="dH">
+    <div class="shead"><div><div class="eyebrow" id="dEye">New every day</div></div></div>
+    <div class="daily">
+      <div>
+        <h2 class="sec" id="dH">Today's Daily</h2>
+        <p id="dP">Seven guessing games, new every day. Free, no sign-up.</p>
+        <div class="k" id="dNext">Next puzzles in</div>
+        <div class="clock" id="clock">--:--:--</div>
+        <p style="margin:14px 0 0"><a class="btn" href="daily.html" id="dPlay">Play today's Daily</a></p>
+      </div>
+      <div class="games" id="games"></div>
     </div>
+  </section>
+
+  <section aria-labelledby="eH">
+    <div class="shead"><div><div class="eyebrow" id="eEye">Where to go</div><h2 class="sec" id="eH">Explore</h2></div></div>
+    <div class="doors" id="doors"></div>
+  </section>
+
+  <section aria-labelledby="nH">
+    <div class="shead"><div><div class="eyebrow" id="nEye">In League right now</div><h2 class="sec" id="nH">Right now</h2></div></div>
+    <div class="now" id="now"></div>
+  </section>
+
+  <section aria-labelledby="yH" id="yours" hidden>
+    <div class="shead"><div><div class="eyebrow">★</div><h2 class="sec" id="yH">Your champions</h2></div><a class="btn ghost" href="mine.html" id="yAll">My champions</a></div>
+    <div class="faces" id="faces"></div>
   </section>
 
   <footer>
-    <div id="credit">Inspired by fan games like LoLdle. Champion facts from Riot's Data Dragon, the League Wiki and Leaguepedia; biographies are Riot's (or, where marked on the Atlas, written for this site). Results and streaks are kept in your browser only.</div>
-    <div id="vcredit">Voice lines are Riot's own recordings: pick and ban lines from the game client (via CommunityDragon), emotes from the League of Legends Wiki.</div>
+    <div id="credit">Champion art and data from Riot's Data Dragon; lore and stories from Riot's Universe site; skins, icons and voice lines from the game client via CommunityDragon; history from the League of Legends Wiki and Leaguepedia (CC BY-SA 3.0).</div>
     <div class="legal">Lore Explorer was created under Riot Games' "Legal Jibber Jabber" policy using assets owned by Riot Games. Riot Games does not endorse or sponsor this project.</div>
   </footer>
 </div>
 
 <script src="data/champions.js"></script>
 <script src="data/regions.js"></script>
-<script src="data/releases.js"></script>
-<script src="data/skins.js"></script>
-<script src="data/game.js"></script>
-<script src="data/abilities.js"></script>
+<script src="data/seasons.js"></script>
+<script src="data/patches.js"></script>
 <script>
-const CHAMPS=(window.ATLAS_CHAMPS||[]).slice().sort((a,b)=>a.id.localeCompare(b.id));
-const CH=Object.fromEntries(CHAMPS.map(c=>[c.id,c]));
-const RG=Object.fromEntries((window.ATLAS_REGIONS||[]).map(r=>[r.id,r]));
-const REL=window.ATLAS_RELEASES||{}, SK=window.ATLAS_SKINS||{}, GM=window.ATLAS_GAME||{};
+(async function(){
+"use strict";
+const I=window.AtlasI18n, LANG=I?I.lang:"en";
+const t=(k,v)=>{let s=I?I.t(k,v):k;if(s===k&&EN[k]!=null)s=EN[k];return String(s).replace(/\{(\w+)\}/g,(m,x)=>v&&v[x]!=null?v[x]:m);};
+const EN={};
+if(I){try{await Promise.all([I.ready,I.loadPack()]);}catch(e){}}
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const nm=c=>I&&I.name?I.name(c):c.name, ttl=c=>I&&I.title?I.title(c):c.title, bio=c=>I&&I.bio?I.bio(c):c.bio;
+const CHAMPS=(window.ATLAS_CHAMPS||[]).slice().sort((a,b)=>a.id.localeCompare(b.id)), CH=Object.fromEntries(CHAMPS.map(c=>[c.id,c]));
 const DD="https://ddragon.leagueoflegends.com/cdn/img/champion/";
-const esc=s=>String(s??"").replace(/[&<>"]/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch]));
-const I=window.AtlasI18n, LANG=I?I.lang:"en", t=(k,v)=>I?I.t(k,v):k;
-const MODES={clues:1,splash:1,ability:1,lore:1,voice:1,quote:1,item:1};
-const MN=m=>t("m_"+m);
-let PK=null; // Riot's official text in the visitor's language (null = English)
-const pc=id=>PK&&PK.champs[id]||null;
-const cName=id=>pc(id)&&pc(id)[0]||CH[id].name;
-const tagName=tg=>I?I.tag(tg):tg;
-const cls=c=>(c.tags||[]).map(tagName).join(", ");
-const resName=id=>{const r=GM[id][0];if(LANG==="en")return r;const v=pc(id)&&pc(id)[3];return v||(r==="None"?t("no_resource"):r);};
-const rangeName=v=>v==="Melee"?t("melee"):v==="Ranged"?t("ranged"):v;
-const skinName=(id,s)=>{if(s[0]===0)return t("original",{name:cName(id)});const v=pc(id)&&pc(id)[5]&&pc(id)[5][s[0]];return v||s[1];};
-const ablName=(p,i)=>{const v=pc(p.id)&&pc(p.id)[4];return (v&&v[i])||p.abl[i][0];};
-const slotName=i=>SLOT[i]==="Passive"?t("passive"):SLOT[i];
-const norm=s=>String(s).normalize("NFD").replace(/\p{M}/gu,"").toLowerCase().replace(/[^\p{L}\p{N}]/gu,"");
+const d=new Date(), KEY=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+const fmt=iso=>I&&I.date?I.date(iso):new Date(iso+"T12:00:00Z").toLocaleDateString("en-GB",{day:"numeric",month:"long",timeZone:"UTC"});
+const LS={get(k){try{return JSON.parse(localStorage.getItem(k)||"null");}catch(e){return null;}}};
 
-/* ---------- the day's puzzle: same for everyone, by the visitor's calendar date ---------- */
-const EPOCH=Date.UTC(2026,9,20); // puzzle #1 = 20 Oct 2026
-function todayKey(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;}
-const dayNo=k=>{const [y,m,d]=k.split("-").map(Number);return Math.round((Date.UTC(y,m-1,d)-EPOCH)/864e5)+1;};
-function rng(seed){let a=seed>>>0;return()=>{a=(a+0x6D2B79F5)>>>0;let t=a;t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return((t^(t>>>14))>>>0)/4294967296;};}
-const hash=s=>{let h=2166136261;for(const ch of s){h^=ch.codePointAt(0);h=Math.imul(h,16777619);}return h>>>0;};
-// each mode walks its own fixed shuffle of all champions, so no champion repeats in a mode until all 173 have come up
-function shuffled(mode){const r=rng(hash("atlas-daily-"+mode));const a=CHAMPS.map(c=>c.id);for(let i=a.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
-const ORDER={clues:shuffled("clues"),splash:shuffled("splash"),ability:shuffled("ability"),lore:shuffled("lore"),voice:shuffled("voice"),quote:shuffled("quote"),item:[]};
-/* ---------- item mode: legendary items and boots from the shop (data/items.js + item names in the visitor's language) ---------- */
-let IT={},ITL=null,itemLoading=null;
-const itName=id=>(ITL&&ITL[id]&&ITL[id][0])||(IT[id]&&IT[id].n)||id;
-const itStats=id=>ITL&&ITL[id]?ITL[id][1].map(x=>(x[0]?x[0]+" ":"")+x[1]):(IT[id]?IT[id].st.map(x=>x.join(" ").trim()):[]);
-const itFx=id=>{if(ITL&&ITL[id])return ITL[id][2];return IT[id]?[...IT[id].fx.matchAll(/<b>(?:Active: )?([^<]+)<\/b>/g)].map(m=>m[1]):[];};
-const ITEM_ICON=id=>`https://ddragon.leagueoflegends.com/cdn/${(window.ATLAS_ITEMS||{}).ver||"16.21.1"}/img/item/${id}.png`;
-function loadItems(){if(ORDER.item.length)return Promise.resolve();
-  if(!itemLoading)itemLoading=Promise.all([new Promise(res=>{if(window.ATLAS_ITEMS)return res();const s=document.createElement("script");s.src="data/items.js";s.onload=res;s.onerror=res;document.head.appendChild(s);}),
-    LANG==="en"?null:new Promise(res=>{const s=document.createElement("script");s.src=`data/i18n/items-${LANG}.js`;s.onload=res;s.onerror=res;document.head.appendChild(s);})]).then(()=>{
-    const A=(window.ATLAS_ITEMS||{items:[]}).items;A.forEach(i=>IT[i.id]=i);ITL=window.ATLAS_I18N_ITEMS||null;
-    const pool=A.filter(i=>(i.t==="Legendary"||i.t==="Boots")&&i.n!=="Boots").map(i=>i.id).sort();
-    const r=rng(hash("atlas-daily-item"));for(let i=pool.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]];}ORDER.item=pool;});
-  return itemLoading;}
-/* ---------- quote mode: what the champion says, in their own words (Wiki transcripts of their voice lines; never one that says their own name) ---------- */
-let quoteLoading=null;
-function loadQuotes(){if(window.ATLAS_VOICE&&window.ATLAS_IX)return Promise.resolve();
-  if(!quoteLoading)quoteLoading=Promise.all([loadVoice(),new Promise(res=>{if(window.ATLAS_IX)return res();const s=document.createElement("script");s.src="data/interactions.js";s.onload=res;s.onerror=res;document.head.appendChild(s);})]);
-  return quoteLoading;}
-let QIDX=null;
-function quotesOf(id){
-  if(!QIDX){QIDX={};(window.ATLAS_IX||[]).forEach(r=>{(QIDX[r[0]]=QIDX[r[0]]||[]).push([r[3],r[2]]);});}
-  const c=CH[id],v=(window.ATLAS_VOICE||{})[id]||{};
-  const parts=[c.name,...c.name.split(/[^A-Za-z']+/)].map(w=>w.toLowerCase()).filter(w=>w.length>=3&&!["the","and"].includes(w));
-  const spoken=txt=>(String(txt||"").match(/["“][^"”]+["”]?/g)||[]).join(" ");
-  const says=txt=>{const w=spoken(txt).toLowerCase();return parts.some(x=>new RegExp(`(^|[^a-z])${x.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")}([^a-z]|$)`).test(w));};
-  const out=[],seen=new Set(),add=(txt,ctx,own)=>{const q=spoken(txt).replace(/^["“]|["”]$/g,"").replace(/["“”]/g,"").trim();if(q.length<12||seen.has(q)||says(txt))return;seen.add(q);out.push({q,ctx,own});};
-  add(v.p,t("v_k_pick"),1);add(v.b,t("v_k_ban"),1);["j","t","d"].forEach(k=>(v[k]||[]).forEach(x=>add(x[1],t(k==="j"?"v_k_joke":k==="t"?"v_k_taunt":"v_dance"),1)));
-  // lines about other champions name them, so they come last (they are the bigger hint)
-  (QIDX[id]||[]).forEach(x=>{if(!/^[A-Z][a-z]+( and [A-Z][a-z]+)?:/.test(x[0]))add(x[0],x[1],0);});
-  return out;}
-const ABI="https://ddragon.leagueoflegends.com/cdn/16.20.1/img/", SLOT=["Passive","Q","W","E","R"];
-function puzzle(mode,key,practiceSeed){
-  const n=practiceSeed!=null?practiceSeed:dayNo(key);
-  const L=ORDER[mode], id=L[((n-1)%L.length+L.length)%L.length];
-  const r=rng(hash(`${mode}|${n}|${practiceSeed!=null?"p":""}`));
-  const p={mode,n,id,practice:practiceSeed!=null};
-  if(mode==="splash"){
-    // a skin that has a Data Dragon splash (base art counts), and a focal point away from the edges
-    const sk=[[0,"Original"]].concat((SK[id]||[]).filter(k=>typeof k[0]==="number"&&!k[7]).map(k=>[k[0],k[1]]));
-    const s=sk[Math.floor(r()*sk.length)];p.skin=s;p.skins=sk;
-    p.fx=(30+r()*40).toFixed(1)+"%";p.fy=(18+r()*40).toFixed(1)+"%";
-    // bonus options: the right skin + up to three others of the same champion
-    const others=sk.filter(x=>x[0]!==s[0]);for(let i=others.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[others[i],others[j]]=[others[j],others[i]];}
-    p.opts=[s].concat(others.slice(0,3));for(let i=p.opts.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[p.opts[i],p.opts[j]]=[p.opts[j],p.opts[i]];}
-  }
-  if(mode==="ability"){
-    const L=((window.ATLAS_ABILITIES||{})[id]||[0,[]])[1];
-    p.ai=Math.floor(r()*L.length);p.rot=[90,180,270][Math.floor(r()*3)];p.abl=L;
-    p.aopts=L.map((a,i)=>i);for(let i=p.aopts.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[p.aopts[i],p.aopts[j]]=[p.aopts[j],p.aopts[i]];}
-  }
-  if(mode==="quote"){
-    // the next champion in the shuffle who has at least three usable quotes; own lines first, lines about others after
-    let i=0,q=[];while(i<L.length){q=quotesOf(L[(((n-1)+i)%L.length+L.length)%L.length]);if(q.length>=3)break;i++;}
-    p.id=L[(((n-1)+i)%L.length+L.length)%L.length];
-    const own=q.filter(x=>x.own),oth=q.filter(x=>!x.own);[own,oth].forEach(A=>{for(let k=A.length-1;k>0;k--){const j=Math.floor(r()*(k+1));[A[k],A[j]]=[A[j],A[k]];}});
-    p.quotes=own.concat(oth).slice(0,4);
-  }
-  if(mode==="voice"){
-    // five different champions a day: the next five places in the voice shuffle (a practice round picks five at random)
-    const V=window.ATLAS_VOICE||{},Lv=ORDER.voice;p.rounds=[];
-    for(let i=0;p.rounds.length<VOICE_N&&i<50;i++){
-      const vid=p.practice?Lv[Math.floor(r()*Lv.length)]:Lv[((((n-1)*VOICE_N+i)%Lv.length)+Lv.length)%Lv.length];
-      if(p.rounds.some(x=>x.id===vid))continue;
-      p.rounds.push({id:vid,line:voiceLine(V[vid],r,CH[vid])});
-    }
-    p.id=p.rounds[0].id;
-  }
-  return p;
-}
-/* ---------- voice lines: Riot's pick/ban recordings (CommunityDragon, in the visitor's language where Riot recorded one) + spoken joke/taunt emotes (League Wiki) ---------- */
-const VOICE_N=5, VOICE_TRIES=3;
-const VLOC={"ko":"ko_kr","zh-CN":"zh_cn","ja":"ja_jp","es-ES":"es_es","es-MX":"es_mx","pt-BR":"pt_br","fr":"fr_fr","de":"de_de","it":"it_it","pl":"pl_pl","ru":"ru_ru","tr":"tr_tr"}[LANG]||"default";
-const VCD=`https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/${VLOC}/v1/`, VWIKI="https://static.wikia.nocookie.net/leagueoflegends/images/";
-function voiceLine(v,r,c){
-  if(!v)return null;
-  // a line that says the champion's own name would give the answer away (judged on the Wiki's English transcript)
-  const parts=c.name.toLowerCase().split(/[^a-z]+/).filter(w=>w.length>=3&&!["the","and"].includes(w));
-  // only the spoken words (inside quotes) count: "Bard chimes." describes a sound, it isn't said aloud
-  const says=txt=>{const w=(String(txt||"").match(/["“][^"”]*["”]?/g)||[]).join(" ").toLowerCase();return parts.some(x=>new RegExp(`(^|[^a-z])${x}([^a-z]|$)`).test(w));};
-  const L=[];
-  if(!says(v.p))L.push({k:"pick",url:`${VCD}champion-choose-vo/${v.k}.ogg`,txt:VLOC==="default"?v.p:"",wiki:false});
-  if(!says(v.b))L.push({k:"ban",url:`${VCD}champion-ban-vo/${v.k}.ogg`,txt:VLOC==="default"?v.b:"",wiki:false});
-  // only emotes with spoken words (a laugh or a grunt gives nothing away)
-  [["j","joke"],["t","taunt"]].forEach(([s,k])=>(v[s]||[]).forEach(x=>{if(/["“]/.test(x[1])&&!says(x[1]))L.push({k,url:VWIKI+x[0]+"/revision/latest",txt:x[1],wiki:true});}));
-  // someone who says their own name in every line (Neeko!) gets a laugh instead
-  if(!L.length)(v.l||[]).forEach(x=>L.push({k:"laugh",url:VWIKI+x[0]+"/revision/latest",txt:x[1],wiki:true}));
-  if(!L.length)L.push({k:"pick",url:`${VCD}champion-choose-vo/${v.k}.ogg`,txt:VLOC==="default"?v.p:"",wiki:false});
-  return L[Math.floor(r()*L.length)];
-}
-let vAudio=null,vBtn=null;const vBlobs={};
-function vStop(){if(vAudio){vAudio.pause();vAudio=null;}if(vBtn){vBtn.classList.remove("on");vBtn=null;}}
-function vSrc(line){
-  if(!line.wiki)return Promise.resolve(line.url);
-  // the Wiki's file host refuses audio requests that carry our address, so its files are fetched without one
-  if(!vBlobs[line.url])vBlobs[line.url]=fetch(line.url,{referrerPolicy:"no-referrer"}).then(r=>{if(!r.ok)throw new Error(r.status);return r.blob();}).then(b=>URL.createObjectURL(b)).catch(e=>{delete vBlobs[line.url];throw e;});
-  return vBlobs[line.url];
-}
-function vPlay(line,btn,onFail){
-  if(vBtn===btn&&vAudio){vStop();return;}
-  vStop();if(!line)return;
-  const a=new Audio();vAudio=a;vBtn=btn;if(btn)btn.classList.add("on");
-  const fail=e=>{if(vAudio===a&&!(e&&e.name==="AbortError")){vStop();if(onFail)onFail();}};
-  a.addEventListener("ended",()=>{if(vAudio===a)vStop();});a.addEventListener("error",()=>fail());
-  vSrc(line).then(u=>{if(vAudio!==a)return;a.src=u;const pr=a.play();if(pr&&pr.catch)pr.catch(fail);},fail);
-}
-const SPK='<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor" stroke="none"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/><path d="M19 6a8.5 8.5 0 0 1 0 12"/></svg>';
-let voiceLoading=null;
-function loadVoice(){if(window.ATLAS_VOICE)return Promise.resolve();if(!voiceLoading)voiceLoading=new Promise(res=>{const s=document.createElement("script");s.src="data/voice.js";s.onload=res;s.onerror=res;document.head.appendChild(s);});return voiceLoading;}
+/* static text in the visitor's language */
+const set=(id,k,html)=>{const el=document.getElementById(id);if(!el)return;const v=t(k);if(v===k)return;html?el.innerHTML=v:el.textContent=v;};
+if(LANG!=="en"){document.documentElement.lang=LANG;
+  set("hEye","h_eye");const a=t("h_h1a"),b=t("h_h1b");if(a!=="h_h1a")document.getElementById("hH1").innerHTML=`${esc(a)} <em>${esc(b)}</em>`;
+  set("hLede","h_lede");set("findT","search_ph");set("dEye","h_d_eye");set("dH","h_daily");set("dP","h_daily_p");set("dNext","h_next_in");set("dPlay","h_play");
+  set("eEye","h_e_eye");set("eH","h_explore");set("nEye","h_n_eye");set("nH","h_now");set("yH","h_yours");set("yAll","mine");}
 
-/* ---------- storage (this browser only) ---------- */
-const LS={get(k,d){try{const v=JSON.parse(localStorage.getItem(k));return v??d;}catch(e){return d;}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}};
-const sKey=(p,key)=>p.practice?null:`atlas.daily.${p.mode}.${key}`;
-function stats(mode){return LS.get(`atlas.daily.stats.${mode}`,{played:0,won:0,streak:0,best:0,last:null,dist:{}});}
-function record(p,key,state){
-  if(p.practice)return;const s=stats(p.mode);if(s.lastKey===key)return;
-  s.played++;s.lastKey=key;
-  if(state.won){s.won++;const prev=s.lastWin;const y=new Date(Date.parse(key)-864e5);const yk=`${y.getUTCFullYear()}-${String(y.getUTCMonth()+1).padStart(2,"0")}-${String(y.getUTCDate()).padStart(2,"0")}`;
-    s.streak=(prev===yk)?s.streak+1:1;s.best=Math.max(s.best,s.streak);s.lastWin=key;const g=Math.min(state.g.length,7);s.dist[g]=(s.dist[g]||0)+1;}
-  else{s.streak=0;}
-  LS.set(`atlas.daily.stats.${p.mode}`,s);
-}
+/* champion of the day: the same champion for everyone on a given date */
+const hash=s=>{let h=2166136261;for(const ch of s){h^=ch.charCodeAt(0);h=Math.imul(h,16777619);}return h>>>0;};
+const C=CHAMPS[hash("cotd|"+KEY)%CHAMPS.length];
+const art=document.getElementById("art");art.onload=()=>art.classList.add("in");art.src=`${DD}splash/${C.dd}_0.jpg`;art.alt=nm(C);
+document.documentElement.style.setProperty("--rc",(((window.ATLAS_REGIONS||[]).find(r=>r.id===C.region))||{}).color||"#c8aa6e");
+document.getElementById("cotd").innerHTML=`<div class="k" style="color:var(--gold)">${esc(t("h_cotd"))} · ${esc(fmt(KEY))}</div><h3>${esc(nm(C))}</h3><div class="t">${esc(ttl(C).replace(/^./,m=>m.toUpperCase()))}</div><p>${esc(bio(C))}</p>
+  <div class="row"><a class="btn" href="journey.html?c=${C.id}">${esc(t("h_meet",{name:nm(C)}))}</a><a class="btn ghost" href="journey.html?c=${CHAMPS[Math.floor(Math.random()*CHAMPS.length)].id}">${esc(t("surprise"))}</a></div>`;
 
-/* ---------- helpers ---------- */
-const year=id=>REL[id]?+REL[id][0].slice(0,4):null;
-const skins=id=>(SK[id]||[]).length;
-const regName=id=>I?I.region(id,(RG[id]||{}).name):((RG[id]||{}).name||id);
-let toastT;function toast(t){let el=document.querySelector(".toast");if(!el){el=document.createElement("div");el.className="toast";document.body.appendChild(el);}el.textContent=t;el.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>el.hidden=true,1800);}
+/* what's here, each number links to its page */
+const N=(n)=>n.toLocaleString(LANG);
+document.getElementById("counts").innerHTML=[[CHAMPS.length,"k_c","journey.html"],[1994,"k_s","skins.html"],[244,"k_st","reading.html"],[147,"k_v","theater.html"],[25,"k_f","finals.html"]].map(([n,k,h])=>`<a href="${h}"><b>${N(n)}</b>${esc(t(k))}</a>`).join("");
 
-/* ---------- clue comparison ---------- */
-function compare(g,a){
-  const G=CH[g],A=CH[a];
-  const reg={v:regName(G.region),r:G.region===A.region?"hit":"miss"};
-  const gt=G.tags||[],at=A.tags||[];const same=gt.filter(t=>at.includes(t)).length;
-  const cls_={v:gt.map(tagName).join(", "),r:same===gt.length&&same===at.length?"hit":same?"near":"miss"};
-  const rng_={v:rangeName(GM[g][1]),r:GM[g][1]===GM[a][1]?"hit":"miss"};
-  const res={v:resName(g),r:GM[g][0]===GM[a][0]?"hit":"miss"};
-  const yg=year(g),ya=year(a);const yr={v:yg,r:yg===ya?"hit":Math.abs(yg-ya)<=2?"near":"miss",dir:yg<ya?"↑":yg>ya?"↓":""};
-  const sg=skins(g),sa=skins(a);const sk={v:sg,r:sg===sa?"hit":Math.abs(sg-sa)<=2?"near":"miss",dir:sg<sa?"↑":sg>sa?"↓":""};
-  return [reg,cls_,rng_,res,yr,sk];
-}
-const SYM={hit:"✓",near:"≈",miss:"✗"};
-const EMO={hit:"🟩",near:"🟧",miss:"🟥"};
+/* today's Daily: the state of each game, read from this browser */
+const MODES=[["clues","?"],["splash","◩"],["ability","◆"],["lore","¶"],["voice","♪"],["quote","❝"],["item","⬡"]];
+document.getElementById("games").innerHTML=MODES.map(([m,ic])=>{const st=LS.get(`atlas.daily.${m}.${KEY}`)||{};const n=(st.g||[]).length;
+  const state=st.won?"won":st.lost?"lost":n?"open":"new";
+  const lab=state==="won"?t("h_solved"):state==="lost"?t("h_revealed"):state==="open"?t("h_in_progress"):t("h_new");
+  return `<a class="g ${state}" href="daily.html#${m}"><i aria-hidden="true">${state==="won"?"✓":ic}</i><span><b>${esc(t("m_"+m))}</b><small>${esc(lab)}</small></span></a>`;}).join("");
+const tick=()=>{const n=new Date(),m=new Date(n.getFullYear(),n.getMonth(),n.getDate()+1),s=Math.max(0,Math.floor((m-n)/1000));
+  document.getElementById("clock").textContent=[Math.floor(s/3600),Math.floor(s/60)%60,s%60].map(x=>String(x).padStart(2,"0")).join(":");};
+tick();setInterval(tick,1000);
 
-/* ---------- game ---------- */
-// Where the player was is remembered, so leaving for the Atlas (or anywhere) and coming back lands on the same puzzle.
-const VIEW="atlas.daily.view", PRAC="atlas.daily.practice";
-const view0=LS.get(VIEW,{});
-let mode=(location.hash.slice(1) in MODES)?location.hash.slice(1):(view0.mode in MODES?view0.mode:"clues");
-let inPractice=!(location.hash.slice(1) in MODES)&&view0.practice===true&&view0.mode===mode;
-const PR=LS.get(PRAC,{}); // {mode:{seed,state}} — practice rounds survive page changes too
-const saveView=()=>LS.set(VIEW,{mode,practice:inPractice});
-const play=document.getElementById("play");
+/* doors: the five sections */
+const DOORS=[
+  {cls:"a",h:"journey.html",t:t("g_champions"),d:t("h_door_c"),img:`${DD}splash/Jinx_0.jpg`,p:"72% 20%",l:[["journey.html","it_champs"],["skins.html","it_cos"],["makeovers.html","it_makeovers"],["beyond.html","it_beyond"]]},
+  {cls:"b",h:"atlas.html",t:t("g_lore"),d:t("h_door_l"),img:"img/scene/ionia.webp",p:"center",l:[["atlas.html","it_atlas"],["reading.html","it_reading"],["timeline.html","it_history"]]},
+  {cls:"c",h:"daily.html",t:t("g_play"),d:t("h_door_p"),img:"img/rift/map.webp",p:"center",l:[["daily.html","it_daily"],["rift.html","it_game"],["tft.html","it_tft"],["library.html","it_cards"]]},
+  {cls:"c",h:"worlds.html",t:t("g_esports"),d:t("h_door_e"),img:"img/scene/noxus.webp",p:"center",l:[["worlds.html","it_worlds"],["players.html","it_players"],["finals.html","it_finals"]]},
+  {cls:"c",h:"theater.html",t:t("g_watch"),d:t("h_door_w"),img:"img/scene/bilgewater.webp",p:"center",l:[["theater.html","it_theater"],["music.html","it_music"]]}];
+document.getElementById("doors").innerHTML=DOORS.map(x=>`<article class="door ${x.cls}"><img class="bg" src="${x.img}" alt="" loading="lazy" style="--p:${x.p}"><div class="tx"><h3><a href="${x.h}">${esc(x.t)}</a></h3><p>${esc(x.d)}</p><ul>${x.l.map(([h,k])=>`<li><a href="${h}">${esc(t(k))}</a></li>`).join("")}</ul></div></article>`).join("");
 
-/* ---------- stream mode (?stream, or ?stream=CODE for one exact round): fresh rounds for streaming.
-   Today's puzzles stay unspoiled for chat and the streamer's streak is never touched. Each mode keeps its current round code;
-   anyone who opens ?stream=<code>#<mode> plays that same round. The stream's running score lives in atlas.daily.stream. ---------- */
-const SKEY="atlas.daily.stream", QS=new URLSearchParams(location.search);
-const SST=Object.assign({m:{},tally:{played:0,found:0,seen:[]}},LS.get(SKEY,{}));
-let STREAM=QS.has("stream");
-const CODEA="ABCDEFGHJKMNPQRSTUVWXYZ23456789";
-const newCode=()=>Array.from({length:4},()=>CODEA[Math.floor(Math.random()*CODEA.length)]).join("");
-const cleanCode=c=>String(c||"").toUpperCase().replace(/[^A-Z0-9]/g,"").slice(0,6);
-const codeSeed=c=>1000+hash("stream|"+c)%100000;
-function streamRound(m){if(!SST.m[m]){SST.m[m]={code:newCode(),state:null};LS.set(SKEY,SST);}return SST.m[m];}
-{const c=cleanCode(QS.get("stream"));if(STREAM&&c.length>=4&&(!SST.m[mode]||SST.m[mode].code!==c)){SST.m[mode]={code:c,state:null};LS.set(SKEY,SST);}}
-if(STREAM)inPractice=false;
-document.documentElement.classList.toggle("stream",STREAM);
-function syncURL(){try{history.replaceState(null,"",location.pathname+(STREAM?`?stream=${streamRound(mode).code}`:"")+"#"+mode);}catch(e){}}
-if(STREAM)syncURL();
-function setStream(on){STREAM=on;inPractice=false;saveView();document.documentElement.classList.toggle("stream",on);vStop();syncURL();render();window.scrollTo({top:0});}
-function streamNew(){SST.m[mode]={code:newCode(),state:null};LS.set(SKEY,SST);vStop();syncURL();render();window.scrollTo({top:0,behavior:"smooth"});}
-function streamTally(p,state){const tag=p.mode+":"+SST.m[p.mode].code,T=SST.tally;if(T.seen.includes(tag))return;T.seen.push(tag);if(T.seen.length>300)T.seen=T.seen.slice(-300);T.played++;if(state.won)T.found++;LS.set(SKEY,SST);}
-const siteAddr=()=>location.host+location.pathname.replace(/index\.html$/,"");
-function streamBar(){
-  const sb=document.getElementById("sbar");if(!STREAM){sb.hidden=true;return;}
-  const r=streamRound(mode),T=SST.tally;sb.hidden=false;
-  sb.innerHTML=`<span class="live">${t("s_live")}</span><span class="code">${t("s_code",{code:`<b>${esc(r.code)}</b>`})}</span><span>${t("s_score",{a:`<b>${T.found}</b>`,b:`<b>${T.played}</b>`})}</span><span class="sp"></span>
-    <button type="button" id="sNew">${t("s_new")}</button>${T.played?`<button type="button" id="sReset">${t("s_reset")}</button>`:""}<button type="button" id="sExit">${t("s_exit")}</button>
-    <span class="along">${t("s_along",{site:`<b>${esc(siteAddr())}</b>`})}</span>`;
-  document.getElementById("sNew").onclick=streamNew;document.getElementById("sExit").onclick=()=>setStream(false);
-  const rs=document.getElementById("sReset");if(rs)rs.onclick=()=>{SST.tally={played:0,found:0,seen:[]};LS.set(SKEY,SST);streamBar();};
-}
-// the buttons a finished round shows in stream mode
-const streamActs=ans=>`<div class="acts"><button class="btn" type="button" id="snext">${t("s_next")}</button><button class="btn ghost" type="button" id="sshare">${t("s_share")}</button>${ans?`<a class="btn ghost" href="journey.html?c=${ans.id}">${esc(t("journey_btn",{name:cName(ans.id)}))}</a>`:""}</div><p style="font-size:14px;color:var(--muted)">${t("s_no_streak")}</p>`;
+/* right now: Worlds 2026 (Leaguepedia dates), the live season act (seasons.js), the next patch (patches.js, Pacific Time) */
+const NOW=[];const today=KEY;
+{const S="2026-10-15",F="2026-11-14",day=Math.round((Date.parse(today)-Date.parse(S))/864e5)+1,left=Math.round((Date.parse(F)-Date.parse(today))/864e5);
+ if(today<=F)NOW.push(`<a class="nw" href="worlds.html"><span class="bd"><b>${today<S?"…":left>0?left:"🏆"}</b><small>${today<S||left<=0?"":esc(t("h_days_left"))}</small></span><span><span class="k">${esc(t("it_worlds"))}</span><b>${today<S?esc(t("h_w_soon",{d:fmt(S)})):left>0?esc(t("h_w_on",{n:day})):esc(t("h_w_final"))}</b><span class="s">${esc(t("h_w_final_on",{d:fmt(F)}))}</span></span></a>`);
+ else NOW.push(`<a class="nw" href="finals.html"><span class="bd"><b>🏆</b></span><span><span class="k">${esc(t("k_f"))}</span><b>${esc(t("it_finals"))}</b><span class="s">${esc(t("it_finals_d"))}</span></span></a>`);}
+{const Z=window.ATLAS_SEASONS;let live=null;if(Z)Z.themed.forEach(s=>s.acts.forEach((a,i)=>{const nx=s.acts[i+1]?s.acts[i+1].start:s.end;if(a.start<=today&&today<nx)live={s,a,end:nx};}));
+ if(live){const img=live.s.img[Math.min(live.s.acts.indexOf(live.a),live.s.img.length-1)];
+  NOW.push(`<a class="nw" href="seasons.html#s-${live.s.id}"><img src="img/seasons/${img}.webp" alt="" loading="lazy"><span><span class="k">${esc(t("h_season"))}</span><b>${esc(live.s.name)} · ${esc(live.a.act)}</b><span class="s">${esc(t("h_until",{d:fmt(live.end)}))}</span></span></a>`);}}
+{const P=window.ATLAS_PATCHES||[];const pt=new Date(new Date().toLocaleString("en-US",{timeZone:"America/Los_Angeles"}));const ptk=`${pt.getFullYear()}-${String(pt.getMonth()+1).padStart(2,"0")}-${String(pt.getDate()).padStart(2,"0")}`;
+ const nx=P.find(p=>p[1]>=ptk),last=P.filter(p=>p[1]<ptk).pop();
+ if(nx){const n=Math.round((Date.parse(nx[1])-Date.parse(ptk))/864e5);
+  NOW.push(`<a class="nw" href="patches.html"><span class="bd"><b>${n}</b><small>${esc(t("h_days_left"))}</small></span><span><span class="k">${esc(t("h_patch"))}</span><b>${esc(t("h_patch_n",{p:nx[0].replace(/^26\.0?/,"26.")}))}</b><span class="s">${esc(fmt(nx[1]))}</span></span></a>`);}}
+document.getElementById("now").innerHTML=NOW.join("");
 
-function render(){
-  document.querySelectorAll(".mode").forEach(b=>b.setAttribute("aria-selected",String(b.dataset.m===mode)));
-  const key=todayKey();if(inPractice&&!PR[mode])inPractice=false;const SR=STREAM?streamRound(mode):null;const pseed=SR?codeSeed(SR.code):inPractice?PR[mode].seed:null;
-  streamBar();
-  if(mode!=="voice")vStop();
-  if(mode==="voice"&&!window.ATLAS_VOICE){play.innerHTML=`<div class="stage"><h2><span>${t("v_who")}</span></h2><p style="margin:0;color:var(--muted)">…</p></div>`;loadVoice().then(()=>{if(mode==="voice")render();});statusChips();return;}
-  if(mode==="quote"&&!(window.ATLAS_VOICE&&window.ATLAS_IX)){play.innerHTML=`<div class="stage"><h2><span>${t("q_who")}</span></h2><p style="margin:0;color:var(--muted)">…</p></div>`;loadQuotes().then(()=>{if(mode==="quote")render();});statusChips();return;}
-  if(mode==="item"&&!ORDER.item.length){play.innerHTML=`<div class="stage"><h2><span>${t("i_which")}</span></h2><p style="margin:0;color:var(--muted)">…</p></div>`;loadItems().then(()=>{if(mode==="item"&&ORDER.item.length)render();});statusChips();return;}
-  const p=puzzle(mode,key,pseed);
-  const k=sKey(p,key);
-  const state=(k&&LS.get(k,null))||p._state||{g:[],won:false,lost:false,bonus:null};
-  p._state=state;
-  const save=()=>{if(SR){SR.state=state;LS.set(SKEY,SST);if(state.won||state.lost)streamTally(p,state);}else if(k)LS.set(k,state);else{PR[mode].state=state;LS.set(PRAC,PR);}};
-  if(SR){if(SR.state)Object.assign(state,SR.state);}else if(pseed!=null&&PR[mode].state)Object.assign(state,PR[mode].state);
-  if(mode==="voice"&&!state.rounds){state.rounds=p.rounds.map(()=>({g:[],done:false,ok:false}));state.cur=0;}
-  const done=state.won||state.lost, ans=CH[p.id]||null;
-  document.getElementById("eye").textContent=SR?t("s_eye",{mode:MN(mode)}):p.practice?t("practice_eye",{mode:MN(mode)}):t("puzzle_n",{n:p.n,date:I&&LANG!=="en"?I.date(key):new Date().toLocaleDateString(LANG,{day:"numeric",month:"long",year:"numeric"})});
-
-  if(mode==="voice"){renderVoice(p,state,save,key);return;}
-  if(mode==="item"){renderItem(p,state,save,key);return;}
-  let stage="";
-  if(mode==="clues"){
-    stage=`<div class="stage"><h2><span>${t("guess_champ")}</span><span>${t("guesses",{n:state.g.length})}</span></h2>
-      <div class="legend"><span><i style="background:var(--hit)"></i>✓ ${t("legend_match")}</span><span><i style="background:var(--near)"></i>≈ ${t("legend_close")}</span><span><i style="background:var(--miss)"></i>✗ ${t("legend_miss")}</span><span>↑ ↓ ${t("legend_arrows")}</span></div></div>`;
-  }else if(mode==="splash"){
-    const wrong=state.g.filter(x=>x!==p.id).length;const z=done?1:Math.max(1,6-wrong*0.85);
-    stage=`<div class="stage"><h2><span>${t("whose_splash")}</span><span class="zoomtag">${done?t("full_view"):t("zoom",{z:z.toFixed(1)})}</span></h2>
-      <div class="crop" style="--fx:${p.fx};--fy:${p.fy};--z:${z};${done?"":"--flt:saturate(1.05)"}"><img src="${DD}splash/${ans.dd}_${p.skin[0]}.jpg" alt="${done?esc(p.skin[0]===0?cName(p.id):skinName(p.id,p.skin)):"?"}"></div>
-      ${state.won?bonusHTML(p,state):""}</div>`;
-  }else if(mode==="ability"){
-    const wrong=state.g.filter(x=>x!==p.id).length, a=p.abl[p.ai];
-    const grey=!done&&wrong<3, turned=!done&&wrong<5;
-    stage=`<div class="stage"><h2><span>${t("whose_ability")}</span><span>${done?"":grey?t("hint_colour"):turned?t("hint_upright"):t("no_more_hints")}</span></h2>
-      <div class="abil"><img src="${ABI}${p.ai?"spell":"passive"}/${a[2]}" alt="${done?esc(ablName(p,p.ai)):"?"}" style="filter:${grey?"grayscale(1) contrast(1.1)":"none"};transform:rotate(${turned?p.rot:0}deg)"></div>
-      ${state.won?abilityBonusHTML(p,state):""}</div>`;
-  }else if(mode==="quote"){
-    const wrong=state.g.filter(x=>x!==p.id).length, Q=p.quotes, show=done?Q.length:Math.min(Q.length,1+wrong);
-    const hints=[];if(done||wrong>=4)hints.push(t("from_region",{r:`<b>${esc(regName(ans.region))}</b>`}));if(done||wrong>=6)hints.push(t("class_is",{c:`<b>${esc(cls(ans))}</b>`}));
-    stage=`<div class="stage"><h2><span>${t("q_who")}</span><span>${t("q_shown",{a:show,b:Q.length})}${done?"":wrong<Q.length-1?" · "+t("q_next_after"):wrong<4?" · "+t("hint_region_after"):""}</span></h2>
-      <ul class="quotes">${Q.map((x,i)=>i<show?`<li>“${esc(x.q)}”${done?`<small>${esc(x.ctx)}</small>`:""}</li>`:`<li class="hid">${t("q_hidden")}</li>`).join("")}</ul>
-      ${hints.length?`<p style="margin:12px 0 0;font-size:15px;color:var(--muted)">${hints.join(" · ")}</p>`:""}
-      ${LANG!=="en"?`<p style="margin:10px 0 0;font-size:13px;color:var(--faint)">${t("q_en")}</p>`:""}</div>`;
-  }else{
-    const B=bioChunks(ans), ch=B.c, wrong=state.g.filter(x=>x!==p.id).length, show=done?ch.length:Math.min(ch.length,1+wrong);
-    const hints=[];if(done||wrong>=3)hints.push(t("from_region",{r:`<b>${esc(regName(ans.region))}</b>`}));if(done||wrong>=5)hints.push(t("class_is",{c:`<b>${esc(cls(ans))}</b>`}));
-    stage=`<div class="stage"><h2><span>${t("who_is_this")}</span><span>${t("parts_shown",{a:show,b:ch.length})}${done?"":wrong<3?" · "+t("hint_region_after"):wrong<5?" · "+t("hint_class_after"):""}</span></h2>
-      <p class="lore">${ch.map((ws,i)=>i<show?`<span class="s">${ws.join(B.sep)}${B.sep}</span>`:`<span class="hid">${ws.map(w=>"▒".repeat(Math.max(2,Math.min(9,w.replace(/<[^>]+>/g,"").length)))).join(" ")} </span>`).join("")}</p>
-      ${hints.length?`<p style="margin:12px 0 0;font-size:15px;color:var(--muted)">${hints.join(" · ")}</p>`:""}</div>`;
-  }
-
-  const input=done?"":`<div class="guess"><input id="gi" type="text" placeholder="${esc(t("placeholder"))}" autocomplete="off" aria-label="${esc(t("guess_champ"))}" aria-autocomplete="list" aria-controls="sugg"><button type="button" id="gb">${t("guess_btn")}</button><div class="sugg" id="sugg" role="listbox" hidden></div></div>
-    <div class="meta-line"><span>${state.g.length?t("tried",{n:state.g.length}):t("start_typing")}</span>${state.g.length>=8?`<button type="button" id="giveup">${t("reveal")}</button>`:""}</div>`;
-
-  let guesses="";
-  if(mode==="clues"&&state.g.length){
-    guesses=`<div class="grid-wrap"><div class="cgrid">${["champion","region","class","range","resource","released","skins"].map(k=>`<div class="h">${t("col_"+k)}</div>`).join("")}
-      ${state.g.slice().reverse().map((g,ri)=>{const c=compare(g,p.id);const fresh=ri===0&&!state._seen;return `<div class="cell p" style="--i:0" title="${esc(cName(g))}"><img src="img/${g}-tile.webp" alt="${esc(cName(g))}"></div>`+c.map((x,i)=>`<div class="cell ${x.r}" style="--i:${fresh?i+1:0};${fresh?"":"animation:none"}">${i>=4?`<b>${x.v}</b>`:esc(x.v)}<span class="ic">${SYM[x.r]}${x.dir?" "+x.dir:""}</span></div>`).join("");}).join("")}</div></div>`;
-  }else if(state.g.length){
-    guesses=`<div class="glist">${state.g.map(g=>`<span class="${g===p.id?"ok":""}"><img src="img/${g}-tile.webp" alt="">${esc(cName(g))}</span>`).join("")}</div>`;
-  }
-
-  const back=p.practice&&!STREAM?`<div class="meta-line" style="margin:0 0 10px"><span>${t("practice_note")}</span><button type="button" id="today">${t("back_today")}</button></div>`:"";
-  play.innerHTML=back+(done?resultHTML(p,state,key):"")+stage+input+guesses;
-  state._seen=true;
-  wire(p,state,save,key);
-  statusChips();
-  if(STREAM&&done){const sn=document.getElementById("snext");if(sn)sn.focus({preventScroll:true});}
-}
-
-function renderItem(p,state,save,key){
-  const it=IT[p.id], done=state.won||state.lost, wrong=state.g.filter(x=>x!==p.id).length;
-  const blur=done?0:Math.max(0,7-wrong*1.6), grey=!done&&wrong<3;
-  const st=itStats(p.id), fx=itFx(p.id);
-  const clues=[];
-  clues.push(done||wrong>=1?`<li>${t("i_cost",{n:`<b>${it.g}</b>`})}</li>`:`<li class="no">${t("i_clue_after",{n:1})}</li>`);
-  clues.push(done||wrong>=2?`<li>${t("i_gives",{s:`<b>${esc((done||wrong>=4?st:st.slice(0,1)).join(" · "))}</b>`})}</li>`:`<li class="no">${t("i_clue_after",{n:2})}</li>`);
-  if(fx.length)clues.push(done||wrong>=5?`<li>${t("i_effect",{e:`<b>${esc(fx.join(" · "))}</b>`})}</li>`:`<li class="no">${t("i_clue_after",{n:5})}</li>`);
-  const stage=`<div class="stage"><h2><span>${t("i_which")}</span><span>${done?"":grey?t("hint_colour"):""}</span></h2>
-    <div class="itm"><div class="ic"><img src="${ITEM_ICON(p.id)}" alt="${done?esc(itName(p.id)):"?"}" style="filter:blur(${blur}px)${grey?" grayscale(1)":""}"></div><ul>${clues.join("")}</ul></div></div>`;
-  const input=done?"":`<div class="guess"><input id="ii" type="text" placeholder="${esc(t("i_placeholder"))}" autocomplete="off" aria-label="${esc(t("i_which"))}" aria-autocomplete="list" aria-controls="isugg"><button type="button" id="ib">${t("guess_btn")}</button><div class="sugg" id="isugg" role="listbox" hidden></div></div>
-    <div class="meta-line"><span>${state.g.length?t("tried",{n:state.g.length}):t("i_start")}</span>${state.g.length>=8?`<button type="button" id="giveup">${t("reveal")}</button>`:""}</div>`;
-  const ANS=new Set(it.st.map(x=>x[1]));
-  const rows=state.g.length?`<div class="irows">${state.g.slice().reverse().map(g=>{const G=IT[g];if(!G)return "";const ok=g===p.id,sh=G.st.filter(x=>ANS.has(x[1])).length,d=it.g-G.g;
-    const c=ok?`<span class="c hit">${G.g}</span>`:`<span class="c ${Math.abs(d)<=300?"near":""}" title="${esc(d>0?t("i_more"):d<0?t("i_less"):t("i_same"))}">${G.g} ${d>0?"↑":d<0?"↓":"="}</span>`;
-    return `<div class="irow ${ok?"ok":""}"><img src="${ITEM_ICON(g)}" alt=""><b style="font-weight:500;min-width:0">${esc(itName(g))}</b>${c}<span class="s">${ok?"✓":t("i_shared",{n:sh})}</span></div>`;}).join("")}</div>
-    <p style="margin:8px 0 0;font-size:13.5px;color:var(--muted)">${t("i_legend")}</p>`:"";
-  const back=p.practice&&!STREAM?`<div class="meta-line" style="margin:0 0 10px"><span>${t("practice_note")}</span><button type="button" id="today">${t("back_today")}</button></div>`:"";
-  play.innerHTML=back+(done?itemResultHTML(p,state):"")+stage+input+rows;
-  wireItem(p,state,save,key);wire(p,state,save,key);statusChips();
-  if(STREAM&&done){const sn=document.getElementById("snext");if(sn)sn.focus({preventScroll:true});}
-}
-function itemResultHTML(p,state){
-  const it=IT[p.id],n=state.g.length,s=stats("item"),maxD=Math.max(1,...Object.values(s.dist||{})),me=Math.min(n,7);
-  return `<div class="result"><div class="pic" style="background:#05080f url('${ITEM_ICON(p.id)}') center/contain no-repeat;image-rendering:auto"></div><div class="body">
-    <div class="eyebrow">${state.won?(n===1?t("first_try"):t("found_it")):p.practice?t("v_out"):t("better_luck")}</div>
-    <h3>${esc(itName(p.id))}</h3><p>${state.won?t("in_n",{guesses:t("guesses",{n})}):t("revealed")} · ${it.g} ${esc(t("i_gold"))}</p>
-    ${it.q?`<p style="font-style:italic;color:#e6dcc4">“${esc(it.q.replace(/^["“]|["”]$/g,""))}”</p>`:""}
-    ${STREAM?streamActs(null):`<div class="acts"><button class="btn" type="button" id="share">${t("share")}</button><a class="btn ghost" href="items.html#i-${p.id}">${esc(t("i_armory"))}</a><button class="btn ghost" type="button" id="practice">${t("practice_btn")}</button></div>`}
-    ${STREAM?"":p.practice?`<p style="font-size:14px;color:var(--muted)">${t("practice_no_streak")}</p>`:`<div class="stats"><div><b>${s.played}</b><span>${t("st_played")}</span></div><div><b>${s.played?Math.round(s.won/s.played*100):0}%</b><span>${t("st_won")}</span></div><div><b>${s.streak}</b><span>${t("st_streak")}</span></div><div><b>${s.best}</b><span>${t("st_best")}</span></div></div>
-    <div class="dist">${[1,2,3,4,5,6,7].map(i=>{const v=(s.dist||{})[i]||0;return `<div><span>${i===7?"7+":i}</span><i class="${state.won&&i===me?"me":""}" style="width:${Math.max(6,v/maxD*100)}%">${v}</i></div>`;}).join("")}</div>`}
-  </div></div>`;
-}
-function wireItem(p,state,save,key){
-  const gi=document.getElementById("ii"),sugg=document.getElementById("isugg");if(!gi)return;
-  const DRAFT=`atlas.daily.draft.item.${p.practice?"p"+p.n:key}`;
-  const POOL=Object.values(IT).filter(i=>i.t==="Legendary"||i.t==="Boots"&&i.n!=="Boots");
-  const keys=i=>[...new Set([norm(itName(i.id)),norm(i.n)])];
-  let sel=0,list=[];
-  const draw=()=>{const q=norm(gi.value.trim());const pool=POOL.filter(i=>!state.g.includes(i.id)),starts=q?pool.filter(i=>keys(i).some(k=>k.startsWith(q))):[];
-    list=q?starts.concat(pool.filter(i=>!starts.includes(i)&&keys(i).some(k=>k.includes(q)))).slice(0,8):[];sel=0;sugg.hidden=!list.length;
-    sugg.innerHTML=list.map((i,k)=>`<button type="button" role="option" data-id="${i.id}" aria-selected="${k===sel}"><img src="${ITEM_ICON(i.id)}" alt="">${esc(itName(i.id))}${LANG!=="en"&&itName(i.id)!==i.n?` <span style="color:var(--faint);font-size:13px">${esc(i.n)}</span>`:""}<small>${i.g}</small></button>`).join("");};
-  const choose=id=>{if(!id||state.g.includes(id))return;try{sessionStorage.removeItem(DRAFT)}catch(e){}state.g.push(id);if(id===p.id){state.won=true;record(p,key,state);}save();render();const g2=document.getElementById("ii");if(g2)g2.focus();};
-  try{const d=sessionStorage.getItem(DRAFT);if(d){gi.value=d;draw();}}catch(e){}
-  gi.addEventListener("input",()=>{try{sessionStorage.setItem(DRAFT,gi.value)}catch(e){}draw();});
-  gi.addEventListener("keydown",e=>{
-    if(e.key==="ArrowDown"&&list.length){e.preventDefault();sel=(sel+1)%list.length;}
-    else if(e.key==="ArrowUp"&&list.length){e.preventDefault();sel=(sel-1+list.length)%list.length;}
-    else if(e.key==="Enter"){e.preventDefault();if(list[sel])choose(list[sel].id);return;}
-    else if(e.key==="Escape"){sugg.hidden=true;return;}else return;
-    sugg.querySelectorAll("button").forEach((b,i)=>b.setAttribute("aria-selected",String(i===sel)));});
-  sugg.addEventListener("click",e=>{const b=e.target.closest("button");if(b)choose(b.dataset.id);});
-  document.getElementById("ib").onclick=()=>{if(list[sel])choose(list[sel].id);else{const q=norm(gi.value.trim()),ex=q&&POOL.find(i=>keys(i).includes(q));if(ex)choose(ex.id);}};
-  if(!matchMedia("(hover:none)").matches)gi.focus();
-}
-function voiceKind(k){return t(k==="laugh"?"v_laugh":"v_k_"+k);}
-function renderVoice(p,state,save,key){
-  const R=state.rounds, done=state.won||state.lost, cur=Math.min(state.cur||0,VOICE_N-1), rd=p.rounds[cur], st=R[cur], ans=CH[rd.id];
-  const score=R.filter(x=>x.ok).length;
-  const pips=`<div class="vpips" aria-hidden="true">${R.map((x,i)=>`<i class="${x.done?(x.ok?"ok":"no"):i===cur&&!done?"now":""}"></i>`).join("")}</div>`;
-  const back=p.practice&&!STREAM?`<div class="meta-line" style="margin:0 0 10px"><span>${t("practice_note")}</span><button type="button" id="today">${t("back_today")}</button></div>`:"";
-  const rowsHTML=(upto)=>`<div class="vlist">${p.rounds.slice(0,upto).map((x,i)=>{const r=R[i],c=CH[x.id];return `<div class="vrow ${r.ok?"ok":""}"><img src="img/${x.id}-tile.webp" alt=""><div style="min-width:0"><b><a href="journey.html?c=${x.id}">${esc(cName(x.id))}</a> <span style="color:${r.ok?"#7fd1a0":"#e58a95"}">${r.ok?"✓":"✗"}</span></b><small>${esc(voiceKind(x.line.k))}${x.line.txt?` · ${esc(x.line.txt)}`:""}</small></div><button type="button" class="vre" data-r="${i}" aria-label="${esc(t("v_again"))}" title="${esc(t("v_again"))}">${SPK}</button></div>`;}).join("")}</div>`;
-  let html=back;
-  if(done){
-    const s=stats("voice"),dist=s.dist||{},maxD=Math.max(1,...Object.values(dist));
-    html+=`<div class="result"><div class="pic" style="background-image:url('${DD}splash/${CH[p.rounds[0].id].dd}_0.jpg')"></div><div class="body">
-      <div class="eyebrow">${score===VOICE_N?t("v_perfect"):state.won?t("found_it"):p.practice?esc(MN("voice")):t("better_luck")}</div>
-      <div class="vscore">${score}<span style="font-size:32px;color:var(--muted)"> / ${VOICE_N}</span></div>
-      <p style="margin-top:8px">${t("v_scored",{a:score,b:VOICE_N})}</p>
-      ${rowsHTML(VOICE_N)}
-      ${STREAM?streamActs(null):`<div class="acts"><button class="btn" type="button" id="share">${t("share")}</button><button class="btn ghost" type="button" id="practice">${t("practice_btn")}</button></div>`}
-      ${STREAM?"":p.practice?`<p style="font-size:14px;color:var(--muted)">${t("practice_no_streak")}</p>`:`<div class="stats"><div><b>${s.played}</b><span>${t("st_played")}</span></div><div><b>${s.played?Math.round(s.won/s.played*100):0}%</b><span>${t("st_won")}</span></div><div><b>${s.streak}</b><span>${t("st_streak")}</span></div><div><b>${s.best}</b><span>${t("st_best")}</span></div></div>
-      <div class="dist">${[5,4,3,2,1,0].map(i=>{const v=dist[i]||0;return `<div><span>${i}</span><i class="${i===score?"me":""}" style="width:${Math.max(6,v/maxD*100)}%">${v}</i></div>`;}).join("")}</div>`}
-      </div></div>`;
-    play.innerHTML=html;
-    if(STREAM){const sn=document.getElementById("snext");if(sn)sn.focus({preventScroll:true});}
-  }else{
-    const wrong=st.g.filter(x=>x!==rd.id).length, left=VOICE_TRIES-st.g.length;
-    const hints=[];if(st.done||wrong>=1)hints.push(t("from_region",{r:`<b>${esc(regName(ans.region))}</b>`}));if(st.done||wrong>=2)hints.push(t("class_is",{c:`<b>${esc(cls(ans))}</b>`}));
-    html+=`<div class="stage"><h2><span>${t("v_round",{a:cur+1,b:VOICE_N})}</span><span>${st.done?"":t("v_left",{n:left})}</span></h2>${pips}
-      <div class="vplay"><button type="button" class="vbtn" id="vbtn" aria-label="${esc(t("v_play"))}">${SPK.replace('viewBox','style="margin-left:4px" viewBox')}<span class="bars" aria-hidden="true"><i></i><i></i><i></i><i></i></span></button>
-        <div class="vt"><b>${t("v_who")}</b><span id="vmsg">${st.g.length||st.done?t("v_again_hint"):t("v_tap")}</span></div></div>
-      ${hints.length?`<p class="vhints">${hints.join(" · ")}</p>`:""}
-      ${st.done?`<div class="vreveal"><img src="img/${rd.id}-tile.webp" alt=""><div style="min-width:0"><div class="k">${st.ok?(st.g.length===1?t("first_try"):t("found_it")):t("v_out")} · ${esc(voiceKind(rd.line.k))}</div><h3>${esc(cName(rd.id))}</h3>${rd.line.txt?`<q>${esc(rd.line.txt.replace(/^["“]|["”]$/g,""))}</q>`:""}</div></div>
-        <div class="vnext"><button class="btn" type="button" id="vnext">${cur+1<VOICE_N?t("v_next"):t("v_results")}</button></div>`:""}
-      </div>`;
-    if(!st.done)html+=`<div class="guess"><input id="gi" type="text" placeholder="${esc(t("placeholder"))}" autocomplete="off" aria-label="${esc(t("v_who"))}" aria-autocomplete="list" aria-controls="sugg"><button type="button" id="gb">${t("guess_btn")}</button><div class="sugg" id="sugg" role="listbox" hidden></div></div>`;
-    if(st.g.length)html+=`<div class="glist">${st.g.map(g=>`<span class="${g===rd.id?"ok":""}"><img src="img/${g}-tile.webp" alt="">${esc(cName(g))}</span>`).join("")}</div>`;
-    if(cur>0)html+=`<h2 style="margin:22px 0 0;font-family:var(--f-mono);font-weight:400;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)">${t("v_so_far",{a:R.slice(0,cur).filter(x=>x.ok).length,b:cur})}</h2>${rowsHTML(cur)}`;
-    play.innerHTML=html;
-    const vb=document.getElementById("vbtn"),msg=document.getElementById("vmsg");
-    vb.onclick=()=>vPlay(rd.line,vb,()=>{msg.textContent=t("v_cant");});
-    const nx=document.getElementById("vnext");
-    if(nx)nx.onclick=()=>{vStop();if(cur+1<VOICE_N){state.cur=cur+1;save();render();const b2=document.getElementById("vbtn");if(b2){b2.click();b2.focus({preventScroll:true});}}else{finishVoice(p,state,key);save();render();}};
-    if(st.done&&nx)nx.focus({preventScroll:true});
-  }
-  play.querySelectorAll(".vre").forEach(b=>b.onclick=()=>{const x=p.rounds[+b.dataset.r];vPlay(x.line,b,()=>toast(t("v_cant")));});
-  wire(p,state,save,key);
-  statusChips();
-}
-function finishVoice(p,state,key){
-  const score=state.rounds.filter(x=>x.ok).length;
-  state.won=score>=3;state.lost=!state.won;state.score=score;
-  if(p.practice)return;const s=stats("voice");if(s.lastKey===key)return;
-  s.played++;s.lastKey=key;s.dist[score]=(s.dist[score]||0)+1;
-  if(state.won){s.won++;const y=new Date(Date.parse(key)-864e5);const yk=`${y.getUTCFullYear()}-${String(y.getUTCMonth()+1).padStart(2,"0")}-${String(y.getUTCDate()).padStart(2,"0")}`;s.streak=(s.lastWin===yk)?s.streak+1:1;s.best=Math.max(s.best,s.streak);s.lastWin=key;}
-  else s.streak=0;
-  LS.set("atlas.daily.stats.voice",s);
-}
-function bioChunks(c){
-  // Riot's biography (in the visitor's language when Riot has one), split into 5 roughly even chunks, with the champion's name (and each part of it) hidden
-  const loc=pc(c.id);
-  if(!loc||!loc[2]){
-    const parts=new Set([c.name,...c.name.split(/[\s&.]+/)].map(w=>w.toLowerCase().replace(/[^a-z']/g,"")).filter(w=>w.length>2));
-    const words=c.bio.split(/\s+/).map(w=>{const core=w.toLowerCase().replace(/[^a-z']/g,"").replace(/'s$/,"");
-      return parts.has(core)||[...parts].some(p=>p.includes(" ")?false:core===p)?`<mark>▇▇▇${/'s\W*$/.test(w)?"'s":""}</mark>${(w.match(/[.,;:!?]+$/)||[""])[0]}`:esc(w);});
-    const n=Math.min(5,words.length), size=Math.ceil(words.length/n), out=[];
-    for(let i=0;i<words.length;i+=size)out.push(words.slice(i,i+size));
-    return {c:out,sep:" "};
-  }
-  return locChunks(loc[2],LANG==="zh-CN"?[loc[0],loc[1],c.name]:[loc[0],c.name]);
-}
-const NOSPACE=/^(zh|ja|th)/.test(LANG);
-function locChunks(text,names){
-  text=text.replace(/\s*(\.\.\.|…)\s*$/,"…");
-  const parts=[...new Set(names.flatMap(nm=>[nm,...nm.split(/[\s&·・.,']+/)]).map(x=>x.trim()).filter(x=>[...x].length>=2&&!/^(the|and|of|de|la|le|el|i|ii|iii|iv|v)$/i.test(x)))].sort((a,b)=>b.length-a.length);
-  const reEsc=x=>x.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
-  // in languages with spaces, a hidden name also swallows the case ending glued to it (Гарена, Garenem, 아리는)
-  // …and a name whose last vowel changes with the case (Аврора → Аврору) is matched by its stem
-  const alt=x=>{const v=`(?<![\\p{L}])${reEsc(x)}\\p{L}{0,3}`;const st=[...x].length>=5&&/[aeiouyаеёиоуыэюяąęó]$/i.test(x)?`|(?<![\\p{L}])${reEsc(x.slice(0,-1))}\\p{L}{1,3}`:"";return v+st;};
-  const re=new RegExp(parts.map(x=>NOSPACE?reEsc(x):alt(x)).join("|"),"giu");
-  const marked=text.replace(re,"\u0001");
-  const html=x=>esc(x).replace(/\u0001/g,"<mark>▇▇▇</mark>");
-  let units;
-  if(NOSPACE){const chars=[...marked];units=[];for(let i=0;i<chars.length;i+=5)units.push(chars.slice(i,i+5).join(""));}
-  else units=marked.split(/\s+/).filter(Boolean);
-  const n=Math.min(5,units.length), size=Math.ceil(units.length/n), out=[];
-  for(let i=0;i<units.length;i+=size)out.push(units.slice(i,i+size).map(html));
-  return {c:out,sep:NOSPACE?"":" "};
-}
-function abilityBonusHTML(p,state){
-  const b=state.bonusA;
-  return `<div class="bonus"><h2 style="margin:0;font-family:var(--f-mono);font-weight:400;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)">${t("bonus_ability")}</h2>
-    <div class="opts">${p.aopts.map(i=>{const cls=b==null?"":i===p.ai?"right":i===b?"wrong":"";return `<button type="button" data-abil="${i}" class="${cls}" ${b!=null?"disabled":""}>${b!=null?`<b style="font-family:var(--f-num);font-weight:500;color:var(--gold);margin-right:6px">${SLOT[i]==="Passive"?"P":SLOT[i]}</b>`:""}${esc(ablName(p,i))}</button>`;}).join("")}</div></div>`;
-}
-function bonusHTML(p,state){
-  const b=state.bonus;
-  return `<div class="bonus"><h2 style="margin:0;font-family:var(--f-mono);font-weight:400;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)">${t("bonus_skin")}</h2>
-    <div class="opts">${p.opts.map(o=>{const cls=b==null?"":o[0]===p.skin[0]?"right":o[0]===b?"wrong":"";return `<button type="button" data-skin="${o[0]}" class="${cls}" ${b!=null?"disabled":""}>${esc(skinName(p.id,o))}</button>`;}).join("")}</div></div>`;
-}
-
-function resultHTML(p,state,key){
-  const ans=CH[p.id];const n=state.g.length;
-  const s=stats(p.mode);const maxD=Math.max(1,...Object.values(s.dist||{}));const me=Math.min(n,7);
-  const art=p.mode==="splash"?`${DD}splash/${ans.dd}_${p.skin[0]}.jpg`:`${DD}splash/${ans.dd}_0.jpg`;
-  return `<div class="result"><div class="pic" style="background-image:url('${art}')"></div><div class="body">
-    <div class="eyebrow">${state.won?(n===1?t("first_try"):t("found_it")):p.practice?t("v_out"):t("better_luck")}</div>
-    <h3>${esc(cName(ans.id))}</h3><p>${state.won?t("in_n",{guesses:t("guesses",{n})}):t("revealed")}${p.mode==="splash"&&state.bonus!=null?` · ${t("skin_label")}: ${state.bonus===p.skin[0]?"✓ ":"✗ "}${esc(p.skin[0]===0?t("original_short"):skinName(p.id,p.skin))}`:""}${p.mode==="ability"&&state.bonusA!=null?` · ${t("ability_label")}: ${state.bonusA===p.ai?"✓ ":"✗ "}${esc(ablName(p,p.ai))} (${slotName(p.ai)})`:""}</p>
-    ${STREAM?streamActs(ans):`<div class="acts"><button class="btn" type="button" id="share">${t("share")}</button><a class="btn ghost" href="journey.html?c=${ans.id}">${esc(t("journey_btn",{name:cName(ans.id)}))}</a><button class="btn ghost" type="button" id="practice">${t("practice_btn")}</button></div>`}
-    ${STREAM?"":p.practice?`<p style="font-size:14px;color:var(--muted)">${t("practice_no_streak")}</p>`:`<div class="stats"><div><b>${s.played}</b><span>${t("st_played")}</span></div><div><b>${s.played?Math.round(s.won/s.played*100):0}%</b><span>${t("st_won")}</span></div><div><b>${s.streak}</b><span>${t("st_streak")}</span></div><div><b>${s.best}</b><span>${t("st_best")}</span></div></div>
-    <div class="dist">${[1,2,3,4,5,6,7].map(i=>{const v=(s.dist||{})[i]||0;return `<div><span>${i===7?"7+":i}</span><i class="${state.won&&i===me?"me":""}" style="width:${Math.max(6,v/maxD*100)}%">${v}</i></div>`;}).join("")}</div>`}
-  </div></div>`;
-}
-
-function shareText(p,state){
-  if(p.mode==="voice"){const sc=state.rounds.filter(x=>x.ok).length;
-    return `${t(p.practice?"share_practice":"share_head",{n:p.n,mode:MN("voice"),result:`${sc}/${VOICE_N}`})}\n${state.rounds.map(x=>x.ok?(x.g.length===1?"🟩":"🟨"):"🟥").join("")}\n${location.origin}${location.pathname}`;}
-  const head=t(p.practice?"share_practice":"share_head",{n:p.n,mode:MN(p.mode),result:state.won?t("guesses",{n:state.g.length}):"X"});
-  let body="";
-  if(p.mode==="clues")body=state.g.map(g=>compare(g,p.id).map(x=>EMO[x.r]).join("")).join("\n");
-  else body=state.g.map(g=>g===p.id?"🟩":"🟥").join("")+(p.mode==="splash"&&state.bonus!=null?`\n${t("skin_bonus")} ${state.bonus===p.skin[0]?"✅":"❌"}`:"")+(p.mode==="ability"&&state.bonusA!=null?`\n${t("ability_bonus")} ${state.bonusA===p.ai?"✅":"❌"}`:"");
-  return `${head}\n${body}\n${location.origin}${location.pathname}`;
-}
-
-function wire(p,state,save,key){
-  const gi=document.getElementById("gi"),sugg=document.getElementById("sugg");
-  const DRAFT=`atlas.daily.draft.${p.mode}.${p.practice?"p"+p.n:key}${p.mode==="voice"?"."+(state.cur||0):""}`;
-  if(gi){
-    let sel=0,list=[];
-    // names in the visitor's language and in English both work
-    const keys=c=>{const a=[norm(cName(c.id)),norm(c.name)];if(LANG==="zh-CN"&&pc(c.id))a.push(norm(pc(c.id)[1]));return [...new Set(a)];};
-    const draw=()=>{const q=norm(gi.value.trim());
-      const used=p.mode==="voice"?state.rounds[state.cur||0].g:state.g;
-      const pool=CHAMPS.filter(c=>!used.includes(c.id)), starts=q?pool.filter(c=>keys(c).some(k=>k.startsWith(q))):[];
-      list=q?starts.concat(pool.filter(c=>!starts.includes(c)&&keys(c).some(k=>k.includes(q)))).slice(0,8):[];
-      sel=0;sugg.hidden=!list.length;
-      sugg.innerHTML=list.map((c,i)=>`<button type="button" role="option" data-id="${c.id}" aria-selected="${i===sel}"><img src="img/${c.id}-tile.webp" alt="">${esc(cName(c.id))}${LANG!=="en"&&cName(c.id)!==c.name?` <span style="color:var(--faint);font-size:13px">${esc(c.name)}</span>`:""}<small>${esc(regName(c.region))}</small></button>`).join("");};
-    const choose=id=>{
-      if(p.mode==="voice"){const i=state.cur||0,R=state.rounds[i];if(!id||R.done||R.g.includes(id))return;try{sessionStorage.removeItem(DRAFT)}catch(e){}
-        R.g.push(id);state.g.push(id);if(id===p.rounds[i].id){R.done=R.ok=true;}else if(R.g.length>=VOICE_TRIES)R.done=true;
-        if(state.rounds.every(x=>x.done))finishVoice(p,state,key);
-        save();render();const g2=document.getElementById("gi");if(g2)g2.focus();return;}
-      if(!id||state.g.includes(id))return;try{sessionStorage.removeItem(DRAFT)}catch(e){}state.g.push(id);state._seen=false;if(id===p.id){state.won=true;record(p,key,state);}save();render();
-      const g2=document.getElementById("gi");if(g2)g2.focus();};
-    // a half-typed guess survives a trip to another page
-    try{const d=sessionStorage.getItem(DRAFT);if(d){gi.value=d;draw();}}catch(e){}
-    gi.addEventListener("input",()=>{try{sessionStorage.setItem(DRAFT,gi.value)}catch(e){}draw();});
-    gi.addEventListener("keydown",e=>{
-      if(e.key==="ArrowDown"&&list.length){e.preventDefault();sel=(sel+1)%list.length;}
-      else if(e.key==="ArrowUp"&&list.length){e.preventDefault();sel=(sel-1+list.length)%list.length;}
-      else if(e.key==="Enter"){e.preventDefault();if(list[sel])choose(list[sel].id);return;}
-      else if(e.key==="Escape"){sugg.hidden=true;return;}else return;
-      sugg.querySelectorAll("button").forEach((b,i)=>b.setAttribute("aria-selected",String(i===sel)));});
-    sugg.addEventListener("click",e=>{const b=e.target.closest("button");if(b)choose(b.dataset.id);});
-    document.getElementById("gb").onclick=()=>{if(list[sel])choose(list[sel].id);else{const q=norm(gi.value.trim()),exact=q&&CHAMPS.find(c=>keys(c).includes(q));if(exact)choose(exact.id);}};
-    if(!matchMedia("(hover:none)").matches)gi.focus();
-  }
-  const gu=document.getElementById("giveup");if(gu)gu.onclick=()=>{state.lost=true;record(p,key,state);save();render();};
-  play.querySelectorAll("[data-skin]").forEach(b=>b.onclick=()=>{state.bonus=+b.dataset.skin;save();render();});
-  play.querySelectorAll("[data-abil]").forEach(b=>b.onclick=()=>{state.bonusA=+b.dataset.abil;save();render();});
-  const sh=document.getElementById("share");if(sh)sh.onclick=async()=>{const txt=shareText(p,state);
-    try{if(navigator.share&&matchMedia("(hover:none)").matches){await navigator.share({text:txt});return;}await navigator.clipboard.writeText(txt);toast(t("copied"));}catch(e){toast(t("copy_fail"));}};
-  const pr=document.getElementById("practice");if(pr){const cur=PR[mode],open=cur&&cur.state&&cur.state.g&&cur.state.g.length&&!cur.state.won&&!cur.state.lost&&!p.practice;
-    pr.textContent=open?t("resume_practice"):t("practice_btn");
-    pr.onclick=()=>{if(!open)PR[mode]={seed:1000+Math.floor(Math.random()*100000),state:null};LS.set(PRAC,PR);inPractice=true;saveView();render();window.scrollTo({top:0,behavior:"smooth"});};}
-  const td=document.getElementById("today");if(td)td.onclick=()=>{inPractice=false;saveView();render();};
-  const sn=document.getElementById("snext");if(sn)sn.onclick=streamNew;
-  const ss=document.getElementById("sshare");if(ss)ss.onclick=async()=>{const c=SST.m[mode].code,txt=`${t("s_share_text",{code:c,mode:MN(mode)})}\n${location.origin}${location.pathname}?stream=${c}#${mode}`;
-    try{await navigator.clipboard.writeText(txt);toast(t("copied"));}catch(e){toast(t("copy_fail"));}};
-}
-
-function statusChips(){
-  const key=todayKey();
-  document.querySelectorAll("[data-st]").forEach(el=>{const m=el.dataset.st;const s=LS.get(`atlas.daily.${m}.${key}`,null);
-    if(m==="voice"){const sc=s&&s.rounds?s.rounds.filter(x=>x.ok).length:0,dn=s&&s.rounds?s.rounds.filter(x=>x.done).length:0;
-      el.textContent=s&&(s.won||s.lost)?`${s.won?"✓":"✗"} ${sc}/${VOICE_N}`:dn?`${dn}/${VOICE_N}`:t("status_new");el.classList.toggle("done",!!(s&&s.won));return;}
-    el.textContent=s&&s.won?`✓ ${s.g.length}`:s&&s.lost?"✗":s&&s.g.length?t("tried",{n:s.g.length}):t("status_new");el.classList.toggle("done",!!(s&&s.won));});
-}
-
-document.querySelectorAll(".mode").forEach(b=>b.onclick=()=>{mode=b.dataset.m;inPractice=false;saveView();syncURL();render();});
-document.getElementById("streamOn").onclick=()=>setStream(true);
-
-// how to play + the page's fixed text, in the visitor's language
-function staticText(){
-  document.getElementById("how").innerHTML=`<h3>${t("how_title")}</h3><ul>${["clues","splash","ability","lore","voice","quote","item","more","stream"].map(k=>`<li>${t("how_"+k)}</li>`).join("")}</ul>`;
-  if(LANG==="en")return;
-  document.documentElement.lang=LANG;
-  document.getElementById("intro").textContent=t("intro");
-  document.getElementById("untilT").textContent=t("until_tomorrow");
-  const so=document.getElementById("streamOn");so.title=t("s_btn_tip");so.querySelector("span").textContent=t("s_btn");
-  document.querySelectorAll(".mode").forEach(b=>{const m=b.dataset.m;b.querySelector("b").textContent=MN(m);b.querySelector("small").textContent=t("md_"+m);});
-  document.getElementById("exE").textContent=t("ex_eyebrow");document.getElementById("exT").textContent=t("ex_title");
-  const EX={"atlas.html":"atlas","journey.html":"journeys","reading.html":"reading","skins.html":"skins","timeline.html":"timeline","worlds.html":"worlds","music.html":"music"};
-  document.querySelectorAll(".ex").forEach(a=>{const k=EX[a.getAttribute("href")];if(!k)return;a.querySelector("b").textContent=t("ex_"+k);a.querySelector("span").textContent=t("ex_"+k+"_d");});
-  const cr=document.getElementById("credit");cr.textContent=t("daily_credit");
-document.getElementById("vcredit").textContent=t("v_credit");
-  const tn=document.createElement("div");tn.textContent=t("tr_note");cr.after(tn);
-}
-
-// countdown to local midnight; roll over to the new day's puzzles automatically
-let lastKey=todayKey();
-function tick(){const n=new Date(),m=new Date(n);m.setHours(24,0,0,0);const s=Math.max(0,Math.floor((m-n)/1000));
-  document.getElementById("clock").textContent=[Math.floor(s/3600),Math.floor(s/60)%60,s%60].map(x=>String(x).padStart(2,"0")).join(":");
-  if(todayKey()!==lastKey){lastKey=todayKey();inPractice=false;saveView();render();}}
-setInterval(tick,1000);tick();
-Promise.all([I?I.ready:null,I?I.loadPack():null]).catch(()=>{}).then(()=>{PK=I&&I.pack;staticText();render();});
+/* the visitor's starred champions */
+const favs=(window.AtlasMine?window.AtlasMine.favs():LS.get("atlas.mine.favs"))||[];
+if(Array.isArray(favs)&&favs.length){document.getElementById("yours").hidden=false;
+  document.getElementById("faces").innerHTML=favs.filter(id=>CH[id]).map(id=>`<a class="face" href="journey.html?c=${id}"><img src="img/${id}-tile.webp" alt="" loading="lazy"><span>${esc(nm(CH[id]))}</span></a>`).join("");}
+})();
 </script>
 </body>
 </html>

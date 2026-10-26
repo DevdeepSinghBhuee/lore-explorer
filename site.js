@@ -9,9 +9,9 @@
   var I=window.AtlasI18n||null;
   if(I&&/^(ko|ja|zh|th)/.test(I.lang))document.documentElement.classList.add("cjk");
   function T(k,v){return I?I.t(k,v):k;}
-  var TRANSLATED={"index.html":1,"journey.html":1,"atlas.html":2,"skins.html":1,"timeline.html":1,"reading.html":1,"mine.html":1};   // 2 = partly   // pages whose own text is translated so far (the menu is translated everywhere)
+  var TRANSLATED={"index.html":1,"daily.html":1,"journey.html":1,"atlas.html":2,"skins.html":1,"timeline.html":1,"reading.html":1,"mine.html":1};   // 2 = partly   // pages whose own text is translated so far (the menu is translated everywhere)
   /* Site map (2026-10-26): 5 sections. Pages that belong together share one menu entry and a tab strip under the header (TABS). */
-  var DAILY="./";
+  var DAILY="daily.html";
   var GROUPS,TABS;
   function makeGroups(){
     TABS={
@@ -244,7 +244,7 @@ html.cjk:not([lang="en"]) body *{letter-spacing:.02em!important}
   }
   /* ---------- "back to your puzzle": on every other page while today's Lore Explorer Daily is unfinished ---------- */
   function resumeChip(){
-    if(file==="index.html")return;
+    if(file==="index.html"||file==="daily.html")return;
     var d=new Date(),key=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
     var names={clues:T("m_clues"),splash:T("m_splash"),ability:T("m_ability"),lore:T("m_lore"),voice:T("m_voice"),quote:T("m_quote"),item:T("m_item")},open=null;
     var v=load("atlas.daily.view")||{};
@@ -258,7 +258,7 @@ html.cjk:not([lang="en"]) body *{letter-spacing:.02em!important}
 .resume:hover{background:#111a2c}
 .resume .x{background:none;border:0;color:var(--muted,#939bb0);font-size:16px;cursor:pointer;padding:0 0 0 4px}
 @media print{.resume{display:none}}`;document.head.appendChild(st2);
-    var a=document.createElement("a");a.className="resume";a.href="./#"+open.m;
+    var a=document.createElement("a");a.className="resume";a.href="daily.html#"+open.m;
     a.innerHTML='<b>▶</b><span>'+esc(T("resume_title"))+'<small>'+esc(T("resume_sub",{mode:names[open.m],guesses:T("guesses",{n:open.n})}))+'</small></span><button class="x" type="button" aria-label="×">×</button>';
     a.querySelector(".x").addEventListener("click",function(e){e.preventDefault();e.stopPropagation();a.remove();});
     document.body.appendChild(a);

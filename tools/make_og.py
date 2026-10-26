@@ -12,7 +12,8 @@ def font(n,size,wght=None):
         except Exception: pass
     return f
 PAGES=[ # file, art, title, tagline, focus x (0-1)
- ("index","art/Jinx_0.jpg","Lore Explorer Daily","Five League of Legends guessing games, new every day",0.62),
+ ("index",R+"img/scene/ionia.webp","Lore Explorer","Every champion, story and skin, in one place",0.62),
+ ("daily","art/Jinx_0.jpg","Lore Explorer Daily","Seven League of Legends guessing games, new every day",0.62),
  ("atlas",R+"img/scene/ionia.webp","The Atlas","The map of Runeterra: every region, 173 champions and their bonds",0.5),
  ("journey","art/Ahri_0.jpg","Champion Journeys","Pick a champion. We'll show you everything worth knowing",0.66),
  ("reading",R+"img/scene/shadowisles.webp","The Reading Room","Every official League of Legends story and comic",0.5),
