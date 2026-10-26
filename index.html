@@ -76,7 +76,7 @@ h2.sec{font-family:var(--f-display);font-weight:400;font-size:clamp(28px,3.4vw,4
 .hero .art{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:var(--pos,70% 22%);opacity:0;transition:opacity 1s,transform 8s ease-out;transform:scale(1.04)}
 .hero .art.in{opacity:1;transform:scale(1)}
 .hero::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(8,13,24,.96) 0%,rgba(8,13,24,.82) 34%,rgba(8,13,24,.1) 72%),linear-gradient(0deg,var(--ink) 0%,rgba(8,13,24,0) 34%),linear-gradient(180deg,rgba(8,13,24,.7) 0%,rgba(8,13,24,0) 18%)}
-.hero .in{position:relative;z-index:1;width:100%;max-width:1240px;margin:0 auto;padding:60px max(16px,env(safe-area-inset-left,0px)) 70px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.62fr);gap:30px;align-items:end}
+.hero .inner{position:relative;z-index:1;width:100%;max-width:1240px;margin:0 auto;padding:60px max(16px,env(safe-area-inset-left,0px)) 70px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.62fr);gap:30px;align-items:end}
 .hero h1{font-family:var(--f-display);font-weight:400;font-size:clamp(44px,6.6vw,88px);line-height:.92;margin:14px 0 16px;text-wrap:balance}
 .hero h1 em{font-style:normal;color:var(--gold)}
 .hero .lede{font-size:clamp(18px,1.6vw,21px);max-width:44ch;color:#d9dbe2;margin:0 0 24px}
@@ -151,7 +151,7 @@ footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width
 @media (max-width:1100px){.games{grid-template-columns:repeat(4,minmax(0,1fr))}.daily{grid-template-columns:minmax(0,1fr)}}
 @media (max-width:900px){
   .hero{min-height:0;align-items:flex-end}
-  .hero .in{grid-template-columns:minmax(0,1fr);padding-top:200px;padding-bottom:40px}
+  .hero .inner{grid-template-columns:minmax(0,1fr);padding-top:200px;padding-bottom:40px}
   .hero::after{background:linear-gradient(0deg,var(--ink) 4%,rgba(8,13,24,.86) 46%,rgba(8,13,24,.25) 100%)}
   .cotd{justify-self:stretch;width:100%}
   .doors{grid-template-columns:repeat(2,minmax(0,1fr))}.door.a,.door.b{grid-column:span 2;min-height:300px}.door.c{grid-column:span 1;min-height:280px}
@@ -178,7 +178,7 @@ footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width
 
   <section class="hero" id="hero">
     <img class="art" id="art" alt="">
-    <div class="in">
+    <div class="inner">
       <div>
         <div class="eyebrow" id="hEye">A free fan site for the world of League of Legends</div>
         <h1 id="hH1">Every champion, story and skin, <em>in one place.</em></h1>
@@ -234,7 +234,7 @@ footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width
 "use strict";
 const I=window.AtlasI18n, LANG=I?I.lang:"en";
 const t=(k,v)=>{let s=I?I.t(k,v):k;if(s===k&&EN[k]!=null)s=EN[k];return String(s).replace(/\{(\w+)\}/g,(m,x)=>v&&v[x]!=null?v[x]:m);};
-const EN={};
+const EN={"g_champions": "Champions", "g_esports": "Esports", "g_lore": "Lore", "g_play": "Play", "g_watch": "Watch & Listen", "h_cotd": "Champion of the day", "h_days_left": "Days to go", "h_door_c": "Every champion on one page: lore, abilities, skins, voice lines, stories and more.", "h_door_e": "Worlds 2026 live, the players, and every final since 2011.", "h_door_l": "The map of Runeterra, Riot's stories and comics, and the history of the game.", "h_door_p": "Seven daily guessing games, the Rift and its items, Teamfight Tactics and the card games.", "h_door_w": "Cinematics, trailers, anthems and virtual bands.", "h_in_progress": "In progress", "h_meet": "Meet {name}", "h_new": "New today", "h_patch": "Next patch", "h_patch_n": "Patch {p}", "h_revealed": "Revealed", "h_season": "This season", "h_solved": "Solved", "h_until": "Until {d}", "h_w_final": "Final day", "h_w_final_on": "The final: {d}", "h_w_on": "Day {n} of the tournament", "h_w_soon": "Starts {d}", "it_finals": "The Finals", "it_finals_d": "Every Worlds and MSI final, game by game", "it_worlds": "Worlds 2026", "k_f": "Finals", "m_ability": "Ability", "m_clues": "Clues", "m_item": "Item", "m_lore": "Lore", "m_quote": "Quote", "m_splash": "Splash", "m_voice": "Voice", "surprise": "Surprise me"};
 if(I){try{await Promise.all([I.ready,I.loadPack()]);}catch(e){}}
 const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const nm=c=>I&&I.name?I.name(c):c.name, ttl=c=>I&&I.title?I.title(c):c.title, bio=c=>I&&I.bio?I.bio(c):c.bio;
