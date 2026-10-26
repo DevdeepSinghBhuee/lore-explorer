@@ -243,6 +243,7 @@
   .bk-page{padding:20px 18px 22px}
   .bk-cap{font-size:16px;min-height:0}
   .bk-crystal{width:92px;height:92px}
+  .bk-dots{gap:3px;flex-wrap:nowrap}.bk-dots button{width:26px;height:30px}
   .st-files{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:14px;padding:6px 4px 16px;margin:0 -4px;scrollbar-width:none}
   .st-files::-webkit-scrollbar{display:none}
   .st-file{flex:0 0 78%;scroll-snap-align:center}
