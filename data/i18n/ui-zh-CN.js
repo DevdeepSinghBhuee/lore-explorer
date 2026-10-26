@@ -13,3 +13,5 @@ Object.assign(window.ATLAS_UI,{"it_gallery": "收藏馆", "it_gallery_d": "所�
 Object.assign(window.ATLAS_UI,{"it_makeovers": "今昔对比", "it_makeovers_d": "重做英雄的新旧原画"});
 
 Object.assign(window.ATLAS_UI,{"it_finals": "历届决赛", "it_finals_d": "每一届全球总决赛和MSI决赛，逐局回顾"});
+
+Object.assign(window.ATLAS_UI,{"it_gallery_t": "图标、表情和守卫", "it_champs": "全部英雄", "it_champs_d": "每位英雄，尽在一处", "it_cos": "皮肤与收藏", "it_cos_d": "所有皮肤、新旧原画、图标、表情和守卫", "it_history": "历史", "it_history_d": "每位英雄的发布与每个赛季", "it_game": "游戏", "it_game_d": "召唤师峡谷、所有装备与版本日程", "it_cards": "卡牌游戏", "it_cards_d": "符文之地传说与Riftbound卡牌", "search": "搜索", "search_ph": "搜索英雄、皮肤、装备、故事…", "section_tabs": "本栏目", "loading": "加载中…", "no_results": "没有找到，换个词试试。", "k_c": "英雄", "k_pg": "页面", "k_s": "皮肤", "k_i": "装备", "k_st": "故事", "k_cm": "漫画", "k_p": "选手", "k_v": "视频", "k_m": "音乐", "k_t": "云顶之弈", "k_f": "决赛"});

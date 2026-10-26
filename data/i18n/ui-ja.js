@@ -13,3 +13,5 @@ Object.assign(window.ATLAS_UI,{"it_gallery": "コレクション", "it_gallery_d
 Object.assign(window.ATLAS_UI,{"it_makeovers": "今と昔", "it_makeovers_d": "リワークされたチャンピオンの新旧アート"});
 
 Object.assign(window.ATLAS_UI,{"it_finals": "決勝の歴史", "it_finals_d": "すべてのWorldsとMSIの決勝を1試合ずつ"});
+
+Object.assign(window.ATLAS_UI,{"it_gallery_t": "アイコン、エモート、ワード", "it_champs": "すべてのチャンピオン", "it_champs_d": "すべてのチャンピオンを一か所に", "it_cos": "スキンとコレクション", "it_cos_d": "すべてのスキン、新旧のアート、アイコン、エモート、ワード", "it_history": "歴史", "it_history_d": "すべてのチャンピオンのリリースとシーズン", "it_game": "ゲーム", "it_game_d": "サモナーズリフト、全アイテム、パッチ予定", "it_cards": "カードゲーム", "it_cards_d": "レジェンド・オブ・ルーンテラとRiftboundのカード", "search": "検索", "search_ph": "チャンピオン、スキン、アイテム、ストーリーを検索…", "section_tabs": "このセクション", "loading": "読み込み中…", "no_results": "見つかりませんでした。別の言葉でお試しください。", "k_c": "チャンピオン", "k_pg": "ページ", "k_s": "スキン", "k_i": "アイテム", "k_st": "ストーリー", "k_cm": "コミック", "k_p": "選手", "k_v": "動画", "k_m": "音楽", "k_t": "チームファイト タクティクス", "k_f": "決勝"});

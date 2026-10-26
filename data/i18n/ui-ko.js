@@ -13,3 +13,5 @@ Object.assign(window.ATLAS_UI,{"it_gallery": "컬렉션", "it_gallery_d": "모�
 Object.assign(window.ATLAS_UI,{"it_makeovers": "그때와 지금", "it_makeovers_d": "리워크된 챔피언의 예전 아트와 지금 아트"});
 
 Object.assign(window.ATLAS_UI,{"it_finals": "결승전", "it_finals_d": "모든 월즈와 MSI 결승, 세트별로"});
+
+Object.assign(window.ATLAS_UI,{"it_gallery_t": "아이콘, 감정 표현, 와드", "it_champs": "모든 챔피언", "it_champs_d": "모든 챔피언을 한곳에서", "it_cos": "스킨과 수집품", "it_cos_d": "모든 스킨, 예전과 지금의 아트, 아이콘, 감정 표현, 와드", "it_history": "역사", "it_history_d": "모든 챔피언 출시와 모든 시즌", "it_game": "게임", "it_game_d": "협곡, 모든 아이템, 패치 일정", "it_cards": "카드 게임", "it_cards_d": "레전드 오브 룬테라와 리프트바운드 카드", "search": "검색", "search_ph": "챔피언, 스킨, 아이템, 이야기 검색…", "section_tabs": "이 섹션", "loading": "불러오는 중…", "no_results": "찾지 못했습니다. 다른 단어를 입력해 보세요.", "k_c": "챔피언", "k_pg": "페이지", "k_s": "스킨", "k_i": "아이템", "k_st": "이야기", "k_cm": "코믹스", "k_p": "선수", "k_v": "영상", "k_m": "음악", "k_t": "전략적 팀 전투", "k_f": "결승전"});

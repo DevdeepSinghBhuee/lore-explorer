@@ -13,3 +13,5 @@ Object.assign(window.ATLAS_UI,{"it_gallery": "คอลเลกชัน", "it_
 Object.assign(window.ATLAS_UI,{"it_makeovers": "วันวานและวันนี้", "it_makeovers_d": "ภาพเก่าและใหม่ของแชมเปี้ยนที่ถูกปรับใหม่"});
 
 Object.assign(window.ATLAS_UI,{"it_finals": "รอบชิงชนะเลิศ", "it_finals_d": "ทุกนัดชิง Worlds และ MSI ทีละเกม"});
+
+Object.assign(window.ATLAS_UI,{"it_gallery_t": "ไอคอน อีโมต และวอร์ด", "it_champs": "แชมเปี้ยนทั้งหมด", "it_champs_d": "แชมเปี้ยนทุกตัวในที่เดียว", "it_cos": "สกินและของสะสม", "it_cos_d": "สกินทั้งหมด ภาพเก่าและใหม่ ไอคอน อีโมต และวอร์ด", "it_history": "ประวัติศาสตร์", "it_history_d": "การเปิดตัวแชมเปี้ยนและทุกซีซั่น", "it_game": "ตัวเกม", "it_game_d": "ริฟต์ ไอเทมทั้งหมด และปฏิทินแพตช์", "it_cards": "เกมการ์ด", "it_cards_d": "การ์ด Legends of Runeterra และ Riftbound", "search": "ค้นหา", "search_ph": "ค้นหาแชมเปี้ยน สกิน ไอเทม เรื่องเล่า…", "section_tabs": "ในหมวดนี้", "loading": "กำลังโหลด…", "no_results": "ไม่พบสิ่งที่ค้นหา ลองคำอื่นดู", "k_c": "แชมเปี้ยน", "k_pg": "หน้า", "k_s": "สกิน", "k_i": "ไอเทม", "k_st": "เรื่องเล่า", "k_cm": "คอมิก", "k_p": "ผู้เล่น", "k_v": "วิดีโอ", "k_m": "เพลง", "k_t": "Teamfight Tactics", "k_f": "รอบชิง"});
