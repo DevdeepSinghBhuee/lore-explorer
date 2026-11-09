@@ -24,21 +24,29 @@
 .st.snd .st-snd .eq i{animation:st-eq 1s ease-in-out infinite}
 .st.snd .st-snd .eq i:nth-child(2){animation-delay:-.4s}.st.snd .st-snd .eq i:nth-child(3){animation-delay:-.7s}
 @keyframes st-eq{0%,100%{height:3px}50%{height:12px}}
-.st-rail{position:fixed;left:max(14px,env(safe-area-inset-left));top:50%;transform:translateY(-50%);z-index:59;display:flex;flex-direction:column;gap:6px;opacity:0;pointer-events:none;transition:opacity .35s}
-.st.inview .st-rail{opacity:1;pointer-events:auto}
-.st-rail a{display:flex;align-items:center;gap:8px;color:var(--faint,#5b6580);text-decoration:none;font:500 10px/1 var(--f-mono);letter-spacing:.14em;text-transform:uppercase}
-.st-rail a b{font-family:var(--f-num);font-size:15px;font-weight:400;width:22px;border-right:1px solid currentColor;padding-right:6px}
-.st-rail a span{opacity:0;transform:translateX(-4px);transition:.25s;white-space:nowrap;background:color-mix(in srgb,var(--sbg) 85%,transparent);padding:3px 6px}
-.st-rail a.on{color:var(--sa)}
-.st-rail a.on span,.st-rail:hover a span{opacity:1;transform:none}
-@media (max-width:1100px){.st-rail{display:none}}
 
-/* 1 close-up → pull back */
-.st-close{height:320vh;height:320svh}
+/* chapter button (bottom-left; replaces the side rail, which floated over content) */
+.st-chap{position:fixed;left:max(16px,env(safe-area-inset-left));bottom:max(16px,env(safe-area-inset-bottom));z-index:60;opacity:0;transform:translateY(12px);pointer-events:none;transition:opacity .35s,transform .35s}
+.st.inview .st-chap{opacity:1;transform:none;pointer-events:auto}
+.st-chapbtn{--prog:0;position:relative;display:flex;align-items:center;gap:10px;min-height:46px;padding:0 16px;font:500 12px/1 var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--sb);background:color-mix(in srgb,var(--sbg) 82%,transparent);border:1px solid color-mix(in srgb,var(--sa) 55%,transparent);border-radius:999px;cursor:pointer;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);overflow:hidden;max-width:min(320px,calc(100vw - 100px))}
+.st-chapbtn:hover,.st.chap-open .st-chapbtn{border-color:var(--sa)}
+.st-chapbtn .pg{font-family:var(--f-num);font-size:18px;letter-spacing:0;color:var(--muted)}.st-chapbtn .pg b{font-weight:400;color:var(--sa)}
+.st-chapbtn .nmc{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.st-chapbtn .car{font-size:10px;color:var(--sa);transition:transform .2s}
+.st.chap-open .st-chapbtn .car{transform:rotate(180deg)}
+.st-chapbtn .bar{position:absolute;left:0;right:0;bottom:0;height:2px;background:color-mix(in srgb,var(--sb) 12%,transparent)}
+.st-chapbtn .bar i{display:block;height:100%;background:var(--sa);transform-origin:left;transform:scaleX(var(--prog))}
+.st-chaplist{position:absolute;left:0;bottom:calc(100% + 8px);margin:0;padding:6px;list-style:none;min-width:240px;background:color-mix(in srgb,var(--sbg) 94%,#000);border:1px solid color-mix(in srgb,var(--sa) 45%,transparent);border-radius:14px;box-shadow:0 20px 50px -20px #000}
+.st-chaplist a{display:flex;align-items:center;gap:12px;min-height:44px;padding:0 12px;border-radius:9px;color:var(--text,#ebe4d3);text-decoration:none;font:400 16px var(--f-body)}
+.st-chaplist a b{font:400 18px var(--f-num);color:var(--muted);width:22px}
+.st-chaplist a:hover,.st-chaplist a:focus-visible{background:color-mix(in srgb,var(--sa) 14%,transparent);outline:none}
+.st-chaplist a.on,.st-chaplist a.on b{color:var(--sa)}
+
+/* 1 opening: the city pulls back */
+.st-close{height:220vh;height:220svh}
 .st-frame{position:absolute;inset:0}
 .st-frame img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;will-change:transform,opacity}
-.st-face{object-position:77.5% 31%}
-.st-cityimg{object-position:58% 36%;opacity:0}
+.st-cityimg{object-position:58% 36%}
 .st-vign{position:absolute;inset:0;pointer-events:none;background:radial-gradient(120% 90% at 50% 50%,transparent 45%,rgba(4,8,16,.75) 100%),linear-gradient(transparent 55%,rgba(4,8,16,.85))}
 .st-hudframe{position:absolute;inset:clamp(10px,2.2vw,26px);border:1px solid color-mix(in srgb,var(--sb) 28%,transparent);border-radius:clamp(12px,2vw,26px);pointer-events:none}
 .st-hudframe i{position:absolute;width:18px;height:18px;border:2px solid var(--sa)}
@@ -48,7 +56,7 @@
 .st-hudframe i:nth-child(4){bottom:-1px;right:-1px;border-left:0;border-top:0;border-bottom-right-radius:inherit}
 .st-addr{position:absolute;top:12px;left:50%;transform:translateX(-50%);font:400 10px/1 var(--f-mono);letter-spacing:.18em;text-transform:uppercase;color:color-mix(in srgb,var(--sb) 70%,transparent);font-style:normal;background:rgba(4,8,16,.55);padding:6px 10px;border-radius:99px;white-space:nowrap}
 .st-who{position:absolute;left:clamp(24px,5vw,72px);bottom:clamp(70px,14vh,140px);display:flex;flex-direction:column;gap:6px;transition:opacity .5s,transform .5s;text-shadow:0 2px 16px #000}
-.st-who strong{font-family:var(--t-font),var(--f-display);font-weight:400;font-size:clamp(34px,5vw,64px);line-height:1}
+.st-who strong{display:none;font-family:var(--t-font),var(--f-display);font-weight:400;font-size:clamp(34px,5vw,64px);line-height:1}
 .st-who em{font-size:20px;color:var(--sb)}
 .st-close:not(.who-on) .st-who{opacity:0;transform:translateY(-16px)}
 .st-title{position:absolute;left:0;right:0;bottom:clamp(64px,13vh,130px);text-align:center;opacity:0;transform:translateY(30px);transition:opacity .8s,transform .8s;text-shadow:0 4px 30px #000}
@@ -221,7 +229,7 @@
 
 /* phones */
 @media (max-width:760px){
-  .st-close{height:240vh;height:240svh}
+  .st-close{height:180vh;height:180svh}
   .st-who{left:22px;right:22px;bottom:96px}
   .st-who em{font-size:17px}
   .st-addr{font-size:9px;max-width:80%;overflow:hidden;text-overflow:ellipsis}
@@ -260,7 +268,7 @@
 .st.static .st-s[data-pin]{height:auto!important}
 .st.static .st-stick{position:relative;height:auto;min-height:0}
 .st.static .st-close .st-stick{height:70vh}
-.st.static .st-face{display:none}.st.static .st-cityimg{opacity:1}
+
 .st.static .st-who{display:none}.st.static .st-title{opacity:1;transform:none}
 .st.static .st-lore .st-stick{padding:120px 0 90px}
 .st.static .st-lines{position:relative;display:flex;flex-direction:column;gap:28px}
@@ -270,5 +278,3 @@
 .st.static .st-track{overflow-x:auto}
 @media (prefers-reduced-motion:reduce){.st *{animation:none!important;transition:none!important}.st-file,.st-head{opacity:1!important;transform:none!important}}
 
-/* the dossier below: keep the web of bonds beside the long champion file */
-@media (min-width:861px){.region .dossier .webcard{position:sticky;top:16px}}

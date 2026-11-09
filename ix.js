@@ -58,7 +58,7 @@
       var P=I[id];if(!el.isConnected||(el.dataset.c&&el.dataset.c!==id))return 0;
       if(!P){el.remove();return 0;}
       var others=Object.keys(P).sort(function(a,b){return P[b].length-P[a].length||nm(a).localeCompare(nm(b));});
-      var lim=opt.limit||10, showAll=others.length<=lim, cur=others[0], LL=12, allLines=false;
+      var lim=opt.limit||10, showAll=others.length<=lim, cur=others[0], LL=opt.lines||12, allLines=false;
       function draw(){
         var list=showAll?others:others.slice(0,lim);
         var L=P[cur].slice().sort(function(a,b){return (a[0]===id?0:1)-(b[0]===id?0:1);}), N=L.length;if(!allLines)L=L.slice(0,LL);

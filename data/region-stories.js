@@ -9,9 +9,9 @@ window.ATLAS_RSTORY = {
     kicker: "The City of Progress",
     universe: "https://universe.leagueoflegends.com/en_US/region/piltover/",
     cms: "https://cmsassets.rgpub.io/sanity/images/dsfx7636/",
-    // 1. close-up: champion face → pull back → the city (fx/fy = focal point as fractions of the image)
+    // 1. opening: Riot's region splash, starting close on (cfx, cfy) and pulling back
+    focus: "jayce", // champion selected first in the constellation
     closeup: {
-      champ: "jayce", splash: "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Jayce_0.jpg", fx: .775, fy: .31,
       city: "universe/6c77423961def6e3a82d9a36545782f1a06386e0-4681x2114.jpg", cfx: .58, cfy: .36, cityTitle: "Piltover (Riot's region splash)"
     },
     // 2. the lore, a beat per screen (Riot: faction.overview.short, split at sentence ends, not changed)

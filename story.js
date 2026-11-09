@@ -100,26 +100,27 @@
     ctx=ctx||{};
     var CH={}; (window.ATLAS_CHAMPS||[]).forEach(function(c){CH[c.id]=c;});
     var nm=function(c){return ctx.name?ctx.name(c):c.name;}, tt=function(c){return ctx.title?ctx.title(c):c.title;};
-    var cu=D.closeup, face=CH[cu.champ];
+    var cu=D.closeup;
     var vid=null; (window.ATLAS_VIDEOS||[]).forEach(function(s){(s.items||s.v||[]).forEach(function(v){if(v.y===D.video)vid=v;});});
     if(!vid&&D.video){ // shelves may be shaped differently: search any object with y === id
       (function find(o){if(vid||!o||typeof o!=="object")return; if(o.y===D.video){vid=o;return;} for(var k in o)find(o[k]);})(window.ATLAS_VIDEOS);
     }
     var map=(window.ATLAS_RMAP||{}), info=(map.info||{})[D.mapPlace];
-    var chapters=["A close-up","The city","Its streets","The folio","Its people","Its champions","On screen","On the map"];
+    var chapters=[D.name,"Its story","Its streets","The folio","Its people","Its champions","On screen","On the map"];
     var n=0, H=[];
 
     H.push('<div class="st" data-r="'+esc(rid)+'">');
     // HUD: sound + chapter rail
     H.push('<div class="st-hud" aria-label="Story controls"><button type="button" class="st-snd" aria-pressed="false"><svg class="spk" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 6h3l4-3v10L5 10H2z"/></svg><span class="eq" aria-hidden="true"><i></i><i></i><i></i></span><span class="lbl">Enable sound</span></button></div>');
-    H.push('<nav class="st-rail" aria-label="Story chapters">'+chapters.map(function(c,i){return '<a href="#st-'+i+'" data-i="'+i+'"><b>'+String(i+1).padStart(2,"0")+'</b><span>'+esc(c)+'</span></a>';}).join("")+'</nav>');
+    H.push('<div class="st-chap"><button type="button" class="st-chapbtn" aria-expanded="false" aria-controls="stChapList"><span class="pg"><b>01</b>/'+String(chapters.length).padStart(2,"0")+'</span><span class="nmc">'+esc(chapters[0])+'</span><span class="car" aria-hidden="true">▴</span><i class="bar" aria-hidden="true"><i></i></i></button>'+
+      '<ol class="st-chaplist" id="stChapList" hidden>'+chapters.map(function(c,i){return '<li><a href="#st-'+i+'" data-i="'+i+'"><b>'+String(i+1).padStart(2,"0")+'</b>'+esc(c)+'</a></li>';}).join("")+'</ol></div>');
 
     // 1 close-up → pull back
     H.push('<section class="st-s st-close" id="st-0" data-pin data-scene="close"><div class="st-stick">'+
-      '<div class="st-frame"><img class="st-face" alt="'+esc(face?nm(face)+" — "+tt(face):"")+'" src="'+esc(cu.splash)+'" decoding="async">'+
+      '<div class="st-frame">'+
       '<img class="st-cityimg" alt="'+esc(cu.cityTitle)+'" src="'+esc(img(D,cu.city,1600))+'" srcset="'+esc(srcset(D,cu.city,[900,1600,2400]))+'" sizes="100vw" decoding="async"></div>'+
       '<div class="st-vign" aria-hidden="true"></div><div class="st-hudframe" aria-hidden="true"><i></i><i></i><i></i><i></i><em class="st-addr">universe / factions / '+esc(rid)+'</em></div>'+
-      '<div class="st-who"><span class="st-no">'+fileNo(++n)+' · '+esc(chapters[0])+'</span><strong>'+esc(face?nm(face):"")+'</strong><em>'+esc(face?tt(face):"")+'</em></div>'+
+      '<div class="st-who"><span class="st-no">'+fileNo(++n)+' · '+esc(cu.cityTitle)+'</span></div>'+
       '<div class="st-title"><span class="st-no">'+esc(D.kicker)+'</span><h3 class="st-name">'+esc(D.name)+'</h3></div>'+
       '<div class="st-down" aria-hidden="true">Scroll<i></i></div></div></section>');
 
@@ -199,20 +200,17 @@
     /* scroll engine: each [data-pin] scene gets a progress value 0..1 */
     var pins=[].slice.call(root.querySelectorAll("[data-pin]"));
     var scenes={}, last={};
-    var titleDone=false, loreAt=-1;
-    var faceEl=root.querySelector(".st-face"), cityEl=root.querySelector(".st-cityimg"), frame=root.querySelector(".st-frame");
+    var titleDone=false, loreAt=-1, chapAt=-1, chapBtn=root.querySelector(".st-chapbtn"), chapList=root.querySelector(".st-chaplist");
+    var cityEl=root.querySelector(".st-cityimg"), frame=root.querySelector(".st-frame");
     function focal(imgEl,fx,fy){ // where (fx,fy) of the picture lands inside its object-fit:cover box
       var W=frame.clientWidth,Hh=frame.clientHeight,iw=imgEl.naturalWidth||1215,ih=imgEl.naturalHeight||717,s=Math.max(W/iw,Hh/ih),dw=iw*s,dh=ih*s;
       return [(W-dw)*fx+fx*dw,(Hh-dh)*fy+fy*dh];
     }
-    scenes.close=function(sec,p){
-      var k1=ease(seg(p,0,.5)), k2=ease(seg(p,.42,.95));
-      var f=focal(faceEl,cu.fx,cu.fy); faceEl.style.transformOrigin=f[0]+"px "+f[1]+"px"; faceEl.style.transform="scale("+lerp(PHONE.matches?3.2:4.4,1.05,k1).toFixed(3)+")";
-      faceEl.style.opacity=(1-seg(p,.42,.62)).toFixed(3);
-      var c=focal(cityEl,cu.cfx,cu.cfy); cityEl.style.transformOrigin=c[0]+"px "+c[1]+"px"; cityEl.style.transform="scale("+lerp(3.2,1,k2).toFixed(3)+")";
-      cityEl.style.opacity=seg(p,.4,.6).toFixed(3);
-      sec.classList.toggle("who-on",p<.4); sec.classList.toggle("title-on",p>.58);
-      if(p>.58&&!titleDone){titleDone=true;scramble(root.querySelector(".st-name"),D.name,900);}
+    scenes.close=function(sec,p){ // Riot's city painting: starts close on the hextech clock and pulls back
+      var k=ease(seg(p,0,.75)), c=focal(cityEl,cu.cfx,cu.cfy);
+      cityEl.style.transformOrigin=c[0]+"px "+c[1]+"px"; cityEl.style.transform="scale("+lerp(PHONE.matches?2.4:2.8,1,k).toFixed(3)+")";
+      sec.classList.toggle("who-on",p<.35); sec.classList.toggle("title-on",p>.45);
+      if(p>.45&&!titleDone){titleDone=true;scramble(root.querySelector(".st-name"),D.name,900);}
     };
     scenes.lore=function(sec,p){
       var k=D.lore.length, i=Math.min(k-1,Math.floor(p*k*1.0001));
@@ -234,17 +232,23 @@
       pins.forEach(function(sec){var r=sec.getBoundingClientRect(),tot=r.height-innerHeight; if(r.bottom<-innerHeight||r.top>innerHeight*2)return; var p=tot>0?clamp(-r.top/tot,0,1):0; var id=sec.dataset.scene; if(last[id]===p)return; last[id]=p; sec.style.setProperty("--p",p.toFixed(4)); scenes[id](sec,p);});
       // chapter rail
       var secs=root.querySelectorAll(".st-s"),cur=0; secs.forEach(function(s,i){if(s.getBoundingClientRect().top<innerHeight*.5)cur=i;});
-      root.querySelectorAll(".st-rail a").forEach(function(a,i){a.classList.toggle("on",i===cur);});
+      if(cur!==chapAt){chapAt=cur; chapBtn.querySelector(".pg b").textContent=String(cur+1).padStart(2,"0"); chapBtn.querySelector(".nmc").textContent=chapters[cur];
+        chapList.querySelectorAll("a").forEach(function(a,i){a.classList.toggle("on",i===cur);if(i===cur)a.setAttribute("aria-current","step");else a.removeAttribute("aria-current");});}
+      var rr=root.getBoundingClientRect(); chapBtn.style.setProperty("--prog",clamp(-rr.top/Math.max(1,rr.height-innerHeight),0,1).toFixed(3));
     }
     var req=function(){if(!raf)raf=requestAnimationFrame(tick);};
     on(window,"scroll",req,{passive:true});
     on(window,"resize",function(){sizeCity();last={};req();});
-    [faceEl,cityEl].forEach(function(x){on(x,"load",function(){last={};req();});});
+    [cityEl].forEach(function(x){on(x,"load",function(){last={};req();});});
     root.querySelectorAll(".st-track img").forEach(function(x){on(x,"load",function(){sizeCity();req();});});
     sizeCity(); tick();
     on(REDUCE,"change",function(){last={};sizeCity();tick();});
     on(PHONE,"change",function(){last={};sizeCity();tick();});
-    root.querySelectorAll(".st-rail a").forEach(function(a){on(a,"click",function(e){e.preventDefault();var t=root.querySelector(a.getAttribute("href"));if(t)t.scrollIntoView({behavior:REDUCE.matches?"auto":"smooth"});});});
+    var chapOpen=function(v){chapList.hidden=!v;chapBtn.setAttribute("aria-expanded",String(v));root.classList.toggle("chap-open",v);};
+    on(chapBtn,"click",function(e){e.stopPropagation();chapOpen(chapList.hidden);});
+    on(document,"click",function(e){if(!chapList.hidden&&!e.target.closest(".st-chap"))chapOpen(false);});
+    on(document,"keydown",function(e){if(e.key==="Escape"&&!chapList.hidden){chapOpen(false);chapBtn.focus();}});
+    chapList.querySelectorAll("a").forEach(function(a){on(a,"click",function(e){e.preventDefault();chapOpen(false);var t=root.querySelector(a.getAttribute("href"));if(t)t.scrollIntoView({behavior:REDUCE.matches?"auto":"smooth"});});});
 
     /* reveal-on-enter for non-pinned scenes */
     var io2=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add("in");io2.unobserve(e.target);}});},{rootMargin:"0px 0px -18% 0px"});
@@ -330,7 +334,7 @@
     });
     on(card,"click",function(e){var b=e.target.closest("[data-champ]");if(b&&ctx.onChamp)ctx.onChamp(b.dataset.champ);});
     on(cst.querySelector(".chips"),"click",function(e){var b=e.target.closest(".st-tie");if(b&&ctx.onChamp)ctx.onChamp(b.dataset.id);});
-    focusChamp(ids.indexOf(cu.champ)>=0?cu.champ:ids[0]);
+    focusChamp(ids.indexOf(D.focus)>=0?D.focus:ids[0]);
 
     /* ---- film facade ---- */
     var film=root.querySelector(".film");

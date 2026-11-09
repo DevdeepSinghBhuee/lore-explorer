@@ -191,6 +191,7 @@
     a_read_about:"Read about {name}",
     a_rr:"Reading Room →",
     a_other_region:"From another region",
+    a_tab_read:"Read & watch",a_tab_cards:"Cards & skins",a_less:"Show fewer",
     c_clear:"Clear filters",
     c_close:"Close",
     c_prev:"← Previous",
