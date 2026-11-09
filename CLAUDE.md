@@ -227,6 +227,7 @@ English only for now. Tested 1440×900 + 375×812 (touch hold via CDP), no error
 Riot images load from github.io. Folio plates turn on touch swipes only when clearly sideways (|dx|>60 and >2×|dy|) so scrolling past never flips
 a plate. Pages caches files ~10 min, so a returning visitor may see the old story.css/story.js briefly after a push. Browser-pane screenshots can lag
 one step after a JS scrollTo — nudge with a real wheel scroll before screenshotting.
+**Cache:** atlas.html loads story.css / story.js / data/region-stories.js with `?v=N` (now 3) — bump N on every change to those files, or returning visitors keep the old copy for a while.
 **To add a region:** add ATLAS_RSTORY.<id> (same shape; book.kind picks the interaction — only "hextech" exists yet; build the region's own element
 from the agreed list above), real data only. Waiting for Devdeep's verdict on the pilot before the other 12.
 (Old note) build ONE region as a pilot (Claude suggested Freljord or Shadow Isles to show off effects, or Piltover for the Hextech book;
