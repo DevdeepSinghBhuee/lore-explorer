@@ -10,7 +10,6 @@ window.ATLAS_RSTORY = {
     universe: "https://universe.leagueoflegends.com/en_US/region/piltover/",
     cms: "https://cmsassets.rgpub.io/sanity/images/dsfx7636/",
     // 1. opening: Riot's region splash, starting close on (cfx, cfy) and pulling back
-    focus: "jayce", // champion selected first in the constellation
     closeup: {
       city: "universe/6c77423961def6e3a82d9a36545782f1a06386e0-4681x2114.jpg", cfx: .58, cfy: .36, cityTitle: "Piltover (Riot's region splash)"
     },
@@ -59,11 +58,9 @@ window.ATLAS_RSTORY = {
       ["Wardens", "The Wardens are the men and women tasked with maintaining the rule of law in Piltover. The organization is funded by trade taxes and 'voluntary' contributions from the mercantile clans, outfitting the Wardens with uniforms and equipment. Many of these donations take the form of unique hextech, such as specialized weaponry or other devices.", "universe_live/95bde7673e26b1e697e03b742848f8f354d75793-789x1080.jpg"],
       ["Vaido Violante", "A former apprentice of Corvin Reveck, Vaido works on numerous projects at once, but stabilizing the energy outputs of his renowned Atlas Gauntlets is at the top of his list of priorities.", "universe_live/349b28338b0929429f67a25fd574b268902ab384-789x1080.jpg"]
     ],
-    // 6. champions: Riot's "associated champions" for the faction, in Riot's order
-    champs: ["caitlyn", "camille", "ezreal", "heimerdinger", "jayce", "orianna", "seraphine", "vi"],
-    // 7. official film (videos.js entry; Riot features it on the faction page)
+    // 6. official film (videos.js entry; Riot features it on the faction page)
     video: "qCVLRh1y96M",
-    // 8. map + the way out
+    // 7. map + the way out
     mapPlace: "piltover-town", next: "zaun", nextLine: "Below the cliffs, Zaun"
   }
 };

@@ -210,16 +210,16 @@ position:sticky + a 0–1 progress per scene, own rAF scroll engine; GSAP not ne
 Riot's own words only, from universe-meeps …/factions/<id>/index.json — faction.overview.short split at sentence ends, image-gallery captions/images;
 read in the browser pane). atlas.html: #rStory between .rhead and the dossier (#rDossier), mountStory(rid) at the end of onRegionChange; regions
 without an ATLAS_RSTORY entry keep the classic layout (story hidden). Also for EVERY region: the web of bonds is now sticky beside the long champion
-panel on desktop (fixes the empty left half). Piltover's 8 chapters (■ 001 file numbers, rounded HUD frame; the side rail of 01–08 was REMOVED 2026-11-09 — it floated over content and got clicked by
+panel on desktop (fixes the empty left half). Piltover's chapters — 7 since 2026-11-09 (■ 001 file numbers, rounded HUD frame; the side rail of 01–08 was REMOVED 2026-11-09 — it floated over content and got clicked by
 accident — replaced by a bottom-left chapter button "06/08 · Its champions ▴" with a progress line, opening a chapter list upward; Esc/outside click closes): 1 close-up
 (2026-11-09: Devdeep disliked the Jayce close-up — removed) opens on Riot's Piltover splash zoomed into the hextech clock (scale 2.8 → 1, 220vh),
-title scrambles in; ATLAS_RSTORY.focus = champion picked first in the constellation · 2 lore, one Riot sentence per screen, word blur-in, meter + "Piltover on Universe ↗" · 3 the streets: 8 Riot gallery paintings with
+title scrambles in; · 2 lore, one Riot sentence per screen, word blur-in, meter + "Piltover on Universe ↗" · 3 the streets: 8 Riot gallery paintings with
 captions on a pinned sideways track (phone: swipe row) · 4 THE HEXTECH FOLIO: 10 plates from Riot's hextech gallery shown as cyan blueprints with
 notes redacted; press-and-hold the crystal (pointer/touch, or hold Space/Enter) ~1.2 s → plate powers to full colour, notes decode, chime; arrows,
 dots, swipe, page-turn tilt; "Can't hold? Power every plate" for accessibility · 5 people: Riot's 4 Residents files (tilted dossier cards; phone swipe)
-· 6 constellation of Riot's 8 associated champions with bonds.js lines (dotted = 'u'), tap/hover → bonds card → "Open X's file" selects the champion
-in the dossier; "Ties beyond the walls" chips (non-'u' bonds to other regions) · 7 Tales of Runeterra: Piltover and Zaun (videos.js; YouTube only
-after a click) · 8 crop of Riot's map (img/map/base-1024.webp) with Piltover + Zaun pins, Riot's map text, buttons: big map (AtlasMap.focus),
+· [REMOVED 2026-11-09: Devdeep saw the web of bonds twice on the page — keep ONLY the dossier web; stories must not draw their own bond web; the story's last button "Meet the champions ↓" leads to it] (was: 6 constellation of Riot's 8 associated champions with bonds.js lines (dotted = 'u'), tap/hover → bonds card → "Open X's file" selects the champion
+in the dossier; "Ties beyond the walls" chips (non-'u' bonds to other regions)) · 6 Tales of Runeterra: Piltover and Zaun (videos.js; YouTube only
+after a click) · 7 crop of Riot's map (img/map/base-1024.webp) with Piltover + Zaun pins, Riot's map text, buttons: big map (AtlasMap.focus),
 "Below the cliffs, Zaun →", "Meet the champions ↓". Sound (Web Audio, nothing downloaded): harbour wind + low drone + clock ticks while the story is
 on screen, crystal hum rising with the charge, chime, paper-turn; OFF until the visitor presses "Enable sound" (saved in localStorage atlas.sound,
 but audio still needs that click each visit); ducked when the film plays. prefers-reduced-motion → .static (no pinning, all text shown).

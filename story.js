@@ -13,7 +13,6 @@
   var seg=function(p,a,b){return clamp((p-a)/(b-a),0,1);};
   var REDUCE=matchMedia("(prefers-reduced-motion: reduce)");
   var PHONE=matchMedia("(max-width: 760px)");
-  var BTYPE={family:"Family",ally:"Ally",mentor:"Mentor",enemy:"Enemy",complicated:"Complicated",linked:"Linked"};
 
   /* ---------------- sound: everything synthesised, nothing downloaded ---------------- */
   var Sound=(function(){
@@ -106,7 +105,7 @@
       (function find(o){if(vid||!o||typeof o!=="object")return; if(o.y===D.video){vid=o;return;} for(var k in o)find(o[k]);})(window.ATLAS_VIDEOS);
     }
     var map=(window.ATLAS_RMAP||{}), info=(map.info||{})[D.mapPlace];
-    var chapters=[D.name,"Its story","Its streets","The folio","Its people","Its champions","On screen","On the map"];
+    var chapters=[D.name,"Its story","Its streets","The folio","Its people","On screen","On the map"];
     var n=0, H=[];
 
     H.push('<div class="st" data-r="'+esc(rid)+'">');
@@ -156,29 +155,13 @@
       '<div class="st-files">'+D.people.map(function(p,i){return '<article class="st-file" style="--t:'+((i%2?1:-1)*(1+i%3))+'deg"><div class="ph"><img alt="'+esc(p[0])+'" loading="lazy" decoding="async" src="'+esc(img(D,p[2],700))+'"></div><div class="tx"><span class="st-no">File '+String(i+1).padStart(3,"0")+'</span><h5>'+esc(p[0])+'</h5><p>'+esc(p[1])+'</p></div></article>';}).join("")+'</div></section>');
 
     // 6 champions + bonds (constellation)
-    var ids=D.champs.filter(function(id){return CH[id];});
-    var inside=(window.ATLAS_BONDS||[]).filter(function(b){return ids.indexOf(b[0])>=0&&ids.indexOf(b[1])>=0;});
-    var told=inside.filter(function(b){return b[4]!=="u";}), hinted=inside.filter(function(b){return b[4]==="u";});
-    var outside=(window.ATLAS_BONDS||[]).filter(function(b){return (ids.indexOf(b[0])>=0)!==(ids.indexOf(b[1])>=0)&&b[4]!=="u";});
-    var R=200,cx=260,cy=250,pos={};
-    ids.forEach(function(id,i){var a=-Math.PI/2+i*2*Math.PI/ids.length;pos[id]=[cx+R*Math.cos(a),cy+R*Math.sin(a)];});
-    var lines=inside.map(function(b,i){var a=pos[b[0]],c=pos[b[1]];return '<path class="bl t-'+b[2]+(b[4]==="u"?" faint":"")+'" data-a="'+b[0]+'" data-b="'+b[1]+'" d="M'+a[0].toFixed(1)+' '+a[1].toFixed(1)+'Q'+cx+' '+cy+' '+c[0].toFixed(1)+' '+c[1].toFixed(1)+'" pathLength="1" style="--d:'+(i*.12)+'s"/>';}).join("");
-    var nodes=ids.map(function(id,i){var p=pos[id],c=CH[id];return '<g class="cn" data-id="'+id+'" tabindex="0" role="button" aria-label="'+esc(nm(c)+", "+tt(c))+'" transform="translate('+p[0].toFixed(1)+' '+p[1].toFixed(1)+')" style="--d:'+(i*.08)+'s"><circle r="40" class="halo"/><clipPath id="stc-'+id+'"><circle r="34"/></clipPath><image href="img/'+id+'-tile.webp" x="-34" y="-34" width="68" height="68" clip-path="url(#stc-'+id+')" preserveAspectRatio="xMidYMid slice"/><circle r="34" class="rim"/><text y="56">'+esc(nm(c))+'</text></g>';}).join("");
-    var other=function(b,id){return b[0]===id?b[1]:b[0];};
-    H.push('<section class="st-s st-champs" id="st-5" data-scene="champs"><div class="st-head"><span class="st-no">'+fileNo(++n)+' · '+esc(chapters[5])+'</span><h4 class="st-h">Who keeps '+esc(D.name)+' running</h4><p class="st-sub">Riot names '+ids.length+' champions for the city. Lines are their bonds; tap a face to see who they are tied to.</p></div>'+
-      '<div class="cst"><svg class="cst-svg" viewBox="0 0 520 520" aria-label="Bonds between '+esc(D.name)+' champions"><circle cx="'+cx+'" cy="'+cy+'" r="'+R+'" class="orbit"/><circle cx="'+cx+'" cy="'+cy+'" r="'+(R*.42)+'" class="orbit o2"/>'+lines+nodes+'</svg>'+
-      '<div class="cst-side"><div class="cst-card" aria-live="polite"></div>'+
-      '<div class="cst-out"><span class="st-no">Ties beyond the walls</span><div class="chips">'+outside.slice(0,10).map(function(b){var ins=ids.indexOf(b[0])>=0?b[0]:b[1],o=other(b,ins),oc=CH[o];return oc?'<button type="button" class="st-tie t-'+b[2]+'" data-id="'+o+'" title="'+esc(b[3])+'"><img src="img/'+o+'-tile.webp" alt="" loading="lazy">'+esc(nm(CH[ins]))+' · '+esc(nm(oc))+'<em>'+BTYPE[b[2]]+'</em></button>':"";}).join("")+'</div></div>'+
-      (hinted.length?'<p class="cst-note">Dotted lines: Riot lists these champions as related, but no official story explains the link yet.</p>':'')+'</div></div></section>');
-
-    // 7 film (YouTube only after a click; stays ≥200 px tall per YouTube's rules)
-    if(vid) H.push('<section class="st-s st-film" id="st-6" data-scene="film"><div class="st-head"><span class="st-no">'+fileNo(++n)+' · '+esc(chapters[6])+'</span><h4 class="st-h">'+esc(vid.t)+'</h4>'+(vid.d?'<p class="st-sub">'+esc(vid.d)+'</p>':'')+'</div>'+
+    if(vid) H.push('<section class="st-s st-film" id="st-5" data-scene="film"><div class="st-head"><span class="st-no">'+fileNo(++n)+' · '+esc(chapters[5])+'</span><h4 class="st-h">'+esc(vid.t)+'</h4>'+(vid.d?'<p class="st-sub">'+esc(vid.d)+'</p>':'')+'</div>'+
       '<button type="button" class="film" data-y="'+esc(vid.y)+'" aria-label="Play '+esc(vid.t)+'"><img alt="" loading="lazy" src="https://i.ytimg.com/vi/'+esc(vid.y)+'/hqdefault.jpg"><span class="play" aria-hidden="true">▶</span><span class="by">Official video · '+esc(vid.by||"League of Legends")+(vid.yr?' · '+esc(vid.yr):'')+'</span></button></section>');
     else n++;
 
     // 8 map + way out
     var rp=(map.regions||{})[rid]; var nx=D.next&&(window.ATLAS_REGIONS||[]).filter(function(r){return r.id===D.next;})[0];
-    H.push('<section class="st-s st-end" id="st-7" data-scene="end"><div class="st-head"><span class="st-no">'+fileNo(++n)+' · '+esc(chapters[7])+'</span></div><div class="end">'+
+    H.push('<section class="st-s st-end" id="st-6" data-scene="end"><div class="st-head"><span class="st-no">'+fileNo(++n)+' · '+esc(chapters[6])+'</span></div><div class="end">'+
       (rp&&map.w?'<div class="minimap" style="--x:'+(rp[0]/map.w*100).toFixed(2)+'%;--y:'+(rp[1]/map.h*100).toFixed(2)+'%"><div class="mm-in"></div><span class="mm-pin" aria-hidden="true"></span>'+(nx&&map.regions[nx.id]?'<span class="mm-pin low" aria-hidden="true" style="--dx:'+((map.regions[nx.id][0]-rp[0])/map.w*100).toFixed(2)+';--dy:'+((map.regions[nx.id][1]-rp[1])/map.h*100).toFixed(2)+'"></span>':'')+'<span class="mm-src">Riot\'s Map of Runeterra</span></div>':'')+
       '<div class="end-tx">'+(info?'<h4 class="st-h">'+esc(info[0])+'</h4><p class="st-sub">'+esc(info[1])+'</p><p>'+esc(info[2])+'</p>':'')+
       '<div class="end-ctl"><button type="button" class="st-btn" data-act="map">Find it on the big map</button>'+(nx?'<button type="button" class="st-btn gold" data-act="next">'+esc(D.nextLine||nx.name)+' →</button>':'')+'<a class="st-btn" href="#rDossier">Meet the champions ↓</a></div></div></div></section>');
@@ -252,7 +235,7 @@
 
     /* reveal-on-enter for non-pinned scenes */
     var io2=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add("in");io2.unobserve(e.target);}});},{rootMargin:"0px 0px -18% 0px"});
-    root.querySelectorAll(".st-book,.st-people,.st-champs,.st-film,.st-end").forEach(function(s){io2.observe(s);}); off.push(function(){io2.disconnect();});
+    root.querySelectorAll(".st-book,.st-people,.st-film,.st-end").forEach(function(s){io2.observe(s);}); off.push(function(){io2.disconnect();});
 
     /* ---- the Hextech book ---- */
     var bk=root.querySelector(".bk"), pageI=0, powered=B.pages.map(function(){return false;}), charge=0, holding=false, chargeRaf=0, lastT=0, capRaf=0;
@@ -314,27 +297,6 @@
     showPage(0,0);
     off.push(function(){cancelAnimationFrame(chargeRaf);cancelAnimationFrame(capRaf);});
 
-    /* ---- champion constellation ---- */
-    var cst=root.querySelector(".cst"), card=cst.querySelector(".cst-card");
-    function focusChamp(id){
-      cst.classList.toggle("focus",!!id);
-      cst.querySelectorAll(".cn").forEach(function(g){g.classList.toggle("sel",g.dataset.id===id);});
-      cst.querySelectorAll(".bl").forEach(function(l){l.classList.toggle("hot",!!id&&(l.dataset.a===id||l.dataset.b===id));});
-      if(!id){card.innerHTML='<p class="st-sub">Tap a champion.</p>';return;}
-      var c=CH[id], mine=(window.ATLAS_BONDS||[]).filter(function(b){return (b[0]===id||b[1]===id)&&b[4]!=="u";});
-      card.innerHTML='<div class="cc-top"><img src="img/'+id+'-tile.webp" alt=""><div><strong>'+esc(nm(c))+'</strong><em>'+esc(tt(c))+'</em></div></div>'+
-        '<ul>'+mine.slice(0,5).map(function(b){var o=CH[other(b,id)];return o?'<li class="t-'+b[2]+'"><b>'+BTYPE[b[2]]+' · '+esc(nm(o))+'</b>'+esc(b[3])+'</li>':"";}).join("")+'</ul>'+
-        '<button type="button" class="st-btn gold" data-champ="'+id+'">Open '+esc(nm(c))+'\'s file ↓</button>';
-      if(Sound.on)Sound.tick();
-    }
-    cst.querySelectorAll(".cn").forEach(function(g){
-      on(g,"click",function(){focusChamp(g.dataset.id);});
-      on(g,"keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();focusChamp(g.dataset.id);}});
-      on(g,"mouseenter",function(){if(!PHONE.matches)focusChamp(g.dataset.id);});
-    });
-    on(card,"click",function(e){var b=e.target.closest("[data-champ]");if(b&&ctx.onChamp)ctx.onChamp(b.dataset.champ);});
-    on(cst.querySelector(".chips"),"click",function(e){var b=e.target.closest(".st-tie");if(b&&ctx.onChamp)ctx.onChamp(b.dataset.id);});
-    focusChamp(ids.indexOf(D.focus)>=0?D.focus:ids[0]);
 
     /* ---- film facade ---- */
     var film=root.querySelector(".film");
