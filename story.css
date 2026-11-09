@@ -95,20 +95,21 @@
 .st-place strong{font-family:var(--t-font),var(--f-display);font-weight:400;font-size:22px;color:var(--sb)}
 .st-place .cap{color:var(--muted);font-size:15.5px;line-height:1.5}
 
-/* 4 the Hextech folio */
+/* 4 the region book (Piltover: the Hextech folio) */
 .st-book .st-head,.st-people .st-head,.st-film .st-head,.st-end .st-head{margin-bottom:28px}
 .bk{--c:0;position:relative;perspective:1600px}
-.bk-spread{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);background:linear-gradient(90deg,#0a1830 0%,#0d2140 49.6%,#071224 50%,#0b1a33 100%);border:1px solid color-mix(in srgb,var(--hex) 35%,transparent);box-shadow:0 40px 90px -40px #000,inset 0 0 0 6px #060e1d,inset 0 0 0 7px color-mix(in srgb,var(--sa) 40%,transparent);transform-style:preserve-3d;transition:box-shadow .5s}
+.bk-spread{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);background:linear-gradient(90deg,var(--bk1,#0a1830) 0%,var(--bk2,#0d2140) 49.6%,var(--bk3,#071224) 50%,var(--bk1,#0b1a33) 100%);border:1px solid color-mix(in srgb,var(--hex) 35%,transparent);box-shadow:0 40px 90px -40px #000,inset 0 0 0 6px #060e1d,inset 0 0 0 7px color-mix(in srgb,var(--sa) 40%,transparent);transform-style:preserve-3d;transition:box-shadow .5s}
 .bk.on .bk-spread{box-shadow:0 40px 110px -40px color-mix(in srgb,var(--hex) 55%,#000),inset 0 0 0 6px #060e1d,inset 0 0 0 7px color-mix(in srgb,var(--hex) 70%,transparent)}
 .bk.turn-r .bk-spread{animation:bk-turn-r .5s ease}.bk.turn-l .bk-spread{animation:bk-turn-l .5s ease}
 @keyframes bk-turn-r{0%{transform:none}45%{transform:rotateY(-14deg) translateX(-2%);filter:brightness(.6)}100%{transform:none}}
 @keyframes bk-turn-l{0%{transform:none}45%{transform:rotateY(14deg) translateX(2%);filter:brightness(.6)}100%{transform:none}}
 .bk-plate{position:relative;margin:0;min-height:clamp(300px,42vw,560px);overflow:hidden;border-right:1px solid color-mix(in srgb,var(--hex) 25%,transparent)}
 .bk-art{position:absolute;inset:6% 6% 12%;display:grid;place-items:center}
-.bk-art img{max-width:100%;max-height:100%;object-fit:contain;display:block;
-  /* blueprint: art turned into cyan linework until the plate is powered */
-  filter:grayscale(1) contrast(1.7) brightness(calc(.85 + var(--c) * .5)) sepia(1) hue-rotate(155deg) saturate(4.5);mix-blend-mode:screen;transition:filter .9s ease,mix-blend-mode 0s .9s}
-.bk.on .bk-art img{filter:none;mix-blend-mode:normal;transition:filter .9s ease}
+.bk-art img{max-width:100%;max-height:100%;object-fit:contain;display:block;transition:filter .9s ease,opacity .6s}
+/* Piltover blueprint: art turned into cyan linework until the plate is powered */
+.bk[data-kind="hextech"] .bk-art img{filter:grayscale(1) contrast(1.7) brightness(calc(.85 + var(--c) * .5)) sepia(1) hue-rotate(155deg) saturate(4.5);mix-blend-mode:screen;transition:filter .9s ease,mix-blend-mode 0s .9s}
+.bk.on .bk-art img{filter:none!important;mix-blend-mode:normal!important;opacity:1!important;clip-path:none!important;transition:filter .9s ease,opacity .6s}
+.bk:not([data-kind="hextech"]) .bk-grid,.bk:not([data-kind="hextech"]) .bk-marks{display:none}
 .bk-grid{position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(89,216,255,.10) 0 1px,transparent 1px 22px),repeating-linear-gradient(90deg,rgba(89,216,255,.10) 0 1px,transparent 1px 22px),repeating-linear-gradient(0deg,rgba(89,216,255,.05) 0 1px,transparent 1px 110px);transition:opacity .9s}
 .bk.on .bk-grid{opacity:.25}
 .bk-marks{position:absolute;inset:0;width:100%;height:100%;fill:none;stroke:rgba(140,230,255,.45);stroke-width:.25;vector-effect:non-scaling-stroke;pointer-events:none;transition:opacity .6s}
@@ -117,13 +118,13 @@
 .bk-glow{position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 50% 55%,color-mix(in srgb,var(--hex) 60%,transparent) 0%,transparent 60%);opacity:calc(var(--c) * .55);mix-blend-mode:screen}
 .bk.burst .bk-glow{animation:bk-burst .9s ease-out}
 @keyframes bk-burst{0%{opacity:.9;transform:scale(.6)}100%{opacity:0;transform:scale(1.6)}}
-.bk-no{position:absolute;left:16px;bottom:12px;font:400 10px/1 var(--f-mono);letter-spacing:.18em;color:rgba(140,230,255,.75)}
-.bk-page{padding:clamp(22px,3.4vw,44px);display:flex;flex-direction:column;gap:12px;min-width:0;background:repeating-linear-gradient(0deg,transparent 0 27px,rgba(89,216,255,.06) 27px 28px)}
+.bk-no{position:absolute;left:16px;bottom:12px;z-index:3;font:400 10px/1 var(--f-mono);letter-spacing:.18em;color:color-mix(in srgb,var(--hex) 75%,#fff)}
+.bk-page{padding:clamp(22px,3.4vw,44px);display:flex;flex-direction:column;gap:12px;min-width:0;background:var(--bkp,repeating-linear-gradient(0deg,transparent 0 27px,rgba(89,216,255,.06) 27px 28px))}
 .bk-kicker{font:400 11px/1 var(--f-mono);letter-spacing:.2em;text-transform:uppercase;color:var(--hex)}
 .bk-kicker b{font-family:var(--f-num);font-weight:400;font-size:16px;letter-spacing:0}
 .bk-title{font-family:var(--t-font),var(--f-display);font-weight:400;font-size:clamp(26px,2.6vw,36px);line-height:1.1;margin:0;color:var(--sb)}
 .bk-cap{margin:0;font-size:17px;line-height:1.6;color:#b9c6dc;min-height:7.5em;word-break:break-word}
-.bk:not(.on) .bk-cap{color:rgba(120,200,240,.38);letter-spacing:.02em}
+.bk:not(.on) .bk-cap{color:color-mix(in srgb,var(--hex) 45%,transparent);letter-spacing:.02em}
 .bk-state{margin:0;font:400 11px/1.4 var(--f-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--sa)}
 .bk.on .bk-state{color:var(--hex)}
 .bk-ctl{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:auto;padding-top:10px}
@@ -133,10 +134,12 @@
 .bk-crystal svg{width:100%;height:100%;overflow:visible}
 .bk-crystal .ring0{fill:none;stroke:color-mix(in srgb,var(--hex) 20%,transparent);stroke-width:3}
 .bk-crystal .ring{fill:none;stroke:var(--hex);stroke-width:4;stroke-dasharray:100;stroke-dashoffset:100;transform:rotate(-90deg);transform-origin:50% 50%;filter:drop-shadow(0 0 6px var(--hex))}
-.bk-crystal .gem{fill:color-mix(in srgb,var(--hex) calc(25% + var(--c) * 75%),#0b2a44);stroke:#bff3ff;stroke-width:1.5;filter:drop-shadow(0 0 calc(4px + var(--c) * 22px) var(--hex));transition:transform .2s;transform-origin:50% 50%}
-.bk-crystal .facet{fill:none;stroke:rgba(230,252,255,.6);stroke-width:1}
-.bk.holding .bk-crystal .gem{transform:scale(.92) rotate(calc(var(--c) * 8deg))}
-.bk:not(.on):not(.holding) .bk-crystal .gem{animation:bk-pulse 2.2s ease-in-out infinite}
+.bk-crystal .ico-f{fill:color-mix(in srgb,var(--hex) calc(25% + var(--c) * 75%),#0b2a44);stroke:#bff3ff;stroke-width:1.5;filter:drop-shadow(0 0 calc(4px + var(--c) * 22px) var(--hex));transition:transform .2s;transform-origin:50% 50%}
+.bk-crystal .ico-l{fill:none;stroke:color-mix(in srgb,var(--hex) 55%,#fff);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.bk[data-kind="hextech"] .bk-crystal .ico-l{stroke:rgba(230,252,255,.6);stroke-width:1}
+.bk-crystal .spin{transform-origin:50% 50%;transform:rotate(calc(var(--c) * 270deg))}
+.bk.holding .bk-crystal .ico-f{transform:scale(.92) rotate(calc(var(--c) * 8deg))}
+.bk:not(.on):not(.holding) .bk-crystal .ico-f{animation:bk-pulse 2.2s ease-in-out infinite}
 @keyframes bk-pulse{50%{filter:drop-shadow(0 0 14px var(--hex))}}
 .bk.on .bk-crystal{cursor:default}
 .bk.on .bk-crystal .ring{stroke-dashoffset:0!important}
@@ -147,6 +150,94 @@
 .bk-dots button::before{content:"";width:11px;height:11px;transform:rotate(45deg);border:1px solid color-mix(in srgb,var(--hex) 55%,transparent)}
 .bk-dots button.done::before{background:var(--hex);box-shadow:0 0 8px var(--hex)}
 .bk-dots button[aria-selected="true"]::before{border-color:var(--sa);outline:1px solid var(--sa);outline-offset:3px}
+
+
+/* ---- region palettes: --sa accent, --sb light text, --hex the element's glow, --sbg scene background, --bk1-3 book paper ---- */
+.st[data-r="zaun"]{--sa:#7ee06f;--sb:#e6f7d9;--hex:#9dff5a;--sbg:#0a130d;--bk1:#0b1a10;--bk2:#10261a;--bk3:#08140c}
+.st[data-r="demacia"]{--sa:#d9b45b;--sb:#f5efe0;--hex:#8fd3ff;--sbg:#0e141f;--bk1:#e9e3d3;--bk2:#f1ece0;--bk3:#ddd5c2;--bkp:none}
+.st[data-r="noxus"]{--sa:#d4413c;--sb:#f2dcd6;--hex:#ff5a4a;--sbg:#140b0c;--bk1:#1a0d0d;--bk2:#221111;--bk3:#120909}
+.st[data-r="freljord"]{--sa:#8fd7ff;--sb:#e8f6ff;--hex:#bfe9ff;--sbg:#0a121b;--bk1:#0e1c2a;--bk2:#132637;--bk3:#0b1622}
+.st[data-r="ionia"]{--sa:#f19ab5;--sb:#fbeef0;--hex:#f5a7c2;--sbg:#130f15;--bk1:#efe6d4;--bk2:#f6eedd;--bk3:#e5dac5;--bkp:none}
+.st[data-r="shurima"]{--sa:#f0c35a;--sb:#fbf0d6;--hex:#ffd26b;--sbg:#17110a;--bk1:#2a1d10;--bk2:#352514;--bk3:#21170c}
+.st[data-r="targon"]{--sa:#b9a6ff;--sb:#efeaff;--hex:#c9bbff;--sbg:#0b0b1a;--bk1:#0d0d22;--bk2:#14142e;--bk3:#0a0a1a}
+.st[data-r="bilgewater"]{--sa:#e0a25a;--sb:#f5eadb;--hex:#5fd0c0;--sbg:#0c1416;--bk1:#e3d2b0;--bk2:#ecdcbc;--bk3:#d6c39d;--bkp:none}
+.st[data-r="shadowisles"]{--sa:#4fe0c4;--sb:#dff8f2;--hex:#5effd8;--sbg:#071211;--bk1:#0c1918;--bk2:#102220;--bk3:#081312}
+.st[data-r="bandle"]{--sa:#f2b4e0;--sb:#fff3fb;--hex:#ffd36e;--sbg:#140f1c;--bk1:#2a1d3a;--bk2:#352548;--bk3:#22182f}
+.st[data-r="ixtal"]{--sa:#6fdb8a;--sb:#eafbe9;--hex:#8ff0ff;--sbg:#08130e;--bk1:#0d1d15;--bk2:#12281c;--bk3:#0a1710}
+.st[data-r="void"]{--sa:#c26bff;--sb:#f3e6ff;--hex:#e070ff;--sbg:#0d0716;--bk1:#140b22;--bk2:#1b0e2e;--bk3:#0f0819}
+/* light paper books: dark ink text */
+.bk[data-kind="petricite"] .bk-page,.bk[data-kind="ink"] .bk-page,.bk[data-kind="chart"] .bk-page{--sb:#2a2116;color:#2a2116}
+.bk[data-kind="petricite"] .bk-cap,.bk[data-kind="ink"] .bk-cap,.bk[data-kind="chart"] .bk-cap{color:#3d3326}
+.bk[data-kind="petricite"]:not(.on) .bk-cap,.bk[data-kind="ink"]:not(.on) .bk-cap,.bk[data-kind="chart"]:not(.on) .bk-cap{color:rgba(60,45,30,.35)}
+.bk[data-kind="petricite"] .bk-kicker,.bk[data-kind="ink"] .bk-kicker,.bk[data-kind="chart"] .bk-kicker{color:#7a5a2e}
+.bk[data-kind="petricite"] .bk-state,.bk[data-kind="ink"] .bk-state,.bk[data-kind="chart"] .bk-state{color:#8a5a1a}
+.bk[data-kind="petricite"] .bk-skip,.bk[data-kind="ink"] .bk-skip,.bk[data-kind="chart"] .bk-skip{color:#6b5a44}
+.bk[data-kind="petricite"] .bk-prev,.bk[data-kind="petricite"] .bk-next,.bk[data-kind="ink"] .bk-prev,.bk[data-kind="ink"] .bk-next,.bk[data-kind="chart"] .bk-prev,.bk[data-kind="chart"] .bk-next{color:#2a2116;border-color:rgba(60,45,30,.35)}
+.bk[data-kind="petricite"] .bk-plate,.bk[data-kind="ink"] .bk-plate,.bk[data-kind="chart"] .bk-plate{border-color:rgba(60,45,30,.2)}
+.bk[data-kind="petricite"] .bk-no,.bk[data-kind="ink"] .bk-no,.bk[data-kind="chart"] .bk-no{color:#6b5a44}
+
+/* ---- the 12 region elements. Each one: a veil over the art that the hold (--c 0→1) lifts; .on = revealed ---- */
+.bk-veil{position:absolute;inset:0;pointer-events:none;z-index:2;transition:opacity .9s}
+.bk.on .bk-veil{opacity:0!important}
+/* Zaun: toxic gas, vented by the valve */
+.bk[data-kind="chem"] .bk-art img{filter:sepia(1) hue-rotate(50deg) saturate(2.2) brightness(calc(.45 + var(--c) * .5)) blur(calc((1 - var(--c)) * 5px))}
+.bk[data-kind="chem"] .bk-veil{opacity:calc(1 - var(--c));background:radial-gradient(40% 35% at 30% 70%,rgba(140,255,90,.55),transparent 70%),radial-gradient(45% 40% at 70% 40%,rgba(90,220,70,.45),transparent 70%),radial-gradient(60% 50% at 50% 100%,rgba(120,255,110,.6),transparent 70%);background-size:160% 160%;animation:gas 9s ease-in-out infinite alternate;filter:blur(6px)}
+@keyframes gas{0%{background-position:0% 0%,100% 0%,50% 100%}100%{background-position:100% 30%,0% 60%,40% 80%}}
+/* Demacia: wild magic glows until petricite dampens it */
+.bk[data-kind="petricite"] .bk-art img{filter:saturate(calc(1 + (1 - var(--c)) * 2)) hue-rotate(calc((1 - var(--c)) * 190deg)) brightness(calc(1 + (1 - var(--c)) * .5)) blur(calc((1 - var(--c)) * 4px))}
+.bk[data-kind="petricite"] .bk-veil{opacity:calc(1 - var(--c));background:radial-gradient(circle at 30% 30%,rgba(120,210,255,.75) 0 2px,transparent 3px) 0 0/38px 38px,radial-gradient(circle at 70% 60%,rgba(255,230,140,.7) 0 1.5px,transparent 3px) 0 0/27px 27px,radial-gradient(60% 60% at 50% 50%,rgba(130,200,255,.35),transparent);animation:spark 3s linear infinite;mix-blend-mode:screen}
+@keyframes spark{to{background-position:0 -38px,0 27px,0 0}}
+/* Noxus: a red war banner unrolls over the order */
+.bk[data-kind="banner"] .bk-art img{filter:grayscale(calc(1 - var(--c))) contrast(1.1) brightness(calc(.5 + var(--c) * .5))}
+.bk[data-kind="banner"] .bk-veil{opacity:1;background:linear-gradient(#8f1c18,#5c0f0d) top/100% calc(var(--c) * 100%) no-repeat;mix-blend-mode:multiply;clip-path:polygon(8% 0,92% 0,92% calc(var(--c) * 100%),50% calc(var(--c) * 100% - 6%),8% calc(var(--c) * 100%))}
+.bk[data-kind="banner"].on .bk-veil{transition:opacity 1.4s .2s}
+/* Freljord: frost over the rune, thawed by holding */
+.bk[data-kind="frost"] .bk-art img{filter:saturate(calc(.3 + var(--c) * .7)) brightness(calc(1.15 - var(--c) * .15)) blur(calc((1 - var(--c)) * 7px))}
+.bk[data-kind="frost"] .bk-veil{opacity:calc((1 - var(--c)) * .9);background:radial-gradient(circle at 20% 30%,rgba(255,255,255,.5) 0 1px,transparent 2px) 0 0/9px 9px,radial-gradient(circle at 60% 70%,rgba(220,240,255,.45) 0 1px,transparent 2px) 0 0/13px 13px,linear-gradient(135deg,rgba(230,245,255,.55),rgba(170,215,245,.25) 50%,rgba(230,245,255,.55));box-shadow:inset 0 0 60px 20px rgba(255,255,255,.55)}
+/* Ionia: the ink spreads from the centre as you paint */
+.bk[data-kind="ink"] .bk-art img{filter:grayscale(1) sepia(.35) contrast(1.15);clip-path:circle(calc(6% + var(--c) * 70%) at 50% 50%);mix-blend-mode:multiply}
+.bk[data-kind="ink"] .bk-veil{opacity:calc(1 - var(--c));background:radial-gradient(circle at 50% 50%,rgba(40,30,20,.12) 0 calc(4% + var(--c) * 66%),transparent calc(10% + var(--c) * 70%))}
+.st-book .petal{position:absolute;width:12px;height:9px;border-radius:70% 0 70% 0;background:linear-gradient(135deg,#ffd0de,#f08aa9);pointer-events:none;z-index:5;transform:rotate(var(--rot));animation:petal 2.2s ease-in forwards}
+@keyframes petal{to{transform:translate(var(--dx),70px) rotate(calc(var(--rot) + 200deg));opacity:0}}
+/* Shurima: sand over the relic (brush it with the mouse, or hold the sun) */
+.bk-sand{position:absolute;inset:0;width:100%;height:100%;z-index:2;opacity:calc(1 - var(--c));transition:opacity .9s;touch-action:auto}
+.bk-sand.brush{cursor:grab}.bk-sand.brush:active{cursor:grabbing}
+.bk.on .bk-sand{opacity:0;pointer-events:none}
+.bk[data-kind="sand"] .bk-art img{filter:sepia(.4) brightness(.9)}
+/* Targon: trace the constellation; the art brightens as the stars align */
+.bk[data-kind="stars"] .bk-art img{filter:brightness(calc(.12 + var(--c) * .88)) saturate(var(--c))}
+.bk-stars{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:none;transition:opacity 1s}
+.bk-stars .sd{fill:#fff;opacity:.55}
+.bk-stars .sp{fill:#fff;filter:drop-shadow(0 0 2px #c9bbff)}
+.bk-stars .sl{fill:none;stroke:#d9d0ff;stroke-width:.35;stroke-dasharray:1;stroke-dashoffset:calc(1 - var(--c));vector-effect:non-scaling-stroke;stroke-width:1.5}
+.bk[data-kind="stars"].on .bk-stars{opacity:.25}
+/* Shadow Isles: the Black Mist closes in from the edges; your light pushes it back */
+.bk[data-kind="mist"] .bk-art img{filter:grayscale(calc(.8 - var(--c) * .8)) brightness(calc(.55 + var(--c) * .45))}
+.bk[data-kind="mist"] .bk-veil{opacity:1;background:radial-gradient(circle at 50% 55%,transparent calc(var(--c) * 62%),rgba(6,24,22,.75) calc(var(--c) * 62% + 14%),rgba(3,14,13,.97) calc(var(--c) * 62% + 34%));animation:mist 6s ease-in-out infinite alternate}
+@keyframes mist{to{transform:scale(1.04) rotate(.6deg)}}
+.bk[data-kind="mist"].holding .bk-glow{background:radial-gradient(circle at 50% 55%,rgba(94,255,216,.35),transparent 55%);opacity:1}
+/* Bilgewater: the chart rocks on the tide until you steady the wheel */
+.bk[data-kind="chart"] .bk-art img{filter:sepia(calc(1 - var(--c))) contrast(.95) saturate(calc(.6 + var(--c) * .4));mix-blend-mode:multiply}
+.bk[data-kind="chart"]:not(.on) .bk-art{animation:tide 3.6s ease-in-out infinite}
+.bk[data-kind="chart"].holding .bk-art{animation-duration:7s}
+@keyframes tide{0%,100%{transform:rotate(-1.6deg) translateY(2px)}50%{transform:rotate(1.6deg) translateY(-3px)}}
+.bk[data-kind="chart"] .bk-veil{opacity:calc((1 - var(--c)) * .7);background:radial-gradient(40% 30% at 30% 40%,rgba(120,80,30,.35),transparent),radial-gradient(35% 30% at 72% 70%,rgba(110,70,30,.3),transparent),repeating-linear-gradient(0deg,rgba(60,120,130,.08) 0 2px,transparent 2px 14px)}
+/* Ixtal: the jungle overgrows the page; holding pushes it back */
+.bk[data-kind="jungle"] .bk-art img{filter:saturate(calc(.6 + var(--c) * .4)) brightness(calc(.6 + var(--c) * .4))}
+.bk[data-kind="jungle"] .bk-veil{opacity:1;background:radial-gradient(ellipse at 0 0,#14411f 0,#0e2e17 calc((1 - var(--c)) * 46%),transparent calc((1 - var(--c)) * 52%)),radial-gradient(ellipse at 100% 0,#1a5328 0,#103418 calc((1 - var(--c)) * 42%),transparent calc((1 - var(--c)) * 48%)),radial-gradient(ellipse at 0 100%,#1b5a2b 0,#0f3317 calc((1 - var(--c)) * 48%),transparent calc((1 - var(--c)) * 54%)),radial-gradient(ellipse at 100% 100%,#14451f 0,#0d2c15 calc((1 - var(--c)) * 44%),transparent calc((1 - var(--c)) * 50%)),radial-gradient(circle at 50% 50%,rgba(20,70,35,calc((1 - var(--c)) * .85)) 30%,transparent 70%)}
+/* Bandle City: the page lies flat until it pops up */
+.bk[data-kind="popup"] .bk-plate{perspective:900px}
+.bk[data-kind="popup"] .bk-art{transform-origin:50% 100%;transform:rotateX(calc((1 - var(--c)) * 60deg));transition:transform .2s}
+.bk[data-kind="popup"].on .bk-art{transform:none;animation:pop .7s cubic-bezier(.3,1.6,.5,1)}
+@keyframes pop{0%{transform:rotateX(20deg) scale(.96)}100%{transform:none}}
+.bk[data-kind="popup"] .bk-art img{filter:drop-shadow(0 18px 18px rgba(0,0,0,.45))}
+/* the Void: the record glitches until you steady it */
+.bk[data-kind="glitch"] .bk-art img{filter:contrast(calc(1.4 - var(--c) * .4)) saturate(calc(1.6 - var(--c) * .6)) hue-rotate(calc((1 - var(--c)) * 40deg))}
+.bk[data-kind="glitch"]:not(.on) .bk-art{animation:jit .18s steps(2) infinite}
+.bk[data-kind="glitch"].holding .bk-art{animation-duration:.6s}
+@keyframes jit{50%{transform:translate(calc((1 - var(--c)) * 4px),calc((1 - var(--c)) * -2px))}}
+.bk[data-kind="glitch"] .bk-veil{inset:6% 6% 12%;opacity:calc(1 - var(--c));background:var(--img) center/contain no-repeat;mix-blend-mode:screen;filter:hue-rotate(250deg) saturate(3);transform:translateX(calc((1 - var(--c)) * 14px));clip-path:inset(18% 0 58% 0);animation:slice 1.1s steps(4) infinite}
+@keyframes slice{0%{clip-path:inset(18% 0 58% 0)}25%{clip-path:inset(62% 0 12% 0)}50%{clip-path:inset(40% 0 44% 0)}75%{clip-path:inset(5% 0 80% 0)}}
 
 /* 5 people: dossier files */
 .st-files{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px}

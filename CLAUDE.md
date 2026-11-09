@@ -227,9 +227,24 @@ English only for now. Tested 1440×900 + 375×812 (touch hold via CDP), no error
 Riot images load from github.io. Folio plates turn on touch swipes only when clearly sideways (|dx|>60 and >2×|dy|) so scrolling past never flips
 a plate. Pages caches files ~10 min, so a returning visitor may see the old story.css/story.js briefly after a push. Browser-pane screenshots can lag
 one step after a JS scrollTo — nudge with a real wheel scroll before screenshotting.
-**Cache:** atlas.html loads story.css / story.js / data/region-stories.js with `?v=N` (now 3) — bump N on every change to those files, or returning visitors keep the old copy for a while.
-**To add a region:** add ATLAS_RSTORY.<id> (same shape; book.kind picks the interaction — only "hextech" exists yet; build the region's own element
-from the agreed list above), real data only. Waiting for Devdeep's verdict on the pilot before the other 12.
+**Cache:** atlas.html loads story.css / story.js / data/region-stories.js with `?v=N` (now 4) — bump N on every change to those files, or returning visitors keep the old copy for a while.
+**ALL 13 REGIONS BUILT 2026-11-09** (Devdeep approved the Piltover pilot: "do the other regions as well like piltover"). Wanderers has no story.
+Data: Riot Universe factions/<id>/index.json for all 12 read in the browser pane (overview → lore beats split at sentence ends after stripping <p> tags, merged
+to ≤230 chars; image galleries picked per region into places / book pages / people; map subtitle = ATLAS_RMAP.info[1] as kicker). Builder script was in the
+session scratchpad (build.py): picks per region are in region-stories.js itself. Chapters are built from the data — a region without places/people/film
+skips them (Void: no places/people; Bandle: no people; Ixtal: no film — only login themes exist). Films: Riot's featured faction video when in videos.js,
+else the region's official cinematic (Zaun = Warwick: The Wrath of Zaun, Targon = Aurelion Sol: The Star Forger Returns, Bandle = Tiny Masterpiece of Evil,
+Void = The Terror Beneath). Bandle opens on Riot's "The Bandle Tree" painting (its splash is nearly black: brightness 18 vs 109) with closeup.zoom 1.5 (800 px image).
+Bandle City has no coordinates on Riot's map → its ending shows the text without a map crop (don't invent a location).
+Elements (story.js KINDS; all use the same press-and-hold + "Can't hold? Reveal every …" skip; CSS veils driven by --c 0→1 in story.css):
+hextech Piltover · chem Zaun (green gas vented by a valve) · petricite Demacia (wild magic glow dampened, light paper) · banner Noxus (red banner unrolls) ·
+frost Freljord (frost thaws) · ink Ionia (ink spreads from the centre; petals follow a mouse cursor) · sand Shurima (canvas sand: brush with a mouse, or hold
+the sun; touch = hold only, so the page still scrolls) · stars Targon (seeded constellation traced) · mist Shadow Isles (Black Mist pushed back by your light)
+· chart Bilgewater (chart rocks on the tide until steadied, light paper) · jungle Ixtal (overgrowth recedes) · popup Bandle (page pops up) · glitch Void (record
+steadies). Region palettes = .st[data-r] vars (--sa, --sb, --hex, --sbg, --bk1-3). Sound: SCENES per region (wind, drone, sea, pulse: tick/bubble/bell/drum/
+twinkle/creak; Void wobbles) + per-kind hum/chime. Next-region chain: piltover→zaun→noxus→demacia→freljord→targon→shurima→void→ixtal→bandle→ionia→bilgewater→shadowisles→piltover.
+Tested all 13 at 1440×900 and 375×812: every element reveals on hold, no errors, no sideways scroll.
+**To change a region:** edit ATLAS_RSTORY.<id> in data/region-stories.js (Riot's words only) and bump ?v= in atlas.html.
 (Old note) build ONE region as a pilot (Claude suggested Freljord or Shadow Isles to show off effects, or Piltover for the Hextech book;
 Devdeep "liked the suggestion" — confirm which region with him, give the usual 3-line plan, then go), test desktop + phone with him, then the
 other 12. Then the wider responsiveness pass over the whole site. Devdeep also has a separate **lore task** he said he'd describe after
