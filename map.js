@@ -44,7 +44,7 @@
 .rmap .town:hover b{color:#fff}
 .rmap .card{position:absolute;z-index:6;width:min(340px,calc(100% - 24px));background:rgba(10,16,30,.97);border:1px solid #c8aa6e;box-shadow:0 18px 44px rgba(0,0,0,.65);padding:14px 16px 14px;color:#ebe4d3;font-size:15px;line-height:1.45;display:none}
 .rmap .card.on{display:block}
-.rmap .card .k{font-family:var(--f-mono,monospace);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#c8aa6e}
+.rmap .card .k{font-family:var(--f-mono,monospace);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#c8aa6e}
 .rmap .card h3{font-family:var(--f-display,serif);font-weight:400;font-size:24px;line-height:1.05;margin:4px 0 2px}
 .rmap .card .st{font-style:italic;color:#a9b3c7;margin:0 0 8px}
 .rmap .card p{margin:0 0 10px;max-height:9.5em;overflow:auto}
@@ -53,10 +53,10 @@
 .rmap .card .faces img{width:36px;height:36px;object-fit:cover;border:1px solid rgba(200,170,110,.4);display:block}
 .rmap .card .faces a:hover img{border-color:#c8aa6e}
 .rmap .card .row{display:flex;gap:8px;flex-wrap:wrap}
-.rmap .card .row button,.rmap .card .row a{font-family:var(--f-mono,monospace);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;border:1px solid rgba(200,170,110,.45);background:transparent;color:#ebe4d3;padding:7px 10px;cursor:pointer;text-decoration:none}
+.rmap .card .row button,.rmap .card .row a{font-family:var(--f-mono,monospace);font-size:11px;letter-spacing:.1em;text-transform:uppercase;border:1px solid rgba(200,170,110,.45);background:transparent;color:#ebe4d3;padding:7px 10px;cursor:pointer;text-decoration:none}
 .rmap .card .row button:hover,.rmap .card .row a:hover{border-color:#c8aa6e;color:#c8aa6e}
 .rmap .card .x{position:absolute;top:8px;right:8px;width:30px;height:30px;border:1px solid rgba(200,170,110,.35);background:none;color:#ebe4d3;cursor:pointer;font-size:18px;line-height:1}
-.rmap .cred{position:absolute;right:10px;bottom:8px;z-index:4;font-family:var(--f-mono,monospace);font-size:9.5px;letter-spacing:.08em;color:rgba(235,228,211,.55);text-shadow:0 1px 2px #000;pointer-events:none}
+.rmap .cred{position:absolute;right:10px;bottom:8px;z-index:4;font-family:var(--f-mono,monospace);font-size:11px;letter-spacing:.08em;color:rgba(235,228,211,.55);text-shadow:0 1px 2px #000;pointer-events:none}
 @media (max-width:640px){.rmap .crest i{width:36px;height:36px}.rmap .crest i img{width:23px;height:23px}.rmap .crest b{font-size:11.5px;letter-spacing:.1em}.rmap .mark b,.rmap .town b{font-size:11.5px}.rmap .card{left:12px!important;right:12px;bottom:12px;top:auto!important;width:auto}}
 @media (prefers-reduced-motion:reduce){.rmap .tile,.rmap .hl{transition:none}}`;
   var st=document.createElement("style");st.textContent=css;document.head.appendChild(st);

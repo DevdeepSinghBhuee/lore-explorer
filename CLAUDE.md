@@ -156,6 +156,17 @@ Must work at phone width with no horizontal scroll (watch grid children: `min-wi
 "which laws for which job", review checklist). Before showing him anything, run that checklist on desktop + 375 px and name the laws behind
 the main choices in plain words. Things he has flagged: controls floating over content get tapped by accident (Fitts); long panels with
 dead space beside them (Chunking / Proximity).
+**Responsiveness pass (2026-11-09)**, shared rules live in site.js's injected CSS (every page loads it): logo never wraps (.brand nowrap, 17px ≤400px);
+on touch screens (`@media (pointer:coarse)`, phones AND tablets) menu buttons, section tabs, chips, selects, filter buttons, player controls and small
+standalone links get min 44px (explicit selector list — add new pages' controls there); checkboxes 20px inside 44px labels; Rift map markers get an
+invisible 8px hit ring (.mk::before). Rows that scroll sideways get a fade at the right edge while more is hidden (scrollHints(): any element with
+overflow-x auto/scroll and height ≤260px; class .has-more; rescans at load, +0.8/2.5/6 s, after clicks, on resize). **Text floor 11px**: every
+font-size under 11px in all pages/scripts was raised to 11px (131 places) — don't add labels below 11px. Rift: first/last events of the "first twenty
+minutes" clock are edge-aligned (.ev.edge-l/.edge-r), which removed the only sideways scroll on the site (768–1280px).
+Audit tool (session scratchpad, re-creatable): Playwright over every *.html at 320/375/414/768/1024/1280/1440 measuring page scrollWidth, elements past
+the edge not clipped by a container, tap targets (<40px touch, <24px mouse; inline text links in p/li/footer exempt) and text <11px. Result after the
+pass: 0 pages scroll sideways at any width, 0 tiny text (except SVG labels in the Atlas web, which scale with the graph); the only small touch targets
+left are chart bars, web-of-bonds nodes, Rift map markers (hit ring) and the folio dots (arrows + swipe also work).
 
 ## Working notes
 - Test locally over http (`python3 -m http.server`), not file:// (WebGL/fetch break). Playwright works for screenshots.
@@ -247,8 +258,7 @@ Tested all 13 at 1440×900 and 375×812: every element reveals on hold, no error
 **To change a region:** edit ATLAS_RSTORY.<id> in data/region-stories.js (Riot's words only) and bump ?v= in atlas.html.
 (Old note) build ONE region as a pilot (Claude suggested Freljord or Shadow Isles to show off effects, or Piltover for the Hextech book;
 Devdeep "liked the suggestion" — confirm which region with him, give the usual 3-line plan, then go), test desktop + phone with him, then the
-other 12. Then the wider responsiveness pass over the whole site. Devdeep also has a separate **lore task** he said he'd describe after
-the map fix — ask him for it.
+other 12. Then the wider responsiveness pass over the whole site. (The separate "lore task" was scrapped by Devdeep on 2026-11-09 — don't ask about it.)
 
 ## Ideas not started yet (ask Devdeep which next)
 1. ~~Player pages~~ (done 2026-10-19; refresh players.js after the 2026 final).

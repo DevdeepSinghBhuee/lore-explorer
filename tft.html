@@ -63,7 +63,7 @@ h1 em{font-style:normal;color:var(--gold)}
 .lede{font-size:19px;max-width:50ch;margin:0;color:#c4c8d3}
 .counts{display:flex;gap:22px;flex-wrap:wrap}
 .counts div b{display:block;font-family:var(--f-num);font-weight:600;font-size:40px;line-height:.9;color:var(--gold);font-variant-numeric:tabular-nums}
-.counts div span{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.counts div span{font-family:var(--f-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
 
 
 :root{--c1:#9aa4b2;--c2:#3fae6a;--c3:#3c8fe0;--c4:#b35be0;--c5:#e8b440}
@@ -78,11 +78,11 @@ h3.sec{font-family:var(--f-display);font-weight:400;font-size:clamp(28px,3vw,38p
 .sethd{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin:26px 0 14px}
 .sethd h2{font-family:var(--f-display);font-weight:400;font-size:clamp(32px,4vw,52px);line-height:1;margin:4px 0 0}
 .sethd .k{font-family:var(--f-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
-.lab{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:18px 0 8px}
+.lab{font-family:var(--f-mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:18px 0 8px}
 .traits{display:flex;flex-wrap:wrap;gap:6px}
 .trait{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--rule);background:#0d1729;padding:4px 10px 4px 5px;cursor:pointer;font-size:14.5px;color:var(--text)}
 .trait img{width:22px;height:22px;filter:invert(.85) sepia(.4) saturate(.6)}
-.trait small{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.trait small{font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
 .trait[aria-pressed="true"]{border-color:var(--gold);background:rgba(200,170,110,.14)}
 .tbox{margin-top:10px;border-left:3px solid var(--gold);background:rgba(200,170,110,.06);padding:10px 14px}
 .tbox b{font-family:var(--f-display);font-weight:400;font-size:20px}
@@ -113,7 +113,7 @@ a.unit:hover{border-color:var(--gold)}
 .var{flex:none;width:118px;border:1px solid var(--rule);background:#05080f;border-bottom:3px solid var(--rc,var(--rule))}
 .var img{width:100%;aspect-ratio:1;object-fit:cover;display:block}
 .var span{display:block;padding:4px 6px 2px;font-size:12.5px;line-height:1.2}
-.var small{display:block;padding:0 6px 6px;font-family:var(--f-mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--rc,var(--muted))}
+.var small{display:block;padding:0 6px 6px;font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--rc,var(--muted))}
 .seg{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
 .seg button{border:1px solid var(--rule);background:transparent;padding:7px 11px;cursor:pointer;font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
 .seg button[aria-pressed="true"]{border-color:var(--gold);color:var(--text);background:rgba(200,170,110,.1)}
@@ -191,7 +191,7 @@ document.getElementById("set").addEventListener("click",e=>{const b=e.target.clo
   document.querySelectorAll(".trait").forEach(x=>x.setAttribute("aria-pressed",String(x.dataset.t===trait)));
   document.querySelectorAll("#set .unit").forEach(u=>u.classList.toggle("dim",!!trait&&!u.dataset.tr.split("|").includes(trait)));
   const box=document.getElementById("tbox"),x=trait&&T.traits[cur][trait];
-  box.innerHTML=x?`<div class="tbox"><b>${esc(trait)}</b> <span style="font-family:var(--f-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">${esc(x[0])}</span>${x[2]?`<p>${esc(x[2])}</p>`:""}${x[3].length?`<ul>${x[3].slice().sort((a,b)=>a[0]-b[0]).map(([n,v])=>`<li><b>(${n})</b>${esc(v)}</li>`).join("")}</ul>`:""}</div>`:"";});
+  box.innerHTML=x?`<div class="tbox"><b>${esc(trait)}</b> <span style="font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">${esc(x[0])}</span>${x[2]?`<p>${esc(x[2])}</p>`:""}${x[3].length?`<ul>${x[3].slice().sort((a,b)=>a[0]-b[0]).map(([n,v])=>`<li><b>(${n})</b>${esc(v)}</li>`).join("")}</ul>`:""}</div>`:"";});
 // Little Legends
 const RC={Default:"#9aa4b2",Epic:"#3c8fe0",Legendary:"#e0a33c",Mythic:"#c45bf0"};
 const KIND=[["LittleLegend","Little Legends"],["Chibi","Chibi champions"],["Style2","Other looks"]];
