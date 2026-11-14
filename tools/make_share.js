@@ -47,7 +47,7 @@ for (const c of CHAMPS) {
 <meta property="og:type" content="profile">
 <meta property="og:site_name" content="Lore Explorer">
 <meta property="og:title" content="${esc(head)}">
-<meta property="og:description" content="${esc(blurb)}">
+<meta property="og:description" content="${esc(desc)}">
 <meta property="og:url" content="${url}">
 <meta property="og:image" content="${img}">
 <meta property="og:image:width" content="1215">
