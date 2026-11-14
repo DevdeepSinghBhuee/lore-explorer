@@ -168,6 +168,24 @@ the edge not clipped by a container, tap targets (<40px touch, <24px mouse; inli
 pass: 0 pages scroll sideways at any width, 0 tiny text (except SVG labels in the Atlas web, which scale with the graph); the only small touch targets
 left are chart bars, web-of-bonds nodes, Rift map markers (hit ring) and the folio dots (arrows + swipe also work).
 
+## Link previews + SEO (finished 2026-11-14)
+**Every page** (23 + 404) has in its <head>: <title>, meta description (≤170 chars, Google cuts ~160), canonical, og:type/site_name/title/description/url/
+image (+ width/height/alt), twitter:card summary_large_image, icons, manifest. index.html also has WebSite JSON-LD. 404.html and mine.html are `noindex`.
+**Share pictures** img/og/<page>.jpg (1200×630, ~100 KB) are drawn by `python3 tools/make_og.py` (needs ./og-work/fonts — Marcellus SC, Alegreya
+Italic, Spline Sans Mono from github.com/google/fonts — and ./og-work/art DDragon splashes from the InFinity54 mirror; set S= to that folder).
+Edit the PAGES list there when a page's tagline changes (2026-11-14: Daily re-drawn, it said "Five" games; there are seven).
+**Champion previews:** c/<id>.html = 173 tiny share pages (Riot's name + title, Riot's Data Dragon blurb as description, DDragon splash
+<dd>_0.jpg hotlinked as the picture, Riot legal line) that send visitors straight to journey.html?c=<id> (keeps #chapter; meta refresh + location.replace;
+canonical = journey.html?c=<id>). Built by `node tools/make_share.js <DDragon en_US champion.json>` (mirror: raw.githubusercontent.com/InFinity54/
+LoL_DDragon/master/latest/data/en_US/champion.json) — rerun when a champion is added; it also rewrites the `<!-- champions -->` block of
+sitemap.xml (173 journey.html?c=<id> rows). journey.html: **Share** button in the hero (#hShare, right after the ★; phones/tablets = system share sheet,
+computers = copies the c/<id>.html link, "✓ Link copied" for 2.2 s + screen-reader status); it also sets the page's description/canonical/og tags per
+champion for Google's renderer. Keys j_share, j_copied in all 17 (also appended to ui-*.js on main only — phase4-translations will need them on merge).
+**robots.txt is NOT possible here:** crawlers only read it at the domain root (devdeepsinghbhuee.github.io/robots.txt), which is outside this repo.
+Instead Devdeep should add the site to **Google Search Console** (free, "URL prefix" property https://devdeepsinghbhuee.github.io/lore-explorer/,
+HTML-tag verification → paste the <meta name="google-site-verification"> into index.html) and submit sitemap.xml; Bing Webmaster Tools can import it.
+Not done yet (waiting for his verification code). Worlds 2026 page texts say "Live" — reword after the final (14 Nov).
+
 ## Working notes
 - Test locally over http (`python3 -m http.server`), not file:// (WebGL/fetch break). Playwright works for screenshots.
 - After pushing, check the live page (append `?v=N` to dodge cache).
@@ -270,4 +288,4 @@ other 12. Then the wider responsiveness pass over the whole site. (The separate 
 7. ~~Comics & short stories (Reading Room)~~ (done 2026-10-19).
 8. ~~Champion release timeline~~ (done 2026-10-19).
 9. ~~Champion journeys~~ (done 2026-10-20). 10. ~~Grouped menu + My champions~~ (done 2026-10-20). Agreed next, in order:
-   11. ~~Daily guessing game~~ (done 2026-10-20; LoLdle modes studied: Classic, Quote, Ability, Emoji, Splash). 12. ~~Abilities + Daily Ability mode~~ (done 2026-10-20; also icon row in atlas.html panel). 13. ~~Champion voice lines~~ (done 2026-10-21; Devdeep's "one more cool thing"). Next: LoL streamers. Earlier agreed: link previews + SEO, streamer-friendly Daily, launch plan.
+   11. ~~Daily guessing game~~ (done 2026-10-20; LoLdle modes studied: Classic, Quote, Ability, Emoji, Splash). 12. ~~Abilities + Daily Ability mode~~ (done 2026-10-20; also icon row in atlas.html panel). 13. ~~Champion voice lines~~ (done 2026-10-21; Devdeep's "one more cool thing"). Next: LoL streamers. Earlier agreed: ~~link previews + SEO~~ (done 2026-11-14), ~~streamer-friendly Daily~~ (done), launch plan (next: no Riot names in accounts/domains, no #LeagueOfLegends-style hashtags).

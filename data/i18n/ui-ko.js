@@ -24,3 +24,4 @@ Object.assign(window.ATLAS_UI,{"h_eye": "리그 오브 레전드 세계를 위�
 
 Object.assign(window.ATLAS_UI,{"k_r": "소환사의 협곡", "k_g": "지역", "k_z": "시즌"});
 Object.assign(window.ATLAS_UI,{"a_tab_read": "읽기와 보기", "a_tab_cards": "카드와 스킨", "a_less": "접기"});
+Object.assign(window.ATLAS_UI,{"j_share": "공유", "j_copied": "링크 복사됨"});

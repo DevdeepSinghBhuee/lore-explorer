@@ -24,3 +24,4 @@ Object.assign(window.ATLAS_UI,{"h_eye": "Trang web miễn phí của người h�
 
 Object.assign(window.ATLAS_UI,{"k_r": "Khe Nứt Triệu Hồi", "k_g": "Khu vực", "k_z": "Mùa giải"});
 Object.assign(window.ATLAS_UI,{"a_tab_read": "Đọc và xem", "a_tab_cards": "Thẻ bài và trang phục", "a_less": "Thu gọn"});
+Object.assign(window.ATLAS_UI,{"j_share": "Chia sẻ", "j_copied": "Đã sao chép liên kết"});

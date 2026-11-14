@@ -24,3 +24,4 @@ Object.assign(window.ATLAS_UI,{"h_eye": "Situs penggemar gratis untuk dunia Leag
 
 Object.assign(window.ATLAS_UI,{"k_r": "Summoner's Rift", "k_g": "Wilayah", "k_z": "Season"});
 Object.assign(window.ATLAS_UI,{"a_tab_read": "Baca & tonton", "a_tab_cards": "Kartu & skin", "a_less": "Tampilkan lebih sedikit"});
+Object.assign(window.ATLAS_UI,{"j_share": "Bagikan", "j_copied": "Tautan disalin"});

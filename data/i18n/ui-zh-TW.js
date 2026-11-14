@@ -24,3 +24,4 @@ Object.assign(window.ATLAS_UI,{"h_eye": "英雄聯盟世界的免費粉絲網站
 
 Object.assign(window.ATLAS_UI,{"k_r": "召喚峽谷", "k_g": "地區", "k_z": "賽季"});
 Object.assign(window.ATLAS_UI,{"a_tab_read": "閱讀與觀看", "a_tab_cards": "卡牌與造型", "a_less": "收合"});
+Object.assign(window.ATLAS_UI,{"j_share": "分享", "j_copied": "已複製連結"});

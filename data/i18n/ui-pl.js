@@ -24,3 +24,4 @@ Object.assign(window.ATLAS_UI,{"h_eye": "Darmowa strona fanów o świecie League
 
 Object.assign(window.ATLAS_UI,{"k_r": "Summoner's Rift", "k_g": "Regiony", "k_z": "Sezony"});
 Object.assign(window.ATLAS_UI,{"a_tab_read": "Czytaj i oglądaj", "a_tab_cards": "Karty i skórki", "a_less": "Pokaż mniej"});
+Object.assign(window.ATLAS_UI,{"j_share": "Udostępnij", "j_copied": "Link skopiowany"});

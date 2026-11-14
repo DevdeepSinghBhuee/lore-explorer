@@ -24,3 +24,4 @@ Object.assign(window.ATLAS_UI,{"h_eye": "Бесплатный фан-сайт о
 
 Object.assign(window.ATLAS_UI,{"k_r": "Ущелье призывателей", "k_g": "Регионы", "k_z": "Сезоны"});
 Object.assign(window.ATLAS_UI,{"a_tab_read": "Читать и смотреть", "a_tab_cards": "Карты и образы", "a_less": "Свернуть"});
+Object.assign(window.ATLAS_UI,{"j_share": "Поделиться", "j_copied": "Ссылка скопирована"});

@@ -24,3 +24,4 @@ Object.assign(window.ATLAS_UI,{"h_eye": "League of Legends dünyası için ücre
 
 Object.assign(window.ATLAS_UI,{"k_r": "Sihirdar Vadisi", "k_g": "Bölgeler", "k_z": "Sezonlar"});
 Object.assign(window.ATLAS_UI,{"a_tab_read": "Oku ve izle", "a_tab_cards": "Kartlar ve kostümler", "a_less": "Daha az göster"});
+Object.assign(window.ATLAS_UI,{"j_share": "Paylaş", "j_copied": "Bağlantı kopyalandı"});

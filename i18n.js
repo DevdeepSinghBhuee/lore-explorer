@@ -100,6 +100,7 @@
     j_through:"A journey through {r}",
     j_arrived:"Arrived {d}",
     j_another:"Pick another champion",
+    j_share:"Share",j_copied:"Link copied",
     j_who:"Who they are",
     j_who_sub:"From Riot's official biography",
     j_full_bio:"Read the full biography on Universe ↗",

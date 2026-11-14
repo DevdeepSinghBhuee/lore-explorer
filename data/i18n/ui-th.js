@@ -24,3 +24,4 @@ Object.assign(window.ATLAS_UI,{"h_eye": "เว็บไซต์แฟนฟร
 
 Object.assign(window.ATLAS_UI,{"k_r": "Summoner's Rift", "k_g": "ภูมิภาค", "k_z": "ซีซั่น"});
 Object.assign(window.ATLAS_UI,{"a_tab_read": "อ่านและดู", "a_tab_cards": "การ์ดและสกิน", "a_less": "แสดงน้อยลง"});
+Object.assign(window.ATLAS_UI,{"j_share": "แชร์", "j_copied": "คัดลอกลิงก์แล้ว"});

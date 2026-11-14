@@ -24,3 +24,4 @@ Object.assign(window.ATLAS_UI,{"h_eye": "Un sito di fan gratuito sul mondo di Le
 
 Object.assign(window.ATLAS_UI,{"k_r": "La Landa degli evocatori", "k_g": "Regioni", "k_z": "Stagioni"});
 Object.assign(window.ATLAS_UI,{"a_tab_read": "Leggi e guarda", "a_tab_cards": "Carte e skin", "a_less": "Mostra meno"});
+Object.assign(window.ATLAS_UI,{"j_share": "Condividi", "j_copied": "Link copiato"});

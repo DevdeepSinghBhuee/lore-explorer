@@ -24,3 +24,4 @@ Object.assign(window.ATLAS_UI,{"h_eye": "リーグ・オブ・レジェンドの
 
 Object.assign(window.ATLAS_UI,{"k_r": "サモナーズリフト", "k_g": "地域", "k_z": "シーズン"});
 Object.assign(window.ATLAS_UI,{"a_tab_read": "読む・観る", "a_tab_cards": "カードとスキン", "a_less": "閉じる"});
+Object.assign(window.ATLAS_UI,{"j_share": "共有", "j_copied": "リンクをコピーしました"});

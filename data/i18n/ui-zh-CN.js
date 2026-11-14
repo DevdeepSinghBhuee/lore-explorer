@@ -24,3 +24,4 @@ Object.assign(window.ATLAS_UI,{"h_eye": "英雄联盟世界的免费粉丝网站
 
 Object.assign(window.ATLAS_UI,{"k_r": "召唤师峡谷", "k_g": "地区", "k_z": "赛季"});
 Object.assign(window.ATLAS_UI,{"a_tab_read": "阅读与观看", "a_tab_cards": "卡牌与皮肤", "a_less": "收起"});
+Object.assign(window.ATLAS_UI,{"j_share": "分享", "j_copied": "链接已复制"});

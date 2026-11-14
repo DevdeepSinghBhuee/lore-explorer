@@ -5,7 +5,7 @@
 <script src="i18n.js"></script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Champion Journeys · A guided tour of any League of Legends champion</title>
-<meta name="description" content="Pick a League of Legends champion and take a guided tour: who they are, how they play, what to read, watch and listen to first, their bonds, best skins and when they arrived.">
+<meta name="description" content="Pick a League of Legends champion for a guided tour: who they are, how they play, what to read, watch and hear first, their bonds, best skins and arrival.">
 <link rel="canonical" href="https://devdeepsinghbhuee.github.io/lore-explorer/journey.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Lore Explorer">
@@ -93,6 +93,11 @@ button,input{font:inherit;color:inherit}
 .hero .meta b{font-family:var(--f-num);font-weight:500;font-size:20px;letter-spacing:.03em;color:var(--text);text-transform:none}
 .hero .meta img{width:22px;height:22px;vertical-align:-5px;margin-right:6px}
 .hero .change{margin-top:20px;display:flex;gap:8px;flex-wrap:wrap}
+.btn.share svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.btn.share.done{border-color:var(--gold);color:var(--gold)}
+.btn.share.done svg{display:none}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+@media (pointer:coarse){.hero .change>.btn,.hero .change>.fav-btn{min-height:44px}}
 
 .tour{display:grid;grid-template-columns:200px minmax(0,1fr);gap:40px;padding-top:28px}
 .rail{position:sticky;top:20px;align-self:start;display:grid;gap:2px;border-left:1px solid var(--rule)}
@@ -314,7 +319,7 @@ footer .legal{font-family:var(--f-mono);font-size:12px;line-height:1.6;max-width
         <h1 id="hName"></h1>
         <div class="ttl" id="hTitle"></div>
         <div class="meta" id="hMeta"></div>
-        <div class="change"><button type="button" class="fav-btn" id="hFav" data-fav-label>Add to my champions</button><a class="btn ghost" href="journey.html" id="hAnother">Pick another champion</a><button class="btn ghost" type="button" id="hRandom">Surprise me</button></div>
+        <div class="change"><button type="button" class="fav-btn" id="hFav" data-fav-label>Add to my champions</button><button class="btn ghost share" type="button" id="hShare"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12M7 8l5-5 5 5M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/></svg><span>Share</span></button><span class="sr" id="hShareSay" role="status" aria-live="polite"></span><a class="btn ghost" href="journey.html" id="hAnother">Pick another champion</a><button class="btn ghost" type="button" id="hRandom">Surprise me</button></div>
         <div class="pn" id="hPN"></div>
       </div>
     </section>
@@ -409,6 +414,32 @@ async function journey(c){
   {const L=CHAMPS,i=L.indexOf(c),pv=L[(i-1+L.length)%L.length],nx=L[(i+1)%L.length];
    document.getElementById("hPN").innerHTML=[[pv,t("j_prev")],[nx,t("j_nextc")]].map(([o,l],k)=>`<a href="journey.html?c=${o.id}" rel="${k?"next":"prev"}">${k?"":"← "}<img src="img/${o.id}-tile.webp" alt=""><span><small>${esc(l)}</small>${esc(nm(o))}</span>${k?" →":""}</a>`).join("");}
   document.getElementById("hFav").setAttribute("data-fav",c.id);
+  // link previews + search: this champion's own description and address (the share page c/<id>.html carries the
+  // preview card for apps that don't run JavaScript; tools/make_share.js builds those)
+  {const head=`${c.name}, ${String(c.title).charAt(0).toLowerCase()+String(c.title).slice(1)}`,
+     desc=`Everything about ${head}: lore, abilities, stories to read, videos, skins, voice lines, card art and when they arrived.`,
+     share=new URL(`c/${c.id}.html`,location.href).href,
+     setM=(sel,attr,v)=>{const m=document.querySelector(sel);if(m)m.setAttribute(attr,v);};
+   setM('meta[name="description"]',"content",desc);setM('meta[property="og:description"]',"content",desc);
+   setM('meta[property="og:title"]',"content",head);
+   setM('link[rel="canonical"]',"href",`https://devdeepsinghbhuee.github.io/lore-explorer/journey.html?c=${c.id}`);
+   setM('meta[property="og:url"]',"content",`https://devdeepsinghbhuee.github.io/lore-explorer/c/${c.id}.html`);
+   setM('meta[property="og:image"]',"content",`${DD}splash/${c.dd}_0.jpg`);
+   setM('meta[property="og:image:alt"]',"content",`${c.name}'s splash art`);
+   const b=document.getElementById("hShare"),lab=b.querySelector("span"),say=document.getElementById("hShareSay");
+   const tx=(k,en)=>{const v=t(k);return v===k?en:v;},SH=tx("j_share","Share"),CP=tx("j_copied","Link copied");// en fallback: a cached older i18n.js has no such key
+   lab.textContent=SH;let tm;
+   const copied=()=>{b.classList.add("done");lab.textContent="✓ "+CP;say.textContent=CP;clearTimeout(tm);
+     tm=setTimeout(()=>{b.classList.remove("done");lab.textContent=SH;say.textContent="";},2200);};
+   const copy=async()=>{try{await navigator.clipboard.writeText(share);return true;}catch(e){
+       const ta=document.createElement("textarea");ta.value=share;ta.setAttribute("readonly","");ta.style.cssText="position:fixed;opacity:0";
+       document.body.appendChild(ta);ta.select();let ok=false;try{ok=document.execCommand("copy");}catch(_){}ta.remove();return ok;}};
+   b.onclick=async()=>{
+     // phones and tablets: the system share sheet (WhatsApp, Discord…); computers: copy the link
+     if(navigator.share&&matchMedia("(pointer:coarse)").matches){
+       try{await navigator.share({title:`${nm(c)} · Lore Explorer`,url:share});return;}catch(e){if(e&&e.name==="AbortError")return;}}
+     if(await copy())copied();else prompt(SH,share);
+   };}
 
   // the heavier data files load now, in parallel
   await Promise.all([loadScript("data/reading.js"),loadScript("data/skins.js"),loadScript("data/abilities.js"),loadScript("data/game.js"),loadScript("data/makeovers.js"),loadScript("data/finals.js"),loadScript("data/players.js")]);

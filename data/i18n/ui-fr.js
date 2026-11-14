@@ -24,3 +24,4 @@ Object.assign(window.ATLAS_UI,{"h_eye": "Un site de fans gratuit sur l'univers d
 
 Object.assign(window.ATLAS_UI,{"k_r": "La Faille de l'invocateur", "k_g": "Régions", "k_z": "Saisons"});
 Object.assign(window.ATLAS_UI,{"a_tab_read": "Lire et regarder", "a_tab_cards": "Cartes et skins", "a_less": "Afficher moins"});
+Object.assign(window.ATLAS_UI,{"j_share": "Partager", "j_copied": "Lien copié"});

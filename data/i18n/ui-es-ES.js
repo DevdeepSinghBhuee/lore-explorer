@@ -24,3 +24,4 @@ Object.assign(window.ATLAS_UI,{"h_eye": "Una web de fans gratuita sobre el mundo
 
 Object.assign(window.ATLAS_UI,{"k_r": "La Grieta del Invocador", "k_g": "Regiones", "k_z": "Temporadas"});
 Object.assign(window.ATLAS_UI,{"a_tab_read": "Leer y ver", "a_tab_cards": "Cartas y aspectos", "a_less": "Mostrar menos"});
+Object.assign(window.ATLAS_UI,{"j_share": "Compartir", "j_copied": "Enlace copiado"});

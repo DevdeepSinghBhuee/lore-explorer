@@ -24,3 +24,4 @@ Object.assign(window.ATLAS_UI,{"h_eye": "Um site de fãs gratuito sobre o mundo 
 
 Object.assign(window.ATLAS_UI,{"k_r": "Summoner's Rift", "k_g": "Regiões", "k_z": "Temporadas"});
 Object.assign(window.ATLAS_UI,{"a_tab_read": "Ler e assistir", "a_tab_cards": "Cartas e skins", "a_less": "Mostrar menos"});
+Object.assign(window.ATLAS_UI,{"j_share": "Compartilhar", "j_copied": "Link copiado"});

@@ -24,3 +24,4 @@ Object.assign(window.ATLAS_UI,{"h_eye": "Eine kostenlose Fanseite über die Welt
 
 Object.assign(window.ATLAS_UI,{"k_r": "Kluft der Beschwörer", "k_g": "Regionen", "k_z": "Saisons"});
 Object.assign(window.ATLAS_UI,{"a_tab_read": "Lesen & ansehen", "a_tab_cards": "Karten & Skins", "a_less": "Weniger anzeigen"});
+Object.assign(window.ATLAS_UI,{"j_share": "Teilen", "j_copied": "Link kopiert"});
